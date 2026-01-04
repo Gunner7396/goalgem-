@@ -1,42 +1,75 @@
-import pandas as pd
-from scipy.stats import poisson
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoalGem v3.2</title>
+    <style>
+        :root { --bg: #0b0f1a; --card: #161b2a; --primary: #00a3ff; --text: #ffffff; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .app { width: 100%; max-width: 450px; }
+        .card { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
+        label { font-size: 10px; color: #888; display: block; text-align: center; margin-bottom: 5px; }
+        input { width: 100%; background: #0b0f1a; border: 1px solid #333; border-radius: 8px; padding: 10px 0; color: white; text-align: center; font-size: 14px; box-sizing: border-box; }
+        button { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        #result { display: none; margin-top: 20px; border-top: 2px solid var(--primary); padding-top: 15px; }
+        .score-box { font-size: 32px; font-weight: bold; color: var(--primary); margin: 10px 0; text-align: center; }
+        .badge { padding: 8px 12px; border-radius: 8px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <h1 style="text-align:center; color:var(--primary); letter-spacing:3px;">GOALGEM</h1>
+        <div class="card">
+            <h3 style="color:#28a745; margin-top:0;">🏠 EV SAHİBİ</h3>
+            <div class="grid">
+                <div><label>npxG</label><input type="number" id="hG" step="0.1" placeholder="1.5"></div>
+                <div><label>npxGA</label><input type="number" id="hGA" step="0.1" placeholder="1.0"></div>
+                <div><label>BOX</label><input type="number" id="hB" placeholder="25"></div>
+                <div><label>OPP.B</label><input type="number" id="hOB" placeholder="15"></div>
+            </div>
+            <h3 style="color:#dc3545;">✈️ DEPLASMAN</h3>
+            <div class="grid">
+                <div><label>npxG</label><input type="number" id="aG" step="0.1" placeholder="1.2"></div>
+                <div><label>npxGA</label><input type="number" id="aGA" step="0.1" placeholder="1.1"></div>
+                <div><label>BOX</label><input type="number" id="aB" placeholder="20"></div>
+                <div><label>OPP.B</label><input type="number" id="aOB" placeholder="18"></div>
+            </div>
+            <button onclick="start()">BAŞLAT</button>
+        </div>
+        <div id="result" class="card">
+            <div id="badge" class="badge"></div>
+            <div id="score" class="score-box"></div>
+            <p id="desc" style="font-size: 14px; line-height: 1.6; color: #ccc;"></p>
+        </div>
+    </div>
 
-# --- AYAR ---
-# GitHub'daki dosyanın 'RAW' linkini buraya yapıştır
-GITHUB_URL = "BURAYA_RAW_LINKI_GELECEK"
+    <script>
+        function start() {
+            const v = (id) => parseFloat(document.getElementById(id).value) || 0;
+            const h = { p: (v('hG')*2.2)+(v('hB')*0.5)-(v('hGA')*1.2)-(v('hOB')*0.3) };
+            const a = { p: (v('aG')*2.2)+(v('aB')*0.5)-(v('aGA')*1.2)-(v('aOB')*0.3) };
+            const diff = h.p - a.p;
+            const totalG = v('hG') + v('aG') + ((v('hB')+v('aB'))/40);
+            
+            document.getElementById('result').style.display = 'block';
+            let b = document.getElementById('badge'), s = document.getElementById('score'), d = document.getElementById('desc');
 
-def github_analiz_motoru(ev_adi, dep_adi):
-    try:
-        # Veriyi GitHub'dan çek
-        df = pd.read_csv(GITHUB_URL)
-        
-        # Takımları ayıkla
-        ev = df[df['Takim'] == ev_adi].iloc[0]
-        dep = df[df['Takim'] == dep_adi].iloc[0]
-
-        # 20 Metrik Mantığıyla Güç Hesaplama (Örnek Parametreler)
-        # npxG ve SCA gibi metrikleri ağırlıklandırarak Lambda (Gol Beklentisi) oluşturma
-        l_ev = (ev['npxG'] * 0.7 + ev['SCA'] * 0.02) * 1.2  # Ev sahibi bonusu
-        l_dep = (dep['npxG'] * 0.7 + dep['SCA'] * 0.02) * 0.8 # Deplasman çarpanı
-
-        # Poisson Olasılıkları
-        def hesapla(l1, l2):
-            prob_alt = sum([poisson.pmf(i, l1 + l2) for i in range(3)])
-            prob_kg = (1 - poisson.pmf(0, l1)) * (1 - poisson.pmf(0, l2))
-            return (1 - prob_alt) * 100, prob_kg * 100
-
-        ust, kg = hesapla(l_ev, l_dep)
-
-        # --- SONUÇ ---
-        print(f"\n🚀 {ev_adi.upper()} vs {dep_adi.upper()} ANALİZİ")
-        print("-" * 30)
-        print(f"🔹 2.5 ÜST İHTİMALİ:  %{ust:.1f}")
-        print(f"🔹 KG VAR İHTİMALİ:   %{kg:.1f}")
-        print("-" * 30)
-        print("✅ Analiz manuel verilerinizle GitHub üzerinden yapıldı.")
-
-    except Exception as e:
-        print(f"❌ Hata: Veri okunamadı veya takım bulunamadı. ({e})")
-
-# ÇALIŞTIR
-github_analiz_motoru("Galatasaray", "Fenerbahce")
+            if (diff > 4.5) {
+                b.innerText = totalG > 2.5 ? "MS 1 & ÜST" : "MS 1 & ALT"; b.style.background = "#28a745";
+                s.innerText = totalG > 2.5 ? "3-1 / 2-1" : "2-0 / 1-0";
+                d.innerText = "Ev sahibi istatistiksel olarak ezici bir üstünlüğe sahip. Galibiyete çok yakın.";
+            } else if (diff < -4.5) {
+                b.innerText = totalG > 2.5 ? "MS 2 & ÜST" : "MS 2 & ALT"; b.style.background = "#dc3545";
+                s.innerText = totalG > 2.5 ? "1-3 / 1-2" : "0-2 / 0-1";
+                d.innerText = "Deplasman ekibi rakibine göre çok daha üretken. Maçın favorisi deplasman.";
+            } else {
+                b.innerText = "DENGELİ / KG VAR"; b.style.background = "#ffc107"; b.style.color = "#000";
+                s.innerText = "1-1 / 2-2";
+                d.innerText = "Metrikler birbirine çok yakın. Karşılıklı gol ihtimali taraf bahsinden daha güvenli.";
+            }
+        }
+    </script>
+</body>
+</html>

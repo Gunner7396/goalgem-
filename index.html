@@ -3,107 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Score Pro - Otomatik Veri</title>
+    <title>AI Score Pro - Ultra Edition</title>
     <style>
-        :root { --bg: #0b0f19; --card: #161e2d; --accent: #10b981; --text: #f8fafc; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 15px; }
-        .app-card { max-width: 450px; margin: auto; background: var(--card); padding: 20px; border-radius: 24px; border: 1px solid #2d3748; }
-        .status-badge { font-size: 10px; background: #2d3748; padding: 4px 10px; border-radius: 20px; color: var(--accent); margin-bottom: 15px; display: inline-block; }
-        input, select { width: 100%; padding: 12px; margin-top: 8px; background: #0b0f19; border: 1px solid #2d3748; color: white; border-radius: 12px; outline: none; }
-        .btn-update { background: #3b82f6; color: white; border: none; padding: 10px; border-radius: 10px; font-size: 12px; margin-bottom: 20px; cursor: pointer; width: 100%; }
-        .btn-analyze { background: var(--accent); color: #0b0f19; border: none; padding: 18px; border-radius: 15px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
-        #result { margin-top: 20px; text-align: center; display: none; background: #0b0f19; padding: 20px; border-radius: 15px; }
-        .res-val { font-size: 36px; font-weight: 800; color: var(--accent); }
+        :root { --bg: #030712; --accent: #3b82f6; --text: #f8fafc; --card: #111827; --progress-bg: #1e293b; --success: #10b981; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 15px; margin: 0; }
+        .dashboard { max-width: 480px; margin: auto; }
+        .card { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
+        h3 { color: var(--accent); font-size: 11px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .input-box { background: #030712; padding: 6px 10px; border-radius: 10px; border: 1px solid #374151; }
+        label { display: block; font-size: 9px; color: #94a3b8; margin-bottom: 2px; }
+        input { width: 100%; background: transparent; border: none; color: white; font-weight: bold; outline: none; font-size: 14px; }
+        
+        /* Analiz Butonu */
+        .btn-run { width: 100%; padding: 18px; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; border-radius: 15px; font-weight: 800; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
+        
+        /* Estetik Sonuç Çubuğu */
+        #results { margin-top: 20px; display: none; border: 2px solid var(--accent); }
+        .result-item { margin-bottom: 20px; }
+        .label-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; font-weight: bold; }
+        .progress-container { width: 100%; height: 12px; background: var(--progress-bg); border-radius: 10px; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #3b82f6, #10b981); transition: width 1s ease-in-out; }
+        
+        .advice-text { font-size: 13px; color: #fbbf24; margin-top: 10px; font-style: italic; }
     </style>
 </head>
 <body>
 
-<div class="app-card">
-    <div class="status-badge">● OTOMATİK VERİ SİSTEMİ AKTİF</div>
-    <h2 style="margin-top:0;">Smart Scorer</h2>
-    
-    <p style="font-size: 12px; color: #94a3b8;">Sistem FBRef üzerinden en güncel lig istatistiklerini tarar.</p>
-    
-    <button class="btn-update" onclick="fetchLiveStats()">🔄 LİSTEYİ GÜNCELLE (FBREF)</button>
+<div class="dashboard">
+    <div style="text-align:center; padding: 10px 0;">
+        <h2 style="margin:0; letter-spacing: 2px;">AI SCORE <span style="color:var(--accent)">PRO</span></h2>
+    </div>
 
-    <label>Ev Sahibi Takım</label>
-    <select id="evSecim"><option>Takım Seçiniz...</option></select>
+    <div class="card">
+        <h3>🏠 Hücum (10 Metrik)</h3>
+        <div class="grid" id="hFields"></div>
+    </div>
 
-    <label>Deplasman Takım</label>
-    <select id="depSecim"><option>Takım Seçiniz...</option></select>
+    <div class="card">
+        <h3>🛡️ Savunma (10 Metrik)</h3>
+        <div class="grid" id="aFields"></div>
+    </div>
 
-    <button class="btn-analyze" onclick="startAnalysis()">ANALİZ ET</button>
+    <button class="btn-run" onclick="deepAnalyze()">ANALİZİ BAŞLAT</button>
 
-    <div id="result">
-        <div style="color: #94a3b8; font-size: 14px;">2.5 ÜST OLASILIĞI</div>
-        <div class="res-val" id="percentBox">%0</div>
-        <div id="signal" style="margin-top:10px; font-weight:bold;"></div>
+    <div id="results" class="card">
+        <div class="result-item">
+            <div class="label-row">
+                <span>2.5 ÜST OLASILIĞI</span>
+                <span id="txtOver">%0</span>
+            </div>
+            <div class="progress-container">
+                <div id="barOver" class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="result-item">
+            <div class="label-row">
+                <span>KG VAR OLASILIĞI</span>
+                <span id="txtKG">%0</span>
+            </div>
+            <div class="progress-container">
+                <div id="barKG" class="progress-bar" style="background: linear-gradient(90deg, #f59e0b, #ef4444);"></div>
+            </div>
+        </div>
+        
+        <div id="advice" class="advice-text"></div>
     </div>
 </div>
 
 <script>
-    let globalStats = {};
+    const hMetrics = ["npxG", "SCA", "PPA", "PrgP", "TouchesBox", "SoT", "G_per_Sh", "SuccDrib", "DeepComp", "Crosses"];
+    const aMetrics = ["xGA", "PSxG", "Tkl_Perc", "Blocks", "Int", "Clearances", "Errors", "AirWon", "Def3rdTkl", "SavePerc"];
 
-    // FBRef'ten verileri otomatik çekme fonksiyonu
-    async function fetchLiveStats() {
-        const status = document.querySelector('.status-badge');
-        status.innerText = "⏳ VERİLER ÇEKİLİYOR...";
-        
-        try {
-            // CORS Proxy kullanarak FBRef'e bağlanıyoruz
-            const url = "https://api.allorigins.win/get?url=" + encodeURIComponent("https://fbref.com/en/comps/26/stats/squads/Turkish-Super-Lig-Stats");
-            const response = await fetch(url);
-            const data = await response.json();
-            
-            // HTML içeriğini işle
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(data.contents, 'text/html');
-            const table = doc.querySelector('table');
-            const rows = table.querySelectorAll('tbody tr');
-            
-            const evSelect = document.getElementById('evSecim');
-            const depSelect = document.getElementById('depSecim');
-            
-            rows.forEach(row => {
-                const teamName = row.querySelector('th[data-stat="team"]').innerText;
-                const xG = row.querySelector('td[data-stat="re_xG"]') ? row.querySelector('td[data-stat="re_xG"]').innerText : "1.5";
-                
-                globalStats[teamName] = parseFloat(xG);
-                
-                const opt = document.createElement('option');
-                opt.value = teamName;
-                opt.innerText = teamName;
-                evSelect.appendChild(opt.cloneNode(true));
-                depSelect.appendChild(opt);
-            });
-            
-            status.innerText = "✅ VERİLER GÜNCEL";
-            status.style.color = "#10b981";
-        } catch (e) {
-            status.innerText = "❌ HATA: MANUEL GİRİŞE GEÇİN";
-            status.style.color = "#ef4444";
-        }
+    function init() {
+        hMetrics.forEach(m => document.getElementById('hFields').innerHTML += `<div class="input-box"><label>${m}</label><input type="number" class="h-val" value="0" step="0.01"></div>`);
+        aMetrics.forEach(m => document.getElementById('aFields').innerHTML += `<div class="input-box"><label>${m}</label><input type="number" class="a-val" value="0" step="0.01"></div>`);
     }
+    init();
 
-    function startAnalysis() {
-        const ev = document.getElementById('evSecim').value;
-        const dep = document.getElementById('depSecim').value;
+    function deepAnalyze() {
+        const h = Array.from(document.querySelectorAll('.h-val')).map(i => parseFloat(i.value) || 0);
+        const a = Array.from(document.querySelectorAll('.a-val')).map(i => parseFloat(i.value) || 0);
+
+        // MOTOR HESAPLAMASI (Ağırlıklı)
+        let attackPower = (h[0] * 0.45) + (h[5] * 0.3) + (h[1] * 0.25);
+        let defenseWeakness = (a[0] * 0.5) + (a[6] * 0.5);
         
-        const l1 = globalStats[ev] || 1.5;
-        const l2 = globalStats[dep] || 1.2;
-        const lambda = (l1 + l2);
+        let lambda = (attackPower + defenseWeakness) / 2;
+        let lambda_dep = a[0] * 0.7; // Temsili deplasman gücü
 
-        // Poisson Hesaplama
-        const p0 = Math.exp(-lambda);
-        const p1 = lambda * Math.exp(-lambda);
-        const p2 = (Math.pow(lambda, 2) * Math.exp(-lambda)) / 2;
-        const over25 = (1 - (p0 + p1 + p2)) * 100;
+        // Poisson
+        function p(k, l) { return (Math.exp(-l) * Math.pow(l, k)) / (k === 0 ? 1 : k === 1 ? 1 : 2); } // Basit 0,1,2 faktöriyel
 
-        document.getElementById('result').style.display = 'block';
-        document.getElementById('percentBox').innerText = `%${over25.toFixed(1)}`;
-        document.getElementById('signal').innerText = over25 > 60 ? "🔥 YÜKSEK SKOR" : "⚖️ DENGELİ";
+        let over25 = (1 - (p(0, lambda+lambda_dep) + p(1, lambda+lambda_dep) + p(2, lambda+lambda_dep))) * 100;
+        let kg_var = (1 - Math.exp(-lambda)) * (1 - Math.exp(-lambda_dep)) * 100;
+
+        // Görselleştirme
+        document.getElementById('results').style.display = 'block';
+        
+        // Çubukları doldur
+        setTimeout(() => {
+            document.getElementById('barOver').style.width = over25.toFixed(1) + "%";
+            document.getElementById('barKG').style.width = kg_var.toFixed(1) + "%";
+            document.getElementById('txtOver').innerText = "%" + over25.toFixed(1);
+            document.getElementById('txtKG').innerText = "%" + kg_var.toFixed(1);
+        }, 100);
+
+        document.getElementById('advice').innerText = over25 > 65 ? "✨ Güçlü Sinyal: Maç yüksek skor potansiyeli taşıyor." : "ℹ️ Sistem bu maç için dengeli bir skor öngörüyor.";
     }
 </script>
 </body>
 </html>
+
 

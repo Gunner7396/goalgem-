@@ -3,71 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoalGem v2.5</title>
+    <title>GoalGem v3.0 - Akıllı Analiz</title>
     <style>
-        :root { --bg: #0b101a; --card: #1a202e; --primary: #00d2ff; --text: #ffffff; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; justify-content: center; }
-        .app { width: 100%; max-width: 400px; }
-        .card { background: var(--card); padding: 18px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); margin-bottom: 15px; }
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; }
-        label { font-size: 10px; color: #aaa; display: block; text-align: center; margin-bottom: 4px; }
-        input { width: 100%; background: #0b101a; border: 1px solid #333; border-radius: 6px; padding: 8px 0; color: white; text-align: center; font-size: 14px; }
-        button { width: 100%; background: var(--primary); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 18px; }
-        #result { display: none; margin-top: 15px; border-left: 4px solid var(--primary); }
-        .index-val { font-size: 36px; font-weight: bold; color: var(--primary); text-align: right; margin-bottom: 10px; }
-        .badge { padding: 8px 12px; border-radius: 6px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
+        :root { --bg: #05080f; --card: #121826; --primary: #00d2ff; --text: #e0e0e0; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; justify-content: center; }
+        .app { width: 100%; max-width: 420px; }
+        .card { background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); margin-bottom: 15px; border: 1px solid #1f2937; }
+        .row { margin-bottom: 15px; }
+        .label-group { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 13px; font-weight: bold; }
+        input[type=range] { width: 100%; height: 6px; background: #2d3748; border-radius: 5px; appearance: none; outline: none; }
+        input[type=range]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--primary); border-radius: 50%; cursor: pointer; }
+        button { width: 100%; background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%); color: #fff; border: none; padding: 16px; border-radius: 12px; font-weight: bold; font-size: 18px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,210,255,0.3); }
+        #result { display: none; text-align: center; border-top: 2px solid var(--primary); padding-top: 15px; }
+        .score-box { font-size: 28px; font-weight: bold; color: #fff; margin: 10px 0; background: rgba(0,210,255,0.1); padding: 10px; border-radius: 8px; }
+        .risk-meter { height: 8px; background: #2d3748; border-radius: 4px; margin: 15px 0; overflow: hidden; }
+        .risk-fill { height: 100%; width: 0%; transition: 0.5s; }
     </style>
 </head>
 <body>
     <div class="app">
-        <h2 style="text-align:center; color:var(--primary); letter-spacing:2px;">GOALGEM v2.5</h2>
+        <h2 style="text-align:center; color:var(--primary); margin-bottom:20px;">GOALGEM v3.0</h2>
         <div class="card">
-            <h4 style="color:#4caf50; margin:0 0 10px 0;">EV SAHİBİ</h4>
-            <div class="grid">
-                <div><label>npxG</label><input type="number" id="hG" step="0.1"></div>
-                <div><label>npxGA</label><input type="number" id="hGA" step="0.1"></div>
-                <div><label>BOX</label><input type="number" id="hB"></div>
-                <div><label>OPP.B</label><input type="number" id="hOB"></div>
+            <h4 style="color:#4caf50; margin-top:0;">🏠 EV SAHİBİ</h4>
+            <div class="row">
+                <div class="label-group"><span>npxG (Hücum)</span><span id="hGv">1.5</span></div>
+                <input type="range" id="hG" min="0" max="4" step="0.1" value="1.5" oninput="updateVal('hG')">
             </div>
-            <h4 style="color:#f44336; margin:10px 0 10px 0;">DEPLASMAN</h4>
-            <div class="grid">
-                <div><label>npxG</label><input type="number" id="aG" step="0.1"></div>
-                <div><label>npxGA</label><input type="number" id="aGA" step="0.1"></div>
-                <div><label>BOX</label><input type="number" id="aB"></div>
-                <div><label>OPP.B</label><input type="number" id="aOB"></div>
+            <div class="row">
+                <div class="label-group"><span>BOX (Baskı)</span><span id="hBv">25</span></div>
+                <input type="range" id="hB" min="0" max="60" step="1" value="25" oninput="updateVal('hB')">
             </div>
-            <button onclick="start()">BAŞLAT</button>
+            <h4 style="color:#f44336;">✈️ DEPLASMAN</h4>
+            <div class="row">
+                <div class="label-group"><span>npxG (Hücum)</span><span id="aGv">1.2</span></div>
+                <input type="range" id="aG" min="0" max="4" step="0.1" value="1.2" oninput="updateVal('aG')">
+            </div>
+            <div class="row">
+                <div class="label-group"><span>BOX (Baskı)</span><span id="aBv">20</span></div>
+                <input type="range" id="aB" min="0" max="60" step="1" value="20" oninput="updateVal('aB')">
+            </div>
+            <button onclick="analyze()">BAŞLAT</button>
         </div>
+
         <div id="result" class="card">
-            <div id="indexVal" class="index-val">0.0</div>
-            <div id="badge" class="badge"></div>
-            <div id="desc" style="font-size:14px; line-height:1.5;"></div>
+            <div id="verdict" style="font-size: 20px; font-weight: bold; margin-bottom: 10px;"></div>
+            <div class="score-box" id="scorePredict"></div>
+            <div style="font-size: 13px; color: #aaa;">GÜVEN ENDEKSİ</div>
+            <div class="risk-meter"><div id="riskFill" class="risk-fill"></div></div>
+            <p id="desc" style="font-size: 14px; line-height: 1.6;"></p>
         </div>
     </div>
+
     <script>
-        function start() {
-            const v = (id) => parseFloat(document.getElementById(id).value) || 0;
-            const h = { p: (v('hG') * 2) + (v('hB') * 0.5) - (v('hGA') * 1.5) - (v('hOB') * 0.3) };
-            const a = { p: (v('aG') * 2) + (v('aB') * 0.5) - (v('aGA') * 1.5) - (v('aOB') * 0.3) };
-            const diff = h.p - a.p;
-            const idx = (5 + diff).toFixed(1);
+        function updateVal(id) { document.getElementById(id + 'v').innerText = document.getElementById(id).value; }
+        
+        function analyze() {
+            const get = (id) => parseFloat(document.getElementById(id).value);
+            const hG = get('hG'), hB = get('hB'), aG = get('aG'), aB = get('aB');
+            
+            const hPower = (hG * 2.5) + (hB * 0.7);
+            const aPower = (aG * 2.5) + (aB * 0.7);
+            const diff = hPower - aPower;
+            const totalG = hG + aG;
             
             let res = document.getElementById('result');
-            let b = document.getElementById('badge');
+            let v = document.getElementById('verdict');
+            let s = document.getElementById('scorePredict');
             let d = document.getElementById('desc');
-            
-            document.getElementById('indexVal').innerText = "ENDEKS: " + idx;
-            res.style.display = 'block';
+            let rf = document.getElementById('riskFill');
 
-            if (idx >= 6.5) {
-                b.innerText = "MS 1 / FAVORİ"; b.style.background = "#4caf50";
-                d.innerText = "Ev sahibi istatistiksel olarak üstün. Baskılı oyun galibiyeti getirecektir.";
-            } else if (idx <= 3.5) {
-                b.innerText = "MS 2 / FAVORİ"; b.style.background = "#f44336";
-                d.innerText = "Deplasman ekibi verilerde çok daha güçlü. Deplasman galibiyeti ön planda.";
+            res.style.display = 'block';
+            let trust = Math.min(Math.abs(diff) * 10, 100);
+            rf.style.width = trust + '%';
+            rf.style.background = trust > 60 ? '#4caf50' : '#ff9800';
+
+            if (diff > 5) {
+                v.innerText = totalG > 2.5 ? "MS 1 & ÜST" : "MS 1 & ALT";
+                v.style.color = "#4caf50";
+                s.innerText = totalG > 2.5 ? "2-1 / 3-1" : "1-0 / 2-0";
+                d.innerText = "Ev sahibi sahada tam hakimiyet kurmuş durumda. Kalitesiyle galibiyete yakın.";
+            } else if (diff < -5) {
+                v.innerText = totalG > 2.5 ? "MS 2 & ÜST" : "MS 2 & ALT";
+                v.style.color = "#f44336";
+                s.innerText = totalG > 2.5 ? "1-2 / 1-3" : "0-1 / 0-2";
+                d.innerText = "Deplasman ekibi istatistiksel olarak daha üretken. Şaşırtıcı bir sonuç çıkabilir.";
             } else {
-                b.innerText = "DENGELİ / KG VAR"; b.style.background = "#ff9800";
-                d.innerText = "İki takım da birbirine yakın güçte. Karşılıklı gol ihtimali taraf bahsinden daha güvenli.";
+                v.innerText = "DENGELİ / KG VAR";
+                v.style.color = "#ff9800";
+                s.innerText = "1-1 / 2-2";
+                d.innerText = "İki takım da birbirine diş geçirebilir. Karşılıklı goller ön planda.";
             }
         }
     </script>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GoalGem v2.3 - Pro Analysis</title>
+    <style>
+        :root { --bg: #0b0f1a; --card: #161c2d; --accent: #38bdf8; --text: #f8fafc; --home: #10b981; --away: #f43f5e; --border: #2d3748; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 5px; margin: 0; display: flex; justify-content: center; }
+        .app { width: 100%; max-width: 380px; }
+        .header { text-align: center; margin: 10px 0; }
+        .header h2 { color: var(--accent); font-size: 1.8rem; margin: 0; letter-spacing: 4px; font-weight: 900; }
+        .card { background: var(--card); padding: 12px; border-radius: 15px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .team-title { font-size: 0.75rem; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+        .input-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; }
+        .input-group { display: flex; flex-direction: column; gap: 3px; }
+        label { font-size: 0.55rem; font-weight: 700; opacity: 0.5; text-align: center; }
+        input { background: #0b0f1a; border: 1px solid var(--border); border-radius: 6px; color: #fff; padding: 8px 2px; font-size: 0.85rem; text-align: center; outline: none; width: 100%; }
+        .calc-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); color: #0b0f1a; border: none; border-radius: 10px; font-size: 1rem; font-weight: 900; cursor: pointer; }
+        
+        /* GELİŞMİŞ SONUÇ ALANI */
+        #res { margin-top: 15px; display: none; padding: 15px; border-radius: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); animation: slideIn 0.3s; }
+        .nme-wrap { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .nme-val { font-size: 2.5rem; font-weight: 900; color: var(--accent); }
+        .gauge-container { width: 100%; height: 8px; background: #2d3748; border-radius: 5px; margin: 12px 0; overflow: hidden; }
+        #gauge-bar { height: 100%; width: 0%; transition: width 1s ease-in-out; }
+        .ai-analysis { font-size: 0.8rem; line-height: 1.4; color: #cbd5e1; margin-top: 10px; padding: 10px; background: rgba(56, 189, 248, 0.05); border-left: 3px solid var(--accent); border-radius: 4px; }
+        .insight-tag { display: inline-block; font-size: 0.65rem; font-weight: 800; padding: 3px 8px; border-radius: 20px; margin-top: 8px; text-transform: uppercase; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="header"><h2>GOALGEM</h2></div>
+    <div class="card">
+        <div class="team-title" style="color:var(--home)">🏠 EV SAHİBİ</div>
+        <div class="input-grid">
+            <div class="input-group"><label>npxG</label><input type="number" id="h_npxg" step="0.01"></div>
+            <div class="input-group"><label>npxGA</label><input type="number" id="h_npxga" step="0.01"></div>
+            <div class="input-group"><label>BOX</label><input type="number" id="h_box"></div>
+            <div class="input-group"><label>OPP.B</label><input type="number" id="h_obox"></div>
+        </div>
+
+        <div class="team-title" style="color:var(--away)">✈️ DEPLASMAN</div>
+        <div class="input-grid">
+            <div class="input-group"><label>npxG</label><input type="number" id="a_npxg" step="0.01"></div>
+            <div class="input-group"><label>npxGA</label><input type="number" id="a_npxga" step="0.01"></div>
+            <div class="input-group"><label>BOX</label><input type="number" id="a_box"></div>
+            <div class="input-group"><label>OPP.B</label><input type="number" id="a_obox"></div>
+        </div>
+
+        <button class="calc-btn" onclick="hesapla()">DETAYLI ANALİZ</button>
+
+        <div id="res">
+            <div class="nme-wrap">
+                <span style="font-size: 0.7rem; font-weight: bold; opacity: 0.6;">MAÇ ENDEKSİ</span>
+                <span class="nme-val" id="nme_num">0.00</span>
+            </div>
+            <div class="gauge-container"><div id="gauge-bar"></div></div>
+            <div id="status_tag" class="insight-tag"> ANALİZ EDİLİYOR...</div>
+            <div id="ai_comment" class="ai-analysis">Veriler işleniyor...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+function hesapla() {
+    const v = {
+        h_g: parseFloat(document.getElementById('h_npxg').value) || 0,
+        h_ga: parseFloat(document.getElementById('h_npxga').value) || 0,
+        h_b: parseFloat(document.getElementById('h_box').value) || 0,
+        h_ob: parseFloat(document.getElementById('h_obox').value) || 0,
+        a_g: parseFloat(document.getElementById('a_npxg').value) || 0,
+        a_ga: parseFloat(document.getElementById('a_npxga').value) || 0,
+        a_b: parseFloat(document.getElementById('a_box').value) || 0,
+        a_ob: parseFloat(document.getElementById('a_obox').value) || 0
+    };
+
+    const h_eff = (v.h_g + (v.h_b / 20)) / (v.a_ga + (v.a_ob / 20));
+    const a_eff = (v.a_g + (v.a_b / 20)) / (v.h_ga + (v.h_ob / 20));
+    const nme = (h_eff + a_eff) / 2;
+
+    document.getElementById('res').style.display = 'block';
+    document.getElementById('nme_num').innerText = nme.toFixed(2);
+    
+    const bar = document.getElementById('gauge-bar');
+    const comment = document.getElementById('ai_comment');
+    const tag = document.getElementById('status_tag');
+    
+    let percent = Math.min(Math.max((nme - 0.5) / 1.5 * 100, 5), 100);
+    bar.style.width = percent + '%';
+
+    // Dinamik Yorum Mantığı
+    let msg = "";
+    let type = "";
+
+    if (nme >= 1.40) {
+        bar.style.background = '#10b981';
+        tag.style.background = '#10b981'; tag.style.color = '#0b0f1a';
+        tag.innerText = "YÜKSEK SKOR";
+        msg = "Hücum güçleri savunma dirençlerini tamamen kırmış durumda. Karşılıklı gol ve 2.5 üst ihtimali çok güçlü.";
+        if (Math.abs(h_eff - a_eff) > 0.8) msg = "Ev sahibi aşırı dominant. Tek taraflı bir skor patlaması (3-0, 4-1) gelebilir.";
+    } else if (nme >= 0.90) {
+        bar.style.background = '#facc15';
+        tag.style.background = '#facc15'; tag.style.color = '#0b0f1a';
+        tag.innerText = "DENGELİ / KG VAR";
+        msg = "Maç dengede ama iki takım da birbirinin zayıflığını yakalayabilecek kapasitede. 1-1 veya 2-1 skorları ön planda.";
+    } else {
+        bar.style.background = '#f43f5e';
+        tag.style.background = '#f43f5e'; tag.style.color = '#fff';
+        tag.innerText = "DÜŞÜK TEMPO";
+        msg = "Savunmalar çok disiplinli veya hücum hatları çok verimsiz. Kilidi açmak zor olacak, alt ve 0-0/1-0 riski yüksek.";
+    }
+
+    comment.innerText = msg;
+}
+</script>
+</body>
+</html>

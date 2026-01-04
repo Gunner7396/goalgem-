@@ -9,17 +9,17 @@
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
         .app { width: 100%; max-width: 450px; }
         header { text-align: center; margin-bottom: 25px; }
-        h1 { color: var(--primary); letter-spacing: 3px; margin: 0; }
+        h1 { color: var(--primary); letter-spacing: 3px; margin: 0; font-size: 24px; }
         .card { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
-        label { font-size: 10px; color: #888; display: block; text-align: center; margin-bottom: 5px; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+        label { font-size: 9px; color: #888; display: block; text-align: center; margin-bottom: 5px; }
         input { width: 100%; background: #0b0f1a; border: 1px solid #333; border-radius: 8px; padding: 10px 0; color: white; text-align: center; font-size: 14px; box-sizing: border-box; }
         button { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
         #result { display: none; margin-top: 20px; animation: fadeIn 0.5s; }
         .index-box { text-align: right; margin-bottom: 15px; }
-        .index-val { font-size: 48px; font-weight: bold; color: var(--primary); }
-        .verdict { padding: 12px; border-radius: 10px; font-weight: bold; display: inline-block; margin-bottom: 15px; }
-        .analysis-text { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; line-height: 1.6; border-left: 4px solid var(--primary); }
+        .index-val { font-size: 42px; font-weight: bold; color: var(--primary); }
+        .verdict { padding: 12px; border-radius: 10px; font-weight: bold; display: inline-block; margin-bottom: 15px; color: white; }
+        .analysis-text { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; line-height: 1.6; border-left: 4px solid var(--primary); font-size: 14px; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -27,14 +27,14 @@
     <div class="app">
         <header><h1>GOALGEM v2.4</h1></header>
         <div class="card">
-            <h3 style="color:#28a745; margin-top:0;">🏠 EV SAHİBİ</h3>
+            <h3 style="color:#28a745; margin:0 0 15px 0; font-size:16px;">🏠 EV SAHİBİ</h3>
             <div class="grid">
                 <div><label>npxG</label><input type="number" id="hG" step="0.1" placeholder="1.5"></div>
                 <div><label>npxGA</label><input type="number" id="hGA" step="0.1" placeholder="1.0"></div>
                 <div><label>BOX</label><input type="number" id="hB" placeholder="25"></div>
                 <div><label>OPP.B</label><input type="number" id="hOB" placeholder="15"></div>
             </div>
-            <h3 style="color:#dc3545;">✈️ DEPLASMAN</h3>
+            <h3 style="color:#dc3545; margin:15px 0 15px 0; font-size:16px;">✈️ DEPLASMAN</h3>
             <div class="grid">
                 <div><label>npxG</label><input type="number" id="aG" step="0.1" placeholder="1.2"></div>
                 <div><label>npxGA</label><input type="number" id="aGA" step="0.1" placeholder="1.1"></div>
@@ -45,7 +45,7 @@
         </div>
         <div id="result" class="card">
             <div class="index-box">
-                <span style="color:#888; font-size:14px;">MAÇ ENDEKSİ</span><br>
+                <span style="color:#888; font-size:12px;">MAÇ GÜÇ ENDEKSİ</span><br>
                 <span id="indexVal" class="index-val">0.00</span>
             </div>
             <div id="verdictBox" class="verdict"></div>
@@ -59,32 +59,40 @@
             const h = { g: val('hG'), ga: val('hGA'), b: val('hB'), ob: val('hOB') };
             const a = { g: val('aG'), ga: val('aGA'), b: val('aB'), ob: val('aOB') };
 
-            // Güç Skorları Hesaplama
-            const hPower = (h.g * 1.5) + (h.b * 0.5) - (h.ga * 1.2) - (h.ob * 0.3);
-            const aPower = (a.g * 1.5) + (a.b * 0.5) - (a.ga * 1.2) - (a.ob * 0.3);
-            const totalIndex = ((hPower - aPower) + 5).toFixed(2);
+            // Gelişmiş Güç Puanlaması
+            const hPower = (h.g * 2) + (h.b * 0.6) - (h.ga * 1.5) - (h.ob * 0.4);
+            const aPower = (a.g * 2) + (a.b * 0.6) - (a.ga * 1.5) - (a.ob * 0.4);
+            
+            // Endeksi 0-10 arasına sabitleme denemesi
+            let diff = hPower - aPower;
+            let totalIndex = (5 + diff).toFixed(2);
+            if(totalIndex > 10) totalIndex = 10;
+            if(totalIndex < 0) totalIndex = 0;
             
             let verdict = ""; let color = "#ffc107"; let text = "";
 
-            // Taraf ve Gol Algoritması
-            if (totalIndex > 7.5) {
+            // Taraf Karar Mekanizması
+            if (totalIndex >= 7.0) {
                 verdict = "MS 1 / MUTLAK FAVORİ"; color = "#28a745";
-                text = "Ev sahibi sahada tam hakimiyet kurmuş durumda. BOX verisi rakibi boğduğunu gösteriyor. Net galibiyet beklenir.";
-            } else if (totalIndex < 2.5) {
+                text = "Ev sahibi istatistiksel olarak rakibini domine ediyor. BOX verisi sahadaki baskının kanıtı. Net galibiyet beklenir.";
+            } else if (totalIndex <= 3.0) {
                 verdict = "MS 2 / MUTLAK FAVORİ"; color = "#dc3545";
-                text = "Deplasman ekibi her alanda üstün. Ev sahibinin savunma direnci bu baskıyı kaldırmaya yetmeyecektir.";
-            } else if (totalIndex > 4.5 && totalIndex <= 7.5) {
-                verdict = "MS 1 VEYA 1X"; color = "#28a745";
-                text = "Ev sahibi oyun olarak önde ancak rakip kontra şansı arayabilir. Güvenli liman çifte şans veya MS 1.";
+                text = "Deplasman ekibi her alanda daha üstün. Ev sahibi savunmasının bu baskıya dayanması zor görünüyor.";
+            } else if (totalIndex > 5.5 && totalIndex < 7.0) {
+                verdict = "MS 1 VEYA 1X"; color = "#218838";
+                text = "Ev sahibi avantajlı tarafta. Oyun üstünlüğü onlarda ancak risk almamak için çifte şans düşünülebilir.";
+            } else if (totalIndex > 3.0 && totalIndex < 4.5) {
+                verdict = "MS 2 VEYA X2"; color = "#c82333";
+                text = "Deplasman ekibi bir adım önde. Daha kaliteli bir oyun sergiliyorlar, yenilmezler seçeneği ideal.";
             } else {
-                verdict = "DENGELİ / KG VAR"; color = "#ffc107";
-                text = "İki takımın metrikleri birbirine çok yakın. Hata yapanın kaybedeceği, karşılıklı gollerin ön planda olduğu bir maç.";
+                verdict = "DENGELİ / RİSKLİ"; color = "#ffc107";
+                text = "Metrikler birbirine çok yakın. İki takımın da birbirini tarttığı, KG VAR ihtimalinin yüksek olduğu bir mücadele.";
             }
 
-            // Alt/Üst Ekstra Kontrol
-            const totalExpectancy = h.g + a.g + ((h.b + a.b) / 30);
-            if (totalExpectancy < 2.2) text += " Ayrıca savunma disiplini nedeniyle 2.5 ALT seçeneği güçlü.";
-            else if (totalExpectancy > 3.5) text += " Temponun yüksek olması ve 2.5 ÜST barajının aşılması muhtemel.";
+            // Gol Beklentisi Ek Analizi
+            const goals = h.g + a.g + ((h.b + a.b) / 35);
+            if (goals < 2.0) text += " Düşük tempo ve savunma ağırlıklı bir maç sebebiyle 2.5 ALT ön planda.";
+            else if (goals > 3.2) text += " Yüksek hücum üretkenliği ile 2.5 ÜST barajı aşılabilir.";
 
             document.getElementById('indexVal').innerText = totalIndex;
             document.getElementById('verdictBox').innerText = verdict;

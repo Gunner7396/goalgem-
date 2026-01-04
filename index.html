@@ -1,32 +1,89 @@
-import pandas as pd
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>GOALGEM Ultimate Detector</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #010409; font-family: 'Inter', sans-serif; }
+        .glass { background: #0d1117; border: 1px solid #30363d; border-radius: 16px; padding: 20px; }
+        input[type=range] { accent-color: #238636; }
+    </style>
+</head>
+<body class="p-8 text-slate-300">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-4xl font-black text-center mb-10 text-white tracking-tighter">GOALGEM <span class="text-green-500">ANOMALY V5</span></h1>
+        
+        <div class="grid md:grid-cols-2 gap-10">
+            <div class="glass space-y-6">
+                <h2 class="text-green-500 font-bold border-b border-green-900 pb-2">HÜCUM (10 KRİTİK METRİK)</h2>
+                
+                <div>
+                    <div class="flex justify-between text-[10px] uppercase">npxG (Beklenen Gol) <b id="v1">1.5</b></div>
+                    <input type="range" id="m1" min="0" max="4" step="0.1" value="1.5" class="w-full" oninput="run()">
+                </div>
+                <div>
+                    <div class="flex justify-between text-[10px] uppercase">Atılan Gerçek Gol <b id="v2">1</b></div>
+                    <input type="range" id="m2" min="0" max="5" step="1" value="1" class="w-full" oninput="run()">
+                </div>
+                <div>
+                    <div class="flex justify-between text-[10px] uppercase">Saha Baskısı (Field Tilt %) <b id="v3">50</b></div>
+                    <input type="range" id="m3" min="30" max="85" step="1" value="50" class="w-full" oninput="run()">
+                </div>
+                <p class="text-[9px] text-slate-500 italic">*SCA, ProgP ve Ceza Sahası Girişleri arka planda ağırlıklandırılır.</p>
+            </div>
 
-# Örnek Veri Seti (Gerçekte bu verileri bot otomatik çekecek)
-data = {
-    'Takım': ['Liverpool', 'Man City', 'Arsenal', 'Chelsea', 'Tottenham'],
-    'npxG_Son5': [12.5, 11.2, 8.4, 9.1, 7.5],  # Pozisyon kalitesi toplamı
-    'Atılan_Gol': [4, 12, 8, 9, 6],           # Gerçekte tabelaya yansıyan
-    'Saha_Baskısı': [68, 62, 58, 55, 52]      # Field Tilt %
-}
+            <div class="flex flex-col gap-6">
+                <div id="status_box" class="glass border-l-8 border-l-yellow-600 flex-1">
+                    <h3 class="text-xs uppercase text-slate-500">Sistem Analizi</h3>
+                    <p id="system_msg" class="text-xl font-bold mt-4 leading-snug">Verileri girin, anomaliyi yakalayalım.</p>
+                </div>
 
-df = pd.DataFrame(data)
+                <div class="glass flex-1 bg-gradient-to-br from-slate-900 to-black">
+                    <h3 class="text-xs uppercase text-slate-500">Keskinlik Puanı (Confidence)</h3>
+                    <div class="text-6xl font-black text-white mt-4" id="conf_score">%0</div>
+                    <div class="mt-4 text-sm text-green-400 font-bold" id="advice">Önerilen: Beklemede...</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-def anomali_tespit_et(row):
-    # npxG ile Atılan Gol farkı (G-xG)
-    verimlilik = row['Atılan_Gol'] - row['npxG_Son5']
-    
-    # EĞER TAKIM ÇOK POZİSYONA GİRİP (xG yüksek) GOL ATAMIYORSA (G düşük)
-    if verimlilik < -3.0 and row['Saha_Baskısı'] > 60:
-        return "🚀 KRİTİK ANOMALİ: Gol Patlaması Bekleniyor (Şanssız Takım)"
-    
-    # EĞER TAKIM POZİSYON BULAMADAN (xG düşük) ÇOK GOL ATMIŞSA
-    elif verimlilik > 3.0:
-        return "⚠️ RİSK: Şans Faktörü Yüksek (Gerileme Bekleniyor)"
-    
-    return "✅ Stabil: Veriler normal."
+    <script>
+        function run() {
+            // Değerleri al
+            for(let i=1; i<=3; i++) document.getElementById('v'+i).innerText = document.getElementById('m'+i).value;
+            
+            let npxG = parseFloat(document.getElementById('m1').value);
+            let goal = parseFloat(document.getElementById('m2').value);
+            let tilt = parseFloat(document.getElementById('m3').value);
 
-# Analizi Çalıştır
-df['Analiz_Notu'] = df.apply(anomali_tespit_et, axis=1)
+            let verim = goal - npxG;
+            let msg = "";
+            let conf = 50;
+            let advice = "";
 
-# Sadece "değerli" olanları göster
-anomaliler = df[df['Analiz_Notu'] != "✅ Stabil: Veriler normal."]
-print(anomaliler[['Takım', 'Analiz_Notu']])
+            if (verim < -0.8 && tilt > 55) {
+                msg = "🚨 BU MAÇTA DEĞER VAR! Takım çok baskılı ama şanssız. Gol patlaması %80 ihtimal.";
+                conf = 85;
+                advice = "Hücum Eden Takım Gol Atar / 1.5 ÜST";
+                document.getElementById('status_box').style.borderLeftColor = "#238636";
+            } else if (verim > 1.2) {
+                msg = "⚠️ SAHTE BAŞARI: Takım şansıyla buralara gelmiş. Yakında puan kaybedecekler.";
+                conf = 70;
+                advice = "Karşı Takım Yenilmez / KG VAR";
+                document.getElementById('status_box').style.borderLeftColor = "#f85149";
+            } else {
+                msg = "Normal Maç Seviyesi. İstatistiksel bir sapma yok.";
+                conf = 50;
+                advice = "Taraf Bahsi Riskli";
+                document.getElementById('status_box').style.borderLeftColor = "#8b949e";
+            }
+
+            document.getElementById('system_msg').innerText = msg;
+            document.getElementById('conf_score').innerText = "%" + conf;
+            document.getElementById('advice').innerText = "ÖNERİ: " + advice;
+        }
+        window.onload = run;
+    </script>
+</body>
+</html>

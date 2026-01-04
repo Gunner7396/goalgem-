@@ -1,138 +1,32 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOALGEM AI Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body { background-color: #020617; font-family: 'Inter', sans-serif; color: #f8fafc; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
-        .accent-bar { height: 4px; border-radius: 2px; transition: width 0.5s ease-in-out; }
-    </style>
-</head>
-<body class="p-4 md:p-8 flex flex-col items-center">
+import pandas as pd
 
-    <div class="w-full max-w-2xl">
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 tracking-tighter">GOALGEM AI</h1>
-            <p class="text-slate-500 text-sm mt-2">Poisson Dağılımı ve Probabilistik Analiz Motoru</p>
-        </div>
+# Örnek Veri Seti (Gerçekte bu verileri bot otomatik çekecek)
+data = {
+    'Takım': ['Liverpool', 'Man City', 'Arsenal', 'Chelsea', 'Tottenham'],
+    'npxG_Son5': [12.5, 11.2, 8.4, 9.1, 7.5],  # Pozisyon kalitesi toplamı
+    'Atılan_Gol': [4, 12, 8, 9, 6],           # Gerçekte tabelaya yansıyan
+    'Saha_Baskısı': [68, 62, 58, 55, 52]      # Field Tilt %
+}
 
-        <div class="grid md:grid-cols-2 gap-6">
-            <div class="glass-card rounded-3xl p-6">
-                <h2 class="text-emerald-400 font-bold mb-6 flex items-center gap-2 uppercase text-xs tracking-widest border-b border-emerald-900/30 pb-2">🏠 Ev Sahibi Gücü</h2>
-                <div class="space-y-6">
-                    <div>
-                        <div class="flex justify-between text-xs mb-2 text-slate-400 uppercase">Hücum (npxG) <span id="v_e_h" class="text-emerald-400 font-bold">1.5</span></div>
-                        <input type="range" id="e_h" min="0.1" max="4" step="0.1" value="1.5" class="w-full accent-emerald-500" oninput="u('e_h')">
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-xs mb-2 text-slate-400 uppercase">Savunma (npxGA) <span id="v_e_s" class="text-emerald-400 font-bold">1.0</span></div>
-                        <input type="range" id="e_s" min="0.1" max="4" step="0.1" value="1.0" class="w-full accent-emerald-500" oninput="u('e_s')">
-                    </div>
-                </div>
+df = pd.DataFrame(data)
 
-                <h2 class="text-rose-400 font-bold mt-10 mb-6 flex items-center gap-2 uppercase text-xs tracking-widest border-b border-rose-900/30 pb-2">✈️ Deplasman Gücü</h2>
-                <div class="space-y-6">
-                    <div>
-                        <div class="flex justify-between text-xs mb-2 text-slate-400 uppercase">Hücum (npxG) <span id="v_d_h" class="text-rose-400 font-bold">1.2</span></div>
-                        <input type="range" id="d_h" min="0.1" max="4" step="0.1" value="1.2" class="w-full accent-rose-500" oninput="u('d_h')">
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-xs mb-2 text-slate-400 uppercase">Savunma (npxGA) <span id="v_d_s" class="text-rose-400 font-bold">1.1</span></div>
-                        <input type="range" id="d_s" min="0.1" max="4" step="0.1" value="1.1" class="w-full accent-rose-500" oninput="u('d_s')">
-                    </div>
-                </div>
+def anomali_tespit_et(row):
+    # npxG ile Atılan Gol farkı (G-xG)
+    verimlilik = row['Atılan_Gol'] - row['npxG_Son5']
+    
+    # EĞER TAKIM ÇOK POZİSYONA GİRİP (xG yüksek) GOL ATAMIYORSA (G düşük)
+    if verimlilik < -3.0 and row['Saha_Baskısı'] > 60:
+        return "🚀 KRİTİK ANOMALİ: Gol Patlaması Bekleniyor (Şanssız Takım)"
+    
+    # EĞER TAKIM POZİSYON BULAMADAN (xG düşük) ÇOK GOL ATMIŞSA
+    elif verimlilik > 3.0:
+        return "⚠️ RİSK: Şans Faktörü Yüksek (Gerileme Bekleniyor)"
+    
+    return "✅ Stabil: Veriler normal."
 
-                <button onclick="analyze()" class="w-full mt-8 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-4 rounded-2xl shadow-xl shadow-cyan-900/20 transition-all active:scale-95">ANALİZİ ÇALIŞTIR</button>
-            </div>
+# Analizi Çalıştır
+df['Analiz_Notu'] = df.apply(anomali_tespit_et, axis=1)
 
-            <div id="res_panel" class="glass-card rounded-3xl p-6 opacity-50">
-                <h2 class="text-cyan-400 font-bold mb-6 text-xs tracking-widest uppercase border-b border-cyan-900/30 pb-2">📊 Analiz Raporu</h2>
-                
-                <div id="empty_msg" class="text-center py-20 text-slate-600 text-sm">Verileri girin ve butona basın.</div>
-                
-                <div id="data_ui" class="hidden space-y-6">
-                    <div>
-                        <p class="text-[10px] text-slate-500 uppercase mb-2">En Yüksek Olasılıklı Skorlar</p>
-                        <div id="score_results" class="space-y-2"></div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="p-3 bg-slate-900/50 rounded-xl border border-slate-800">
-                            <p class="text-[10px] text-slate-500 uppercase mb-1">KG VAR</p>
-                            <p id="kg_v" class="text-xl font-bold text-cyan-400 mono">%0</p>
-                        </div>
-                        <div class="p-3 bg-slate-900/50 rounded-xl border border-slate-800">
-                            <p class="text-[10px] text-slate-500 uppercase mb-1">2.5 ÜST</p>
-                            <p id="uo_25" class="text-xl font-bold text-cyan-400 mono">%0</p>
-                        </div>
-                    </div>
-
-                    <div class="space-y-3">
-                        <p class="text-[10px] text-slate-500 uppercase">Maç Sonucu İhtimalleri</p>
-                        <div class="space-y-2">
-                            <div class="flex justify-between text-xs mb-1"><span>1 (Ev)</span> <span id="p_1">%0</span></div>
-                            <div class="w-full bg-slate-800 h-1.5 rounded-full"><div id="b_1" class="bg-emerald-500 accent-bar" style="width: 0%"></div></div>
-                            <div class="flex justify-between text-xs mb-1"><span>X (Berabere)</span> <span id="p_x">%0</span></div>
-                            <div class="w-full bg-slate-800 h-1.5 rounded-full"><div id="b_x" class="bg-slate-400 accent-bar" style="width: 0%"></div></div>
-                            <div class="flex justify-between text-xs mb-1"><span>2 (Dep)</span> <span id="p_2">%0</span></div>
-                            <div class="w-full bg-slate-800 h-1.5 rounded-full"><div id="b_2" class="bg-rose-500 accent-bar" style="width: 0%"></div></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function u(id) { document.getElementById('v_'+id).innerText = document.getElementById(id).value; }
-        
-        function fact(n) { return n <= 1 ? 1 : n * fact(n - 1); }
-        function poisson(k, l) { return (Math.pow(l, k) * Math.exp(-l)) / fact(k); }
-
-        function analyze() {
-            const eh = parseFloat(document.getElementById('e_h').value), es = parseFloat(document.getElementById('e_s').value);
-            const dh = parseFloat(document.getElementById('d_h').value), ds = parseFloat(document.getElementById('d_s').value);
-            
-            const ev_exp = (eh + ds) / 2, dep_exp = (dh + es) / 2;
-            let m = { win: 0, draw: 0, lose: 0, kg: 0, over25: 0, scores: [] };
-
-            for(let i=0; i<6; i++) {
-                for(let j=0; j<6; j++) {
-                    let p = poisson(i, ev_exp) * poisson(j, dep_exp);
-                    if(i > j) m.win += p; else if(i === j) m.draw += p; else m.lose += p;
-                    if(i > 0 && j > 0) m.kg += p;
-                    if((i + j) > 2.5) m.over25 += p;
-                    m.scores.push({ s: `${i}-${j}`, p: p });
-                }
-            }
-
-            document.getElementById('res_panel').classList.remove('opacity-50');
-            document.getElementById('empty_msg').classList.add('hidden');
-            document.getElementById('data_ui').classList.remove('hidden');
-
-            // UI Güncelleme
-            const upd = (id, val) => {
-                document.getElementById('p_'+id).innerText = '%' + (val*100).toFixed(1);
-                document.getElementById('b_'+id).style.width = (val*100) + '%';
-            };
-            upd('1', m.win); upd('x', m.draw); upd('2', m.lose);
-            document.getElementById('kg_v').innerText = '%' + (m.kg*100).toFixed(1);
-            document.getElementById('uo_25').innerText = '%' + (m.over25*100).toFixed(1);
-
-            let sHTML = '';
-            m.scores.sort((a,b)=>b.p-a.p).slice(0,3).forEach(s => {
-                sHTML += `<div class="flex justify-between items-center bg-white/5 p-2 rounded-lg border border-white/5">
-                    <span class="mono font-bold text-lg">${s.s}</span>
-                    <span class="text-cyan-400 text-xs font-bold">% ${(s.p*100).toFixed(1)}</span>
-                </div>`;
-            });
-            document.getElementById('score_results').innerHTML = sHTML;
-        }
-    </script>
-</body>
-</html>
+# Sadece "değerli" olanları göster
+anomaliler = df[df['Analiz_Notu'] != "✅ Stabil: Veriler normal."]
+print(anomaliler[['Takım', 'Analiz_Notu']])

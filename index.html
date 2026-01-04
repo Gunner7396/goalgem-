@@ -3,104 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoalGem v2.4 - Keskin Analiz</title>
+    <title>GoalGem v2.5</title>
     <style>
-        :root { --bg: #0b0f1a; --card: #161b2a; --primary: #00a3ff; --text: #ffffff; --win: #28a745; --lose: #dc3545; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .app { width: 100%; max-width: 450px; }
-        header { text-align: center; margin-bottom: 25px; }
-        h1 { color: var(--primary); letter-spacing: 3px; margin: 0; font-size: 24px; }
-        .card { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
-        label { font-size: 9px; color: #888; display: block; text-align: center; margin-bottom: 5px; }
-        input { width: 100%; background: #0b0f1a; border: 1px solid #333; border-radius: 8px; padding: 10px 0; color: white; text-align: center; font-size: 14px; box-sizing: border-box; }
-        button { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        #result { display: none; margin-top: 20px; animation: fadeIn 0.5s; }
-        .index-box { text-align: right; margin-bottom: 15px; }
-        .index-val { font-size: 42px; font-weight: bold; color: var(--primary); }
-        .verdict { padding: 12px; border-radius: 10px; font-weight: bold; display: inline-block; margin-bottom: 15px; color: white; }
-        .analysis-text { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; line-height: 1.6; border-left: 4px solid var(--primary); font-size: 14px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        :root { --bg: #0b101a; --card: #1a202e; --primary: #00d2ff; --text: #ffffff; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; justify-content: center; }
+        .app { width: 100%; max-width: 400px; }
+        .card { background: var(--card); padding: 18px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); margin-bottom: 15px; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; }
+        label { font-size: 10px; color: #aaa; display: block; text-align: center; margin-bottom: 4px; }
+        input { width: 100%; background: #0b101a; border: 1px solid #333; border-radius: 6px; padding: 8px 0; color: white; text-align: center; font-size: 14px; }
+        button { width: 100%; background: var(--primary); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 18px; }
+        #result { display: none; margin-top: 15px; border-left: 4px solid var(--primary); }
+        .index-val { font-size: 36px; font-weight: bold; color: var(--primary); text-align: right; margin-bottom: 10px; }
+        .badge { padding: 8px 12px; border-radius: 6px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
     </style>
 </head>
 <body>
     <div class="app">
-        <header><h1>GOALGEM v2.4</h1></header>
+        <h2 style="text-align:center; color:var(--primary); letter-spacing:2px;">GOALGEM v2.5</h2>
         <div class="card">
-            <h3 style="color:#28a745; margin:0 0 15px 0; font-size:16px;">🏠 EV SAHİBİ</h3>
+            <h4 style="color:#4caf50; margin:0 0 10px 0;">EV SAHİBİ</h4>
             <div class="grid">
-                <div><label>npxG</label><input type="number" id="hG" step="0.1" placeholder="1.5"></div>
-                <div><label>npxGA</label><input type="number" id="hGA" step="0.1" placeholder="1.0"></div>
-                <div><label>BOX</label><input type="number" id="hB" placeholder="25"></div>
-                <div><label>OPP.B</label><input type="number" id="hOB" placeholder="15"></div>
+                <div><label>npxG</label><input type="number" id="hG" step="0.1"></div>
+                <div><label>npxGA</label><input type="number" id="hGA" step="0.1"></div>
+                <div><label>BOX</label><input type="number" id="hB"></div>
+                <div><label>OPP.B</label><input type="number" id="hOB"></div>
             </div>
-            <h3 style="color:#dc3545; margin:15px 0 15px 0; font-size:16px;">✈️ DEPLASMAN</h3>
+            <h4 style="color:#f44336; margin:10px 0 10px 0;">DEPLASMAN</h4>
             <div class="grid">
-                <div><label>npxG</label><input type="number" id="aG" step="0.1" placeholder="1.2"></div>
-                <div><label>npxGA</label><input type="number" id="aGA" step="0.1" placeholder="1.1"></div>
-                <div><label>BOX</label><input type="number" id="aB" placeholder="20"></div>
-                <div><label>OPP.B</label><input type="number" id="aOB" placeholder="18"></div>
+                <div><label>npxG</label><input type="number" id="aG" step="0.1"></div>
+                <div><label>npxGA</label><input type="number" id="aGA" step="0.1"></div>
+                <div><label>BOX</label><input type="number" id="aB"></div>
+                <div><label>OPP.B</label><input type="number" id="aOB"></div>
             </div>
-            <button onclick="analyze()">KESKİN ANALİZ YAP</button>
+            <button onclick="start()">BAŞLAT</button>
         </div>
         <div id="result" class="card">
-            <div class="index-box">
-                <span style="color:#888; font-size:12px;">MAÇ GÜÇ ENDEKSİ</span><br>
-                <span id="indexVal" class="index-val">0.00</span>
-            </div>
-            <div id="verdictBox" class="verdict"></div>
-            <div id="analysisBox" class="analysis-text"></div>
+            <div id="indexVal" class="index-val">0.0</div>
+            <div id="badge" class="badge"></div>
+            <div id="desc" style="font-size:14px; line-height:1.5;"></div>
         </div>
     </div>
-
     <script>
-        function analyze() {
-            const val = (id) => parseFloat(document.getElementById(id).value) || 0;
-            const h = { g: val('hG'), ga: val('hGA'), b: val('hB'), ob: val('hOB') };
-            const a = { g: val('aG'), ga: val('aGA'), b: val('aB'), ob: val('aOB') };
-
-            // Gelişmiş Güç Puanlaması
-            const hPower = (h.g * 2) + (h.b * 0.6) - (h.ga * 1.5) - (h.ob * 0.4);
-            const aPower = (a.g * 2) + (a.b * 0.6) - (a.ga * 1.5) - (a.ob * 0.4);
+        function start() {
+            const v = (id) => parseFloat(document.getElementById(id).value) || 0;
+            const h = { p: (v('hG') * 2) + (v('hB') * 0.5) - (v('hGA') * 1.5) - (v('hOB') * 0.3) };
+            const a = { p: (v('aG') * 2) + (v('aB') * 0.5) - (v('aGA') * 1.5) - (v('aOB') * 0.3) };
+            const diff = h.p - a.p;
+            const idx = (5 + diff).toFixed(1);
             
-            // Endeksi 0-10 arasına sabitleme denemesi
-            let diff = hPower - aPower;
-            let totalIndex = (5 + diff).toFixed(2);
-            if(totalIndex > 10) totalIndex = 10;
-            if(totalIndex < 0) totalIndex = 0;
+            let res = document.getElementById('result');
+            let b = document.getElementById('badge');
+            let d = document.getElementById('desc');
             
-            let verdict = ""; let color = "#ffc107"; let text = "";
+            document.getElementById('indexVal').innerText = "ENDEKS: " + idx;
+            res.style.display = 'block';
 
-            // Taraf Karar Mekanizması
-            if (totalIndex >= 7.0) {
-                verdict = "MS 1 / MUTLAK FAVORİ"; color = "#28a745";
-                text = "Ev sahibi istatistiksel olarak rakibini domine ediyor. BOX verisi sahadaki baskının kanıtı. Net galibiyet beklenir.";
-            } else if (totalIndex <= 3.0) {
-                verdict = "MS 2 / MUTLAK FAVORİ"; color = "#dc3545";
-                text = "Deplasman ekibi her alanda daha üstün. Ev sahibi savunmasının bu baskıya dayanması zor görünüyor.";
-            } else if (totalIndex > 5.5 && totalIndex < 7.0) {
-                verdict = "MS 1 VEYA 1X"; color = "#218838";
-                text = "Ev sahibi avantajlı tarafta. Oyun üstünlüğü onlarda ancak risk almamak için çifte şans düşünülebilir.";
-            } else if (totalIndex > 3.0 && totalIndex < 4.5) {
-                verdict = "MS 2 VEYA X2"; color = "#c82333";
-                text = "Deplasman ekibi bir adım önde. Daha kaliteli bir oyun sergiliyorlar, yenilmezler seçeneği ideal.";
+            if (idx >= 6.5) {
+                b.innerText = "MS 1 / FAVORİ"; b.style.background = "#4caf50";
+                d.innerText = "Ev sahibi istatistiksel olarak üstün. Baskılı oyun galibiyeti getirecektir.";
+            } else if (idx <= 3.5) {
+                b.innerText = "MS 2 / FAVORİ"; b.style.background = "#f44336";
+                d.innerText = "Deplasman ekibi verilerde çok daha güçlü. Deplasman galibiyeti ön planda.";
             } else {
-                verdict = "DENGELİ / RİSKLİ"; color = "#ffc107";
-                text = "Metrikler birbirine çok yakın. İki takımın da birbirini tarttığı, KG VAR ihtimalinin yüksek olduğu bir mücadele.";
+                b.innerText = "DENGELİ / KG VAR"; b.style.background = "#ff9800";
+                d.innerText = "İki takım da birbirine yakın güçte. Karşılıklı gol ihtimali taraf bahsinden daha güvenli.";
             }
-
-            // Gol Beklentisi Ek Analizi
-            const goals = h.g + a.g + ((h.b + a.b) / 35);
-            if (goals < 2.0) text += " Düşük tempo ve savunma ağırlıklı bir maç sebebiyle 2.5 ALT ön planda.";
-            else if (goals > 3.2) text += " Yüksek hücum üretkenliği ile 2.5 ÜST barajı aşılabilir.";
-
-            document.getElementById('indexVal').innerText = totalIndex;
-            document.getElementById('verdictBox').innerText = verdict;
-            document.getElementById('verdictBox').style.background = color;
-            document.getElementById('analysisBox').innerText = text;
-            document.getElementById('result').style.display = 'block';
         }
     </script>
 </body>
 </html>
-

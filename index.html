@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GoalGem v6.0 - Final Master</title>
+    <title>GoalGem v6.0 - Master</title>
     <style>
         :root { --bg: #05070a; --card: #111622; --primary: #00a3ff; --success: #28a745; --danger: #dc3545; --text: #ffffff; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
@@ -15,7 +15,7 @@
         label { font-size: 9px; color: #94a3b8; margin-bottom: 3px; font-weight: bold; text-transform: uppercase; }
         button { width: 100%; background: linear-gradient(135deg, #00a3ff, #0066ff); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; }
         .res-box { display: none; }
-        .score-display { text-align: center; padding: 15px 0; }
+        .score-display { text-align: center; padding: 15px 0; border-bottom: 1px solid #1f2937; margin-bottom: 15px; }
         .score-num { font-size: 72px; font-weight: 900; letter-spacing: -3px; line-height: 1; }
         .stat-row { margin-bottom: 10px; }
         .stat-label { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px; color: #94a3b8; font-weight: bold; }
@@ -26,7 +26,7 @@
 </head>
 <body>
     <div class="app">
-        <h2 style="text-align:center; color: var(--primary); font-size: 16px; letter-spacing:2px; margin-bottom:15px;">GOALGEM v6.0 MASTER</h2>
+        <h2 style="text-align:center; color: var(--primary); font-size: 16px; letter-spacing:2px;">GOALGEM v6.0 MASTER</h2>
         <div class="card">
             <textarea id="rawInput" placeholder="Verileri buraya yapıştır..."></textarea>
             <button onclick="deepScan()" style="background:#1e293b; font-size:10px; margin-bottom:12px; height: 35px;">VERİLERİ AYIKLA</button>
@@ -47,7 +47,7 @@
                 <div><label>BOX</label><input type="text" id="aB"></div>
                 <div><label>TILT</label><input type="text" id="aT"></div>
             </div>
-            <button onclick="analyze()" style="margin-top:15px;">FINAL MASTER ANALİZ</button>
+            <button onclick="analyze()" style="margin-top:15px;">ANALİZİ BAŞLAT</button>
         </div>
 
         <div id="res" class="card res-box">
@@ -55,12 +55,21 @@
                 <div class="score-num"><span id="hScr">0</span> - <span id="aScr">0</span></div>
             </div>
             <div class="stat-row">
-                <div class="stat-label"><span>HÜCUM KESKİNLİĞİ</span><span id="hAtkVal">0%</span></div>
+                <div class="stat-label"><span>EV HÜCUM KESKİNLİĞİ</span><span id="hAtkVal">0%</span></div>
                 <div class="bar-bg"><div id="hAtkBar" class="bar-fill" style="background:var(--success);"></div></div>
             </div>
             <div class="stat-row">
-                <div class="stat-label"><span>SAVUNMA VERİMLİLİĞİ</span><span id="hDefVal">0%</span></div>
+                <div class="stat-label"><span>EV SAVUNMA VERİMLİLİĞİ</span><span id="hDefVal">0%</span></div>
                 <div class="bar-bg"><div id="hDefBar" class="bar-fill" style="background:var(--primary);"></div></div>
+            </div>
+            <div style="height:10px;"></div>
+            <div class="stat-row">
+                <div class="stat-label"><span>DEP. HÜCUM KESKİNLİĞİ</span><span id="aAtkVal">0%</span></div>
+                <div class="bar-bg"><div id="aAtkBar" class="bar-fill" style="background:var(--danger);"></div></div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label"><span>DEP. SAVUNMA VERİMLİLİĞİ</span><span id="aDefVal">0%</span></div>
+                <div class="bar-bg"><div id="aDefBar" class="bar-fill" style="background:var(--primary);"></div></div>
             </div>
             <div id="insight" class="insight-box"></div>
         </div>
@@ -86,18 +95,18 @@
         function analyze() {
             const v = (id) => parseFloat(document.getElementById(id).value.replace(',', '.')) || 0;
             
-            // 1. SAVUNMA VERİMLİLİĞİ (Senin Tespit Ettiğin INTR-TILT Dengesi)
+            // 1. SAVUNMA VERİMLİLİĞİ (INTR-TILT Dengesi)
             const calcDef = (intr, tilt, xga) => {
-                let opp = 100 - tilt;
-                let efficiency = (intr / (opp + 5)) * 10;
+                let opportunity = 100 - tilt; 
+                let efficiency = (intr / (opportunity + 5)) * 10;
                 return Math.min(100, (efficiency * 3) + (tilt * 0.4) - (xga * 8));
             };
 
-            // 2. HÜCUM KESKİNLİĞİ (SCA'yı BOX ile süzüyoruz)
+            // 2. HÜCUM KESKİNLİĞİ (SCA vs BOX Filtresi)
             const calcAtk = (xg, sca, box, tilt) => {
-                let boxQuality = box / (sca + 1); // Şutların ne kadarı ceza sahası içinden?
-                let weightedSca = sca * boxQuality * 0.8; 
-                return (xg * 22) + (weightedSca) + (tilt * 0.2);
+                let boxRatio = box / (sca + 1); 
+                let weightedSca = sca * boxRatio * 0.8;
+                return Math.min(100, (xg * 22) + (weightedSca) + (tilt * 0.2));
             };
 
             let hAtk = calcAtk(v('hG'), v('hS'), v('hB'), v('hT'));
@@ -112,25 +121,29 @@
                 document.getElementById(id+'Val').innerText = d + '%';
             };
             updateBar('hAtk', hAtk); updateBar('hDef', hDef);
+            updateBar('aAtk', aAtkPwr = aAtk); updateBar('aDef', aDef);
 
-            // 3. FİNAL SKOR (Master Logic)
-            const getScore = (atk, oppDef, ownXG) => {
+            // 3. SKOR MANTIĞI
+            const getScore = (atk, oppDef, ownXG, oppXGA) => {
                 let score = (atk / 25) - (oppDef / 45);
-                if (ownXG < 0.75 && oppDef > 45) return 0;
-                return Math.max(0, Math.min(4, Math.round(score)));
+                if (ownXG < 0.8 && oppDef > 40 && oppXGA < 1.0) return 0; // Gerçekçi Sıfırlama
+                if (score < 0.9) return 0;
+                if (score < 1.8) return 1;
+                if (score < 2.8) return 2;
+                return Math.min(4, Math.round(score));
             };
 
-            let fH = getScore(hAtk, aDef, v('hG'));
-            let fA = getScore(aAtk, hDef, v('aG'));
+            let fH = getScore(hAtk, aDef, v('hG'), v('hGA'));
+            let fA = getScore(aAtk, hDef, v('aG'), v('aGA'));
 
             document.getElementById('res').style.display = 'block';
             document.getElementById('hScr').innerText = fH;
             document.getElementById('aScr').innerText = fA;
 
             document.getElementById('insight').innerHTML = `
-                <b>SENARYO:</b> ${fH > fA ? 'Ev Sahibi Üstünlüğü' : (fA > fH ? 'Deplasman Baskısı' : 'Kilit Maç')}<br>
-                <b>GÜVEN:</b> %${Math.round(Math.abs(hAtk-aAtk) + 50)}<br>
-                <b>ANALİZ:</b> ${hDef > 60 && aAtk < 40 ? 'Savunma duvarı aşılamadı.' : 'Hücumlar meyvesini verdi.'}
+                <b>SENARYO:</b> ${fH > fA ? 'Hücum Baskısı Sonuç Verdi' : (fA > fH ? 'Deplasman Dominasyonu' : 'Taktiksel Kilit Maç')}<br>
+                <b>TAHMİN:</b> ${fH > fA ? 'MS 1' : (fA > fH ? 'MS 2' : 'X')} | <b>KG:</b> ${fH > 0 && fA > 0 ? 'VAR' : 'YOK'}<br>
+                <b>NOT:</b> ${hDef > 65 ? 'Ev sahibi savunma verimliliği çok yüksek.' : 'Açık bir mücadele beklenebilir.'}
             `;
         }
     </script>

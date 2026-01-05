@@ -3,148 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Analiz Motoru v2.0 - 10 Metrik</title>
+    <title>Analiz Motoru | Pro Edition</title>
     <style>
-        :root { --primary: #1a1a2e; --accent: #e94560; --success: #0f3460; --bg: #16213e; --text: #e94560; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 20px; }
-        .container { max-width: 1300px; margin: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .card { background: var(--primary); padding: 20px; border-radius: 15px; border: 1px solid #16213e; }
-        h2 { border-bottom: 2px solid var(--accent); padding-bottom: 10px; color: #fff; text-align: center; }
-        .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .metric-group { background: #16213e; padding: 10px; border-radius: 8px; }
-        .metric-label { display: flex; justify-content: space-between; font-weight: bold; font-size: 12px; color: #aaa; }
-        .val { color: var(--accent); font-size: 14px; }
-        input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--accent); }
-        .controls { grid-column: 1 / -1; text-align: center; margin: 30px 0; }
-        button { padding: 15px 40px; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; margin: 0 10px; }
-        .btn-analyze { background: var(--accent); color: white; box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4); }
-        .btn-reset { background: #4e4e4e; color: white; }
-        .result-panel { grid-column: 1 / -1; background: #0f3460; padding: 30px; border-radius: 20px; text-align: center; border: 2px solid var(--accent); display: none; }
-        .coach-box { margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-left: 5px solid var(--accent); text-align: left; line-height: 1.6; }
-        .history-section { grid-column: 1 / -1; margin-top: 30px; }
-        table { width: 100%; border-collapse: collapse; background: var(--primary); border-radius: 10px; overflow: hidden; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #16213e; }
-        th { background: #0f3460; color: var(--accent); }
+        :root { 
+            --bg: #0a0f1e; --card: #161d31; --accent: #38bdf8; --text: #e2e8f0; 
+            --danger: #ff4d4d; --success: #22c55e; --border: #2d364d; 
+        }
+        body { 
+            font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); 
+            color: var(--text); margin: 0; padding: 20px; line-height: 1.5; 
+        }
+        .container { max-width: 1200px; margin: auto; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        
+        /* Modern Kart Tasarımı */
+        .card { 
+            background: var(--card); padding: 25px; border-radius: 20px; 
+            border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+        }
+        h1, h2 { color: var(--accent); letter-spacing: -0.5px; }
+        h2 { border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-top: 0; }
+
+        /* Metrik Ayarları */
+        .metric-group { margin-bottom: 18px; }
+        .label-row { display: flex; justify-content: space-between; font-size: 13px; color: #94a3b8; margin-bottom: 8px; }
+        .val-badge { color: var(--accent); font-weight: 700; background: rgba(56, 189, 248, 0.1); padding: 2px 10px; border-radius: 6px; }
+        input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--accent); height: 6px; border-radius: 5px; }
+        input[type="text"] { 
+            width: 100%; background: #0a0f1e; border: 1px solid var(--border); 
+            color: white; padding: 12px; border-radius: 10px; margin-bottom: 20px; box-sizing: border-box;
+        }
+
+        /* İşlem Alanı */
+        .btn-group { grid-column: 1 / -1; text-align: center; margin: 40px 0; }
+        button { 
+            padding: 16px 35px; border-radius: 12px; border: none; font-weight: 700; 
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-transform: uppercase;
+        }
+        .btn-run { background: var(--accent); color: #0a0f1e; box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3); }
+        .btn-run:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5); }
+        .btn-clear { background: transparent; color: var(--danger); border: 1px solid var(--danger); margin-left: 15px; }
+        .btn-clear:hover { background: var(--danger); color: white; }
+
+        /* Sonuç Paneli */
+        .result-panel { 
+            grid-column: 1 / -1; background: linear-gradient(135deg, #161d31 0%, #0a0f1e 100%); 
+            padding: 40px; border-radius: 24px; border: 1px solid var(--accent); 
+            text-align: center; display: none; position: relative; overflow: hidden;
+        }
+        .score-display { font-size: 72px; font-weight: 900; color: white; margin: 20px 0; text-shadow: 0 0 20px rgba(56, 189, 248, 0.5); }
+        .coach-note { 
+            background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; 
+            border-left: 5px solid var(--accent); text-align: left; max-width: 800px; margin: 20px auto; 
+        }
+
+        /* Geçmiş Tablosu */
+        .history-section { grid-column: 1 / -1; margin-top: 50px; }
+        table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid var(--border); }
+        th, td { padding: 18px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: #1c253d; color: var(--accent); text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+        tr:hover { background: rgba(56, 189, 248, 0.02); }
+        .btn-del { background: rgba(255, 77, 77, 0.1); color: var(--danger); padding: 8px 15px; border-radius: 8px; border: 1px solid var(--danger); font-size: 11px; }
+        .btn-del:hover { background: var(--danger); color: white; }
     </style>
 </head>
 <body>
 
-<h1 style="text-align:center; margin-bottom: 30px;">⚽ STRATEJİK ANALİZ MOTORU <small>v2.0</small></h1>
-
 <div class="container">
-    <div class="card">
-        <h2>🏠 EV SAHİBİ</h2>
-        <input type="text" id="h-name" placeholder="Takım Adı" style="width:96%; padding:10px; margin-bottom:20px; border-radius:5px; border:none;">
-        
-        <div class="metric-grid">
-            <div class="metric-group"><div class="metric-label">npxG <span class="val" id="h-v1">1.5</span></div><input type="range" id="h-npxG" min="0" max="4" step="0.1" value="1.5"></div>
-            <div class="metric-group"><div class="metric-label">SCA <span class="val" id="h-v2">15</span></div><input type="range" id="h-SCA" min="0" max="40" value="15"></div>
-            <div class="metric-group"><div class="metric-label">BOX <span class="val" id="h-v3">20</span></div><input type="range" id="h-BOX" min="0" max="50" value="20"></div>
-            <div class="metric-group"><div class="metric-label">Field Tilt % <span class="val" id="h-v4">50</span></div><input type="range" id="h-Tilt" min="0" max="100" value="50"></div>
-            <div class="metric-group"><div class="metric-label">ProgP <span class="val" id="h-v5">35</span></div><input type="range" id="h-ProgP" min="0" max="80" value="35"></div>
-            <div class="metric-group"><div class="metric-label">npxGA <span class="val" id="h-v6">1.2</span></div><input type="range" id="h-npxGA" min="0" max="4" step="0.1" value="1.2"></div>
-            <div class="metric-group"><div class="metric-label">PPDA <span class="val" id="h-v7">12.0</span></div><input type="range" id="h-PPDA" min="5" max="25" step="0.5" value="12"></div>
-            <div class="metric-group"><div class="metric-label">OPP.B <span class="val" id="h-v8">10</span></div><input type="range" id="h-OPPB" min="0" max="40" value="10"></div>
-            <div class="metric-group"><div class="metric-label">Deep A. <span class="val" id="h-v9">5</span></div><input type="range" id="h-DeepA" min="0" max="20" value="5"></div>
-            <div class="metric-group"><div class="metric-label">Interceptions <span class="val" id="h-v10">15</span></div><input type="range" id="h-Int" min="0" max="40" value="15"></div>
+    <h1 style="text-align:center; font-size: 2.5rem; margin-bottom: 10px;">⚽ STRATEJİK ANALİZ <span style="font-weight: 300; opacity: 0.8;">MOTORU</span></h1>
+    <p style="text-align: center; color: #94a3b8; margin-bottom: 40px;">Kademeli Bariyer ve Artan Marjinal Zorluk Algoritması v5.0</p>
+
+    <div class="grid">
+        <div class="card">
+            <h2>🏠 EV SAHİBİ</h2>
+            <input type="text" id="h-name" placeholder="Takım Adı Girin...">
+            <div id="h-sliders"></div>
         </div>
-    </div>
 
-    <div class="card">
-        <h2>✈️ DEPLASMAN</h2>
-        <input type="text" id="a-name" placeholder="Takım Adı" style="width:96%; padding:10px; margin-bottom:20px; border-radius:5px; border:none;">
-        
-        <div class="metric-grid">
-            <div class="metric-group"><div class="metric-label">npxG <span class="val" id="a-v1">1.5</span></div><input type="range" id="a-npxG" min="0" max="4" step="0.1" value="1.5"></div>
-            <div class="metric-group"><div class="metric-label">SCA <span class="val" id="a-v2">15</span></div><input type="range" id="a-SCA" min="0" max="40" value="15"></div>
-            <div class="metric-group"><div class="metric-label">BOX <span class="val" id="a-v3">20</span></div><input type="range" id="a-BOX" min="0" max="50" value="20"></div>
-            <div class="metric-group"><div class="metric-label">Field Tilt % <span class="val" id="a-v4">50</span></div><input type="range" id="a-Tilt" min="0" max="100" value="50"></div>
-            <div class="metric-group"><div class="metric-label">ProgP <span class="val" id="a-v5">35</span></div><input type="range" id="a-ProgP" min="0" max="80" value="35"></div>
-            <div class="metric-group"><div class="metric-label">npxGA <span class="val" id="a-v6">1.2</span></div><input type="range" id="a-npxGA" min="0" max="4" step="0.1" value="1.2"></div>
-            <div class="metric-group"><div class="metric-label">PPDA <span class="val" id="a-v7">12.0</span></div><input type="range" id="a-PPDA" min="5" max="25" step="0.5" value="12"></div>
-            <div class="metric-group"><div class="metric-label">OPP.B <span class="val" id="a-v8">10</span></div><input type="range" id="a-OPPB" min="0" max="40" value="10"></div>
-            <div class="metric-group"><div class="metric-label">Deep A. <span class="val" id="a-v9">5</span></div><input type="range" id="a-DeepA" min="0" max="20" value="5"></div>
-            <div class="metric-group"><div class="metric-label">Interceptions <span class="val" id="a-v10">15</span></div><input type="range" id="a-Int" min="0" max="40" value="15"></div>
+        <div class="card">
+            <h2>✈️ DEPLASMAN</h2>
+            <input type="text" id="a-name" placeholder="Takım Adı Girin...">
+            <div id="a-sliders"></div>
         </div>
-    </div>
 
-    <div class="controls">
-        <button class="btn-analyze" onclick="analizEt()">STRATEJİYİ ÇARPIŞTIR</button>
-        <button class="btn-reset" onclick="formuTemizle()">SIFRLA</button>
-    </div>
+        <div class="btn-group">
+            <button class="btn-run" onclick="runAnalysis()">Analiz Et ve Kaydet</button>
+            <button class="btn-clear" onclick="clearHistory()">Geçmişi Temizle</button>
+        </div>
 
-    <div class="result-panel" id="result-panel">
-        <h2 id="match-header">EV vs DEPLASMAN</h2>
-        <div style="font-size: 60px; font-weight: bold; color: var(--accent);" id="final-score">0.00 - 0.00</div>
-        <div class="coach-box" id="coach-box"></div>
-    </div>
+        <div class="result-panel" id="result-panel">
+            <div id="res-title" style="font-size: 1.4rem; color: #94a3b8; font-weight: 500;"></div>
+            <div class="score-display" id="res-score">0.00 - 0.00</div>
+            <div class="coach-note" id="res-coach"></div>
+        </div>
 
-    <div class="history-section">
-        <h3>📝 Analiz Kayıtları</h3>
-        <table id="history-table">
-            <thead><tr><th>Maç</th><th>Tahmin</th><th>Baş Antrenör Notu</th></tr></thead>
-            <tbody></tbody>
-        </table>
+        <div class="history-section">
+            <h2 style="border:none;">📜 ANALİZ ARŞİVİ</h2>
+            <table id="history-table">
+                <thead>
+                    <tr>
+                        <th>TARİH / SAAT</th>
+                        <th>KARŞILAŞMA</th>
+                        <th>BEKLENEN SKOR TAHMİNİ</th>
+                        <th>İŞLEM</th>
+                    </tr>
+                </thead>
+                <tbody id="history-body"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-    // Dinamik Değer Gösterimi
-    document.querySelectorAll('input[type="range"]').forEach(slider => {
-        slider.addEventListener('input', (e) => {
-            e.target.previousElementSibling.querySelector('.val').innerText = e.target.value;
+    const metricsConfig = [
+        { id: 'npxG', label: 'npxG (Gol Beklentisi)', min: 0, max: 4, step: 0.1, def: 1.5 },
+        { id: 'sca', label: 'SCA (Şut Yaratan Aksiyon)', min: 0, max: 40, step: 1, def: 15 },
+        { id: 'box', label: 'BOX (C.Saha Etkinliği)', min: 0, max: 50, step: 1, def: 20 },
+        { id: 'tilt', label: 'Field Tilt (Hakimiyet %)', min: 0, max: 100, step: 1, def: 50 },
+        { id: 'prog', label: 'ProgP (Dikine Pas)', min: 0, max: 80, step: 1, def: 30 },
+        { id: 'npxga', label: 'npxGA (Savunma Zaafı)', min: 0, max: 4, step: 0.1, def: 1.2 },
+        { id: 'ppda', label: 'PPDA (Pres Şiddeti)', min: 5, max: 25, step: 0.5, def: 12 },
+        { id: 'deep', label: 'Deep A. (Sızma Koşusu)', min: 0, max: 20, step: 1, def: 5 },
+        { id: 'oppb', label: 'Opp. Box (Rakip Giriş)', min: 0, max: 40, step: 1, def: 10 },
+        { id: 'int', label: 'Interceptions (Pas Arası)', min: 0, max: 40, step: 1, def: 15 }
+    ];
+
+    function init() {
+        ['h', 'a'].forEach(p => {
+            const container = document.getElementById(`${p}-sliders`);
+            metricsConfig.forEach(m => {
+                container.innerHTML += `
+                    <div class="metric-group">
+                        <div class="label-row"><span>${m.label}</span><span class="val-badge" id="${p}-v-${m.id}">${m.def}</span></div>
+                        <input type="range" id="${p}-${m.id}" min="${m.min}" max="${m.max}" step="${m.step}" value="${m.def}" 
+                               oninput="document.getElementById('${p}-v-${m.id}').innerText = this.value">
+                    </div>`;
+            });
         });
-    });
+        loadHistory();
+    }
 
-    function analizEt() {
-        const getData = (p) => ({
-            name: document.getElementById(`${p}-name`).value || (p === 'h' ? 'Ev Sahibi' : 'Deplasman'),
-            npxG: parseFloat(document.getElementById(`${p}-npxG`).value),
-            sca: parseFloat(document.getElementById(`${p}-SCA`).value),
-            box: parseFloat(document.getElementById(`${p}-BOX`).value),
-            tilt: parseFloat(document.getElementById(`${p}-Tilt`).value),
-            progP: parseFloat(document.getElementById(`${p}-ProgP`).value),
-            npxGA: parseFloat(document.getElementById(`${p}-npxGA`).value),
-            ppda: parseFloat(document.getElementById(`${p}-PPDA`).value),
-            oppb: parseFloat(document.getElementById(`${p}-OPPB`).value),
-            deepA: parseFloat(document.getElementById(`${p}-DeepA`).value),
-            int: parseFloat(document.getElementById(`${p}-Int`).value)
-        });
+    function runAnalysis() {
+        const hName = document.getElementById('h-name').value || "Ev Sahibi";
+        const aName = document.getElementById('a-name').value || "Deplasman";
+        const getVal = (p, id) => parseFloat(document.getElementById(`${p}-${id}`).value);
 
-        const h = getData('h'); const a = getData('a');
+        const calculateGoal = (p, opp) => {
+            let score = 0;
+            // SENİN İSTEDİĞİN MANTIK: Her gol bir öncekinden daha nitelikli veri ister
+            
+            // 1. GOL BARAJI (Gereksinim: 1.1 birim - npxG ve SCA ağırlıklı)
+            let power1 = (getVal(p, 'npxG') * 0.75) + (getVal(p, 'sca') * 0.04);
+            if (power1 >= 1.1) {
+                score = 1.0;
+                let power2 = (getVal(p, 'tilt') * 0.45) + (getVal(p, 'box') * 0.55);
+                
+                // 2. GOL BARAJI (Gereksinim: +1.4 birim - Hakimiyet Şartı)
+                if (power2 >= 60) {
+                    score = 2.0;
+                    let power3 = (getVal(p, 'prog') * 0.5) + (getVal(opp, 'deep') * 0.5);
+                    
+                    // 3. GOL BARAJI (Gereksinim: +1.8 birim - Rakip Çözülmesi Şartı)
+                    if (power3 >= 50) score = 3.0;
+                    else score += (power3 / 50) * 0.5; // Kalan gücü 'zorluk cezasıyla' ekle
+                } else score += (power2 / 60) * 0.65;
+            } else score = (power1 / 1.1) * 0.8;
 
-        // ÇARPIŞTIRMA MOTORU (Optimize Edilmiş)
-        let h_score = (h.npxG * 1.15) * (a.npxGA / 1.2); 
-        let a_score = (a.npxG * 0.85) * (h.npxGA / 1.2);
+            return p === 'h' ? score * 1.1 : score * 0.9;
+        };
 
-        // Pekiştirme: A'nın hücumu iyi, B'nin savunması kötüyse (Dediğin Senaryo)
-        if(h.npxG > 2 && a.npxGA > 2) h_score *= 1.25;
-        if(a.npxG > 2 && h.npxGA > 2) a_score *= 1.25;
+        const resH = calculateGoal('h', 'a').toFixed(2);
+        const resA = calculateGoal('a', 'h').toFixed(2);
+        const result = `${resH} - ${resA}`;
 
-        // Antrenör Yorum Mantığı
-        let coachMsg = "";
-        if(h.tilt > 60 && a.deepA > 10) {
-            coachMsg = "<b>Hocam Analizim Şudur:</b> Rakibi sahasına hapsettik (High Tilt). Rakip savunma arkasına sızmalara (Deep A.) çok müsait. Dikine paslarla (ProgP) fişi çekebiliriz. Ancak kontra atağa dikkat!";
-        } else if (a.npxG > h.npxG && a.tilt < 45) {
-            coachMsg = "<b>Taktiksel Uyarı:</b> Deplasman takımı tam bir 'pusu' futbolu oynuyor. Topu bize bıraktılar ama bitiricilikleri (npxG) çok keskin. Savunma güvenliğini elden bırakmamalıyız.";
-        } else {
-            coachMsg = "<b>Maç Dengede:</b> İki takım da birbirini kilitliyor. PPDA değerleri yoğun presi gösteriyor. Duran top veya bir yerleşim hatası tabelayı değiştirir.";
-        }
-
-        // Sonuçları Yansıt
         document.getElementById('result-panel').style.display = 'block';
-        document.getElementById('match-header').innerText = `${h.name} vs ${a.name}`;
-        document.getElementById('final-score').innerText = `${h_score.toFixed(2)} - ${a_score.toFixed(2)}`;
-        document.getElementById('coach-box').innerHTML = coachMsg;
+        document.getElementById('res-title').innerText = `${hName} vs ${aName}`;
+        document.getElementById('res-score').innerText = result;
+        document.getElementById('res-coach').innerHTML = `<strong>ANALİST RAPORU:</strong> Makine, her golü ayrı bir bariyer olarak değerlendirdi. Skor 1.0'dan sonra vites değiştirerek alan hakimiyetini (Tilt) sorguladı. Veriler doğrusal değil, stratejik ağırlıklı hesaplandı.`;
 
-        // Geçmişe Ekle
-        const newRow = `<tr><td>${h.name} vs ${a.name}</td><td><b>${h_score.toFixed(2)} - ${a_score.toFixed(2)}</b></td><td><small>${coachMsg}</small></td></tr>`;
-        document.querySelector('#history-table tbody').insertAdjacentHTML('afterbegin', newRow);
+        saveMatch(hName, aName, result);
     }
 
-    function formuTemizle() {
-        location.reload(); // En temiz sıfırlama yöntemi
+    function saveMatch(h, a, res) {
+        let history = JSON.parse(localStorage.getItem('futbol_db') || '[]');
+        history.unshift({ id: Date.now(), match: `${h} vs ${a}`, score: res, time: new Date().toLocaleString('tr-TR') });
+        localStorage.setItem('futbol_db', JSON.stringify(history));
+        loadHistory();
     }
+
+    function loadHistory() {
+        let history = JSON.parse(localStorage.getItem('futbol_db') || '[]');
+        document.getElementById('history-body').innerHTML = history.map(item => `
+            <tr>
+                <td style="font-size: 13px; color: #94a3b8;">${item.time}</td>
+                <td style="font-weight: 600;">${item.match}</td>
+                <td style="font-size: 20px; font-weight: 900; color: var(--accent);">${item.score}</td>
+                <td><button class="btn-del" onclick="deleteItem(${item.id})">KAYDI SİL</button></td>
+            </tr>
+        `).join('');
+    }
+
+    function deleteItem(id) {
+        let history = JSON.parse(localStorage.getItem('futbol_db'));
+        history = history.filter(i => i.id !== id);
+        localStorage.setItem('futbol_db', JSON.stringify(history));
+        loadHistory();
+    }
+
+    function clearHistory() {
+        if(confirm("Tüm arşivi kalıcı olarak silmek istediğinizden emin misiniz?")) {
+            localStorage.removeItem('futbol_db');
+            loadHistory();
+        }
+    }
+
+    init();
 </script>
 </body>
 </html>

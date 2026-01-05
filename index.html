@@ -2,116 +2,85 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Score Pro - Ultra Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GoalGem v4.1 - Mobil Smart</title>
     <style>
-        :root { --bg: #030712; --accent: #3b82f6; --text: #f8fafc; --card: #111827; --progress-bg: #1e293b; --success: #10b981; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 15px; margin: 0; }
-        .dashboard { max-width: 480px; margin: auto; }
-        .card { background: var(--card); border: 1px solid #1f2937; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
-        h3 { color: var(--accent); font-size: 11px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .input-box { background: #030712; padding: 6px 10px; border-radius: 10px; border: 1px solid #374151; }
-        label { display: block; font-size: 9px; color: #94a3b8; margin-bottom: 2px; }
-        input { width: 100%; background: transparent; border: none; color: white; font-weight: bold; outline: none; font-size: 14px; }
-        
-        /* Analiz Butonu */
-        .btn-run { width: 100%; padding: 18px; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; border-radius: 15px; font-weight: 800; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
-        
-        /* Estetik Sonuç Çubuğu */
-        #results { margin-top: 20px; display: none; border: 2px solid var(--accent); }
-        .result-item { margin-bottom: 20px; }
-        .label-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; font-weight: bold; }
-        .progress-container { width: 100%; height: 12px; background: var(--progress-bg); border-radius: 10px; overflow: hidden; }
-        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #3b82f6, #10b981); transition: width 1s ease-in-out; }
-        
-        .advice-text { font-size: 13px; color: #fbbf24; margin-top: 10px; font-style: italic; }
+        :root { --bg: #0b0f1a; --card: #161b2a; --primary: #00a3ff; --text: #ffffff; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
+        .app { width: 100%; max-width: 400px; margin: auto; }
+        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #232d45; }
+        /* Mobil Uyumlu Yapıştırma Alanı */
+        textarea { width: 100%; height: 60px; background: #050810; border: 1px dashed var(--primary); color: #00a3ff; border-radius: 8px; padding: 10px; font-size: 12px; margin-bottom: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+        input { width: 100%; background: #0b0f1a; border: 1px solid #333; border-radius: 4px; padding: 8px 0; color: white; text-align: center; font-size: 12px; -webkit-appearance: none; }
+        label { font-size: 7px; color: #888; text-align: center; display: block; font-weight: bold; margin-bottom: 2px; }
+        button { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .result-box { display: none; text-align: center; border-top: 4px solid var(--primary); animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-
-<div class="dashboard">
-    <div style="text-align:center; padding: 10px 0;">
-        <h2 style="margin:0; letter-spacing: 2px;">AI SCORE <span style="color:var(--accent)">PRO</span></h2>
-    </div>
-
-    <div class="card">
-        <h3>🏠 Hücum (10 Metrik)</h3>
-        <div class="grid" id="hFields"></div>
-    </div>
-
-    <div class="card">
-        <h3>🛡️ Savunma (10 Metrik)</h3>
-        <div class="grid" id="aFields"></div>
-    </div>
-
-    <button class="btn-run" onclick="deepAnalyze()">ANALİZİ BAŞLAT</button>
-
-    <div id="results" class="card">
-        <div class="result-item">
-            <div class="label-row">
-                <span>2.5 ÜST OLASILIĞI</span>
-                <span id="txtOver">%0</span>
+    <div class="app">
+        <h3 style="text-align:center; color:var(--primary); margin: 10px 0;">GOALGEM v4.1 MOBİL</h3>
+        
+        <div class="card">
+            <textarea id="rawInput" placeholder="Mobilden kopyaladığın tabloyu buraya yapıştır..."></textarea>
+            <button onclick="smartParse()" style="background:#1f2937; padding:10px; font-size:12px; height:auto; margin-bottom:10px;">VERİLERİ AYIKLA</button>
+            
+            <div id="manualFields">
+                <h5 style="color:#28a745; margin:5px 0;">🏠 EV SAHİBİ</h5>
+                <div class="grid">
+                    <div><label>npxG</label><input type="number" id="hG" step="0.1"></div>
+                    <div><label>SCA</label><input type="number" id="hS"></div>
+                    <div><label>BOX</label><input type="number" id="hB"></div>
+                    <div><label>TILT</label><input type="number" id="hT"></div>
+                    <div><label>INTR</label><input type="number" id="hIN"></div>
+                </div>
+                
+                <h5 style="color:#dc3545; margin:15px 0 5px 0;">✈️ DEPLASMAN</h5>
+                <div class="grid">
+                    <div><label>npxG</label><input type="number" id="aG" step="0.1"></div>
+                    <div><label>SCA</label><input type="number" id="aS"></div>
+                    <div><label>BOX</label><input type="number" id="aB"></div>
+                    <div><label>TILT</label><input type="number" id="aT"></div>
+                    <div><label>INTR</label><input type="number" id="aIN"></div>
+                </div>
             </div>
-            <div class="progress-container">
-                <div id="barOver" class="progress-bar"></div>
-            </div>
+            <button onclick="analyze()" style="margin-top:20px;">ANALİZ ET</button>
         </div>
 
-        <div class="result-item">
-            <div class="label-row">
-                <span>KG VAR OLASILIĞI</span>
-                <span id="txtKG">%0</span>
-            </div>
-            <div class="progress-container">
-                <div id="barKG" class="progress-bar" style="background: linear-gradient(90deg, #f59e0b, #ef4444);"></div>
-            </div>
+        <div id="res" class="card result-box">
+            <div id="tag" style="font-size:14px; font-weight:bold; margin-bottom:5px;"></div>
+            <div id="scr" style="font-size:40px; font-weight:bold; color:var(--primary); margin:10px 0;"></div>
+            <p id="desc" style="font-size:12px; color:#aaa;"></p>
         </div>
-        
-        <div id="advice" class="advice-text"></div>
     </div>
-</div>
 
-<script>
-    const hMetrics = ["npxG", "SCA", "PPA", "PrgP", "TouchesBox", "SoT", "G_per_Sh", "SuccDrib", "DeepComp", "Crosses"];
-    const aMetrics = ["xGA", "PSxG", "Tkl_Perc", "Blocks", "Int", "Clearances", "Errors", "AirWon", "Def3rdTkl", "SavePerc"];
+    <script>
+        function smartParse() {
+            const text = document.getElementById('rawInput').value;
+            // Mobilde kopyalanan karmaşık metindeki tüm sayıları bulur
+            const nums = text.match(/\d+(\.\d+)?/g);
+            if (nums && nums.length >= 10) {
+                const ids = ['hG','hS','hB','hT','hIN','aG','aS','aB','aT','aIN'];
+                ids.forEach((id, i) => document.getElementById(id).value = nums[i]);
+                alert("Veriler başarıyla yerleştirildi!");
+            } else {
+                alert("Hata: Kopyalanan metinde yeterli sayı bulunamadı.");
+            }
+        }
 
-    function init() {
-        hMetrics.forEach(m => document.getElementById('hFields').innerHTML += `<div class="input-box"><label>${m}</label><input type="number" class="h-val" value="0" step="0.01"></div>`);
-        aMetrics.forEach(m => document.getElementById('aFields').innerHTML += `<div class="input-box"><label>${m}</label><input type="number" class="a-val" value="0" step="0.01"></div>`);
-    }
-    init();
+        function analyze() {
+            const v = (id) => parseFloat(document.getElementById(id).value) || 0;
+            // 5+5 Takım Bütünlüğü Algoritması
+            const hP = (v('hG')*2.5) + (v('hB')*0.4) + (v('hS')*0.2) + (v('hT')*0.1) - ( (v('aG')*1.5) - (v('aIN')*0.1) );
+            const aP = (v('aG')*2.5) + (v('aB')*0.4) + (v('aS')*0.2) + (v('aT')*0.1) - ( (v('hG')*1.5) - (v('hIN')*0.1) );
 
-    function deepAnalyze() {
-        const h = Array.from(document.querySelectorAll('.h-val')).map(i => parseFloat(i.value) || 0);
-        const a = Array.from(document.querySelectorAll('.a-val')).map(i => parseFloat(i.value) || 0);
-
-        // MOTOR HESAPLAMASI (Ağırlıklı)
-        let attackPower = (h[0] * 0.45) + (h[5] * 0.3) + (h[1] * 0.25);
-        let defenseWeakness = (a[0] * 0.5) + (a[6] * 0.5);
-        
-        let lambda = (attackPower + defenseWeakness) / 2;
-        let lambda_dep = a[0] * 0.7; // Temsili deplasman gücü
-
-        // Poisson
-        function p(k, l) { return (Math.exp(-l) * Math.pow(l, k)) / (k === 0 ? 1 : k === 1 ? 1 : 2); } // Basit 0,1,2 faktöriyel
-
-        let over25 = (1 - (p(0, lambda+lambda_dep) + p(1, lambda+lambda_dep) + p(2, lambda+lambda_dep))) * 100;
-        let kg_var = (1 - Math.exp(-lambda)) * (1 - Math.exp(-lambda_dep)) * 100;
-
-        // Görselleştirme
-        document.getElementById('results').style.display = 'block';
-        
-        // Çubukları doldur
-        setTimeout(() => {
-            document.getElementById('barOver').style.width = over25.toFixed(1) + "%";
-            document.getElementById('barKG').style.width = kg_var.toFixed(1) + "%";
-            document.getElementById('txtOver').innerText = "%" + over25.toFixed(1);
-            document.getElementById('txtKG').innerText = "%" + kg_var.toFixed(1);
-        }, 100);
-
-        document.getElementById('advice').innerText = over25 > 65 ? "✨ Güçlü Sinyal: Maç yüksek skor potansiyeli taşıyor." : "ℹ️ Sistem bu maç için dengeli bir skor öngörüyor.";
-    }
-</script>
+            document.getElementById('res').style.display = 'block';
+            document.getElementById('scr').innerText = `${Math.round(Math.abs(hP/2))}-${Math.round(Math.abs(aP/2))}`;
+            document.getElementById('tag').innerText = hP > aP ? "MS 1 ÖNGÖRÜSÜ" : "MS 2 ÖNGÖRÜSÜ";
+            document.getElementById('desc').innerText = "Kolektif takım verileri işlendi.";
+        }
+    </script>
 </body>
 </html>

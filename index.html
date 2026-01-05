@@ -1,34 +1,149 @@
-<div class="card" style="grid-column: span 2; background: #1e293b; border: 1px dashed var(--accent);">
-    <h4>HIZLI VERİ AKTARIMI</h4>
-    <textarea id="bulkData" placeholder="Siteden kopyaladığın veri bloğunu buraya yapıştır..." 
-              style="width:100%; height:60px; background:#000; color:#00ff88; border-radius:8px; padding:10px; font-size:12px;"></textarea>
-    <div style="display:flex; gap:10px; margin-top:10px;">
-        <button onclick="veriyiIsle('e_')" style="background:#3b82f6; padding:10px;">EV SAHİBİNE AKTAR</button>
-        <button onclick="veriyiIsle('d_')" style="background:#ef4444; padding:10px;">DEPLASMANA AKTAR</button>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analiz Motoru Pro v5.0</title>
+    <style>
+        :root { --accent: #00ff88; --bg: #050a0f; --card: #111827; --ev: #3b82f6; --dep: #ef4444; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #f3f4f6; margin: 0; padding: 10px; font-size: 13px; }
+        .container { max-width: 600px; margin: auto; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .card { background: var(--card); padding: 12px; border-radius: 12px; border: 1px solid #1f2937; position: relative; }
+        h4 { text-align: center; margin: 0 0 10px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Hızlı Veri Girişi */
+        .bulk-box { grid-column: span 2; background: #1e293b; border: 1px dashed var(--accent); padding: 10px; border-radius: 12px; margin-bottom: 10px; }
+        textarea { width: 100%; height: 50px; background: #000; color: var(--accent); border: none; border-radius: 8px; padding: 8px; box-sizing: border-box; font-size: 11px; outline: none; }
+        
+        /* İnputlar */
+        label { display: block; font-size: 9px; color: #9ca3af; margin-top: 5px; }
+        input { width: 100%; background: #000; border: 1px solid #374151; color: #fff; padding: 7px; border-radius: 6px; box-sizing: border-box; font-weight: bold; }
+        
+        /* Butonlar */
+        .btn-group { display: flex; gap: 5px; margin-top: 8px; }
+        .btn-sm { flex: 1; padding: 8px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 10px; color: white; }
+        .main-btn { width: 100%; padding: 18px; background: var(--accent); border: none; border-radius: 12px; color: #000; font-weight: 900; margin-top: 15px; font-size: 16px; box-shadow: 0 0 20px rgba(0,255,136,0.2); }
+        
+        /* Sonuç Paneli */
+        #sonuc { margin-top: 15px; display: none; animation: slideUp 0.4s ease-out; }
+        .skor-box { background: linear-gradient(145deg, #111827, #1f2937); padding: 20px; border-radius: 20px; text-align: center; border: 1px solid var(--accent); }
+        .skor { font-size: 48px; font-weight: 900; color: #fff; letter-spacing: -2px; margin: 10px 0; }
+        .prob-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 15px; }
+        .prob-item { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; }
+        .prob-val { display: block; color: var(--accent); font-size: 16px; font-weight: 800; }
+        .not-box { margin-top: 15px; padding: 10px; background: rgba(0,255,136,0.05); border-radius: 8px; font-size: 12px; border-left: 3px solid var(--accent); text-align: left; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="bulk-box">
+        <textarea id="bulkData" placeholder="Siteden kopyaladığın sayıları buraya yapıştır..."></textarea>
+        <div class="btn-group">
+            <button class="btn-sm" style="background:var(--ev)" onclick="aktar('e_')">EV'E AKTAR</button>
+            <button class="btn-sm" style="background:var(--dep)" onclick="aktar('d_')">DEP'E AKTAR</button>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="card" style="border-top: 3px solid var(--ev)">
+            <h4>EV SAHİBİ</h4>
+            <label>npxG</label><input type="number" id="e_npxg" value="1.5">
+            <label>SCA / BOX</label>
+            <div style="display:flex;gap:2px"><input type="number" id="e_sca" value="20"><input type="number" id="e_box" value="25"></div>
+            <label>Tilt% / ProgP</label>
+            <div style="display:flex;gap:2px"><input type="number" id="e_tilt" value="50"><input type="number" id="e_progp" value="40"></div>
+            <label>npxGA / PPDA</label>
+            <div style="display:flex;gap:2px"><input type="number" id="e_npxga" value="1.2"><input type="number" id="e_ppda" value="12"></div>
+            <label>OPP.B / DeepA / Int.</label>
+            <div style="display:flex;gap:2px"><input type="number" id="e_oppb" value="15"><input type="number" id="e_deepa" value="5"><input type="number" id="e_inter" value="12"></div>
+        </div>
+
+        <div class="card" style="border-top: 3px solid var(--dep)">
+            <h4>DEPLASMAN</h4>
+            <label>npxG</label><input type="number" id="d_npxg" value="1.2">
+            <label>SCA / BOX</label>
+            <div style="display:flex;gap:2px"><input type="number" id="d_sca" value="18"><input type="number" id="d_box" value="20"></div>
+            <label>Tilt% / ProgP</label>
+            <div style="display:flex;gap:2px"><input type="number" id="d_tilt" value="50"><input type="number" id="d_progp" value="35"></div>
+            <label>npxGA / PPDA</label>
+            <div style="display:flex;gap:2px"><input type="number" id="d_npxga" value="1.4"><input type="number" id="d_ppda" value="14"></div>
+            <label>OPP.B / DeepA / Int.</label>
+            <div style="display:flex;gap:2px"><input type="number" id="d_oppb" value="18"><input type="number" id="d_deepa" value="7"><input type="number" id="d_inter" value="10"></div>
+        </div>
+    </div>
+
+    <button class="main-btn" onclick="hesaplaMaster()">ÇARPIŞTIR VE ANALİZ ET</button>
+
+    <div id="sonuc">
+        <div class="skor-box">
+            <div style="font-size:11px; color:#9ca3af; text-transform:uppercase">Tahmini Skor Sonucu</div>
+            <div class="skor" id="skorOut">0.0 - 0.0</div>
+            
+            <div class="prob-grid">
+                <div class="prob-item">2.5 ÜST <span class="prob-val" id="ustP">-%</span></div>
+                <div class="prob-item">KG VAR <span class="prob-val" id="kgvP">-%</span></div>
+                <div class="prob-item">TARAF <span class="prob-val" id="tarafP">-%</span></div>
+            </div>
+
+            <div class="not-box" id="yorumOut"></div>
+        </div>
     </div>
 </div>
 
 <script>
-function veriyiIsle(prefix) {
-    const rawData = document.getElementById('bulkData').value;
-    // Metin içindeki sayıları (ondalıklı dahil) bulur
-    const numbers = rawData.match(/\d+(\.\d+)?/g);
+function aktar(prefix) {
+    const raw = document.getElementById('bulkData').value;
+    const nums = raw.match(/\d+(\.\d+)?/g);
+    if (!nums || nums.length < 10) return alert("Hata: En az 10 sayı kopyalamalısın!");
+    const ids = ['npxg', 'sca', 'box', 'tilt', 'progp', 'npxga', 'ppda', 'oppb', 'deepa', 'inter'];
+    ids.forEach((id, i) => document.getElementById(prefix + id).value = nums[i]);
+    document.getElementById('bulkData').value = "";
+}
+
+function hesaplaMaster() {
+    const v = (id) => parseFloat(document.getElementById(id).value);
     
-    if (!numbers || numbers.length < 10) {
-        alert("Yetersiz veri! En az 10 sayısal değer bulunmalı.");
-        return;
+    function kuvvet(p, r) {
+        let huc = (v(p+'npxg') * 0.45) + (v(p+'box') * 0.03) + (v(p+'sca') * 0.02);
+        // Interception düzeltmesi: Tilt %55 üzerindeyse pas arası düşüklüğü zayıflık değildir
+        let intVal = v(r+'inter');
+        if (v(r+'tilt') > 55) intVal *= 1.4;
+        
+        let sav = (v(r+'npxga') * 0.40) + (v(r+'oppb') * 0.03) + (v(r+'deepa') * 0.02) + ((15/intVal) * 0.01);
+        
+        // Çarpıştırma
+        let res = (huc * 0.65) + (sav * 0.35);
+        
+        // Absürt skor törpüsü (Logaritmik sınırlama)
+        return res > 2.0 ? (2.0 + Math.log10(res - 1)) : res;
     }
 
-    // Sırasıyla metrik kutularına yerleştirir (FBref tablo sırasına göre ayarlanabilir)
-    const metricIds = ['npxg', 'sca', 'box', 'tilt', 'progp', 'npxga', 'ppda', 'oppb', 'deepa', 'inter'];
+    let eSkor = kuvvet('e_', 'd_') * 1.05;
+    let dSkor = kuvvet('d_', 'e_');
     
-    metricIds.forEach((id, index) => {
-        if (numbers[index]) {
-            document.getElementById(prefix + id).value = numbers[index];
-        }
-    });
+    // Olasılıklar
+    let kgv = (1 - Math.exp(-eSkor)) * (1 - Math.exp(-dSkor)) * 100;
+    let ust = (1 - Math.exp(-(eSkor + dSkor) * 0.65)) * 100;
     
-    document.getElementById('bulkData').value = ""; // Kutuyu temizle
-    alert("Veriler başarıyla eşleşti!");
+    // UI Güncelleme
+    document.getElementById('sonuc').style.display = 'block';
+    document.getElementById('skorOut').innerText = eSkor.toFixed(1) + " - " + dSkor.toFixed(1);
+    document.getElementById('kgvP').innerText = "%" + Math.min(92, kgv * 1.3).toFixed(0);
+    document.getElementById('ustP').innerText = "%" + Math.min(94, ust * 1.2).toFixed(0);
+    
+    let taraf = eSkor > dSkor + 0.4 ? "1" : (dSkor > eSkor + 0.4 ? "2" : "X");
+    document.getElementById('tarafP').innerText = taraf;
+
+    // Yorum Motoru
+    let yorum = "<b>Analiz:</b> ";
+    if (v('e_progp') > 45 && v('d_deepa') > 8) yorum += "Ev sahibi savunma arkasına çok rahat sızabilir. ";
+    if (eSkor + dSkor < 2.0) yorum += "İki takımın savunma disiplini hücumları kilitliyor. ";
+    if (v('e_tilt') > 60 && v('d_ppda') > 15) yorum += "Tek kale maç senaryosu; deplasman kapanacaktır. ";
+    document.getElementById('yorumOut').innerHTML = yorum;
 }
 </script>
+</body>
+</html>

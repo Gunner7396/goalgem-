@@ -1,107 +1,71 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GoalGem v5.1 - Defense Shield</title>
-    <style>
-        :root { --bg: #05070a; --card: #111622; --primary: #00a3ff; --success: #28a745; --danger: #dc3545; --text: #ffffff; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
-        .app { width: 100%; max-width: 420px; margin: auto; }
-        .card { background: var(--card); padding: 18px; border-radius: 16px; margin-bottom: 12px; border: 1px solid #1f2937; }
-        textarea { width: 100%; height: 60px; background: #000; border: 1px dashed var(--primary); color: var(--primary); border-radius: 10px; padding: 10px; font-size: 11px; margin-bottom: 10px; box-sizing: border-box; outline: none; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
-        .input-group { display: flex; flex-direction: column; align-items: center; }
-        input { width: 100%; background: #1a2234; border: 1px solid #334155; border-radius: 6px; padding: 10px 0; color: white; text-align: center; font-size: 14px; font-weight: bold; }
-        label { font-size: 9px; color: #94a3b8; margin-bottom: 4px; font-weight: bold; }
-        button { width: 100%; background: linear-gradient(135deg, #00a3ff, #0066ff); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; }
-        .res-box { display: none; text-align: center; border-top: 4px solid var(--primary); }
-        .score-row { display: flex; justify-content: center; align-items: center; gap: 30px; margin: 20px 0; }
-        .score-num { font-size: 64px; font-weight: 900; }
-    </style>
-</head>
-<body>
-    <div class="app">
-        <h2 style="text-align:center; color: var(--primary); font-size: 18px; letter-spacing:1px;">GOALGEM v5.1 PRO</h2>
-        <div class="card">
-            <textarea id="rawInput" placeholder="Verileri yapıştır (xG, xGA, SCA, BOX, TILT, INTR)"></textarea>
-            <button onclick="deepScan()" style="background:#1e293b; font-size:11px; margin-bottom:15px; border: 1px solid #334155; padding:10px;">VERİLERİ EŞLEŞTİR</button>
-            
-            <h5 style="color:var(--success); margin: 0 0 10px 0;">🏠 EV SAHİBİ</h5>
-            <div class="grid">
-                <div class="input-group"><label>npxG</label><input type="text" id="hG"></div>
-                <div class="input-group"><label>xGA</label><input type="text" id="hGA"></div>
-                <div class="input-group"><label>SCA</label><input type="text" id="hS"></div>
-                <div class="input-group"><label>BOX</label><input type="text" id="hB"></div>
-                <div class="input-group"><label>TILT</label><input type="text" id="hT"></div>
-                <div class="input-group"><label>INTR</label><input type="text" id="hIN"></div>
-            </div>
-            
-            <h5 style="color:var(--danger); margin: 15px 0 10px 0;">✈️ DEPLASMAN</h5>
-            <div class="grid">
-                <div class="input-group"><label>npxG</label><input type="text" id="aG"></div>
-                <div class="input-group"><label>xGA</label><input type="text" id="aGA"></div>
-                <div class="input-group"><label>SCA</label><input type="text" id="aS"></div>
-                <div class="input-group"><label>BOX</label><input type="text" id="aB"></div>
-                <div class="input-group"><label>TILT</label><input type="text" id="aT"></div>
-                <div class="input-group"><label>INTR</label><input type="text" id="aIN"></div>
-            </div>
-            <button onclick="analyze()" style="margin-top:20px;">HESAPLA & ANALİZ ET</button>
-        </div>
+<style>
+    .insight-card { background: #05070a; padding: 12px; border-radius: 10px; margin-top: 15px; border-left: 3px solid var(--primary); }
+    .tag { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
+    .tag-blue { background: rgba(0, 163, 255, 0.2); color: var(--primary); }
+    .tag-green { background: rgba(40, 167, 69, 0.2); color: var(--success); }
+    .confidence-meter { height: 4px; background: #1a2234; border-radius: 2px; margin-top: 5px; }
+    .confidence-fill { height: 100%; background: var(--primary); width: 0%; transition: width 1.5s; }
+</style>
 
-        <div id="res" class="card res-box">
-            <div class="score-row"><div class="score-num" id="hScr">0</div><div style="font-size: 30px; opacity: 0.2;">-</div><div class="score-num" id="aScr">0</div></div>
-            <div id="advice" style="background:#05070a; padding:15px; border-radius:10px; font-size:14px; text-align:left; border-left: 4px solid var(--primary);"></div>
+<div id="res" class="card res-box">
+    <div class="score-display">
+        <div class="score-num"><span id="hScr">0</span> - <span id="aScr">0</span></div>
+        <div id="scenarioTag" class="tag tag-blue">Analiz Ediliyor...</div>
+    </div>
+    
+    <div id="statBars"></div> 
+
+    <div class="insight-card">
+        <div style="font-size: 11px; color: #94a3b8;">TAHMİN GÜVEN ENDEKSİ</div>
+        <div class="confidence-meter"><div id="confFill" class="confidence-fill"></div></div>
+        
+        <div style="margin-top:15px;">
+            <div id="mainPick" style="font-weight: 800; font-size: 15px; color: #fff;"></div>
+            <div id="sidePick" style="font-size: 12px; color: #94a3b8; margin-top: 4px;"></div>
         </div>
     </div>
+</div>
 
-    <script>
-        function deepScan() {
-            const text = document.getElementById('rawInput').value.toLowerCase();
-            const extract = (str, key) => {
-                const regex = new RegExp(`(\\d+[.,]?\\d*)\\s*${key}`, 'i');
-                const match = str.match(regex);
-                return match ? match[1].replace(',', '.') : '0';
-            };
-            const parts = text.split('|');
-            const fields = ['G','GA','S','B','T','IN'];
-            const keys = ['xg','xga','sca','box','tilt','inter'];
-            fields.forEach((f, i) => {
-                document.getElementById('h'+f).value = extract(parts[0] || '', keys[i]);
-                document.getElementById('a'+f).value = extract(parts[1] || '', keys[i]);
-            });
-        }
+<script>
+function analyze() {
+    // ... (v5.5'teki hücum/savunma hesaplama kodları burada devam eder) ...
+    const v = (id) => parseFloat(document.getElementById(id).value.replace(',', '.')) || 0;
+    let hAtk = (v('hG') * 20) + (v('hS') * 0.8) + (v('hB') * 0.5);
+    let aAtk = (v('aG') * 20) + (v('aS') * 0.8) + (v('aB') * 0.5);
+    let hDef = (v('hIN') * 2.5) + (v('hT') * 0.5) - (v('hGA') * 5);
+    let aDef = (v('aIN') * 2.5) + (v('aT') * 0.5) - (v('aGA') * 5);
 
-        function analyze() {
-            const v = (id) => parseFloat(document.getElementById(id).value.replace(',', '.')) || 0;
-            
-            // 1. KATMAN: HÜCUM POTANSİYELİ
-            let hAtk = (v('hG') * 0.7) + (v('hS') * 0.1) + (v('hB') * 0.1);
-            let aAtk = (v('aG') * 0.7) + (v('aS') * 0.1) + (v('aB') * 0.1);
-            
-            // 2. KATMAN: SAVUNMA FİLTRESİ (xGA + INTR + TILT)
-            // xGA, savunmanın kesiciliği (INTR) ve hakimiyeti (TILT) ile bölünür.
-            let hDefMod = (v('hGA') * 0.5) / (1 + (v('hIN') * 0.05) + (v('hT') * 0.01));
-            let aDefMod = (v('aGA') * 0.5) / (1 + (v('aIN') * 0.05) + (v('aT') * 0.01));
+    // 1. Senaryo Belirleme
+    let scenario = "";
+    if (Math.abs(hAtk - aAtk) < 15) scenario = "Dengeli Mücadele";
+    else if (hAtk > aAtk + 30) scenario = "Ev Sahibi Dominasyonu";
+    else if (aAtk > hAtk + 30) scenario = "Deplasman Baskısı";
+    else scenario = "Taktiksel Savaş";
+    document.getElementById('scenarioTag').innerText = scenario;
 
-            // 3. KATMAN: FİNAL SKOR SİMÜLASYONU
-            let resH = Math.round(hAtk - aDefMod);
-            let resA = Math.round(aAtk - hDefMod);
+    // 2. Güven Endeksi (xG farkı ve Defans gücüne göre)
+    let confidence = Math.min(95, Math.abs(hAtk - aAtk) + (hDef / 2));
+    document.getElementById('confFill').style.width = confidence + "%";
 
-            // Realite Kilidi
-            resH = Math.max(0, Math.min(4, resH));
-            resA = Math.max(0, Math.min(4, resA));
+    // 3. Skor ve Tahmin Mantığı
+    let fH = Math.round((hAtk / 22) - (aDef / 45));
+    let fA = Math.round((aAtk / 22) - (hDef / 45));
+    // Sınırlandırmalar
+    fH = Math.max(0, Math.min(4, fH)); fA = Math.max(0, Math.min(4, fA));
+    
+    document.getElementById('hScr').innerText = fH;
+    document.getElementById('aScr').innerText = fA;
 
-            document.getElementById('res').style.display = 'block';
-            document.getElementById('hScr').innerText = resH;
-            document.getElementById('aScr').innerText = resA;
-            
-            document.getElementById('advice').innerHTML = `
-                <b style="color:#00a3ff">PROFESYONEL ÖNGÖRÜ:</b><br>
-                <span>Maç Sonucu: ${resH > resA ? 'MS 1' : (resA > resH ? 'MS 2' : 'BERABERLİK')}</span><br>
-                <span>Tahmin: ${resH+resA > 2.5 ? '2.5 ÜST' : '2.5 ALT'}</span>
-            `;
-        }
-    </script>
-</body>
-</html>
+    // Profesyonel Tavsiyeler
+    let pick = (fH > fA) ? "MS 1" : (fA > fH ? "MS 2" : "KG VAR / X");
+    document.getElementById('mainPick').innerText = "ANA TERCİH: " + pick;
+    
+    let side = "";
+    if (v('hT') > 60 || v('aT') > 60) side = "Korner Bahisleri Uygundur";
+    else if (fH + fA < 2) side = "2.5 Alt / Kısır Maç";
+    else side = "Karşılıklı Gol Şansı Yüksek";
+    document.getElementById('sidePick').innerText = "EKSTRA: " + side;
+
+    document.getElementById('res').style.display = 'block';
+}
+</script>

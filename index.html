@@ -1,50 +1,132 @@
-<script>
-    function analyze() {
-        const v = (id) => parseFloat(document.getElementById(id).value.replace(',', '.')) || 0;
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GoalGem v4.4 - Elite</title>
+    <style>
+        :root { --bg: #05070a; --card: #111622; --primary: #00a3ff; --success: #28a745; --danger: #dc3545; --text: #ffffff; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
+        .app { width: 100%; max-width: 420px; margin: auto; }
+        .card { background: var(--card); padding: 18px; border-radius: 16px; margin-bottom: 12px; border: 1px solid #1f2937; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        textarea { width: 100%; height: 70px; background: #000; border: 1px dashed var(--primary); color: var(--primary); border-radius: 10px; padding: 10px; font-size: 12px; margin-bottom: 10px; box-sizing: border-box; }
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+        input { width: 100%; background: #1a2234; border: 1px solid #334155; border-radius: 6px; padding: 10px 0; color: white; text-align: center; font-size: 13px; font-weight: bold; }
+        label { font-size: 8px; color: #94a3b8; text-align: center; display: block; margin-bottom: 4px; text-transform: uppercase; }
+        button { width: 100%; background: linear-gradient(135deg, #00a3ff, #0066ff); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
         
-        // GÜÇ HESAPLAMA (v4.3 Keskinleştirilmiş)
-        const hP = (v('hG')*2.5) + (v('hB')*0.4) + (v('hS')*0.2) + (v('hT')*0.1);
-        const aP = (v('aG')*2.5) + (v('aB')*0.4) + (v('aS')*0.2) + (v('aT')*0.1);
+        /* ANALİZ PANELİ */
+        .res-box { display: none; animation: fadeIn 0.4s ease; }
+        .score-row { display: flex; justify-content: center; align-items: center; gap: 30px; margin: 20px 0; }
+        .score-num { font-size: 56px; font-weight: 900; background: linear-gradient(to bottom, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .prob-bar { width: 100%; height: 14px; background: #1a2234; border-radius: 20px; overflow: hidden; display: flex; margin: 15px 0; border: 1px solid #334155; }
+        .prob-h { background: var(--success); transition: 1s; }
+        .prob-a { background: var(--danger); transition: 1s; }
+        .badge { display: inline-block; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <h2 style="text-align:center; letter-spacing: 3px; font-size: 20px; color: var(--primary);">GOALGEM ELITE <span style="font-size: 10px; vertical-align: middle; opacity: 0.6;">v4.4</span></h2>
         
-        const hD = (v('hGA')*1.5 || 1.2) - (v('hIN')*0.1); // Savunma direnci
-        const aD = (v('aGA')*1.5 || 1.2) - (v('aIN')*0.1);
+        <div class="card">
+            <textarea id="rawInput" placeholder="Veri bloğunu buraya yapıştır..."></textarea>
+            <button onclick="deepScan()" style="background:#1e293b; padding:10px; font-size:11px; margin-bottom:15px; border: 1px solid #334155;">VERİLERİ AYIKLA</button>
+            
+            <h5 style="color:var(--success); margin: 0 0 10px 0; display:flex; align-items:center; gap:5px;">🏠 EV SAHİBİ</h5>
+            <div class="grid">
+                <div><label>npxG</label><input type="text" id="hG"></div>
+                <div><label>SCA</label><input type="text" id="hS"></div>
+                <div><label>BOX</label><input type="text" id="hB"></div>
+                <div><label>TILT</label><input type="text" id="hT"></div>
+                <div><label>INTR</label><input type="text" id="hIN"></div>
+            </div>
+            
+            <h5 style="color:var(--danger); margin: 20px 0 10px 0; display:flex; align-items:center; gap:5px;">✈️ DEPLASMAN</h5>
+            <div class="grid">
+                <div><label>npxG</label><input type="text" id="aG"></div>
+                <div><label>SCA</label><input type="text" id="aS"></div>
+                <div><label>BOX</label><input type="text" id="aB"></div>
+                <div><label>TILT</label><input type="text" id="aT"></div>
+                <div><label>INTR</label><input type="text" id="aIN"></div>
+            </div>
+            <button onclick="analyze()" style="margin-top:25px;">HESAPLA & ANALİZ ET</button>
+        </div>
 
-        // SKOR SİMÜLASYONU (Ham puanı gerçek skora çevirir)
-        let hScore = Math.round((hP / (aD + 2)) * 0.8);
-        let aScore = Math.round((aP / (hD + 2)) * 0.8);
-        
-        // Olasılık Hesaplama
-        const total = hP + aP;
-        const hWinProb = Math.round((hP / total) * 100);
-        const aWinProb = 100 - hWinProb;
+        <div id="res" class="card res-box">
+            <div id="outcome" class="badge"></div>
+            <div class="score-row">
+                <div class="score-num" id="hScr">0</div>
+                <div style="font-size: 30px; opacity: 0.3;">-</div>
+                <div class="score-num" id="aScr">0</div>
+            </div>
+            <div class="prob-bar">
+                <div id="barH" class="prob-h"></div>
+                <div id="barA" class="prob-a"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold; color:#94a3b8; margin-bottom:15px;">
+                <span id="percH">EV %50</span>
+                <span id="percA">DEP %50</span>
+            </div>
+            <div id="advice" style="background:#05070a; padding:12px; border-radius:10px; font-size:13px; line-height:1.5; text-align:left; border-left: 4px solid var(--primary);"></div>
+        </div>
+    </div>
 
-        document.getElementById('res').style.display = 'block';
-        document.getElementById('scr').innerHTML = `
-            <div style="font-size:16px; color:#888; margin-bottom:10px;">BEKLENEN SKOR</div>
-            <div style="display:flex; justify-content:center; align-items:center; gap:20px;">
-                <span style="color:#28a745">${hScore}</span>
-                <span style="color:#444">-</span>
-                <span style="color:#dc3545">${aScore}</span>
-            </div>
-        `;
-        
-        document.getElementById('tag').innerHTML = `
-            <div style="width:100%; background:#1f2937; height:12px; border-radius:10px; overflow:hidden; display:flex; margin-bottom:10px;">
-                <div style="width:${hWinProb}%; background:#28a745;"></div>
-                <div style="width:${aWinProb}%; background:#dc3545;"></div>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:12px;">
-                <span>EV: %${hWinProb}</span>
-                <span>DEP: %${aWinProb}</span>
-            </div>
-        `;
+    <script>
+        function deepScan() {
+            const text = document.getElementById('rawInput').value.toLowerCase();
+            const extract = (str, key) => {
+                const regex = new RegExp(`(\\d+[.,]?\\d*)\\s*${key}`, 'i');
+                const match = str.match(regex);
+                return match ? match[1].replace(',', '.') : '0';
+            };
+            const parts = text.includes('|') ? text.split('|') : [text, ''];
+            
+            const fields = ['G','S','B','T','IN'];
+            const keys = ['xg','sca','box','tilt','inter'];
+            
+            fields.forEach((f, i) => {
+                document.getElementById('h'+f).value = extract(parts[0], keys[i]);
+                if(parts[1]) document.getElementById('a'+f).value = extract(parts[1], keys[i]);
+            });
+        }
 
-        document.getElementById('desc').innerHTML = `
-            <div style="margin-top:15px; border-top:1px solid #333; padding-top:10px;">
-                <b>TAHMİN:</b> ${hScore > aScore ? 'Ev Sahibi Galibiyeti' : (aScore > hScore ? 'Deplasman Galibiyeti' : 'Beraberlik / KG Var')} <br>
-                <b>GÜVEN:</b> %${Math.abs(hWinProb - 50) + 50} <br>
-                <small style="color:#555;">*Kolektif veriler ışığında maçın muhtemel senaryosudur.</small>
-            </div>
-        `;
-    }
-</script>
+        function analyze() {
+            const v = (id) => parseFloat(document.getElementById(id).value) || 0;
+            
+            // 11 Kişilik Kolektif Güç Algoritması
+            const hPower = (v('hG')*2.2) + (v('hB')*0.3) + (v('hS')*0.15) + (v('hT')*0.05);
+            const aPower = (v('aG')*2.2) + (v('aB')*0.3) + (v('aS')*0.15) + (v('aT')*0.05);
+            
+            // Savunma Direnci (Interceptions ve npxG Karşılaması)
+            const hResist = 2.5 + (v('hIN') * 0.1);
+            const aResist = 2.5 + (v('aIN') * 0.1);
+
+            // Gerçekçi Skor Simülasyonu (Limitli)
+            let hFinal = Math.min(5, Math.floor(hPower / (aResist * 0.8)));
+            let aFinal = Math.min(5, Math.floor(aPower / (hResist * 0.8)));
+
+            // Olasılıklar
+            const total = hPower + aPower;
+            const hPerc = Math.round((hPower / total) * 100);
+            const aPerc = 100 - hPerc;
+
+            document.getElementById('res').style.display = 'block';
+            document.getElementById('hScr').innerText = hFinal;
+            document.getElementById('aScr').innerText = aFinal;
+            document.getElementById('barH').style.width = hPerc + '%';
+            document.getElementById('barA').style.width = aPerc + '%';
+            document.getElementById('percH').innerText = `EV %${hPerc}`;
+            document.getElementById('percA').innerText = `DEP %${aPerc}`;
+
+            let out = document.getElementById('outcome');
+            let adv = document.getElementById('advice');
+
+            if(hPerc > 60) { out.innerText = "MS 1"; out.style.background = "var(--success)"; adv.innerHTML = "<b>ANALİZ:</b> Ev sahibi kolektif baskıda çok üstün. <br><b>TAVSİYE:</b> Maç Sonucu 1 veya 1.5 Üst."; }
+            else if(aPerc > 60) { out.innerText = "MS 2"; out.style.background = "var(--danger)"; adv.innerHTML = "<b>ANALİZ:</b> Deplasman ekibi geçiş oyununda daha etkili. <br><b>TAVSİYE:</b> Maç Sonucu 2 veya Deplasman 0.5 Üst."; }
+            else { out.innerText = "KG VAR / X"; out.style.background = "#eab308"; adv.innerHTML = "<b>ANALİZ:</b> İki takım da dengeli bir üretim içinde. <br><b>TAVSİYE:</b> Karşılıklı Gol Var veya 2.5 Alt."; }
+        }
+    </script>
+</body>
+</html>

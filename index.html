@@ -3,35 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GoalGem v4.6 - Final</title>
+    <title>GoalGem v4.7 - Professional</title>
     <style>
         :root { --bg: #05070a; --card: #111622; --primary: #00a3ff; --success: #28a745; --danger: #dc3545; --text: #ffffff; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
         .app { width: 100%; max-width: 420px; margin: auto; }
-        .card { background: var(--card); padding: 18px; border-radius: 16px; margin-bottom: 12px; border: 1px solid #1f2937; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        textarea { width: 100%; height: 70px; background: #000; border: 1px dashed var(--primary); color: var(--primary); border-radius: 10px; padding: 10px; font-size: 12px; margin-bottom: 10px; box-sizing: border-box; outline: none; }
+        .card { background: var(--card); padding: 18px; border-radius: 16px; margin-bottom: 12px; border: 1px solid #1f2937; }
+        textarea { width: 100%; height: 60px; background: #000; border: 1px dashed var(--primary); color: var(--primary); border-radius: 10px; padding: 10px; font-size: 11px; margin-bottom: 10px; box-sizing: border-box; outline: none; }
         .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-        input { width: 100%; background: #1a2234; border: 1px solid #334155; border-radius: 6px; padding: 10px 0; color: white; text-align: center; font-size: 13px; font-weight: bold; }
-        label { font-size: 8px; color: #94a3b8; text-align: center; display: block; margin-bottom: 4px; text-transform: uppercase; }
-        button { width: 100%; background: linear-gradient(135deg, #00a3ff, #0066ff); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; text-transform: uppercase; }
-        .res-box { display: none; text-align: center; border-top: 4px solid var(--primary); animation: fadeIn 0.4s ease; }
-        .score-row { display: flex; justify-content: center; align-items: center; gap: 30px; margin: 20px 0; }
-        .score-num { font-size: 60px; font-weight: 900; color: var(--text); text-shadow: 0 0 20px rgba(0,163,255,0.4); }
-        .prob-bar { width: 100%; height: 14px; background: #1a2234; border-radius: 20px; overflow: hidden; display: flex; margin: 15px 0; border: 1px solid #334155; }
-        .prob-h { background: var(--success); transition: 1s; }
-        .prob-a { background: var(--danger); transition: 1s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        input { width: 100%; background: #1a2234; border: 1px solid #334155; border-radius: 6px; padding: 8px 0; color: white; text-align: center; font-size: 13px; font-weight: bold; }
+        label { font-size: 8px; color: #94a3b8; text-align: center; display: block; margin-bottom: 4px; }
+        button { width: 100%; background: linear-gradient(135deg, #00a3ff, #0066ff); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; }
+        .res-box { display: none; text-align: center; border-top: 4px solid var(--primary); }
+        .score-row { display: flex; justify-content: center; align-items: center; gap: 30px; margin: 15px 0; }
+        .score-num { font-size: 64px; font-weight: 900; color: var(--text); text-shadow: 0 0 15px rgba(0,163,255,0.3); }
+        .prob-bar { width: 100%; height: 12px; background: #1a2234; border-radius: 10px; overflow: hidden; display: flex; margin: 10px 0; }
     </style>
 </head>
 <body>
     <div class="app">
-        <h2 style="text-align:center; letter-spacing: 2px; color: var(--primary); font-size: 18px;">GOALGEM ELITE v4.6</h2>
-        
+        <h2 style="text-align:center; color: var(--primary); font-size: 18px;">GOALGEM ELITE v4.7</h2>
         <div class="card">
-            <textarea id="rawInput" placeholder="Real Madrid 2.8 xG, 22 SCA..."></textarea>
+            <textarea id="rawInput" placeholder="Verileri buraya yapıştır..."></textarea>
             <button onclick="deepScan()" style="background:#1e293b; font-size:11px; margin-bottom:15px; border: 1px solid #334155;">VERİLERİ AYIKLA</button>
-            
-            <h5 style="color:var(--success); margin: 0 0 10px 0;">🏠 EV SAHİBİ</h5>
+            <h5 style="color:var(--success); margin: 0 0 5px 0;">🏠 EV SAHİBİ</h5>
             <div class="grid">
                 <div><label>npxG</label><input type="text" id="hG"></div>
                 <div><label>SCA</label><input type="text" id="hS"></div>
@@ -39,8 +34,7 @@
                 <div><label>TILT</label><input type="text" id="hT"></div>
                 <div><label>INTR</label><input type="text" id="hIN"></div>
             </div>
-            
-            <h5 style="color:var(--danger); margin: 20px 0 10px 0;">✈️ DEPLASMAN</h5>
+            <h5 style="color:var(--danger); margin: 15px 0 5px 0;">✈️ DEPLASMAN</h5>
             <div class="grid">
                 <div><label>npxG</label><input type="text" id="aG"></div>
                 <div><label>SCA</label><input type="text" id="aS"></div>
@@ -48,20 +42,13 @@
                 <div><label>TILT</label><input type="text" id="aT"></div>
                 <div><label>INTR</label><input type="text" id="aIN"></div>
             </div>
-            <button onclick="analyze()" style="margin-top:25px;">HESAPLA & ANALİZ ET</button>
+            <button onclick="analyze()" style="margin-top:20px;">HESAPLA & ANALİZ ET</button>
         </div>
 
         <div id="res" class="card res-box">
-            <div class="score-row">
-                <div class="score-num" id="hScr">0</div>
-                <div style="font-size: 30px; opacity: 0.3;">-</div>
-                <div class="score-num" id="aScr">0</div>
-            </div>
-            <div class="prob-bar">
-                <div id="barH" class="prob-h"></div>
-                <div id="barA" class="prob-a"></div>
-            </div>
-            <div id="advice" style="background:#05070a; padding:15px; border-radius:10px; font-size:14px; text-align:left; border-left: 4px solid var(--primary); line-height:1.6;"></div>
+            <div class="score-row"><div class="score-num" id="hScr">0</div><div style="font-size: 30px; opacity: 0.2;">-</div><div class="score-num" id="aScr">0</div></div>
+            <div class="prob-bar"><div id="barH" style="background:var(--success); transition:1s;"></div><div id="barA" style="background:var(--danger); transition:1s;"></div></div>
+            <div id="advice" style="background:#05070a; padding:12px; border-radius:10px; font-size:13px; text-align:left; border-left: 4px solid var(--primary); line-height:1.5;"></div>
         </div>
     </div>
 
@@ -73,10 +60,9 @@
                 const match = str.match(regex);
                 return match ? match[1].replace(',', '.') : '0';
             };
-            const parts = text.includes('|') ? text.split('|') : [text, ''];
-            const fields = ['G','S','B','T','IN'];
-            const keys = ['xg','sca','box','tilt','inter'];
-            fields.forEach((f, i) => {
+            const parts = text.split('|');
+            ['G','S','B','T','IN'].forEach((f, i) => {
+                const keys = ['xg','sca','box','tilt','inter'];
                 document.getElementById('h'+f).value = extract(parts[0], keys[i]);
                 if(parts[1]) document.getElementById('a'+f).value = extract(parts[1], keys[i]);
             });
@@ -85,36 +71,35 @@
         function analyze() {
             const v = (id) => parseFloat(document.getElementById(id).value) || 0;
             
-            // ANALİZ MOTORU: Hücum gücünü savunma direnciyle filtreler
-            let hAttack = (v('hG') * 0.7) + (v('hS') * 0.1) + (v('hB') * 0.1);
-            let aAttack = (v('aG') * 0.7) + (v('aS') * 0.1) + (v('aB') * 0.1);
+            // PROFESYONEL NORMALLEŞTİRİCİ: Ham puanları lig ortalamasına çeker
+            // Futbolda ortalama gol beklentisi (xG) 1.3 - 1.5 civarıdır.
+            let hExp = (v('hG') * 0.5) + (v('hS') * 0.05) + (v('hB') * 0.05);
+            let aExp = (v('aG') * 0.5) + (v('aS') * 0.05) + (v('aB') * 0.05);
             
-            let hDefDirenci = (v('hIN') * 0.05) + (v('hT') * 0.01);
-            let aDefDirenci = (v('aIN') * 0.05) + (v('aT') * 0.01);
+            // Savunma Direnci Faktörü (Interception gol yemeyi azaltır)
+            let hDefDamping = 1 + (v('hIN') * 0.02) + (v('hT') * 0.005);
+            let aDefDamping = 1 + (v('aIN') * 0.02) + (v('aT') * 0.005);
 
-            // SKOR NORMALLEŞTİRME (Absürt skorları 0-3 bandına çeker)
-            const scale = (val) => {
-                if (val > 2.3) return 3; // 2.3 xG üstü profesyonelce 3'e yuvarlanır
-                if (val < 0.4) return 0;
-                return Math.round(val);
-            };
+            // Final Skor Hesaplama (Absürt sayıları süzgeçten geçirir)
+            let sH = Math.round(hExp / aDefDamping);
+            let sA = Math.round(aExp / hDefDamping);
 
-            let sH = scale(hAttack - aDefDirenci);
-            let sA = scale(aAttack - hDefDirenci);
+            // Realite Kilidi: Max 4 gol (Olağanüstü durumlar hariç)
+            sH = Math.min(4, sH);
+            sA = Math.min(4, sA);
 
             document.getElementById('res').style.display = 'block';
             document.getElementById('hScr').innerText = sH;
             document.getElementById('aScr').innerText = sA;
             
-            const total = (hAttack + aAttack) || 1;
-            const hPerc = Math.round((hAttack / total) * 100);
+            const hPerc = Math.round((hExp / (hExp + aExp)) * 100);
             document.getElementById('barH').style.width = hPerc + '%';
-            document.getElementById('barA').style.width = (100 - hPerc) + '%';
+            document.getElementById('barA').style.width = (100-hPerc) + '%';
 
-            let tip = (sH > sA) ? "MS 1" : (sA > sH ? "MS 2" : "BERABERLİK / X");
             document.getElementById('advice').innerHTML = `
-                <b style="color:#00a3ff">ÖNERİ: ${tip}</b><br>
-                <span>Gol Tahmini: ${sH+sA > 2.5 ? '2.5 ÜST' : '2.5 ALT'}</span><br>
+                <b style="color:#00a3ff">ANALİZ RAPORU:</b><br>
+                <span>Tahmin: ${sH > sA ? 'MS 1' : (sA > sH ? 'MS 2' : 'Beraberlik')}</span><br>
+                <span>Üst/Alt: ${sH+sA > 2.5 ? '2.5 ÜST' : '2.5 ALT'}</span><br>
                 <span>Karşılıklı Gol: ${sH > 0 && sA > 0 ? 'VAR' : 'YOK'}</span>
             `;
         }

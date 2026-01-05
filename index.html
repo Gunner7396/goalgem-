@@ -3,113 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analiz Motoru - Smart & Clean</title>
+    <title>Analiz Motoru - Full Recall v8.0</title>
     <style>
-        :root { --accent: #00ff88; --bg: #0b0f1a; --card: #161e2d; --reset: #4b5563; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #f3f4f6; margin: 0; padding: 10px; }
+        :root { --accent: #00ff88; --bg: #050a0f; --card: #111827; --ev: #3b82f6; --dep: #ef4444; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #f3f4f6; margin: 0; padding: 10px; font-size: 13px; }
         .card { background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #1f2937; margin-bottom: 10px; }
-        textarea { width: 100%; height: 60px; background: #000; color: var(--accent); border: 1px solid #333; border-radius: 8px; padding: 10px; font-size: 11px; outline: none; }
+        textarea { width: 100%; height: 50px; background: #000; color: var(--accent); border: 1px solid #333; border-radius: 8px; padding: 8px; font-size: 11px; outline: none; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        input { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 6px; box-sizing: border-box; font-size: 14px; margin-bottom: 5px; outline: none; }
-        input:focus { border-color: var(--accent); }
-        label { font-size: 10px; color: #9ca3af; display: block; }
-        .btn-main { width: 100%; padding: 15px; background: var(--accent); border: none; border-radius: 10px; color: #000; font-weight: 800; cursor: pointer; margin-top: 5px; font-size: 16px; }
-        .btn-reset { width: 100%; padding: 12px; background: var(--reset); border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 12px; }
-        .result-box { margin-top: 20px; padding: 20px; background: #1f2937; border-radius: 15px; text-align: center; border: 2px solid var(--accent); display:none; }
-        .skor { font-size: 42px; font-weight: 900; }
+        input { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 6px; box-sizing: border-box; margin-bottom: 5px; font-weight: bold; }
+        .btn-main { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 10px; color: #000; font-weight: 800; cursor: pointer; margin-top: 5px; font-size: 15px; transition: 0.2s; }
+        .btn-main:active { transform: scale(0.98); }
+        
+        /* Geçmiş Sekmesi */
+        .history-item { background: #161e2d; padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 4px solid var(--accent); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+        .history-item:hover { background: #1f2937; border-left-width: 8px; }
+        .history-item:active { background: #000; }
+        .history-score { font-weight: 900; color: var(--accent); font-size: 16px; }
+        .restore-badge { font-size: 8px; background: var(--accent); color: #000; padding: 2px 5px; border-radius: 4px; margin-top: 4px; display: inline-block; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <h4 style="margin:0 0 10px 0; color:var(--accent)">1. VERİ AKTARIMI</h4>
-        <textarea id="bulkData" placeholder="FBref satırını buraya yapıştır..."></textarea>
-        <div style="display:flex; gap:5px; margin-top:10px;">
-            <button onclick="smartParse('e_')" style="background:#3b82f6; color:white; flex:1; padding:10px; border:none; border-radius:6px; cursor:pointer;">EV'E AKTAR</button>
-            <button onclick="smartParse('d_')" style="background:#ef4444; color:white; flex:1; padding:10px; border:none; border-radius:6px; cursor:pointer;">DEP'E AKTAR</button>
+        <textarea id="bulkData" placeholder="FBref verisini yapıştır..."></textarea>
+        <div style="display:flex; gap:5px; margin-top:8px;">
+            <button onclick="smartParse('e_')" style="background:var(--ev); color:white; flex:1; padding:10px; border:none; border-radius:6px; cursor:pointer;">EV'E AKTAR</button>
+            <button onclick="smartParse('d_')" style="background:var(--dep); color:white; flex:1; padding:10px; border:none; border-radius:6px; cursor:pointer;">DEP'E AKTAR</button>
         </div>
+    </div>
+
+    <div class="grid" style="margin-bottom:8px;">
+        <input type="text" id="e_name" placeholder="Ev Adı">
+        <input type="text" id="d_name" placeholder="Dep Adı">
     </div>
 
     <div class="grid">
-        <div class="card">
-            <h4 style="font-size:10px; margin-top:0;">EV SAHİBİ</h4>
-            <label>npxG (Hücum)</label><input type="number" id="e_npxg" step="0.01" class="input-field">
-            <label>npxGA (Savunma)</label><input type="number" id="e_npxga" step="0.01" class="input-field">
-            <label>Tilt%</label><input type="number" id="e_tilt" value="50" class="input-field">
-            <label>SCA</label><input type="number" id="e_sca" value="15" class="input-field">
+        <div class="card" style="border-top: 2px solid var(--ev)">
+            <label style="font-size:9px;">npxG</label><input type="number" id="e_npxg" step="0.01" class="val-field">
+            <label style="font-size:9px;">npxGA</label><input type="number" id="e_npxga" step="0.01" class="val-field">
         </div>
-        <div class="card">
-            <h4 style="font-size:10px; margin-top:0;">DEPLASMAN</h4>
-            <label>npxG (Hücum)</label><input type="number" id="d_npxg" step="0.01" class="input-field">
-            <label>npxGA (Savunma)</label><input type="number" id="d_npxga" step="0.01" class="input-field">
-            <label>Tilt%</label><input type="number" id="d_tilt" value="50" class="input-field">
-            <label>SCA</label><input type="number" id="d_sca" value="15" class="input-field">
+        <div class="card" style="border-top: 2px solid var(--dep)">
+            <label style="font-size:9px;">npxG</label><input type="number" id="d_npxg" step="0.01" class="val-field">
+            <label style="font-size:9px;">npxGA</label><input type="number" id="d_npxga" step="0.01" class="val-field">
         </div>
     </div>
 
-    <button class="btn-main" onclick="finalHesapla()">ÇARPIŞTIR VE ANALİZ ET</button>
-    <button class="btn-reset" onclick="ekraniSifirla()">❌ TÜM VERİLERİ SIFIRLA</button>
+    <button class="btn-main" onclick="finalHesapla()">ANALİZ ET VE KAYDET</button>
+    <button style="width:100%; background:none; border:1px solid #374151; color:#9ca3af; padding:8px; border-radius:8px; margin-top:8px; cursor:pointer;" onclick="temizle()">❌ EKRANI TEMİZLE</button>
 
-    <div id="sonucBox" class="result-box">
-        <div id="skorDisplay" class="skor">0.0 - 0.0</div>
-        <div id="oranDisplay" style="margin-top:10px; font-weight:bold; color:var(--accent)"></div>
+    <div id="sonucBox" style="display:none; text-align:center; margin:15px 0; padding:15px; background:#1f2937; border-radius:12px; border:1px solid var(--accent);">
+        <div id="skorDisplay" style="font-size:32px; font-weight:900;"></div>
+    </div>
+
+    <div style="margin-top:25px;">
+        <h4 style="color:var(--accent); font-size:12px; margin-bottom:10px;">ANALİZ GEÇMİŞİ (Yüklemek için tıkla)</h4>
+        <div id="historyList"></div>
     </div>
 
 <script>
+window.onload = gecmisiGoster;
+
 function smartParse(prefix) {
     const raw = document.getElementById('bulkData').value;
     const nums = raw.match(/\d+(\.\d+)?/g);
-    
-    if (!nums || nums.length < 5) {
-        alert("Geçerli bir veri bulunamadı."); return;
-    }
-
-    let bulunanVal = 0;
-    // FBref'ten gelen npxG genelde 0.5 ile 4.0 arasındadır.
-    for (let n of nums) {
-        let val = parseFloat(n);
-        if (val > 0.4 && val < 4.0) {
-            bulunanVal = val;
-            break;
-        }
-    }
-
-    if (raw.toLowerCase().includes("opponent")) {
-        document.getElementById(prefix + 'npxga').value = bulunanVal;
-    } else {
-        document.getElementById(prefix + 'npxg').value = bulunanVal;
-    }
-    
+    if (!nums) return;
+    let val = nums.find(n => parseFloat(n) > 0.4 && parseFloat(n) < 4.0) || 0;
+    document.getElementById(prefix + (raw.toLowerCase().includes("opponent") ? 'npxga' : 'npxg')).value = val;
     document.getElementById('bulkData').value = "";
 }
 
-function ekraniSifirla() {
-    if(confirm("Tüm veriler temizlenecek. Emin misin?")) {
-        // Tüm inputları temizle
-        const inputs = document.getElementsByClassName('input-field');
-        for (let i = 0; i < inputs.length; i++) {
-            // Tilt ve SCA için varsayılan değerleri geri yükle, diğerlerini boşalt
-            if(inputs[i].id.includes('tilt')) inputs[i].value = 50;
-            else if(inputs[i].id.includes('sca')) inputs[i].value = 15;
-            else inputs[i].value = "";
-        }
-        // Sonuç kutusunu gizle
-        document.getElementById('sonucBox').style.display = 'none';
-        document.getElementById('bulkData').value = "";
-    }
-}
-
 function finalHesapla() {
-    const v = (id) => parseFloat(document.getElementById(id).value) || 0;
-    let evGol = (v('e_npxg') + v('d_npxga')) / 2;
-    let depGol = (v('d_npxg') + v('e_npxga')) / 2;
-    evGol *= 1.05;
+    const data = {
+        en: document.getElementById('e_name').value || "Ev",
+        dn: document.getElementById('d_name').value || "Dep",
+        eg: parseFloat(document.getElementById('e_npxg').value) || 0,
+        ega: parseFloat(document.getElementById('e_npxga').value) || 0,
+        dg: parseFloat(document.getElementById('d_npxg').value) || 0,
+        dga: parseFloat(document.getElementById('d_npxga').value) || 0
+    };
+
+    let evSkor = ((data.eg + data.dga) / 2 * 1.05).toFixed(1);
+    let depSkor = ((data.dg + data.ega) / 2).toFixed(1);
+    const skor = evSkor + " - " + depSkor;
 
     document.getElementById('sonucBox').style.display = 'block';
-    document.getElementById('skorDisplay').innerText = evGol.toFixed(1) + " - " + depGol.toFixed(1);
-    
-    let toplam = evGol + depGol;
-    document.getElementById('oranDisplay').innerText = toplam > 2.5 ? "🔥 2.5 ÜST POTANSİYELİ" : "🛡️ ALT/DENGELİ MAÇ";
+    document.getElementById('skorDisplay').innerText = skor;
+
+    // Tüm metriklerle birlikte kaydet
+    let history = JSON.parse(localStorage.getItem('analiz_v8') || '[]');
+    history.unshift({ ...data, skor, tarih: new Date().toLocaleTimeString() });
+    localStorage.setItem('analiz_v8', JSON.stringify(history.slice(0, 10)));
+    gecmisiGoster();
+}
+
+function gecmisiGoster() {
+    let history = JSON.parse(localStorage.getItem('analiz_v8') || '[]');
+    document.getElementById('historyList').innerHTML = history.map((item, index) => `
+        <div class="history-item" onclick="veriyiGeriYukle(${index})">
+            <div>
+                <span style="font-weight:bold; display:block;">${item.en} vs ${item.dn}</span>
+                <span class="restore-badge">VERİLERİ GERİ YÜKLE</span>
+            </div>
+            <div class="history-score">${item.skor}</div>
+        </div>
+    `).join('');
+}
+
+function veriyiGeriYukle(index) {
+    let history = JSON.parse(localStorage.getItem('analiz_v8') || '[]');
+    let m = history[index];
+    document.getElementById('e_name').value = m.en;
+    document.getElementById('d_name').value = m.dn;
+    document.getElementById('e_npxg').value = m.eg;
+    document.getElementById('e_npxga').value = m.ega;
+    document.getElementById('d_npxg').value = m.dg;
+    document.getElementById('d_npxga').value = m.dga;
+    document.getElementById('skorDisplay').innerText = m.skor;
+    document.getElementById('sonucBox').style.display = 'block';
+    alert(m.en + " maçı verileri yüklendi!");
+}
+
+function temizle() {
+    document.querySelectorAll('input').forEach(i => i.value = "");
+    document.getElementById('sonucBox').style.display = 'none';
 }
 </script>
 </body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GoalGem v6.0 - Master</title>
+    <title>GoalGem v6.1 - The Vault</title>
     <style>
         :root { --bg: #05070a; --card: #111622; --primary: #00a3ff; --success: #28a745; --danger: #dc3545; --text: #ffffff; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
@@ -26,7 +26,7 @@
 </head>
 <body>
     <div class="app">
-        <h2 style="text-align:center; color: var(--primary); font-size: 16px; letter-spacing:2px;">GOALGEM v6.0 MASTER</h2>
+        <h2 style="text-align:center; color: var(--primary); font-size: 16px; letter-spacing:2px; margin-bottom:15px;">GOALGEM v6.1 VAULT</h2>
         <div class="card">
             <textarea id="rawInput" placeholder="Verileri buraya yapıştır..."></textarea>
             <button onclick="deepScan()" style="background:#1e293b; font-size:10px; margin-bottom:12px; height: 35px;">VERİLERİ AYIKLA</button>
@@ -47,7 +47,7 @@
                 <div><label>BOX</label><input type="text" id="aB"></div>
                 <div><label>TILT</label><input type="text" id="aT"></div>
             </div>
-            <button onclick="analyze()" style="margin-top:15px;">ANALİZİ BAŞLAT</button>
+            <button onclick="analyze()" style="margin-top:15px;">VAULT ANALİZİ BAŞLAT</button>
         </div>
 
         <div id="res" class="card res-box">
@@ -55,20 +55,20 @@
                 <div class="score-num"><span id="hScr">0</span> - <span id="aScr">0</span></div>
             </div>
             <div class="stat-row">
-                <div class="stat-label"><span>EV HÜCUM KESKİNLİĞİ</span><span id="hAtkVal">0%</span></div>
+                <div class="stat-label"><span>HÜCUM VERİMLİLİĞİ</span><span id="hAtkVal">0%</span></div>
                 <div class="bar-bg"><div id="hAtkBar" class="bar-fill" style="background:var(--success);"></div></div>
             </div>
             <div class="stat-row">
-                <div class="stat-label"><span>EV SAVUNMA VERİMLİLİĞİ</span><span id="hDefVal">0%</span></div>
+                <div class="stat-label"><span>SAVUNMA DİRENCİ</span><span id="hDefVal">0%</span></div>
                 <div class="bar-bg"><div id="hDefBar" class="bar-fill" style="background:var(--primary);"></div></div>
             </div>
             <div style="height:10px;"></div>
             <div class="stat-row">
-                <div class="stat-label"><span>DEP. HÜCUM KESKİNLİĞİ</span><span id="aAtkVal">0%</span></div>
+                <div class="stat-label"><span>DEP. HÜCUM GÜCÜ</span><span id="aAtkVal">0%</span></div>
                 <div class="bar-bg"><div id="aAtkBar" class="bar-fill" style="background:var(--danger);"></div></div>
             </div>
             <div class="stat-row">
-                <div class="stat-label"><span>DEP. SAVUNMA VERİMLİLİĞİ</span><span id="aDefVal">0%</span></div>
+                <div class="stat-label"><span>DEP. SAVUNMA GÜCÜ</span><span id="aDefVal">0%</span></div>
                 <div class="bar-bg"><div id="aDefBar" class="bar-fill" style="background:var(--primary);"></div></div>
             </div>
             <div id="insight" class="insight-box"></div>
@@ -95,18 +95,18 @@
         function analyze() {
             const v = (id) => parseFloat(document.getElementById(id).value.replace(',', '.')) || 0;
             
-            // 1. SAVUNMA VERİMLİLİĞİ (INTR-TILT Dengesi)
-            const calcDef = (intr, tilt, xga) => {
-                let opportunity = 100 - tilt; 
-                let efficiency = (intr / (opportunity + 5)) * 10;
-                return Math.min(100, (efficiency * 3) + (tilt * 0.4) - (xga * 8));
+            // 1. ADIM: GELİŞMİŞ HÜCUM PUANI (SCA/BOX Dengesi)
+            const calcAtk = (xg, sca, box, tilt) => {
+                let quality = (box + 1) / (sca + 5); 
+                let weightedAtk = (xg * 25) + (sca * quality * 2) + (tilt * 0.1);
+                return Math.min(100, weightedAtk);
             };
 
-            // 2. HÜCUM KESKİNLİĞİ (SCA vs BOX Filtresi)
-            const calcAtk = (xg, sca, box, tilt) => {
-                let boxRatio = box / (sca + 1); 
-                let weightedSca = sca * boxRatio * 0.8;
-                return Math.min(100, (xg * 22) + (weightedSca) + (tilt * 0.2));
+            // 2. ADIM: GELİŞMİŞ SAVUNMA PUANI (TILT/INTR Dengesi)
+            const calcDef = (intr, tilt, xga) => {
+                let safetyArea = (tilt * 0.5) + (intr * 1.5);
+                let riskFactor = xga * 15;
+                return Math.min(100, Math.max(0, safetyArea - riskFactor + 30));
             };
 
             let hAtk = calcAtk(v('hG'), v('hS'), v('hB'), v('hT'));
@@ -114,36 +114,36 @@
             let hDef = calcDef(v('hIN'), v('hT'), v('hGA'));
             let aDef = calcDef(v('aIN'), v('aT'), v('aGA'));
 
-            // Barlar
             const updateBar = (id, val) => {
-                let d = Math.min(100, Math.max(5, Math.round(val)));
+                let d = Math.round(val);
                 document.getElementById(id+'Bar').style.width = d + '%';
                 document.getElementById(id+'Val').innerText = d + '%';
             };
             updateBar('hAtk', hAtk); updateBar('hDef', hDef);
-            updateBar('aAtk', aAtkPwr = aAtk); updateBar('aDef', aDef);
+            updateBar('aAtk', aAtk); updateBar('aDef', aDef);
 
-            // 3. SKOR MANTIĞI
+            // 3. ADIM: VAULT SKOR SÜZGECİ (Gerçekçi Skor Üretimi)
             const getScore = (atk, oppDef, ownXG, oppXGA) => {
-                let score = (atk / 25) - (oppDef / 45);
-                if (ownXG < 0.8 && oppDef > 40 && oppXGA < 1.0) return 0; // Gerçekçi Sıfırlama
-                if (score < 0.9) return 0;
-                if (score < 1.8) return 1;
-                if (score < 2.8) return 2;
-                return Math.min(4, Math.round(score));
+                let potential = (atk / 25) - (oppDef / 45);
+                // KRİTİK FİLTRE: Zayıf takımın gol şansını logaritmik olarak kesiyoruz
+                if (ownXG < 1.0 && oppXGA < 0.8 && oppDef > 50) return 0;
+                if (potential < 0.85) return 0;
+                if (potential < 1.85) return 1;
+                if (potential < 2.85) return 2;
+                return Math.min(5, Math.round(potential));
             };
 
-            let fH = getScore(hAtk, aDef, v('hG'), v('hGA'));
-            let fA = getScore(aAtk, hDef, v('aG'), v('aGA'));
+            let fH = getScore(hAtk, aDef, v('hG'), v('aGA'));
+            let fA = getScore(aAtk, hDef, v('aG'), v('hGA'));
 
             document.getElementById('res').style.display = 'block';
             document.getElementById('hScr').innerText = fH;
             document.getElementById('aScr').innerText = fA;
 
             document.getElementById('insight').innerHTML = `
-                <b>SENARYO:</b> ${fH > fA ? 'Hücum Baskısı Sonuç Verdi' : (fA > fH ? 'Deplasman Dominasyonu' : 'Taktiksel Kilit Maç')}<br>
-                <b>TAHMİN:</b> ${fH > fA ? 'MS 1' : (fA > fH ? 'MS 2' : 'X')} | <b>KG:</b> ${fH > 0 && fA > 0 ? 'VAR' : 'YOK'}<br>
-                <b>NOT:</b> ${hDef > 65 ? 'Ev sahibi savunma verimliliği çok yüksek.' : 'Açık bir mücadele beklenebilir.'}
+                <b>SENARYO:</b> ${fH > fA ? 'Baskın Oyun' : (fA > fH ? 'Deplasman Sürprizi' : 'Dengeli Kilitleme')}<br>
+                <b>KG TAHMİNİ:</b> ${fH > 0 && fA > 0 ? 'VAR' : 'YOK'}<br>
+                <b>GÜVEN ENDEKSİ:</b> %${Math.round(Math.abs(hAtk - aAtk) + 55)}
             `;
         }
     </script>

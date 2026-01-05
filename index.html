@@ -1,94 +1,50 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GoalGem v4.2 - Deep Scan</title>
-    <style>
-        :root { --bg: #0b0f1a; --card: #161b2a; --primary: #00a3ff; --text: #ffffff; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
-        .app { width: 100%; max-width: 400px; margin: auto; }
-        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #232d45; }
-        textarea { width: 100%; height: 80px; background: #050810; border: 1px dashed var(--primary); color: #00a3ff; border-radius: 8px; padding: 10px; font-size: 12px; margin-bottom: 10px; outline: none; }
-        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
-        input { width: 100%; background: #0b0f1a; border: 1px solid #333; border-radius: 4px; padding: 8px 0; color: white; text-align: center; font-size: 12px; }
-        label { font-size: 7px; color: #888; text-align: center; display: block; font-weight: bold; margin-bottom: 2px; }
-        button { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 5px; }
-        .result-box { display: none; text-align: center; border-top: 4px solid var(--primary); }
-    </style>
-</head>
-<body>
-    <div class="app">
-        <h3 style="text-align:center; color:var(--primary); margin: 10px 0;">GOALGEM v4.2 PRO</h3>
-        <div class="card">
-            <textarea id="rawInput" placeholder="Buraya herhangi bir formatta veri yapıştırın..."></textarea>
-            <button onclick="deepScan()" style="background:#1f2937; font-size:12px; height:auto;">VERİLERİ EŞLEŞTİR</button>
-            
-            <h5 style="color:#28a745; margin:15px 0 5px 0;">🏠 EV SAHİBİ</h5>
-            <div class="grid">
-                <div><label>npxG</label><input type="text" id="hG"></div>
-                <div><label>SCA</label><input type="text" id="hS"></div>
-                <div><label>BOX</label><input type="text" id="hB"></div>
-                <div><label>TILT</label><input type="text" id="hT"></div>
-                <div><label>INTR</label><input type="text" id="hIN"></div>
+<script>
+    function analyze() {
+        const v = (id) => parseFloat(document.getElementById(id).value.replace(',', '.')) || 0;
+        
+        // GÜÇ HESAPLAMA (v4.3 Keskinleştirilmiş)
+        const hP = (v('hG')*2.5) + (v('hB')*0.4) + (v('hS')*0.2) + (v('hT')*0.1);
+        const aP = (v('aG')*2.5) + (v('aB')*0.4) + (v('aS')*0.2) + (v('aT')*0.1);
+        
+        const hD = (v('hGA')*1.5 || 1.2) - (v('hIN')*0.1); // Savunma direnci
+        const aD = (v('aGA')*1.5 || 1.2) - (v('aIN')*0.1);
+
+        // SKOR SİMÜLASYONU (Ham puanı gerçek skora çevirir)
+        let hScore = Math.round((hP / (aD + 2)) * 0.8);
+        let aScore = Math.round((aP / (hD + 2)) * 0.8);
+        
+        // Olasılık Hesaplama
+        const total = hP + aP;
+        const hWinProb = Math.round((hP / total) * 100);
+        const aWinProb = 100 - hWinProb;
+
+        document.getElementById('res').style.display = 'block';
+        document.getElementById('scr').innerHTML = `
+            <div style="font-size:16px; color:#888; margin-bottom:10px;">BEKLENEN SKOR</div>
+            <div style="display:flex; justify-content:center; align-items:center; gap:20px;">
+                <span style="color:#28a745">${hScore}</span>
+                <span style="color:#444">-</span>
+                <span style="color:#dc3545">${aScore}</span>
             </div>
-            
-            <h5 style="color:#dc3545; margin:15px 0 5px 0;">✈️ DEPLASMAN</h5>
-            <div class="grid">
-                <div><label>npxG</label><input type="text" id="aG"></div>
-                <div><label>SCA</label><input type="text" id="aS"></div>
-                <div><label>BOX</label><input type="text" id="aB"></div>
-                <div><label>TILT</label><input type="text" id="aT"></div>
-                <div><label>INTR</label><input type="text" id="aIN"></div>
+        `;
+        
+        document.getElementById('tag').innerHTML = `
+            <div style="width:100%; background:#1f2937; height:12px; border-radius:10px; overflow:hidden; display:flex; margin-bottom:10px;">
+                <div style="width:${hWinProb}%; background:#28a745;"></div>
+                <div style="width:${aWinProb}%; background:#dc3545;"></div>
             </div>
-            <button onclick="analyze()" style="margin-top:20px;">ANALİZ ET</button>
-        </div>
+            <div style="display:flex; justify-content:space-between; font-size:12px;">
+                <span>EV: %${hWinProb}</span>
+                <span>DEP: %${aWinProb}</span>
+            </div>
+        `;
 
-        <div id="res" class="card result-box">
-            <div id="tag" style="font-size:14px; font-weight:bold; margin-bottom:5px;"></div>
-            <div id="scr" style="font-size:40px; font-weight:bold; color:var(--primary); margin:10px 0;"></div>
-            <p id="desc" style="font-size:12px; color:#aaa;"></p>
-        </div>
-    </div>
-
-    <script>
-        function deepScan() {
-            const text = document.getElementById('rawInput').value.toLowerCase();
-            const parts = text.split('|'); // Takımları ayır (varsa)
-            
-            const extract = (str, key) => {
-                const regex = new RegExp(`(\\d+[.,]?\\d*)\\s*${key}`, 'i');
-                const match = str.match(regex);
-                return match ? match[1].replace(',', '.') : '';
-            };
-
-            if(parts.length >= 2) {
-                // Ev Sahibi (İlk kısım)
-                document.getElementById('hG').value = extract(parts[0], 'xg');
-                document.getElementById('hS').value = extract(parts[0], 'sca');
-                document.getElementById('hB').value = extract(parts[0], 'box');
-                document.getElementById('hT').value = extract(parts[0], 'tilt');
-                document.getElementById('hIN').value = extract(parts[0], 'inter');
-
-                // Deplasman (İkinci kısım)
-                document.getElementById('aG').value = extract(parts[1], 'xg');
-                document.getElementById('aS').value = extract(parts[1], 'sca');
-                document.getElementById('aB').value = extract(parts[1], 'box');
-                document.getElementById('aT').value = extract(parts[1], 'tilt');
-                document.getElementById('aIN').value = extract(parts[1], 'inter');
-                alert("Veriler etiketlere göre hatasız eşleştirildi!");
-            } else {
-                alert("Hata: Verileri ayırmak için iki takım arasına '|' işareti koyun veya düzgün kopyalayın.");
-            }
-        }
-
-        function analyze() {
-            // Analiz algoritması aynı kalır...
-            document.getElementById('res').style.display = 'block';
-            document.getElementById('scr').innerText = "2 - 1";
-            document.getElementById('tag').innerText = "ANALİZ TAMAMLANDI";
-            document.getElementById('desc').innerText = "Akıllı etiket tarama sistemi kullanıldı.";
-        }
-    </script>
-</body>
-</html>
+        document.getElementById('desc').innerHTML = `
+            <div style="margin-top:15px; border-top:1px solid #333; padding-top:10px;">
+                <b>TAHMİN:</b> ${hScore > aScore ? 'Ev Sahibi Galibiyeti' : (aScore > hScore ? 'Deplasman Galibiyeti' : 'Beraberlik / KG Var')} <br>
+                <b>GÜVEN:</b> %${Math.abs(hWinProb - 50) + 50} <br>
+                <small style="color:#555;">*Kolektif veriler ışığında maçın muhtemel senaryosudur.</small>
+            </div>
+        `;
+    }
+</script>

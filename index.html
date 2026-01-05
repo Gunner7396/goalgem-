@@ -1,71 +1,138 @@
-<style>
-    .insight-card { background: #05070a; padding: 12px; border-radius: 10px; margin-top: 15px; border-left: 3px solid var(--primary); }
-    .tag { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
-    .tag-blue { background: rgba(0, 163, 255, 0.2); color: var(--primary); }
-    .tag-green { background: rgba(40, 167, 69, 0.2); color: var(--success); }
-    .confidence-meter { height: 4px; background: #1a2234; border-radius: 2px; margin-top: 5px; }
-    .confidence-fill { height: 100%; background: var(--primary); width: 0%; transition: width 1.5s; }
-</style>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GoalGem v6.0 - Final Master</title>
+    <style>
+        :root { --bg: #05070a; --card: #111622; --primary: #00a3ff; --success: #28a745; --danger: #dc3545; --text: #ffffff; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
+        .app { width: 100%; max-width: 420px; margin: auto; }
+        .card { background: var(--card); padding: 18px; border-radius: 16px; margin-bottom: 12px; border: 1px solid #1f2937; }
+        textarea { width: 100%; height: 50px; background: #000; border: 1px dashed var(--primary); color: var(--primary); border-radius: 8px; padding: 10px; font-size: 11px; margin-bottom: 10px; box-sizing: border-box; outline: none; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        input { width: 100%; background: #1a2234; border: 1px solid #334155; border-radius: 6px; padding: 10px 0; color: white; text-align: center; font-size: 14px; font-weight: bold; }
+        label { font-size: 9px; color: #94a3b8; margin-bottom: 3px; font-weight: bold; text-transform: uppercase; }
+        button { width: 100%; background: linear-gradient(135deg, #00a3ff, #0066ff); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; }
+        .res-box { display: none; }
+        .score-display { text-align: center; padding: 15px 0; }
+        .score-num { font-size: 72px; font-weight: 900; letter-spacing: -3px; line-height: 1; }
+        .stat-row { margin-bottom: 10px; }
+        .stat-label { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px; color: #94a3b8; font-weight: bold; }
+        .bar-bg { width: 100%; height: 6px; background: #1a2234; border-radius: 3px; overflow: hidden; }
+        .bar-fill { height: 100%; transition: width 1s ease-in-out; }
+        .insight-box { background: rgba(0, 163, 255, 0.05); border-left: 4px solid var(--primary); padding: 15px; border-radius: 8px; margin-top: 15px; font-size: 13px; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <h2 style="text-align:center; color: var(--primary); font-size: 16px; letter-spacing:2px; margin-bottom:15px;">GOALGEM v6.0 MASTER</h2>
+        <div class="card">
+            <textarea id="rawInput" placeholder="Verileri buraya yapıştır..."></textarea>
+            <button onclick="deepScan()" style="background:#1e293b; font-size:10px; margin-bottom:12px; height: 35px;">VERİLERİ AYIKLA</button>
+            <div class="grid">
+                <div><label>npxG</label><input type="text" id="hG"></div>
+                <div><label>xGA</label><input type="text" id="hGA"></div>
+                <div><label>INTR</label><input type="text" id="hIN"></div>
+                <div><label>SCA</label><input type="text" id="hS"></div>
+                <div><label>BOX</label><input type="text" id="hB"></div>
+                <div><label>TILT</label><input type="text" id="hT"></div>
+            </div>
+            <div style="height:1px; background:#1f2937; margin:15px 0;"></div>
+            <div class="grid">
+                <div><label>npxG</label><input type="text" id="aG"></div>
+                <div><label>xGA</label><input type="text" id="aGA"></div>
+                <div><label>INTR</label><input type="text" id="aIN"></div>
+                <div><label>SCA</label><input type="text" id="aS"></div>
+                <div><label>BOX</label><input type="text" id="aB"></div>
+                <div><label>TILT</label><input type="text" id="aT"></div>
+            </div>
+            <button onclick="analyze()" style="margin-top:15px;">FINAL MASTER ANALİZ</button>
+        </div>
 
-<div id="res" class="card res-box">
-    <div class="score-display">
-        <div class="score-num"><span id="hScr">0</span> - <span id="aScr">0</span></div>
-        <div id="scenarioTag" class="tag tag-blue">Analiz Ediliyor...</div>
-    </div>
-    
-    <div id="statBars"></div> 
-
-    <div class="insight-card">
-        <div style="font-size: 11px; color: #94a3b8;">TAHMİN GÜVEN ENDEKSİ</div>
-        <div class="confidence-meter"><div id="confFill" class="confidence-fill"></div></div>
-        
-        <div style="margin-top:15px;">
-            <div id="mainPick" style="font-weight: 800; font-size: 15px; color: #fff;"></div>
-            <div id="sidePick" style="font-size: 12px; color: #94a3b8; margin-top: 4px;"></div>
+        <div id="res" class="card res-box">
+            <div class="score-display">
+                <div class="score-num"><span id="hScr">0</span> - <span id="aScr">0</span></div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label"><span>HÜCUM KESKİNLİĞİ</span><span id="hAtkVal">0%</span></div>
+                <div class="bar-bg"><div id="hAtkBar" class="bar-fill" style="background:var(--success);"></div></div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label"><span>SAVUNMA VERİMLİLİĞİ</span><span id="hDefVal">0%</span></div>
+                <div class="bar-bg"><div id="hDefBar" class="bar-fill" style="background:var(--primary);"></div></div>
+            </div>
+            <div id="insight" class="insight-box"></div>
         </div>
     </div>
-</div>
 
-<script>
-function analyze() {
-    // ... (v5.5'teki hücum/savunma hesaplama kodları burada devam eder) ...
-    const v = (id) => parseFloat(document.getElementById(id).value.replace(',', '.')) || 0;
-    let hAtk = (v('hG') * 20) + (v('hS') * 0.8) + (v('hB') * 0.5);
-    let aAtk = (v('aG') * 20) + (v('aS') * 0.8) + (v('aB') * 0.5);
-    let hDef = (v('hIN') * 2.5) + (v('hT') * 0.5) - (v('hGA') * 5);
-    let aDef = (v('aIN') * 2.5) + (v('aT') * 0.5) - (v('aGA') * 5);
+    <script>
+        function deepScan() {
+            const text = document.getElementById('rawInput').value.toLowerCase();
+            const extract = (str, key) => {
+                const regex = new RegExp(`(\\d+[.,]?\\d*)\\s*${key}`, 'i');
+                const match = str.match(regex);
+                return match ? match[1].replace(',', '.') : '0';
+            };
+            const parts = text.split('|');
+            const fields = ['G','GA','IN','S','B','T'];
+            const keys = ['xg','xga','inter','sca','box','tilt'];
+            fields.forEach((f, i) => {
+                document.getElementById('h'+f).value = extract(parts[0] || '', keys[i]);
+                document.getElementById('a'+f).value = extract(parts[1] || '', keys[i]);
+            });
+        }
 
-    // 1. Senaryo Belirleme
-    let scenario = "";
-    if (Math.abs(hAtk - aAtk) < 15) scenario = "Dengeli Mücadele";
-    else if (hAtk > aAtk + 30) scenario = "Ev Sahibi Dominasyonu";
-    else if (aAtk > hAtk + 30) scenario = "Deplasman Baskısı";
-    else scenario = "Taktiksel Savaş";
-    document.getElementById('scenarioTag').innerText = scenario;
+        function analyze() {
+            const v = (id) => parseFloat(document.getElementById(id).value.replace(',', '.')) || 0;
+            
+            // 1. SAVUNMA VERİMLİLİĞİ (Senin Tespit Ettiğin INTR-TILT Dengesi)
+            const calcDef = (intr, tilt, xga) => {
+                let opp = 100 - tilt;
+                let efficiency = (intr / (opp + 5)) * 10;
+                return Math.min(100, (efficiency * 3) + (tilt * 0.4) - (xga * 8));
+            };
 
-    // 2. Güven Endeksi (xG farkı ve Defans gücüne göre)
-    let confidence = Math.min(95, Math.abs(hAtk - aAtk) + (hDef / 2));
-    document.getElementById('confFill').style.width = confidence + "%";
+            // 2. HÜCUM KESKİNLİĞİ (SCA'yı BOX ile süzüyoruz)
+            const calcAtk = (xg, sca, box, tilt) => {
+                let boxQuality = box / (sca + 1); // Şutların ne kadarı ceza sahası içinden?
+                let weightedSca = sca * boxQuality * 0.8; 
+                return (xg * 22) + (weightedSca) + (tilt * 0.2);
+            };
 
-    // 3. Skor ve Tahmin Mantığı
-    let fH = Math.round((hAtk / 22) - (aDef / 45));
-    let fA = Math.round((aAtk / 22) - (hDef / 45));
-    // Sınırlandırmalar
-    fH = Math.max(0, Math.min(4, fH)); fA = Math.max(0, Math.min(4, fA));
-    
-    document.getElementById('hScr').innerText = fH;
-    document.getElementById('aScr').innerText = fA;
+            let hAtk = calcAtk(v('hG'), v('hS'), v('hB'), v('hT'));
+            let aAtk = calcAtk(v('aG'), v('aS'), v('aB'), v('aT'));
+            let hDef = calcDef(v('hIN'), v('hT'), v('hGA'));
+            let aDef = calcDef(v('aIN'), v('aT'), v('aGA'));
 
-    // Profesyonel Tavsiyeler
-    let pick = (fH > fA) ? "MS 1" : (fA > fH ? "MS 2" : "KG VAR / X");
-    document.getElementById('mainPick').innerText = "ANA TERCİH: " + pick;
-    
-    let side = "";
-    if (v('hT') > 60 || v('aT') > 60) side = "Korner Bahisleri Uygundur";
-    else if (fH + fA < 2) side = "2.5 Alt / Kısır Maç";
-    else side = "Karşılıklı Gol Şansı Yüksek";
-    document.getElementById('sidePick').innerText = "EKSTRA: " + side;
+            // Barlar
+            const updateBar = (id, val) => {
+                let d = Math.min(100, Math.max(5, Math.round(val)));
+                document.getElementById(id+'Bar').style.width = d + '%';
+                document.getElementById(id+'Val').innerText = d + '%';
+            };
+            updateBar('hAtk', hAtk); updateBar('hDef', hDef);
 
-    document.getElementById('res').style.display = 'block';
-}
-</script>
+            // 3. FİNAL SKOR (Master Logic)
+            const getScore = (atk, oppDef, ownXG) => {
+                let score = (atk / 25) - (oppDef / 45);
+                if (ownXG < 0.75 && oppDef > 45) return 0;
+                return Math.max(0, Math.min(4, Math.round(score)));
+            };
+
+            let fH = getScore(hAtk, aDef, v('hG'));
+            let fA = getScore(aAtk, hDef, v('aG'));
+
+            document.getElementById('res').style.display = 'block';
+            document.getElementById('hScr').innerText = fH;
+            document.getElementById('aScr').innerText = fA;
+
+            document.getElementById('insight').innerHTML = `
+                <b>SENARYO:</b> ${fH > fA ? 'Ev Sahibi Üstünlüğü' : (fA > fH ? 'Deplasman Baskısı' : 'Kilit Maç')}<br>
+                <b>GÜVEN:</b> %${Math.round(Math.abs(hAtk-aAtk) + 50)}<br>
+                <b>ANALİZ:</b> ${hDef > 60 && aAtk < 40 ? 'Savunma duvarı aşılamadı.' : 'Hücumlar meyvesini verdi.'}
+            `;
+        }
+    </script>
+</body>
+</html>

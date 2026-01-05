@@ -2,166 +2,115 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GoalGem v6.3 - Identity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analiz Motoru - Olasılık v4.0</title>
     <style>
-        :root { --bg: #0b0f1a; --card: #161b2c; --primary: #00a3ff; --accent: #7000ff; --success: #00f291; --danger: #ff4b5c; --text: #f1f5f9; }
-        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; justify-content: center; }
-        .app { width: 100%; max-width: 440px; }
-        .header { text-align: center; padding: 15px 0; margin-bottom: 10px; }
-        .header h2 { font-size: 14px; letter-spacing: 3px; color: var(--primary); opacity: 0.8; }
+        :root { --accent: #00ff88; --bg: #0b0f1a; --card: #161e2d; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #f3f4f6; margin: 0; padding: 10px; font-size: 13px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .card { background: var(--card); padding: 10px; border-radius: 12px; border: 1px solid #1f2937; }
+        h4 { text-align: center; margin: 0 0 10px 0; color: var(--accent); font-size: 11px; text-transform: uppercase; }
+        label { display: block; font-size: 9px; color: #9ca3af; margin-top: 4px; }
+        input { width: 100%; background: #000; border: 1px solid #374151; color: #fff; padding: 6px; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: var(--accent); border: none; border-radius: 10px; color: #000; font-weight: 800; margin-top: 10px; cursor: pointer; }
         
-        .card { background: var(--card); padding: 20px; border-radius: 24px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        textarea { width: 100%; height: 50px; background: rgba(0,0,0,0.3); border: 1px dashed var(--primary); color: var(--primary); border-radius: 12px; padding: 10px; font-size: 11px; margin-bottom: 15px; box-sizing: border-box; outline: none; }
+        #sonuc { margin-top: 15px; display: none; }
+        .skor-box { background: #1f2937; padding: 15px; border-radius: 15px; text-align: center; border: 1px solid var(--accent); }
+        .skor { font-size: 36px; font-weight: 900; color: #fff; margin-bottom: 10px; }
         
-        .team-section { border-radius: 18px; padding: 15px; margin-bottom: 15px; background: rgba(255,255,255,0.02); }
-        .home-border { border-left: 4px solid var(--primary); }
-        .away-border { border-left: 4px solid var(--danger); }
-        
-        .team-name-input { width: 100%; background: transparent; border: none; border-bottom: 2px solid #2d3748; color: white; font-size: 18px; font-weight: 800; padding: 5px 0; margin-bottom: 15px; outline: none; }
-        .team-name-input:focus { border-bottom-color: var(--primary); }
-
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .input-group { display: flex; flex-direction: column; gap: 4px; }
-        .input-group label { font-size: 9px; color: #94a3b8; font-weight: 700; text-transform: uppercase; }
-        input { background: #0b0f1a; border: 1px solid #2d3748; border-radius: 8px; padding: 10px 0; color: white; text-align: center; font-size: 14px; font-weight: bold; }
-        
-        button { width: 100%; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 14px; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
-
-        .res-box { display: none; animation: slideUp 0.4s ease-out; }
-        .score-board { background: #05070a; border-radius: 20px; padding: 25px 15px; text-align: center; margin-bottom: 20px; border: 1px solid #1f2937; }
-        .score-row { display: flex; justify-content: space-between; align-items: center; }
-        .score-team { flex: 1; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .score-val { font-size: 64px; font-weight: 900; color: white; flex: 1; }
-        
-        .stat-row { margin-bottom: 12px; }
-        .stat-header { display: flex; justify-content: space-between; font-size: 10px; font-weight: 800; color: #94a3b8; margin-bottom: 5px; }
-        .bar-bg { height: 6px; background: #1a2234; border-radius: 3px; overflow: hidden; }
-        .bar-fill { height: 100%; transition: width 1s ease-out; }
-        
-        .report-box { padding: 15px; background: rgba(0,163,255,0.05); border-radius: 15px; font-size: 13px; line-height: 1.5; border: 1px solid rgba(0,163,255,0.1); }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px; }
+        .stat-item { background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px; font-size: 11px; }
+        .stat-val { display: block; font-weight: bold; color: var(--accent); font-size: 14px; }
     </style>
 </head>
 <body>
-    <div class="app">
-        <div class="header"><h2>GOALGEM v6.3</h2></div>
-        
-        <div class="card">
-            <textarea id="rawInput" placeholder="Verileri buraya yapıştır..."></textarea>
-            <button onclick="deepScan()" style="background:#1e293b; height:40px; font-size:10px; margin-bottom:15px;">VERİLERİ EŞLEŞTİR</button>
-            
-            <div class="team-section home-border">
-                <input type="text" id="hName" class="team-name-input" placeholder="EV SAHİBİ">
-                <div class="grid">
-                    <div class="input-group"><label>npxG</label><input type="text" id="hG"></div>
-                    <div class="input-group"><label>xGA</label><input type="text" id="hGA"></div>
-                    <div class="input-group"><label>INTR</label><input type="text" id="hIN"></div>
-                    <div class="input-group"><label>SCA</label><input type="text" id="hS"></div>
-                    <div class="input-group"><label>BOX</label><input type="text" id="hB"></div>
-                    <div class="input-group"><label>TILT</label><input type="text" id="hT"></div>
-                </div>
-            </div>
-            
-            <div class="team-section away-border">
-                <input type="text" id="aName" class="team-name-input" placeholder="DEPLASMAN">
-                <div class="grid">
-                    <div class="input-group"><label>npxG</label><input type="text" id="aG"></div>
-                    <div class="input-group"><label>xGA</label><input type="text" id="aGA"></div>
-                    <div class="input-group"><label>INTR</label><input type="text" id="aIN"></div>
-                    <div class="input-group"><label>SCA</label><input type="text" id="aS"></div>
-                    <div class="input-group"><label>BOX</label><input type="text" id="aB"></div>
-                    <div class="input-group"><label>TILT</label><input type="text" id="aT"></div>
-                </div>
-            </div>
-            
-            <button onclick="analyze()">ANALİZİ BAŞLAT</button>
-        </div>
 
-        <div id="res" class="card res-box">
-            <div class="score-board">
-                <div class="score-row">
-                    <div class="score-team" id="hDispName" style="color:var(--primary);">HOME</div>
-                    <div class="score-val"><span id="hScr">0</span> - <span id="aScr">0</span></div>
-                    <div class="score-team" id="aDispName" style="color:var(--danger);">AWAY</div>
-                </div>
-            </div>
-
-            <div class="stat-row">
-                <div class="stat-header"><span>HÜCUM VERİMLİLİĞİ</span><span id="hAtkVal">0%</span></div>
-                <div class="bar-bg"><div id="hAtkBar" class="bar-fill" style="background:var(--success);"></div></div>
-            </div>
-            <div class="stat-row">
-                <div class="stat-header"><span>SAVUNMA DİRENCİ</span><span id="hDefVal">0%</span></div>
-                <div class="bar-bg"><div id="hDefBar" class="bar-fill" style="background:var(--primary);"></div></div>
-            </div>
-            <div style="height:10px;"></div>
-            <div class="stat-row">
-                <div class="stat-header"><span>DEP. HÜCUM GÜCÜ</span><span id="aAtkVal">0%</span></div>
-                <div class="bar-bg"><div id="aAtkBar" class="bar-fill" style="background:var(--danger);"></div></div>
-            </div>
-
-            <div id="report" class="report-box"></div>
-        </div>
+<div class="grid">
+    <div class="card">
+        <h4>EV SAHİBİ</h4>
+        <label>npxG / SCA</label>
+        <div style="display:flex; gap:2px"><input type="number" id="e_npxg" value="1.6"><input type="number" id="e_sca" value="22"></div>
+        <label>BOX / Tilt%</label>
+        <div style="display:flex; gap:2px"><input type="number" id="e_box" value="28"><input type="number" id="e_tilt" value="55"></div>
+        <label>ProgP / npxGA</label>
+        <div style="display:flex; gap:2px"><input type="number" id="e_progp" value="45"><input type="number" id="e_npxga" value="1.0"></div>
+        <label>PPDA / OPP.B</label>
+        <div style="display:flex; gap:2px"><input type="number" id="e_ppda" value="9"><input type="number" id="e_oppb" value="12"></div>
+        <label>DeepA / Inter.</label>
+        <div style="display:flex; gap:2px"><input type="number" id="e_deepa" value="4"><input type="number" id="e_inter" value="10"></div>
     </div>
 
-    <script>
-        function deepScan() {
-            const text = document.getElementById('rawInput').value;
-            const extract = (str, key) => {
-                const regex = new RegExp(`(\\d+[.,]?\\d*)\\s*${key}`, 'i');
-                const match = str.match(regex);
-                return match ? match[1].replace(',', '.') : '0';
-            };
-            // Takım isimlerini ayıkla (Man City | Wolves gibi)
-            const parts = text.split('|');
-            if(parts[0]) document.getElementById('hName').value = parts[0].split(/\d/)[0].trim();
-            if(parts[1]) document.getElementById('aName').value = parts[1].split(/\d/)[0].trim();
+    <div class="card">
+        <h4>DEPLASMAN</h4>
+        <label>npxG / SCA</label>
+        <div style="display:flex; gap:2px"><input type="number" id="d_npxg" value="1.2"><input type="number" id="d_sca" value="16"></div>
+        <label>BOX / Tilt%</label>
+        <div style="display:flex; gap:2px"><input type="number" id="d_box" value="20"><input type="number" id="d_tilt" value="45"></div>
+        <label>ProgP / npxGA</label>
+        <div style="display:flex; gap:2px"><input type="number" id="d_progp" value="32"><input type="number" id="d_npxga" value="1.4"></div>
+        <label>PPDA / OPP.B</label>
+        <div style="display:flex; gap:2px"><input type="number" id="d_ppda" value="14"><input type="number" id="d_oppb" value="19"></div>
+        <label>DeepA / Inter.</label>
+        <div style="display:flex; gap:2px"><input type="number" id="d_deepa" value="8"><input type="number" id="d_inter" value="16"></div>
+    </div>
+</div>
 
-            const fields = ['G','GA','IN','S','B','T'];
-            const keys = ['xg','xga','inter','sca','box','tilt'];
-            fields.forEach((f, i) => {
-                document.getElementById('h'+f).value = extract(parts[0] || '', keys[i]);
-                document.getElementById('a'+f).value = extract(parts[1] || '', keys[i]);
-            });
-        }
+<button onclick="superAnaliz()">DERİNLEMESİNE ANALİZ ET</button>
 
-        function analyze() {
-            const v = (id) => parseFloat(document.getElementById(id).value.replace(',', '.')) || 0;
-            const hN = document.getElementById('hName').value || 'HOME';
-            const aN = document.getElementById('aName').value || 'AWAY';
-            
-            const calcAtk = (xg, sca, box, tilt) => Math.min(100, (xg * 25) + (sca * ((box+1)/(sca+5)) * 2) + (tilt * 0.1));
-            const calcDef = (intr, tilt, xga) => Math.min(100, Math.max(0, (tilt * 0.5) + (intr * 1.5) - (xga * 15) + 30));
+<div id="sonuc">
+    <div class="skor-box">
+        <div style="font-size:10px; color:#9ca3af">TAHMİNİ SKOR</div>
+        <div class="skor" id="skorOut">0 - 0</div>
+        
+        <div class="stats-grid">
+            <div class="stat-item">2.5 ÜST <span class="stat-val" id="ustOut">%0</span></div>
+            <div class="stat-item">KG VAR <span class="stat-val" id="kgvOut">%0</span></div>
+            <div class="stat-item">1/X/2 <span class="stat-val" id="tarafOut">-%</span></div>
+            <div class="stat-item">GÜVEN <span class="stat-val" id="guvenOut">%0</span></div>
+        </div>
+    </div>
+</div>
 
-            let hA = calcAtk(v('hG'), v('hS'), v('hB'), v('hT'));
-            let hD = calcDef(v('hIN'), v('hT'), v('hGA'));
-            let aA = calcAtk(v('aG'), v('aS'), v('aB'), v('aT'));
-            let aD = calcDef(v('aIN'), v('aT'), v('aGA'));
+<script>
+function superAnaliz() {
+    const v = (id) => parseFloat(document.getElementById(id).value);
 
-            document.getElementById('hAtkBar').style.width = hA + '%';
-            document.getElementById('hAtkVal').innerText = Math.round(hA) + '%';
-            document.getElementById('hDefBar').style.width = hD + '%';
-            document.getElementById('hDefVal').innerText = Math.round(hD) + '%';
-            document.getElementById('aAtkBar').style.width = aA + '%';
-            document.getElementById('aAtkVal').innerText = Math.round(aA) + '%';
+    function beklentiHesapla(p, r) {
+        let h = (v(p+'npxg') * 0.45) + (v(p+'box') * 0.03) + (v(p+'sca') * 0.02);
+        let s = (v(r+'npxga') * 0.40) + (v(r+'oppb') * 0.03) + (v(r+'deepa') * 0.02);
+        
+        // Interception & Tilt Dengelemesi
+        if (v(r+'tilt') > 55) s *= 0.85; // Topa sahip olanın interception ihtiyacı azalır
 
-            const getScore = (atk, oppDef, ownXG, oppXGA) => {
-                if (ownXG < 1.0 && oppDef > 50 && oppXGA < 0.8) return 0;
-                let pot = (atk / 25) - (oppDef / 45);
-                return (pot < 0.85) ? 0 : (pot < 1.85 ? 1 : (pot < 2.85 ? 2 : Math.min(5, Math.round(pot))));
-            };
+        let xG = (h * 0.6) + (s * 0.4);
+        // Absürt Skor Törpüsü
+        if (xG > 2.2) xG = 2.2 + Math.log10(xG - 1.2);
+        return xG;
+    }
 
-            let fH = getScore(hA, aD, v('hG'), v('aGA'));
-            let fA = getScore(aA, hD, v('aG'), v('hGA'));
+    let e_exp = beklentiHesapla('e_', 'd_') * 1.05; // Ev avantajı
+    let d_exp = beklentiHesapla('d_', 'e_');
 
-            document.getElementById('res').style.display = 'block';
-            document.getElementById('hScr').innerText = fH;
-            document.getElementById('aScr').innerText = fA;
-            document.getElementById('hDispName').innerText = hN;
-            document.getElementById('aDispName').innerText = aN;
-            
-            document.getElementById('report').innerHTML = `<b>Tahmin:</b> ${fH > fA ? 'MS 1' : (fA > fH ? 'MS 2' : 'BERABERLİK')}<br><b>KG:</b> ${fH > 0 && fA > 0 ? 'VAR' : 'YOK'}`;
-        }
-    </script>
+    // Olasılık Hesaplama (Basitleştirilmiş Poisson Yaklaşımı)
+    let kgVarOlasilik = Math.min(95, (1 - Math.exp(-e_exp)) * (1 - Math.exp(-d_exp)) * 130);
+    let ustOlasilik = Math.min(95, (1 - Math.exp(-(e_exp + d_exp) * 0.6)) * 110);
+    
+    // Taraf Yüzdesi
+    let toplam = e_exp + d_exp;
+    let evYuzde = (e_exp / toplam) * 100;
+    let taraf = evYuzde > 55 ? "1 (%"+evYuzde.toFixed(0)+")" : (evYuzde < 45 ? "2 (%"+(100-evYuzde).toFixed(0)+")" : "X");
+
+    // Güven Endeksi (Veri tutarlılığına göre)
+    let guven = 100 - (Math.abs(v('e_npxg') - v('e_npxga')) * 10);
+
+    // Çıktılar
+    document.getElementById('sonuc').style.display = 'block';
+    document.getElementById('skorOut').innerText = e_exp.toFixed(1) + " - " + d_exp.toFixed(1);
+    document.getElementById('kgvOut').innerText = "%" + kgVarOlasilik.toFixed(0);
+    document.getElementById('ustOut').innerText = "%" + ustOlasilik.toFixed(0);
+    document.getElementById('tarafOut').innerText = taraf;
+    document.getElementById('guvenOut').innerText = "%" + Math.max(30, Math.min(95, guven)).toFixed(0);
+}
+</script>
 </body>
 </html>

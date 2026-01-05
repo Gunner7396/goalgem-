@@ -3,62 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analiz Motoru | Minimal</title>
+    <title>Pro Analiz & Skor Tahmin Motoru</title>
     <style>
         :root { 
             --bg: #0a0f1e; --card: #161d31; --accent: #38bdf8; --text: #e2e8f0; 
-            --danger: #ff4d4d; --success: #22c55e; --border: #2d364d; 
+            --border: #2d364d; --win: #22c55e; --loss: #ef4444;
         }
-        body { 
-            font-family: 'Inter', system-ui, sans-serif; background: var(--bg); 
-            color: var(--text); margin: 0; padding: 15px; font-size: 14px;
-        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 15px; font-size: 14px; }
         .container { max-width: 1000px; margin: auto; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        
-        .card { 
-            background: var(--card); padding: 18px; border-radius: 12px; 
-            border: 1px solid var(--border);
-        }
-        h2 { 
-            color: var(--accent); font-size: 16px; margin: 0 0 15px 0; 
-            text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
-        }
-
+        .card { background: var(--card); padding: 18px; border-radius: 12px; border: 1px solid var(--border); }
+        h2 { color: var(--accent); font-size: 16px; margin: 0 0 15px 0; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
         .metric-group { margin-bottom: 12px; }
         .label-row { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-bottom: 4px; }
         .val-badge { color: var(--accent); font-weight: 600; }
-        
         input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--accent); height: 4px; }
-        input[type="text"] { 
-            width: 100%; background: #0a0f1e; border: 1px solid var(--border); 
-            color: white; padding: 8px; border-radius: 6px; margin-bottom: 15px; box-sizing: border-box; font-size: 13px;
-        }
-
+        input[type="text"] { width: 100%; background: #0a0f1e; border: 1px solid var(--border); color: white; padding: 8px; border-radius: 6px; margin-bottom: 15px; box-sizing: border-box; }
         .btn-group { grid-column: 1 / -1; text-align: center; margin: 20px 0; }
-        button { 
-            padding: 12px 25px; border-radius: 8px; border: none; font-weight: 600; 
-            cursor: pointer; transition: 0.2s; font-size: 13px;
-        }
+        button { padding: 12px 25px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 13px; }
         .btn-run { background: var(--accent); color: #0a0f1e; }
-        .btn-clear { background: transparent; color: var(--danger); border: 1px solid var(--danger); margin-left: 10px; }
+        .btn-clear { background: transparent; color: var(--loss); border: 1px solid var(--loss); margin-left: 10px; }
 
+        /* Yeni Sonuç Paneli Tasarımı */
         .result-panel { 
             grid-column: 1 / -1; background: var(--card); padding: 25px; border-radius: 12px; 
-            border: 1px solid var(--accent); text-align: center; display: none;
+            border: 1px solid var(--accent); display: none;
         }
-        .score-display { font-size: 42px; font-weight: 800; color: white; margin: 10px 0; }
-        .coach-note { 
-            font-size: 13px; color: #94a3b8; background: rgba(255,255,255,0.03); 
-            padding: 12px; border-radius: 6px; border-left: 3px solid var(--accent); text-align: left;
-        }
+        .score-main { text-align: center; margin-bottom: 20px; }
+        .score-val { font-size: 48px; font-weight: 800; color: white; display: block; }
+        .prob-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; border-top: 1px solid var(--border); padding-top: 20px; }
+        .prob-item { background: rgba(56, 189, 248, 0.05); padding: 15px; border-radius: 8px; text-align: center; border: 1px solid rgba(56, 189, 248, 0.1); }
+        .prob-label { font-size: 11px; color: #94a3b8; display: block; margin-bottom: 5px; }
+        .prob-val { font-size: 18px; font-weight: 700; color: var(--accent); }
+        
+        .prediction-box { background: rgba(34, 197, 94, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid var(--win); margin-top: 15px; }
+        .prediction-title { font-weight: 700; color: var(--win); margin-bottom: 5px; display: block; }
 
         .history-section { grid-column: 1 / -1; margin-top: 30px; }
-        table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; font-size: 12px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { background: #1c253d; color: var(--accent); font-weight: 600; }
-        .btn-del { background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 4px 8px; border-radius: 4px; font-size: 11px; }
+        th { background: #1c253d; color: var(--accent); }
     </style>
 </head>
 <body>
@@ -78,26 +62,36 @@
         </div>
 
         <div class="btn-group">
-            <button class="btn-run" onclick="runAnalysis()">HESAPLA VE KAYDET</button>
-            <button class="btn-clear" onclick="clearHistory()">GEÇMİŞİ SİL</button>
+            <button class="btn-run" onclick="runAnalysis()">ANALİZ ET VE TAHMİN ET</button>
+            <button class="btn-clear" onclick="clearHistory()">TEMİZLE</button>
         </div>
 
         <div class="result-panel" id="result-panel">
-            <div id="res-title" style="color: #94a3b8;"></div>
-            <div class="score-display" id="res-score">0.00 - 0.00</div>
-            <div class="coach-note" id="res-coach"></div>
+            <div class="score-main">
+                <span style="color: #94a3b8;">BEKLENEN SKOR (xG)</span>
+                <span class="score-val" id="res-score">0.00 - 0.00</span>
+            </div>
+
+            <div class="prob-grid">
+                <div class="prob-item"><span class="prob-label">MS 1 İHTİMAL</span><span class="prob-val" id="p-win">-%</span></div>
+                <div class="prob-item"><span class="prob-label">MS X İHTİMAL</span><span class="prob-val" id="p-draw">-%</span></div>
+                <div class="prob-item"><span class="prob-label">MS 2 İHTİMAL</span><span class="prob-val" id="p-loss">-%</span></div>
+                <div class="prob-item"><span class="prob-label">2.5 ÜST</span><span class="prob-val" id="p-over">-%</span></div>
+                <div class="prob-item"><span class="prob-label">KG VAR</span><span class="prob-val" id="p-btts">-%</span></div>
+                <div class="prob-item"><span class="prob-label">TOPLAM GOL</span><span class="prob-val" id="p-total">0.00</span></div>
+            </div>
+
+            <div class="prediction-box">
+                <span class="prediction-title">🎯 OLASI SKOR TAHMİNLERİ</span>
+                <div id="skor-tahminleri" style="font-weight: 600; font-size: 15px;"></div>
+            </div>
         </div>
 
         <div class="history-section">
             <h2>ARŞİV</h2>
             <table id="history-table">
                 <thead>
-                    <tr>
-                        <th>ZAMAN</th>
-                        <th>MAÇ</th>
-                        <th>SKOR</th>
-                        <th>İŞLEM</th>
-                    </tr>
+                    <tr><th>SAAT</th><th>MAÇ</th><th>xG SKOR</th><th>TAHMİN</th></tr>
                 </thead>
                 <tbody id="history-body"></tbody>
             </table>
@@ -134,6 +128,12 @@
         loadHistory();
     }
 
+    // Poisson Olasılık Fonksiyonu
+    function poisson(k, lambda) {
+        return (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k);
+    }
+    function factorial(n) { return n <= 1 ? 1 : n * factorial(n - 1); }
+
     function runAnalysis() {
         const hName = document.getElementById('h-name').value || "EV";
         const aName = document.getElementById('a-name').value || "DEP";
@@ -141,64 +141,70 @@
 
         const calculateGoal = (p, opp) => {
             let score = 0;
-            let power1 = (getVal(p, 'npxG') * 0.75) + (getVal(p, 'sca') * 0.04);
-            if (power1 >= 1.1) {
+            let p1 = (getVal(p, 'npxG') * 0.75) + (getVal(p, 'sca') * 0.04);
+            if (p1 >= 1.1) {
                 score = 1.0;
-                let power2 = (getVal(p, 'tilt') * 0.45) + (getVal(p, 'box') * 0.55);
-                if (power2 >= 60) {
+                let p2 = (getVal(p, 'tilt') * 0.45) + (getVal(p, 'box') * 0.55);
+                if (p2 >= 60) {
                     score = 2.0;
-                    let power3 = (getVal(p, 'prog') * 0.5) + (getVal(opp, 'deep') * 0.5);
-                    if (power3 >= 50) score = 3.0;
-                    else score += (power3 / 50) * 0.5;
-                } else score += (power2 / 60) * 0.65;
-            } else score = (power1 / 1.1) * 0.8;
-            return p === 'h' ? score * 1.05 : score * 0.95;
+                    let p3 = (getVal(p, 'prog') * 0.5) + (getVal(opp, 'deep') * 0.5);
+                    if (p3 >= 50) score = 3.0; else score += (p3 / 50) * 0.5;
+                } else score += (p2 / 60) * 0.65;
+            } else score = (p1 / 1.1) * 0.8;
+            return score;
         };
 
-        const resH = calculateGoal('h', 'a').toFixed(2);
-        const resA = calculateGoal('a', 'h').toFixed(2);
-        const result = `${resH} - ${resA}`;
+        let xGH = calculateGoal('h', 'a') * 1.05;
+        let xGA = calculateGoal('a', 'h') * 0.95;
+        const totalXG = xGH + xGA;
 
+        // İhtimalleri Hesapla (Poisson Mantığı ile)
+        let probH = 0, probA = 0, probD = 0, probOver = 0, probBTTS = 0;
+        let scores = [];
+
+        for (let i = 0; i <= 5; i++) {
+            for (let j = 0; j <= 5; j++) {
+                let p = poisson(i, xGH) * poisson(j, xGA);
+                if (i > j) probH += p; else if (j > i) probA += p; else probD += p;
+                if (i + j > 2.5) probOver += p;
+                if (i > 0 && j > 0) probBTTS += p;
+                scores.push({ s: `${i}-${j}`, p: p });
+            }
+        }
+
+        // En yüksek 3 skor tahmini
+        scores.sort((a, b) => b.p - a.p);
+        const top3 = scores.slice(0, 3).map(s => `${s.s} (%${(s.p * 100).toFixed(1)})`).join(" | ");
+
+        // UI Güncelle
         document.getElementById('result-panel').style.display = 'block';
-        document.getElementById('res-title').innerText = `${hName} vs ${aName}`;
-        document.getElementById('res-score').innerText = result;
-        document.getElementById('res-coach').innerText = "Analiz Tamamlandı: Kademeli bariyer sistemi uygulandı. Skor arşive eklendi.";
+        document.getElementById('res-score').innerText = `${xGH.toFixed(2)} - ${xGA.toFixed(2)}`;
+        document.getElementById('p-win').innerText = `%${(probH * 100).toFixed(0)}`;
+        document.getElementById('p-draw').innerText = `%${(probD * 100).toFixed(0)}`;
+        document.getElementById('p-loss').innerText = `%${(probA * 100).toFixed(0)}`;
+        document.getElementById('p-over').innerText = `%${(probOver * 100).toFixed(0)}`;
+        document.getElementById('p-btts').innerText = `%${(probBTTS * 100).toFixed(0)}`;
+        document.getElementById('p-total').innerText = totalXG.toFixed(2);
+        document.getElementById('skor-tahminleri').innerText = top3;
 
-        saveMatch(hName, aName, result);
+        saveMatch(hName, aName, `${xGH.toFixed(2)}-${xGA.toFixed(2)}`, top3.split('|')[0]);
     }
 
-    function saveMatch(h, a, res) {
-        let history = JSON.parse(localStorage.getItem('futbol_min_db') || '[]');
-        history.unshift({ id: Date.now(), match: `${h}-${a}`, score: res, time: new Date().toLocaleTimeString('tr-TR') });
-        localStorage.setItem('futbol_min_db', JSON.stringify(history));
+    function saveMatch(h, a, score, best) {
+        let history = JSON.parse(localStorage.getItem('futbol_pro_db') || '[]');
+        history.unshift({ id: Date.now(), match: `${h}-${a}`, score: score, best: best, time: new Date().toLocaleTimeString('tr-TR') });
+        localStorage.setItem('futbol_pro_db', JSON.stringify(history));
         loadHistory();
     }
 
     function loadHistory() {
-        let history = JSON.parse(localStorage.getItem('futbol_min_db') || '[]');
-        document.getElementById('history-body').innerHTML = history.map(item => `
-            <tr>
-                <td style="color: #94a3b8;">${item.time}</td>
-                <td>${item.match}</td>
-                <td style="font-weight: 700; color: var(--accent);">${item.score}</td>
-                <td><button class="btn-del" onclick="deleteItem(${item.id})">SİL</button></td>
-            </tr>
+        let history = JSON.parse(localStorage.getItem('futbol_pro_db') || '[]');
+        document.getElementById('history-body').innerHTML = history.map(i => `
+            <tr><td>${i.time}</td><td>${i.match}</td><td style="color:var(--accent); font-weight:700;">${i.score}</td><td>${i.best}</td></tr>
         `).join('');
     }
 
-    function deleteItem(id) {
-        let history = JSON.parse(localStorage.getItem('futbol_min_db'));
-        history = history.filter(i => i.id !== id);
-        localStorage.setItem('futbol_min_db', JSON.stringify(history));
-        loadHistory();
-    }
-
-    function clearHistory() {
-        if(confirm("Tüm kayıtlar silinsin mi?")) {
-            localStorage.removeItem('futbol_min_db');
-            loadHistory();
-        }
-    }
+    function clearHistory() { if(confirm("Silinsin mi?")) { localStorage.removeItem('futbol_pro_db'); loadHistory(); } }
 
     init();
 </script>

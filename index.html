@@ -3,181 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Analiz Motoru v1.0</title>
+    <title>Pro Analiz Motoru v2.0 - 10 Metrik</title>
     <style>
-        :root {
-            --primary: #2c3e50; --accent: #e74c3c; --success: #27ae60; --bg: #f4f7f6;
-        }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; color: var(--primary); }
-        .metric-group { margin-bottom: 15px; }
-        .metric-label { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
-        input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--primary); }
-        .controls { grid-column: 1 / -1; display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
-        button { padding: 12px 25px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-analyze { background: var(--success); color: white; }
-        .btn-reset { background: var(--accent); color: white; }
-        .result-panel { grid-column: 1 / -1; background: #2c3e50; color: white; padding: 25px; border-radius: 12px; text-align: center; }
-        .coach-comment { font-style: italic; color: #bdc3c7; margin-top: 15px; border-left: 4px solid var(--accent); padding-left: 15px; text-align: left; }
-        .history { grid-column: 1 / -1; margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #eee; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; }
-        .home-badge { background: #d1ecf1; color: #0c5460; }
+        :root { --primary: #1a1a2e; --accent: #e94560; --success: #0f3460; --bg: #16213e; --text: #e94560; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 20px; }
+        .container { max-width: 1300px; margin: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: var(--primary); padding: 20px; border-radius: 15px; border: 1px solid #16213e; }
+        h2 { border-bottom: 2px solid var(--accent); padding-bottom: 10px; color: #fff; text-align: center; }
+        .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .metric-group { background: #16213e; padding: 10px; border-radius: 8px; }
+        .metric-label { display: flex; justify-content: space-between; font-weight: bold; font-size: 12px; color: #aaa; }
+        .val { color: var(--accent); font-size: 14px; }
+        input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--accent); }
+        .controls { grid-column: 1 / -1; text-align: center; margin: 30px 0; }
+        button { padding: 15px 40px; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; margin: 0 10px; }
+        .btn-analyze { background: var(--accent); color: white; box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4); }
+        .btn-reset { background: #4e4e4e; color: white; }
+        .result-panel { grid-column: 1 / -1; background: #0f3460; padding: 30px; border-radius: 20px; text-align: center; border: 2px solid var(--accent); display: none; }
+        .coach-box { margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-left: 5px solid var(--accent); text-align: left; line-height: 1.6; }
+        .history-section { grid-column: 1 / -1; margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; background: var(--primary); border-radius: 10px; overflow: hidden; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #16213e; }
+        th { background: #0f3460; color: var(--accent); }
     </style>
 </head>
 <body>
 
-<h1 style="text-align:center; color: var(--primary);">⚽ STRATEJİK ANALİZ MOTORU</h1>
+<h1 style="text-align:center; margin-bottom: 30px;">⚽ STRATEJİK ANALİZ MOTORU <small>v2.0</small></h1>
 
 <div class="container">
-    <div class="card" id="home-team">
+    <div class="card">
         <h2>🏠 EV SAHİBİ</h2>
-        <input type="text" id="h-name" placeholder="Takım Adı" style="width:100%; padding:8px; margin-bottom:15px; border:1px solid #ddd;">
+        <input type="text" id="h-name" placeholder="Takım Adı" style="width:96%; padding:10px; margin-bottom:20px; border-radius:5px; border:none;">
         
-        <div class="metric-group">
-            <div class="metric-label"><span>npxG (Gol Beklentisi)</span><span id="h-v1">1.50</span></div>
-            <input type="range" id="h-npxG" min="0" max="4" step="0.1" value="1.5">
-        </div>
-        <div class="metric-group">
-            <div class="metric-label"><span>SCA (Şut Yaratan Aksiyon)</span><span id="h-v2">15</span></div>
-            <input type="range" id="h-SCA" min="0" max="40" value="15">
-        </div>
-        <div class="metric-group">
-            <div class="metric-label"><span>BOX (C.Saha Etkinliği)</span><span id="h-v3">20</span></div>
-            <input type="range" id="h-BOX" min="0" max="50" value="20">
-        </div>
-        <div class="metric-group">
-            <div class="metric-label"><span>Field Tilt (Hakimiyet %)</span><span id="h-v4">50</span></div>
-            <input type="range" id="h-Tilt" min="0" max="100" value="50">
-        </div>
-        <div class="metric-group">
-            <div class="metric-label"><span>npxGA (Savunma Zaafı)</span><span id="h-v5">1.20</span></div>
-            <input type="range" id="h-npxGA" min="0" max="4" step="0.1" value="1.2">
+        <div class="metric-grid">
+            <div class="metric-group"><div class="metric-label">npxG <span class="val" id="h-v1">1.5</span></div><input type="range" id="h-npxG" min="0" max="4" step="0.1" value="1.5"></div>
+            <div class="metric-group"><div class="metric-label">SCA <span class="val" id="h-v2">15</span></div><input type="range" id="h-SCA" min="0" max="40" value="15"></div>
+            <div class="metric-group"><div class="metric-label">BOX <span class="val" id="h-v3">20</span></div><input type="range" id="h-BOX" min="0" max="50" value="20"></div>
+            <div class="metric-group"><div class="metric-label">Field Tilt % <span class="val" id="h-v4">50</span></div><input type="range" id="h-Tilt" min="0" max="100" value="50"></div>
+            <div class="metric-group"><div class="metric-label">ProgP <span class="val" id="h-v5">35</span></div><input type="range" id="h-ProgP" min="0" max="80" value="35"></div>
+            <div class="metric-group"><div class="metric-label">npxGA <span class="val" id="h-v6">1.2</span></div><input type="range" id="h-npxGA" min="0" max="4" step="0.1" value="1.2"></div>
+            <div class="metric-group"><div class="metric-label">PPDA <span class="val" id="h-v7">12.0</span></div><input type="range" id="h-PPDA" min="5" max="25" step="0.5" value="12"></div>
+            <div class="metric-group"><div class="metric-label">OPP.B <span class="val" id="h-v8">10</span></div><input type="range" id="h-OPPB" min="0" max="40" value="10"></div>
+            <div class="metric-group"><div class="metric-label">Deep A. <span class="val" id="h-v9">5</span></div><input type="range" id="h-DeepA" min="0" max="20" value="5"></div>
+            <div class="metric-group"><div class="metric-label">Interceptions <span class="val" id="h-v10">15</span></div><input type="range" id="h-Int" min="0" max="40" value="15"></div>
         </div>
     </div>
 
-    <div class="card" id="away-team">
+    <div class="card">
         <h2>✈️ DEPLASMAN</h2>
-        <input type="text" id="a-name" placeholder="Takım Adı" style="width:100%; padding:8px; margin-bottom:15px; border:1px solid #ddd;">
+        <input type="text" id="a-name" placeholder="Takım Adı" style="width:96%; padding:10px; margin-bottom:20px; border-radius:5px; border:none;">
         
-        <div class="metric-group">
-            <div class="metric-label"><span>npxG (Gol Beklentisi)</span><span id="a-v1">1.50</span></div>
-            <input type="range" id="a-npxG" min="0" max="4" step="0.1" value="1.5">
-        </div>
-        <div class="metric-group">
-            <div class="metric-label"><span>SCA (Şut Yaratan Aksiyon)</span><span id="a-v2">15</span></div>
-            <input type="range" id="a-SCA" min="0" max="40" value="15">
-        </div>
-        <div class="metric-group">
-            <div class="metric-label"><span>BOX (C.Saha Etkinliği)</span><span id="a-v3">20</span></div>
-            <input type="range" id="a-BOX" min="0" max="50" value="20">
-        </div>
-        <div class="metric-group">
-            <div class="metric-label"><span>Field Tilt (Hakimiyet %)</span><span id="a-v4">50</span></div>
-            <input type="range" id="a-Tilt" min="0" max="100" value="50">
-        </div>
-        <div class="metric-group">
-            <div class="metric-label"><span>npxGA (Savunma Zaafı)</span><span id="a-v5">1.20</span></div>
-            <input type="range" id="a-npxGA" min="0" max="4" step="0.1" value="1.2">
+        <div class="metric-grid">
+            <div class="metric-group"><div class="metric-label">npxG <span class="val" id="a-v1">1.5</span></div><input type="range" id="a-npxG" min="0" max="4" step="0.1" value="1.5"></div>
+            <div class="metric-group"><div class="metric-label">SCA <span class="val" id="a-v2">15</span></div><input type="range" id="a-SCA" min="0" max="40" value="15"></div>
+            <div class="metric-group"><div class="metric-label">BOX <span class="val" id="a-v3">20</span></div><input type="range" id="a-BOX" min="0" max="50" value="20"></div>
+            <div class="metric-group"><div class="metric-label">Field Tilt % <span class="val" id="a-v4">50</span></div><input type="range" id="a-Tilt" min="0" max="100" value="50"></div>
+            <div class="metric-group"><div class="metric-label">ProgP <span class="val" id="a-v5">35</span></div><input type="range" id="a-ProgP" min="0" max="80" value="35"></div>
+            <div class="metric-group"><div class="metric-label">npxGA <span class="val" id="a-v6">1.2</span></div><input type="range" id="a-npxGA" min="0" max="4" step="0.1" value="1.2"></div>
+            <div class="metric-group"><div class="metric-label">PPDA <span class="val" id="a-v7">12.0</span></div><input type="range" id="a-PPDA" min="5" max="25" step="0.5" value="12"></div>
+            <div class="metric-group"><div class="metric-label">OPP.B <span class="val" id="a-v8">10</span></div><input type="range" id="a-OPPB" min="0" max="40" value="10"></div>
+            <div class="metric-group"><div class="metric-label">Deep A. <span class="val" id="a-v9">5</span></div><input type="range" id="a-DeepA" min="0" max="20" value="5"></div>
+            <div class="metric-group"><div class="metric-label">Interceptions <span class="val" id="a-v10">15</span></div><input type="range" id="a-Int" min="0" max="40" value="15"></div>
         </div>
     </div>
 
     <div class="controls">
-        <button class="btn-analyze" onclick="analizEt()">MAÇI ANALİZ ET</button>
-        <button class="btn-reset" onclick="formuTemizle()">SIFIRLA</button>
+        <button class="btn-analyze" onclick="analizEt()">STRATEJİYİ ÇARPIŞTIR</button>
+        <button class="btn-reset" onclick="formuTemizle()">SIFRLA</button>
     </div>
 
-    <div class="result-panel" id="result-area" style="display:none;">
-        <h3 id="match-title">A vs B</h3>
-        <h1 id="score-prediction" style="font-size: 48px; margin: 10px 0;">0.0 - 0.0</h1>
-        <div class="coach-comment" id="coach-comment">Hocam, analiz verileri işleniyor...</div>
+    <div class="result-panel" id="result-panel">
+        <h2 id="match-header">EV vs DEPLASMAN</h2>
+        <div style="font-size: 60px; font-weight: bold; color: var(--accent);" id="final-score">0.00 - 0.00</div>
+        <div class="coach-box" id="coach-box"></div>
     </div>
 
-    <div class="history">
-        <h3>📊 Analiz Geçmişi</h3>
+    <div class="history-section">
+        <h3>📝 Analiz Kayıtları</h3>
         <table id="history-table">
-            <thead>
-                <tr><th>Maç</th><th>Skor Tahmini</th><th>Antrenör Notu</th></tr>
-            </thead>
+            <thead><tr><th>Maç</th><th>Tahmin</th><th>Baş Antrenör Notu</th></tr></thead>
             <tbody></tbody>
         </table>
     </div>
 </div>
 
 <script>
-    // Slider değerlerini anlık göster
-    document.querySelectorAll('input[type="range"]').forEach(input => {
-        input.addEventListener('input', (e) => {
-            const spanId = e.target.id.replace('h-', 'h-v').replace('a-', 'a-v');
-            // ID eşleştirme mantığı düzeltme:
-            const span = e.target.previousElementSibling.querySelector('span:last-child');
-            span.innerText = e.target.value;
+    // Dinamik Değer Gösterimi
+    document.querySelectorAll('input[type="range"]').forEach(slider => {
+        slider.addEventListener('input', (e) => {
+            e.target.previousElementSibling.querySelector('.val').innerText = e.target.value;
         });
     });
 
     function analizEt() {
-        // Verileri al
-        const h = {
-            name: document.getElementById('h-name').value || 'Ev Sahibi',
-            npxG: parseFloat(document.getElementById('h-npxG').value),
-            sca: parseFloat(document.getElementById('h-SCA').value),
-            box: parseFloat(document.getElementById('h-BOX').value),
-            tilt: parseFloat(document.getElementById('h-Tilt').value),
-            npxGA: parseFloat(document.getElementById('h-npxGA').value)
-        };
+        const getData = (p) => ({
+            name: document.getElementById(`${p}-name`).value || (p === 'h' ? 'Ev Sahibi' : 'Deplasman'),
+            npxG: parseFloat(document.getElementById(`${p}-npxG`).value),
+            sca: parseFloat(document.getElementById(`${p}-SCA`).value),
+            box: parseFloat(document.getElementById(`${p}-BOX`).value),
+            tilt: parseFloat(document.getElementById(`${p}-Tilt`).value),
+            progP: parseFloat(document.getElementById(`${p}-ProgP`).value),
+            npxGA: parseFloat(document.getElementById(`${p}-npxGA`).value),
+            ppda: parseFloat(document.getElementById(`${p}-PPDA`).value),
+            oppb: parseFloat(document.getElementById(`${p}-OPPB`).value),
+            deepA: parseFloat(document.getElementById(`${p}-DeepA`).value),
+            int: parseFloat(document.getElementById(`${p}-Int`).value)
+        });
 
-        const a = {
-            name: document.getElementById('a-name').value || 'Deplasman',
-            npxG: parseFloat(document.getElementById('a-npxG').value),
-            sca: parseFloat(document.getElementById('a-SCA').value),
-            box: parseFloat(document.getElementById('a-BOX').value),
-            tilt: parseFloat(document.getElementById('a-Tilt').value),
-            npxGA: parseFloat(document.getElementById('a-npxGA').value)
-        };
+        const h = getData('h'); const a = getData('a');
 
-        // 1. ÇARPIŞTIRMA VE H/A KATSAYILARI
-        // Ev sahibi bonusu (1.1), Deplasman zorluğu (0.9)
-        let homeExp = (h.npxG * 1.1) * (a.npxGA / 1.2); 
-        let awayExp = (a.npxG * 0.9) * (h.npxGA / 1.2);
+        // ÇARPIŞTIRMA MOTORU (Optimize Edilmiş)
+        let h_score = (h.npxG * 1.15) * (a.npxGA / 1.2); 
+        let a_score = (a.npxG * 0.85) * (h.npxGA / 1.2);
 
-        // npxG vs npxGA Pekiştirme (Dediğin Senaryo)
-        if(h.npxG > 2.0 && a.npxGA > 2.0) homeExp *= 1.2;
-        if(a.npxG > 2.0 && h.npxGA > 2.0) awayExp *= 1.2;
+        // Pekiştirme: A'nın hücumu iyi, B'nin savunması kötüyse (Dediğin Senaryo)
+        if(h.npxG > 2 && a.npxGA > 2) h_score *= 1.25;
+        if(a.npxG > 2 && h.npxGA > 2) a_score *= 1.25;
 
-        const s1 = homeExp.toFixed(2);
-        const s2 = awayExp.toFixed(2);
-
-        // 2. ANTRENÖR YORUMU
-        let yorum = "";
-        if (h.tilt > 60 && a.npxGA > 1.5) {
-            yorum = "Hocam, sahayı dar ettik. Rakip savunma yerleşimi npxGA verilerinde olduğu gibi çok dağınık. Sürekli ceza sahasına (BOX) giriyoruz, fişi erken çekebiliriz.";
-        } else if (a.tilt < 40 && a.npxG > 1.5) {
-            yorum = "Dikkat hocam! Rakip topu bize bıraktı ama kontra atakları (ProgP) çok tehlikeli. Az gelip öz vuruyorlar, savunma arkasına sızmalara önlem almalıyız.";
+        // Antrenör Yorum Mantığı
+        let coachMsg = "";
+        if(h.tilt > 60 && a.deepA > 10) {
+            coachMsg = "<b>Hocam Analizim Şudur:</b> Rakibi sahasına hapsettik (High Tilt). Rakip savunma arkasına sızmalara (Deep A.) çok müsait. Dikine paslarla (ProgP) fişi çekebiliriz. Ancak kontra atağa dikkat!";
+        } else if (a.npxG > h.npxG && a.tilt < 45) {
+            coachMsg = "<b>Taktiksel Uyarı:</b> Deplasman takımı tam bir 'pusu' futbolu oynuyor. Topu bize bıraktılar ama bitiricilikleri (npxG) çok keskin. Savunma güvenliğini elden bırakmamalıyız.";
         } else {
-            yorum = "Orta saha mücadelesine dönen bir maç. Kim daha az hata yaparsa o kazanır, veriler çok yakın.";
+            coachMsg = "<b>Maç Dengede:</b> İki takım da birbirini kilitliyor. PPDA değerleri yoğun presi gösteriyor. Duran top veya bir yerleşim hatası tabelayı değiştirir.";
         }
 
-        // SONUCU GÖSTER
-        document.getElementById('result-area').style.display = 'block';
-        document.getElementById('match-title').innerText = `${h.name} vs ${a.name}`;
-        document.getElementById('score-prediction').innerText = `${s1} - ${s2}`;
-        document.getElementById('coach-comment').innerText = yorum;
+        // Sonuçları Yansıt
+        document.getElementById('result-panel').style.display = 'block';
+        document.getElementById('match-header').innerText = `${h.name} vs ${a.name}`;
+        document.getElementById('final-score').innerText = `${h_score.toFixed(2)} - ${a_score.toFixed(2)}`;
+        document.getElementById('coach-box').innerHTML = coachMsg;
 
-        // GEÇMİŞE KAYDET
-        const row = `<tr><td>${h.name} - ${a.name}</td><td><b>${s1} - ${s2}</b></td><td><small>${yorum}</small></td></tr>`;
-        document.querySelector('#history-table tbody').insertAdjacentHTML('afterbegin', row);
+        // Geçmişe Ekle
+        const newRow = `<tr><td>${h.name} vs ${a.name}</td><td><b>${h_score.toFixed(2)} - ${a_score.toFixed(2)}</b></td><td><small>${coachMsg}</small></td></tr>`;
+        document.querySelector('#history-table tbody').insertAdjacentHTML('afterbegin', newRow);
     }
 
     function formuTemizle() {
-        document.querySelectorAll('input[type="range"]').forEach(i => i.value = i.getAttribute('value'));
-        document.querySelectorAll('.metric-label span:last-child').forEach(s => s.innerText = "-");
-        document.getElementById('h-name').value = "";
-        document.getElementById('a-name').value = "";
-        document.getElementById('result-area').style.display = 'none';
+        location.reload(); // En temiz sıfırlama yöntemi
     }
 </script>
 </body>

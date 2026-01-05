@@ -3,130 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analiz Motoru - Full Recall v8.0</title>
+    <title>Pro Analiz Motoru v1.0</title>
     <style>
-        :root { --accent: #00ff88; --bg: #050a0f; --card: #111827; --ev: #3b82f6; --dep: #ef4444; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #f3f4f6; margin: 0; padding: 10px; font-size: 13px; }
-        .card { background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #1f2937; margin-bottom: 10px; }
-        textarea { width: 100%; height: 50px; background: #000; color: var(--accent); border: 1px solid #333; border-radius: 8px; padding: 8px; font-size: 11px; outline: none; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        input { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 6px; box-sizing: border-box; margin-bottom: 5px; font-weight: bold; }
-        .btn-main { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 10px; color: #000; font-weight: 800; cursor: pointer; margin-top: 5px; font-size: 15px; transition: 0.2s; }
-        .btn-main:active { transform: scale(0.98); }
-        
-        /* Geçmiş Sekmesi */
-        .history-item { background: #161e2d; padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 4px solid var(--accent); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-        .history-item:hover { background: #1f2937; border-left-width: 8px; }
-        .history-item:active { background: #000; }
-        .history-score { font-weight: 900; color: var(--accent); font-size: 16px; }
-        .restore-badge { font-size: 8px; background: var(--accent); color: #000; padding: 2px 5px; border-radius: 4px; margin-top: 4px; display: inline-block; font-weight: bold; }
+        :root {
+            --primary: #2c3e50; --accent: #e74c3c; --success: #27ae60; --bg: #f4f7f6;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; color: var(--primary); }
+        .metric-group { margin-bottom: 15px; }
+        .metric-label { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--primary); }
+        .controls { grid-column: 1 / -1; display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+        button { padding: 12px 25px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-analyze { background: var(--success); color: white; }
+        .btn-reset { background: var(--accent); color: white; }
+        .result-panel { grid-column: 1 / -1; background: #2c3e50; color: white; padding: 25px; border-radius: 12px; text-align: center; }
+        .coach-comment { font-style: italic; color: #bdc3c7; margin-top: 15px; border-left: 4px solid var(--accent); padding-left: 15px; text-align: left; }
+        .history { grid-column: 1 / -1; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #eee; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .home-badge { background: #d1ecf1; color: #0c5460; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <textarea id="bulkData" placeholder="FBref verisini yapıştır..."></textarea>
-        <div style="display:flex; gap:5px; margin-top:8px;">
-            <button onclick="smartParse('e_')" style="background:var(--ev); color:white; flex:1; padding:10px; border:none; border-radius:6px; cursor:pointer;">EV'E AKTAR</button>
-            <button onclick="smartParse('d_')" style="background:var(--dep); color:white; flex:1; padding:10px; border:none; border-radius:6px; cursor:pointer;">DEP'E AKTAR</button>
+<h1 style="text-align:center; color: var(--primary);">⚽ STRATEJİK ANALİZ MOTORU</h1>
+
+<div class="container">
+    <div class="card" id="home-team">
+        <h2>🏠 EV SAHİBİ</h2>
+        <input type="text" id="h-name" placeholder="Takım Adı" style="width:100%; padding:8px; margin-bottom:15px; border:1px solid #ddd;">
+        
+        <div class="metric-group">
+            <div class="metric-label"><span>npxG (Gol Beklentisi)</span><span id="h-v1">1.50</span></div>
+            <input type="range" id="h-npxG" min="0" max="4" step="0.1" value="1.5">
+        </div>
+        <div class="metric-group">
+            <div class="metric-label"><span>SCA (Şut Yaratan Aksiyon)</span><span id="h-v2">15</span></div>
+            <input type="range" id="h-SCA" min="0" max="40" value="15">
+        </div>
+        <div class="metric-group">
+            <div class="metric-label"><span>BOX (C.Saha Etkinliği)</span><span id="h-v3">20</span></div>
+            <input type="range" id="h-BOX" min="0" max="50" value="20">
+        </div>
+        <div class="metric-group">
+            <div class="metric-label"><span>Field Tilt (Hakimiyet %)</span><span id="h-v4">50</span></div>
+            <input type="range" id="h-Tilt" min="0" max="100" value="50">
+        </div>
+        <div class="metric-group">
+            <div class="metric-label"><span>npxGA (Savunma Zaafı)</span><span id="h-v5">1.20</span></div>
+            <input type="range" id="h-npxGA" min="0" max="4" step="0.1" value="1.2">
         </div>
     </div>
 
-    <div class="grid" style="margin-bottom:8px;">
-        <input type="text" id="e_name" placeholder="Ev Adı">
-        <input type="text" id="d_name" placeholder="Dep Adı">
-    </div>
-
-    <div class="grid">
-        <div class="card" style="border-top: 2px solid var(--ev)">
-            <label style="font-size:9px;">npxG</label><input type="number" id="e_npxg" step="0.01" class="val-field">
-            <label style="font-size:9px;">npxGA</label><input type="number" id="e_npxga" step="0.01" class="val-field">
+    <div class="card" id="away-team">
+        <h2>✈️ DEPLASMAN</h2>
+        <input type="text" id="a-name" placeholder="Takım Adı" style="width:100%; padding:8px; margin-bottom:15px; border:1px solid #ddd;">
+        
+        <div class="metric-group">
+            <div class="metric-label"><span>npxG (Gol Beklentisi)</span><span id="a-v1">1.50</span></div>
+            <input type="range" id="a-npxG" min="0" max="4" step="0.1" value="1.5">
         </div>
-        <div class="card" style="border-top: 2px solid var(--dep)">
-            <label style="font-size:9px;">npxG</label><input type="number" id="d_npxg" step="0.01" class="val-field">
-            <label style="font-size:9px;">npxGA</label><input type="number" id="d_npxga" step="0.01" class="val-field">
+        <div class="metric-group">
+            <div class="metric-label"><span>SCA (Şut Yaratan Aksiyon)</span><span id="a-v2">15</span></div>
+            <input type="range" id="a-SCA" min="0" max="40" value="15">
+        </div>
+        <div class="metric-group">
+            <div class="metric-label"><span>BOX (C.Saha Etkinliği)</span><span id="a-v3">20</span></div>
+            <input type="range" id="a-BOX" min="0" max="50" value="20">
+        </div>
+        <div class="metric-group">
+            <div class="metric-label"><span>Field Tilt (Hakimiyet %)</span><span id="a-v4">50</span></div>
+            <input type="range" id="a-Tilt" min="0" max="100" value="50">
+        </div>
+        <div class="metric-group">
+            <div class="metric-label"><span>npxGA (Savunma Zaafı)</span><span id="a-v5">1.20</span></div>
+            <input type="range" id="a-npxGA" min="0" max="4" step="0.1" value="1.2">
         </div>
     </div>
 
-    <button class="btn-main" onclick="finalHesapla()">ANALİZ ET VE KAYDET</button>
-    <button style="width:100%; background:none; border:1px solid #374151; color:#9ca3af; padding:8px; border-radius:8px; margin-top:8px; cursor:pointer;" onclick="temizle()">❌ EKRANI TEMİZLE</button>
-
-    <div id="sonucBox" style="display:none; text-align:center; margin:15px 0; padding:15px; background:#1f2937; border-radius:12px; border:1px solid var(--accent);">
-        <div id="skorDisplay" style="font-size:32px; font-weight:900;"></div>
+    <div class="controls">
+        <button class="btn-analyze" onclick="analizEt()">MAÇI ANALİZ ET</button>
+        <button class="btn-reset" onclick="formuTemizle()">SIFIRLA</button>
     </div>
 
-    <div style="margin-top:25px;">
-        <h4 style="color:var(--accent); font-size:12px; margin-bottom:10px;">ANALİZ GEÇMİŞİ (Yüklemek için tıkla)</h4>
-        <div id="historyList"></div>
+    <div class="result-panel" id="result-area" style="display:none;">
+        <h3 id="match-title">A vs B</h3>
+        <h1 id="score-prediction" style="font-size: 48px; margin: 10px 0;">0.0 - 0.0</h1>
+        <div class="coach-comment" id="coach-comment">Hocam, analiz verileri işleniyor...</div>
     </div>
+
+    <div class="history">
+        <h3>📊 Analiz Geçmişi</h3>
+        <table id="history-table">
+            <thead>
+                <tr><th>Maç</th><th>Skor Tahmini</th><th>Antrenör Notu</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
 
 <script>
-window.onload = gecmisiGoster;
+    // Slider değerlerini anlık göster
+    document.querySelectorAll('input[type="range"]').forEach(input => {
+        input.addEventListener('input', (e) => {
+            const spanId = e.target.id.replace('h-', 'h-v').replace('a-', 'a-v');
+            // ID eşleştirme mantığı düzeltme:
+            const span = e.target.previousElementSibling.querySelector('span:last-child');
+            span.innerText = e.target.value;
+        });
+    });
 
-function smartParse(prefix) {
-    const raw = document.getElementById('bulkData').value;
-    const nums = raw.match(/\d+(\.\d+)?/g);
-    if (!nums) return;
-    let val = nums.find(n => parseFloat(n) > 0.4 && parseFloat(n) < 4.0) || 0;
-    document.getElementById(prefix + (raw.toLowerCase().includes("opponent") ? 'npxga' : 'npxg')).value = val;
-    document.getElementById('bulkData').value = "";
-}
+    function analizEt() {
+        // Verileri al
+        const h = {
+            name: document.getElementById('h-name').value || 'Ev Sahibi',
+            npxG: parseFloat(document.getElementById('h-npxG').value),
+            sca: parseFloat(document.getElementById('h-SCA').value),
+            box: parseFloat(document.getElementById('h-BOX').value),
+            tilt: parseFloat(document.getElementById('h-Tilt').value),
+            npxGA: parseFloat(document.getElementById('h-npxGA').value)
+        };
 
-function finalHesapla() {
-    const data = {
-        en: document.getElementById('e_name').value || "Ev",
-        dn: document.getElementById('d_name').value || "Dep",
-        eg: parseFloat(document.getElementById('e_npxg').value) || 0,
-        ega: parseFloat(document.getElementById('e_npxga').value) || 0,
-        dg: parseFloat(document.getElementById('d_npxg').value) || 0,
-        dga: parseFloat(document.getElementById('d_npxga').value) || 0
-    };
+        const a = {
+            name: document.getElementById('a-name').value || 'Deplasman',
+            npxG: parseFloat(document.getElementById('a-npxG').value),
+            sca: parseFloat(document.getElementById('a-SCA').value),
+            box: parseFloat(document.getElementById('a-BOX').value),
+            tilt: parseFloat(document.getElementById('a-Tilt').value),
+            npxGA: parseFloat(document.getElementById('a-npxGA').value)
+        };
 
-    let evSkor = ((data.eg + data.dga) / 2 * 1.05).toFixed(1);
-    let depSkor = ((data.dg + data.ega) / 2).toFixed(1);
-    const skor = evSkor + " - " + depSkor;
+        // 1. ÇARPIŞTIRMA VE H/A KATSAYILARI
+        // Ev sahibi bonusu (1.1), Deplasman zorluğu (0.9)
+        let homeExp = (h.npxG * 1.1) * (a.npxGA / 1.2); 
+        let awayExp = (a.npxG * 0.9) * (h.npxGA / 1.2);
 
-    document.getElementById('sonucBox').style.display = 'block';
-    document.getElementById('skorDisplay').innerText = skor;
+        // npxG vs npxGA Pekiştirme (Dediğin Senaryo)
+        if(h.npxG > 2.0 && a.npxGA > 2.0) homeExp *= 1.2;
+        if(a.npxG > 2.0 && h.npxGA > 2.0) awayExp *= 1.2;
 
-    // Tüm metriklerle birlikte kaydet
-    let history = JSON.parse(localStorage.getItem('analiz_v8') || '[]');
-    history.unshift({ ...data, skor, tarih: new Date().toLocaleTimeString() });
-    localStorage.setItem('analiz_v8', JSON.stringify(history.slice(0, 10)));
-    gecmisiGoster();
-}
+        const s1 = homeExp.toFixed(2);
+        const s2 = awayExp.toFixed(2);
 
-function gecmisiGoster() {
-    let history = JSON.parse(localStorage.getItem('analiz_v8') || '[]');
-    document.getElementById('historyList').innerHTML = history.map((item, index) => `
-        <div class="history-item" onclick="veriyiGeriYukle(${index})">
-            <div>
-                <span style="font-weight:bold; display:block;">${item.en} vs ${item.dn}</span>
-                <span class="restore-badge">VERİLERİ GERİ YÜKLE</span>
-            </div>
-            <div class="history-score">${item.skor}</div>
-        </div>
-    `).join('');
-}
+        // 2. ANTRENÖR YORUMU
+        let yorum = "";
+        if (h.tilt > 60 && a.npxGA > 1.5) {
+            yorum = "Hocam, sahayı dar ettik. Rakip savunma yerleşimi npxGA verilerinde olduğu gibi çok dağınık. Sürekli ceza sahasına (BOX) giriyoruz, fişi erken çekebiliriz.";
+        } else if (a.tilt < 40 && a.npxG > 1.5) {
+            yorum = "Dikkat hocam! Rakip topu bize bıraktı ama kontra atakları (ProgP) çok tehlikeli. Az gelip öz vuruyorlar, savunma arkasına sızmalara önlem almalıyız.";
+        } else {
+            yorum = "Orta saha mücadelesine dönen bir maç. Kim daha az hata yaparsa o kazanır, veriler çok yakın.";
+        }
 
-function veriyiGeriYukle(index) {
-    let history = JSON.parse(localStorage.getItem('analiz_v8') || '[]');
-    let m = history[index];
-    document.getElementById('e_name').value = m.en;
-    document.getElementById('d_name').value = m.dn;
-    document.getElementById('e_npxg').value = m.eg;
-    document.getElementById('e_npxga').value = m.ega;
-    document.getElementById('d_npxg').value = m.dg;
-    document.getElementById('d_npxga').value = m.dga;
-    document.getElementById('skorDisplay').innerText = m.skor;
-    document.getElementById('sonucBox').style.display = 'block';
-    alert(m.en + " maçı verileri yüklendi!");
-}
+        // SONUCU GÖSTER
+        document.getElementById('result-area').style.display = 'block';
+        document.getElementById('match-title').innerText = `${h.name} vs ${a.name}`;
+        document.getElementById('score-prediction').innerText = `${s1} - ${s2}`;
+        document.getElementById('coach-comment').innerText = yorum;
 
-function temizle() {
-    document.querySelectorAll('input').forEach(i => i.value = "");
-    document.getElementById('sonucBox').style.display = 'none';
-}
+        // GEÇMİŞE KAYDET
+        const row = `<tr><td>${h.name} - ${a.name}</td><td><b>${s1} - ${s2}</b></td><td><small>${yorum}</small></td></tr>`;
+        document.querySelector('#history-table tbody').insertAdjacentHTML('afterbegin', row);
+    }
+
+    function formuTemizle() {
+        document.querySelectorAll('input[type="range"]').forEach(i => i.value = i.getAttribute('value'));
+        document.querySelectorAll('.metric-label span:last-child').forEach(s => s.innerText = "-");
+        document.getElementById('h-name').value = "";
+        document.getElementById('a-name').value = "";
+        document.getElementById('result-area').style.display = 'none';
+    }
 </script>
 </body>
 </html>

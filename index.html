@@ -3,150 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoalGem - Analiz</title>
+    <title>HVP Üst Analiz Sistemi</title>
     <style>
-        /* Tam Sayfa Arkaplan ve Ortalama */
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --button-success: #22c55e;
+            --button-danger: #ef4444;
+        }
+
+        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0f0f0f; /* Koyu tema */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-        }
-
-        /* Tüm Ekranı Kaplayan Ana Konteyner */
-        .full-page-container {
-            width: 90%;
-            max-width: 500px;
-            background: #181818;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            text-align: center;
-        }
-
-        /* Başlık: GoalGem */
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            color: #ffffff;
-            letter-spacing: 2px;
-            font-weight: bold;
-        }
-
-        /* Input Alanları */
-        .input-group {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .match-input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .team-card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #334155;
+        }
+
+        h3 { color: var(--accent-color); margin-top: 0; }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            color: #94a3b8;
         }
 
         input {
             width: 100%;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #333;
-            background: #252525;
+            background: #0f172a;
+            border: 1px solid #475569;
             color: white;
-            font-size: 1rem;
-            box-sizing: border-box; /* Padding taşmasını önler */
+            padding: 8px;
+            border-radius: 6px;
+            box-sizing: border-box;
+            outline: none;
         }
 
-        input::placeholder {
-            color: #777;
-        }
+        input:focus { border-color: var(--accent-color); }
 
-        /* Buton Grubu */
-        .button-group {
+        .actions {
             display: flex;
-            gap: 15px;
-            margin-top: 25px;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
         }
 
         button {
-            flex: 1;
-            padding: 15px;
+            padding: 12px 30px;
+            border-radius: 8px;
             border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, opacity 0.2s;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .btn-analyze {
-            background-color: #27ae60;
-            color: white;
-        }
-
-        .btn-clear {
-            background-color: #c0392b;
-            color: white;
-        }
-
-        /* Sonuç Alanı */
-        #resultContainer {
-            margin-top: 30px;
-            font-size: 1.8rem;
             font-weight: bold;
+            transition: 0.3s;
         }
 
-        #hvpResult {
-            color: #f1c40f; /* Altın sarısı sonuç rengi */
+        .btn-analyze { background-color: var(--button-success); color: white; }
+        .btn-clear { background-color: var(--button-danger); color: white; }
+        button:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        #resultArea {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: none;
         }
+
+        .history {
+            width: 100%;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #334155;
+        }
+
+        th { color: var(--accent-color); }
     </style>
 </head>
 <body>
 
-<div class="full-page-container">
-    <h1>GoalGem</h1>
-    
-    <div class="input-group">
-        <input type="number" id="npxG" placeholder="npxG">
-        <input type="number" id="gMinusXG" placeholder="G-xG">
-        <input type="number" id="touchesBox" placeholder="Touches in Box">
-        <input type="number" id="prgP" placeholder="PrgP">
-        <input type="number" id="prgC" placeholder="PrgC">
-        <input type="number" id="turnovers" placeholder="High Turnovers">
+<div class="container">
+    <div class="header">
+        <h1>HVP Üst Tahmin Sistemi</h1>
+        <p>Akan Oyun ve Savunma Riski Analizi</p>
     </div>
 
-    <div class="button-group">
-        <button onclick="calculateHVP()" class="btn-analyze">Analiz Et</button>
-        <button onclick="clearFields()" class="btn-clear">Temizle</button>
+    <div class="match-input-grid">
+        <div class="team-card" id="teamA">
+            <h3>A Takımı (Ev)</h3>
+            <div class="input-group"><label>npxG</label><input type="number" step="0.01" class="npxG"></div>
+            <div class="input-group"><label>G-xG</label><input type="number" step="0.01" class="GxG"></div>
+            <div class="input-group"><label>Touches in Box</label><input type="number" class="tib"></div>
+            <div class="input-group"><label>PrgP + PrgC</label><input type="number" class="prg"></div>
+            <div class="input-group"><label>Direct Speed (m/s)</label><input type="number" step="0.1" class="ds"></div>
+            <div class="input-group"><label>Def. Line (m)</label><input type="number" class="dl"></div>
+        </div>
+
+        <div class="team-card" id="teamB">
+            <h3>B Takımı (Dep)</h3>
+            <div class="input-group"><label>npxG</label><input type="number" step="0.01" class="npxG"></div>
+            <div class="input-group"><label>G-xG</label><input type="number" step="0.01" class="GxG"></div>
+            <div class="input-group"><label>Touches in Box</label><input type="number" class="tib"></div>
+            <div class="input-group"><label>PrgP + PrgC</label><input type="number" class="prg"></div>
+            <div class="input-group"><label>Direct Speed (m/s)</label><input type="number" step="0.1" class="ds"></div>
+            <div class="input-group"><label>Def. Line (m)</label><input type="number" class="dl"></div>
+        </div>
     </div>
 
-    <div id="resultContainer">
-        HVP Skoru: <span id="hvpResult">%0</span>
+    <div class="actions">
+        <button class="btn-analyze" onclick="analyzeMatch()">ANALİZ ET</button>
+        <button class="btn-clear" onclick="clearForm()">TEMİZLE</button>
+    </div>
+
+    <div id="resultArea"></div>
+
+    <div class="history">
+        <h3>Geçmiş Analizler</h3>
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>Maç</th>
+                    <th>HVP Ort.</th>
+                    <th>Üst Yüzdesi</th>
+                    <th>Durum</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 </div>
 
 <script>
-    function calculateHVP() {
-        const npxG = parseFloat(document.getElementById('npxG').value) || 0;
-        const gMinusXG = parseFloat(document.getElementById('gMinusXG').value) || 0;
-        const prgP = parseFloat(document.getElementById('prgP').value) || 0;
-        const prgC = parseFloat(document.getElementById('prgC').value) || 0;
+    function analyzeMatch() {
+        const getData = (id) => ({
+            npxG: parseFloat(document.querySelector(`#${id} .npxG`).value) || 0,
+            GxG: parseFloat(document.querySelector(`#${id} .GxG`).value) || 0,
+            tib: parseFloat(document.querySelector(`#${id} .tib`).value) || 0,
+            prg: parseFloat(document.querySelector(`#${id} .prg`).value) || 0,
+            ds: parseFloat(document.querySelector(`#${id} .ds`).value) || 0,
+            dl: parseFloat(document.querySelector(`#${id} .dl`).value) || 0
+        });
 
-        // Belirlediğin HVP Formülü
-        let score = ((npxG * 2) + (prgP + prgC)) / 10 + gMinusXG;
-        
-        document.getElementById('hvpResult').innerText = "%" + score.toFixed(2);
+        const a = getData('teamA');
+        const b = getData('teamB');
+
+        // HVP Hesaplama (Senin Formülün)
+        const calcHVP = (t) => ((t.npxG * 2) + t.prg) / 10 + t.GxG;
+        const hvpA = calcHVP(a);
+        const hvpB = calcHVP(b);
+        const avgHVP = (hvpA + hvpB) / 2;
+
+        // ÜST YÜZDESİ HESAPLAMA MANTIĞI
+        let score = 0;
+        if ((a.npxG + b.npxG) > 2.30) score += 30;
+        if ((a.tib + b.tib) > 40) score += 20;
+        if (a.ds > 1.8 || b.ds > 1.8) score += 20;
+        if (a.dl > 45 || b.dl > 45) score += 20;
+        if (avgHVP > 1.5) score += 10;
+
+        const resultArea = document.getElementById('resultArea');
+        resultArea.style.display = 'block';
+        resultArea.style.backgroundColor = score >= 75 ? '#065f46' : '#450a0a';
+        resultArea.innerHTML = `<h2>Üst Bitme Olasılığı: %${score}</h2><p>Ortalama HVP: ${avgHVP.toFixed(2)}</p>`;
+
+        // Geçmişe Ekle
+        const table = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
+        const newRow = table.insertRow(0);
+        newRow.innerHTML = `<td>Maç #${table.rows.length + 1}</td><td>${avgHVP.toFixed(2)}</td><td>%${score}</td><td>${score >= 75 ? '🔥 YÜKSEK' : '⚠️ RİSKLİ'}</td>`;
     }
 
-    function clearFields() {
-        // Tüm inputları temizle
-        const inputs = document.querySelectorAll('input');
-        inputs.forEach(input => input.value = "");
-        // Sonucu sıfırla
-        document.getElementById('hvpResult').innerText = "%0";
+    function clearForm() {
+        document.querySelectorAll('input').forEach(input => input.value = '');
+        document.getElementById('resultArea').style.display = 'none';
     }
 </script>
 

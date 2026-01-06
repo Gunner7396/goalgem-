@@ -3,210 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Analiz & Skor Tahmin Motoru</title>
+    <title>GoalGem | Hızlı Analiz</title>
     <style>
-        :root { 
-            --bg: #0a0f1e; --card: #161d31; --accent: #38bdf8; --text: #e2e8f0; 
-            --border: #2d364d; --win: #22c55e; --loss: #ef4444;
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --border: #334155;
         }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 15px; font-size: 14px; }
-        .container { max-width: 1000px; margin: auto; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .card { background: var(--card); padding: 18px; border-radius: 12px; border: 1px solid var(--border); }
-        h2 { color: var(--accent); font-size: 16px; margin: 0 0 15px 0; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-        .metric-group { margin-bottom: 12px; }
-        .label-row { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-bottom: 4px; }
-        .val-badge { color: var(--accent); font-weight: 600; }
-        input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--accent); height: 4px; }
-        input[type="text"] { width: 100%; background: #0a0f1e; border: 1px solid var(--border); color: white; padding: 8px; border-radius: 6px; margin-bottom: 15px; box-sizing: border-box; }
-        .btn-group { grid-column: 1 / -1; text-align: center; margin: 20px 0; }
-        button { padding: 12px 25px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 13px; }
-        .btn-run { background: var(--accent); color: #0a0f1e; }
-        .btn-clear { background: transparent; color: var(--loss); border: 1px solid var(--loss); margin-left: 10px; }
 
-        /* Yeni Sonuç Paneli Tasarımı */
-        .result-panel { 
-            grid-column: 1 / -1; background: var(--card); padding: 25px; border-radius: 12px; 
-            border: 1px solid var(--accent); display: none;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .score-main { text-align: center; margin-bottom: 20px; }
-        .score-val { font-size: 48px; font-weight: 800; color: white; display: block; }
-        .prob-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; border-top: 1px solid var(--border); padding-top: 20px; }
-        .prob-item { background: rgba(56, 189, 248, 0.05); padding: 15px; border-radius: 8px; text-align: center; border: 1px solid rgba(56, 189, 248, 0.1); }
-        .prob-label { font-size: 11px; color: #94a3b8; display: block; margin-bottom: 5px; }
-        .prob-val { font-size: 18px; font-weight: 700; color: var(--accent); }
+
+        .container { width: 100%; max-width: 500px; }
+        h1 { color: var(--accent-color); text-align: center; letter-spacing: -1px; }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .input-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        .input-group { flex: 1; }
         
-        .prediction-box { background: rgba(34, 197, 94, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid var(--win); margin-top: 15px; }
-        .prediction-title { font-weight: 700; color: var(--win); margin-bottom: 5px; display: block; }
+        label { display: block; margin-bottom: 6px; font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: bold; }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+        }
 
-        .history-section { grid-column: 1 / -1; margin-top: 30px; }
-        table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; font-size: 12px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { background: #1c253d; color: var(--accent); }
+        input:focus { border-color: var(--accent-color); }
+
+        .btn-main {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 8px;
+            color: #0f172a;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .history-container { width: 100%; }
+        .history-card {
+            background: var(--card-bg);
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .high { background: var(--success); color: white; }
+        .mid { background: #eab308; color: black; }
+        .low { background: var(--danger); color: white; }
+
+        .clear-btn {
+            background: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="grid">
-        <div class="card">
-            <h2>EV</h2>
-            <input type="text" id="h-name" placeholder="Takım Adı">
-            <div id="h-sliders"></div>
-        </div>
+    <h1>GoalGem</h1>
 
-        <div class="card">
-            <h2>DEP</h2>
-            <input type="text" id="a-name" placeholder="Takım Adı">
-            <div id="a-sliders"></div>
+    <div class="card">
+        <div class="input-group" style="margin-bottom: 15px;">
+            <label>Maç İsmi</label>
+            <input type="text" id="matchName" placeholder="Örn: Real Madrid - Barcelona">
         </div>
-
-        <div class="btn-group">
-            <button class="btn-run" onclick="runAnalysis()">ANALİZ ET VE TAHMİN ET</button>
-            <button class="btn-clear" onclick="clearHistory()">TEMİZLE</button>
-        </div>
-
-        <div class="result-panel" id="result-panel">
-            <div class="score-main">
-                <span style="color: #94a3b8;">BEKLENEN SKOR (xG)</span>
-                <span class="score-val" id="res-score">0.00 - 0.00</span>
+        
+        <div class="input-row">
+            <div class="input-group">
+                <label>Toplam npxG</label>
+                <input type="number" step="0.01" id="npxG" placeholder="3.20">
             </div>
-
-            <div class="prob-grid">
-                <div class="prob-item"><span class="prob-label">MS 1 İHTİMAL</span><span class="prob-val" id="p-win">-%</span></div>
-                <div class="prob-item"><span class="prob-label">MS X İHTİMAL</span><span class="prob-val" id="p-draw">-%</span></div>
-                <div class="prob-item"><span class="prob-label">MS 2 İHTİMAL</span><span class="prob-val" id="p-loss">-%</span></div>
-                <div class="prob-item"><span class="prob-label">2.5 ÜST</span><span class="prob-val" id="p-over">-%</span></div>
-                <div class="prob-item"><span class="prob-label">KG VAR</span><span class="prob-val" id="p-btts">-%</span></div>
-                <div class="prob-item"><span class="prob-label">TOPLAM GOL</span><span class="prob-val" id="p-total">0.00</span></div>
-            </div>
-
-            <div class="prediction-box">
-                <span class="prediction-title">🎯 OLASI SKOR TAHMİNLERİ</span>
-                <div id="skor-tahminleri" style="font-weight: 600; font-size: 15px;"></div>
+            <div class="input-group">
+                <label>Toplam npxGA</label>
+                <input type="number" step="0.01" id="npxGA" placeholder="2.90">
             </div>
         </div>
 
-        <div class="history-section">
-            <h2>ARŞİV</h2>
-            <table id="history-table">
-                <thead>
-                    <tr><th>SAAT</th><th>MAÇ</th><th>xG SKOR</th><th>TAHMİN</th></tr>
-                </thead>
-                <tbody id="history-body"></tbody>
-            </table>
+        <div class="input-row">
+            <div class="input-group">
+                <label>Deep Comp.</label>
+                <input type="number" id="deep" placeholder="22">
+            </div>
+            <div class="input-group">
+                <label>Field Tilt %</label>
+                <input type="number" id="tilt" placeholder="60">
+            </div>
         </div>
+
+        <button class="btn-main" onclick="analizEt()">ANALİZ ET VE TEMİZLE</button>
+    </div>
+
+    <div class="history-container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Geçmiş Analizler</h3>
+            <button class="clear-btn" onclick="gecmisiSil()">TÜMÜNÜ SİL</button>
+        </div>
+        <div id="historyList"></div>
     </div>
 </div>
 
 <script>
-    const metricsConfig = [
-        { id: 'npxG', label: 'npxG', min: 0, max: 4, step: 0.1, def: 1.5 },
-        { id: 'sca', label: 'SCA', min: 0, max: 40, step: 1, def: 15 },
-        { id: 'box', label: 'BOX', min: 0, max: 50, step: 1, def: 20 },
-        { id: 'tilt', label: 'Tilt %', min: 0, max: 100, step: 1, def: 50 },
-        { id: 'prog', label: 'ProgP', min: 0, max: 80, step: 1, def: 30 },
-        { id: 'npxga', label: 'npxGA', min: 0, max: 4, step: 0.1, def: 1.2 },
-        { id: 'ppda', label: 'PPDA', min: 5, max: 25, step: 0.5, def: 12 },
-        { id: 'deep', label: 'DeepA', min: 0, max: 20, step: 1, def: 5 },
-        { id: 'oppb', label: 'OppB', min: 0, max: 40, step: 1, def: 10 },
-        { id: 'int', label: 'Int', min: 0, max: 40, step: 1, def: 15 }
-    ];
+    window.onload = listeleGeçmiş;
 
-    function init() {
-        ['h', 'a'].forEach(p => {
-            const container = document.getElementById(`${p}-sliders`);
-            metricsConfig.forEach(m => {
-                container.innerHTML += `
-                    <div class="metric-group">
-                        <div class="label-row"><span>${m.label}</span><span class="val-badge" id="${p}-v-${m.id}">${m.def}</span></div>
-                        <input type="range" id="${p}-${m.id}" min="${m.min}" max="${m.max}" step="${m.step}" value="${m.def}" 
-                               oninput="document.getElementById('${p}-v-${m.id}').innerText = this.value">
-                    </div>`;
-            });
-        });
-        loadHistory();
-    }
-
-    // Poisson Olasılık Fonksiyonu
-    function poisson(k, lambda) {
-        return (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k);
-    }
-    function factorial(n) { return n <= 1 ? 1 : n * factorial(n - 1); }
-
-    function runAnalysis() {
-        const hName = document.getElementById('h-name').value || "EV";
-        const aName = document.getElementById('a-name').value || "DEP";
-        const getVal = (p, id) => parseFloat(document.getElementById(`${p}-${id}`).value);
-
-        const calculateGoal = (p, opp) => {
-            let score = 0;
-            let p1 = (getVal(p, 'npxG') * 0.75) + (getVal(p, 'sca') * 0.04);
-            if (p1 >= 1.1) {
-                score = 1.0;
-                let p2 = (getVal(p, 'tilt') * 0.45) + (getVal(p, 'box') * 0.55);
-                if (p2 >= 60) {
-                    score = 2.0;
-                    let p3 = (getVal(p, 'prog') * 0.5) + (getVal(opp, 'deep') * 0.5);
-                    if (p3 >= 50) score = 3.0; else score += (p3 / 50) * 0.5;
-                } else score += (p2 / 60) * 0.65;
-            } else score = (p1 / 1.1) * 0.8;
-            return score;
+    function analizEt() {
+        // Verileri al
+        const inputs = {
+            name: document.getElementById('matchName').value,
+            g: parseFloat(document.getElementById('npxG').value) || 0,
+            ga: parseFloat(document.getElementById('npxGA').value) || 0,
+            d: parseInt(document.getElementById('deep').value) || 0,
+            t: parseInt(document.getElementById('tilt').value) || 0
         };
 
-        let xGH = calculateGoal('h', 'a') * 1.05;
-        let xGA = calculateGoal('a', 'h') * 0.95;
-        const totalXG = xGH + xGA;
+        if(!inputs.name) { alert("Maç ismini girmelisin!"); return; }
 
-        // İhtimalleri Hesapla (Poisson Mantığı ile)
-        let probH = 0, probA = 0, probD = 0, probOver = 0, probBTTS = 0;
-        let scores = [];
+        // ALGORİTMA: %90 hedefine göre puanlama
+        let score = 0;
+        if(inputs.g >= 3.0) score += 40; else score += (inputs.g / 3.0) * 40;
+        if(inputs.ga >= 2.5) score += 30; else score += (inputs.ga / 2.5) * 30;
+        if(inputs.d >= 20) score += 20;
+        if(inputs.t >= 60) score += 10;
 
-        for (let i = 0; i <= 5; i++) {
-            for (let j = 0; j <= 5; j++) {
-                let p = poisson(i, xGH) * poisson(j, xGA);
-                if (i > j) probH += p; else if (j > i) probA += p; else probD += p;
-                if (i + j > 2.5) probOver += p;
-                if (i > 0 && j > 0) probBTTS += p;
-                scores.push({ s: `${i}-${j}`, p: p });
-            }
+        const finalScore = Math.min(Math.round(score), 98); // Maksimum 98 gösterir (Bahiste 100 risklidir)
+
+        // Kaydet
+        const result = { ...inputs, finalScore, date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) };
+        let history = JSON.parse(localStorage.getItem('goalGemHistory')) || [];
+        history.unshift(result);
+        localStorage.setItem('goalGemHistory', JSON.stringify(history));
+
+        // EKRANI SIFIRLA (İstediğin özellik)
+        document.getElementById('matchName').value = "";
+        document.getElementById('npxG').value = "";
+        document.getElementById('npxGA').value = "";
+        document.getElementById('deep').value = "";
+        document.getElementById('tilt').value = "";
+
+        listeleGeçmiş();
+    }
+
+    function listeleGeçmiş() {
+        const history = JSON.parse(localStorage.getItem('goalGemHistory')) || [];
+        const list = document.getElementById('historyList');
+        list.innerHTML = "";
+
+        history.forEach(item => {
+            let colorClass = item.finalScore >= 85 ? 'high' : (item.finalScore >= 65 ? 'mid' : 'low');
+            list.innerHTML += `
+                <div class="history-card">
+                    <div>
+                        <div style="font-weight: bold;">${item.name}</div>
+                        <div style="font-size: 0.7rem; color: #94a3b8;">${item.date} | npxG: ${item.g} | npxGA: ${item.ga}</div>
+                    </div>
+                    <div class="badge ${colorClass}">%${item.finalScore}</div>
+                </div>
+            `;
+        });
+    }
+
+    function gecmisiSil() {
+        if(confirm("Tüm geçmiş silinecek, emin misin?")) {
+            localStorage.removeItem('goalGemHistory');
+            listeleGeçmiş();
         }
-
-        // En yüksek 3 skor tahmini
-        scores.sort((a, b) => b.p - a.p);
-        const top3 = scores.slice(0, 3).map(s => `${s.s} (%${(s.p * 100).toFixed(1)})`).join(" | ");
-
-        // UI Güncelle
-        document.getElementById('result-panel').style.display = 'block';
-        document.getElementById('res-score').innerText = `${xGH.toFixed(2)} - ${xGA.toFixed(2)}`;
-        document.getElementById('p-win').innerText = `%${(probH * 100).toFixed(0)}`;
-        document.getElementById('p-draw').innerText = `%${(probD * 100).toFixed(0)}`;
-        document.getElementById('p-loss').innerText = `%${(probA * 100).toFixed(0)}`;
-        document.getElementById('p-over').innerText = `%${(probOver * 100).toFixed(0)}`;
-        document.getElementById('p-btts').innerText = `%${(probBTTS * 100).toFixed(0)}`;
-        document.getElementById('p-total').innerText = totalXG.toFixed(2);
-        document.getElementById('skor-tahminleri').innerText = top3;
-
-        saveMatch(hName, aName, `${xGH.toFixed(2)}-${xGA.toFixed(2)}`, top3.split('|')[0]);
     }
-
-    function saveMatch(h, a, score, best) {
-        let history = JSON.parse(localStorage.getItem('futbol_pro_db') || '[]');
-        history.unshift({ id: Date.now(), match: `${h}-${a}`, score: score, best: best, time: new Date().toLocaleTimeString('tr-TR') });
-        localStorage.setItem('futbol_pro_db', JSON.stringify(history));
-        loadHistory();
-    }
-
-    function loadHistory() {
-        let history = JSON.parse(localStorage.getItem('futbol_pro_db') || '[]');
-        document.getElementById('history-body').innerHTML = history.map(i => `
-            <tr><td>${i.time}</td><td>${i.match}</td><td style="color:var(--accent); font-weight:700;">${i.score}</td><td>${i.best}</td></tr>
-        `).join('');
-    }
-
-    function clearHistory() { if(confirm("Silinsin mi?")) { localStorage.removeItem('futbol_pro_db'); loadHistory(); } }
-
-    init();
 </script>
+
 </body>
 </html>

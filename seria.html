@@ -3,148 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOALGEM | SERIE A PRO</title>
+    <title>GOALGEM | COMPACT</title>
     <style>
-        :root { --accent: #40c4ff; --green: #00c853; --red: #ff5252; --bg: #0b1426; --card: #16213a; --input-bg: #0f172a; }
-        body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 15px; margin: 0; }
-        .main-card { width: 100%; max-width: 500px; background: var(--card); border-radius: 28px; padding: 25px; box-shadow: 0 25px 50px rgba(0,0,0,0.7); border: 1px solid rgba(64,196,255,0.15); }
-        h1 { color: var(--accent); text-align: center; font-size: 28px; margin: 0; letter-spacing: 4px; font-weight: 900; }
-        .subtitle { text-align: center; color: #78909c; font-size: 10px; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
+        :root { --accent: #40c4ff; --green: #00c853; --bg: #0b1426; --card: #16213a; }
+        body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; padding-top: 10px; }
         
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .team-header { padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; font-size: 14px; margin-bottom: 15px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.1); }
-        .ev-h { color: var(--accent); background: rgba(64,196,255,0.1); border-color: var(--accent); }
-        .dep-h { color: #cfd8dc; background: rgba(255,255,255,0.05); }
+        /* Sayfa boyutunu küçülttük */
+        .main-card { width: 95%; max-width: 420px; background: var(--card); border-radius: 20px; padding: 15px; border: 1px solid rgba(64,196,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        h1 { color: var(--accent); text-align: center; font-size: 20px; margin: 0; letter-spacing: 2px; }
+        .subtitle { text-align: center; color: #78909c; font-size: 9px; margin-bottom: 15px; text-transform: uppercase; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .team-h { padding: 6px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 11px; margin-bottom: 8px; }
+        .ev-h { background: rgba(64,196,255,0.15); color: var(--accent); }
+        .dep-h { background: rgba(255,255,255,0.05); color: #cfd8dc; }
 
-        .input-group { margin-bottom: 12px; }
-        label { display: block; font-size: 10px; color: #90a4ae; margin-bottom: 4px; font-weight: bold; text-transform: uppercase; }
-        input { width: 100%; background: var(--input-bg); border: 1px solid #334155; color: white; padding: 10px; border-radius: 8px; box-sizing: border-box; font-size: 13px; transition: 0.3s; }
-        input:focus { border-color: var(--accent); outline: none; background: #1e2a44; }
+        .input-group { margin-bottom: 6px; }
+        label { display: block; font-size: 9px; color: #90a4ae; margin-bottom: 2px; font-weight: bold; }
         
-        .btn-box { display: flex; gap: 12px; margin: 25px 0; }
-        button { flex: 1; padding: 18px; border-radius: 14px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 15px; text-transform: uppercase; }
-        .btn-run { background: linear-gradient(135deg, var(--green), #009624); color: white; box-shadow: 0 4px 15px rgba(0,200,83,0.3); }
+        /* Placeholderlar silindi, girişler küçültüldü */
+        input { width: 100%; background: #0f172a; border: 1px solid #334155; color: white; padding: 6px; border-radius: 5px; box-sizing: border-box; font-size: 12px; }
+
+        .btn-box { display: flex; gap: 8px; margin: 15px 0; }
+        button { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; }
+        .btn-run { background: var(--green); color: white; }
         .btn-clear { background: #37474f; color: white; }
-        button:active { transform: scale(0.97); }
 
-        .premium-result { background: rgba(0,0,0,0.4); border-radius: 24px; padding: 25px; border: 1px solid #1e2a44; position: relative; overflow: hidden; }
-        .res-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #263238; padding-bottom: 20px; margin-bottom: 20px; }
-        .hvp-box { text-align: left; }
-        .hvp-label { font-size: 10px; color: #90a4ae; font-weight: bold; }
-        .hvp-val { font-size: 32px; font-weight: 900; color: var(--accent); line-height: 1.1; }
-        .percent-box { text-align: right; }
-        .percent-val { font-size: 48px; font-weight: 900; color: var(--green); line-height: 1; transition: 0.5s; }
+        /* Sonuç Paneli Kompakt Yapı */
+        .res-panel { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 12px; border: 1px solid #1e2a44; }
+        .res-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #263238; padding-bottom: 8px; margin-bottom: 8px; }
+        .hvp-val { font-size: 20px; font-weight: 900; color: var(--accent); }
+        .percent-val { font-size: 30px; font-weight: 900; color: var(--green); line-height: 1; }
         
-        .stat-card { margin-top: 15px; }
-        .stat-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; color: #b0bec5; font-weight: 600; }
-        .stat-bar-bg { width: 100%; height: 8px; background: #0f172a; border-radius: 4px; overflow: hidden; border: 1px solid #1e2a44; }
-        .stat-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #00b0ff); width: 0%; transition: 1.2s cubic-bezier(0.1, 0.7, 1.0, 0.1); }
+        .stat-row { display: flex; justify-content: space-between; font-size: 10px; color: #b0bec5; margin-bottom: 4px; }
+        .bar-bg { width: 100%; height: 5px; background: #0f172a; border-radius: 3px; overflow: hidden; }
+        .bar-fill { height: 100%; background: var(--accent); width: 0%; transition: 0.8s; }
     </style>
 </head>
 <body>
 
 <div class="main-card">
     <h1>GOALGEM</h1>
-    <p class="subtitle">SERIE A | HVP STRATEGY & TACTICAL AI</p>
+    <p class="subtitle">SERIE A | TACTICAL PRO</p>
 
-    <div class="grid-container">
-        <div class="team-col">
-            <div class="team-header ev-h">EV SAHİBİ</div>
-            <div class="input-group"><label>npxG</label><input type="number" id="e_npxG" placeholder="1.10"></div>
-            <div class="input-group"><label>G-xG</label><input type="number" id="e_G_xG" placeholder="0.20"></div>
-            <div class="input-group"><label>PrgP + PrgC</label><input type="number" id="e_Prg" placeholder="45"></div>
-            <div class="input-group"><label>Box Touches</label><input type="number" id="e_Box" placeholder="22"></div>
-            <div class="input-group"><label>Direct Speed</label><input type="number" id="e_DS" placeholder="1.8"></div>
-            <div class="input-group"><label>Def. Line</label><input type="number" id="e_Line" placeholder="48"></div>
-            <div class="input-group"><label>npxGA (Sav.)</label><input type="number" id="e_npxGA" placeholder="1.5"></div>
+    <div class="grid">
+        <div class="col">
+            <div class="team-h ev-h">EV SAHİBİ</div>
+            <div class="input-group"><label>npxG</label><input type="number" id="e_n" class="inp"></div>
+            <div class="input-group"><label>G-xG</label><input type="number" id="e_g" class="inp"></div>
+            <div class="input-group"><label>PrgP+C</label><input type="number" id="e_p" class="inp"></div>
+            <div class="input-group"><label>Box Touches</label><input type="number" id="e_b" class="inp"></div>
+            <div class="input-group"><label>Direct Speed</label><input type="number" id="e_s" class="inp"></div>
+            <div class="input-group"><label>Def. Line</label><input type="number" id="e_l" class="inp"></div>
+            <div class="input-group"><label>npxGA</label><input type="number" id="e_a" class="inp"></div>
         </div>
-        <div class="team-col">
-            <div class="team-header dep-h">DEPLASMAN</div>
-            <div class="input-group"><label>npxG</label><input type="number" id="d_npxG" placeholder="1.05"></div>
-            <div class="input-group"><label>G-xG</label><input type="number" id="d_G_xG" placeholder="0.10"></div>
-            <div class="input-group"><label>PrgP + PrgC</label><input type="number" id="d_Prg" placeholder="42"></div>
-            <div class="input-group"><label>Box Touches</label><input type="number" id="d_Box" placeholder="20"></div>
-            <div class="input-group"><label>Direct Speed</label><input type="number" id="d_DS" placeholder="1.6"></div>
-            <div class="input-group"><label>Def. Line</label><input type="number" id="d_Line" placeholder="42"></div>
-            <div class="input-group"><label>npxGA (Sav.)</label><input type="number" id="d_npxGA" placeholder="1.2"></div>
+        <div class="col">
+            <div class="team-h dep-h">DEPLASMAN</div>
+            <div class="input-group"><label>npxG</label><input type="number" id="d_n" class="inp"></div>
+            <div class="input-group"><label>G-xG</label><input type="number" id="d_g" class="inp"></div>
+            <div class="input-group"><label>PrgP+C</label><input type="number" id="d_p" class="inp"></div>
+            <div class="input-group"><label>Box Touches</label><input type="number" id="d_b" class="inp"></div>
+            <div class="input-group"><label>Direct Speed</label><input type="number" id="d_s" class="inp"></div>
+            <div class="input-group"><label>Def. Line</label><input type="number" id="d_l" class="inp"></div>
+            <div class="input-group"><label>npxGA</label><input type="number" id="d_a" class="inp"></div>
         </div>
     </div>
 
     <div class="btn-box">
-        <button class="btn-run" onclick="runAnalysis()">ANALİZİ BAŞLAT</button>
-        <button class="btn-clear" onclick="resetForm()">SİL</button>
+        <button class="btn-run" onclick="run()">ANALİZ ET</button>
+        <button class="btn-clear" onclick="clr()">SİL</button>
     </div>
 
-    <div class="premium-result">
+    <div class="res-panel">
         <div class="res-top">
-            <div class="hvp-box">
-                <div class="hvp-label">HVP EFFICIENCY SKORU</div>
-                <div id="hvp_total" class="hvp-val">0.00</div>
-            </div>
-            <div class="percent-box">
-                <div id="signal_text" style="font-size: 11px; font-weight: 800; margin-bottom: 5px;">VERİ ANALİZİ</div>
-                <div id="res_percent" class="percent-val">%0</div>
-            </div>
+            <div><div style="font-size: 8px; color: #90a4ae;">HVP SKOR</div><div id="hvp" class="hvp-val">0.00</div></div>
+            <div style="text-align: right;"><div id="sig" style="font-size: 9px; font-weight: bold; color: #78909c;">BEKLENİYOR</div><div id="per" class="percent-val">%0</div></div>
         </div>
-
-        <div class="stat-card">
-            <div class="stat-row"><span>Hücum Gücü (Harem)</span><span id="txt_npxg">0.00</span></div>
-            <div class="stat-bar-bg"><div id="bar_npxg" class="stat-bar-fill"></div></div>
-            
-            <div class="stat-row" style="margin-top:15px;"><span>Aksiyon Yoğunluğu (Box+DS)</span><span id="txt_act">0.00</span></div>
-            <div class="stat-bar-bg"><div id="bar_act" class="stat-bar-fill" style="background: var(--green);"></div></div>
-        </div>
+        <div class="stat-row"><span>Hücum Haremi</span><span id="t_n">0.00</span></div>
+        <div class="bar-bg"><div id="b_n" class="bar-fill"></div></div>
     </div>
 </div>
 
 <script>
-function runAnalysis() {
-    const getV = (id) => parseFloat(document.getElementById(id).value) || 0;
-    const e = { n: getV('e_npxG'), ga: getV('e_npxGA'), g: getV('e_G_xG'), p: getV('e_Prg'), b: getV('e_Box'), ds: getV('e_DS'), l: getV('e_Line') };
-    const d = { n: getV('d_npxG'), ga: getV('d_npxGA'), g: getV('d_G_xG'), p: getV('d_Prg'), b: getV('d_Box'), ds: getV('d_DS'), l: getV('d_Line') };
+function run() {
+    const v = (id) => parseFloat(document.getElementById(id).value) || 0;
+    const e = { n:v('e_n'), a:v('e_a'), g:v('e_g'), p:v('e_p'), b:v('e_b'), s:v('e_s'), l:v('e_l') };
+    const d = { n:v('d_n'), a:v('d_a'), g:v('d_g'), p:v('d_p'), b:v('d_b'), s:v('d_s'), l:v('d_l') };
 
-    // HVP Formülü Uygulaması
-    const hvpE = ((e.n * 2) + e.p) / 10 + e.g;
-    const hvpD = ((d.n * 2) + d.p) / 10 + d.g;
-    const totalHvp = hvpE + hvpD;
+    const hvp = (((e.n * 2) + e.p) / 10 + e.g) + (((d.n * 2) + d.p) / 10 + d.g);
+    let p = 0;
+    if ((e.n + d.n) >= 1.95) p += 35;
+    if (e.a > 1.4 || d.a > 1.4) p += 20;
+    if (e.l > 45 || d.l > 45) p += 10;
+    if ((e.p + d.p) >= 85) p += 15;
+    if ((e.b + d.b) >= 42) p += 10;
+    if ((e.s + d.s) >= 3.4) p += 10;
 
-    // Serie A Üst İhtimali Algoritması
-    let score = 0;
-    if ((e.n + d.n) >= 1.95) score += 30; // npxG Eşiği
-    if (e.ga > 1.4 || d.ga > 1.4) score += 20; // Savunma Zaafiyeti
-    if (e.l > 45 || d.l > 45) score += 10; // Savunma Hattı
-    if ((e.p + d.p) >= 85) score += 15; // İlerleme (PrgP+C)
-    if ((e.b + d.b) >= 42) score += 15; // Box Touches (Ceza sahası etkinliği)
-    if ((e.ds + d.ds) >= 3.4) score += 10; // Direct Speed (Geçiş hızı)
+    document.getElementById('hvp').innerText = hvp.toFixed(2);
+    document.getElementById('per').innerText = "%" + Math.min(p, 100);
+    document.getElementById('t_n').innerText = (e.n + d.n).toFixed(2);
+    document.getElementById('b_n').style.width = Math.min(((e.n + d.n)/2.5)*100, 100) + "%";
 
-    // UI Güncelleme
-    document.getElementById('hvp_total').innerText = totalHvp.toFixed(2);
-    const finalP = Math.min(score, 100);
-    document.getElementById('res_percent').innerText = "%" + finalP;
-    document.getElementById('txt_npxg').innerText = (e.n + d.n).toFixed(2);
-    document.getElementById('txt_act').innerText = ((e.b + d.b)/10 + (e.ds + d.ds)).toFixed(2);
-    
-    // Barlar
-    document.getElementById('bar_npxg').style.width = Math.min(((e.n + d.n)/2.5)*100, 100) + "%";
-    document.getElementById('bar_act').style.width = Math.min(finalP, 100) + "%";
-
-    const sig = document.getElementById('signal_text');
-    const pEl = document.getElementById('res_percent');
-    if(finalP >= 80) { sig.innerText = "GÜÇLÜ ÜST"; pEl.style.color = "#00c853"; sig.style.color = "#00c853"; }
-    else if(finalP >= 55) { sig.innerText = "PLASE SİNYAL"; pEl.style.color = "#ffd600"; sig.style.color = "#ffd600"; }
-    else { sig.innerText = "DÜŞÜK İHTİMAL"; pEl.style.color = "#ff5252"; sig.style.color = "#ff5252"; }
+    const s = document.getElementById('sig');
+    const pr = document.getElementById('per');
+    if(p >= 80) { s.innerText="GÜÇLÜ ÜST"; s.style.color=pr.style.color="#00c853"; }
+    else if(p >= 55) { s.innerText="PLASE"; s.style.color=pr.style.color="#ffd600"; }
+    else { s.innerText="RİSKLİ"; s.style.color=pr.style.color="#ff5252"; }
 }
 
-function resetForm() {
-    const inputs = document.querySelectorAll('input');
-    inputs.forEach(i => i.value = '');
-    document.getElementById('res_percent').innerText = "%0";
-    document.getElementById('hvp_total').innerText = "0.00";
-    document.getElementById('bar_npxg').style.width = "0%";
-    document.getElementById('bar_act').style.width = "0%";
-    document.getElementById('signal_text').innerText = "VERİ SİLİNDİ";
-    document.getElementById('signal_text').style.color = "#78909c";
-    document.getElementById('res_percent').style.color = "#00c853";
+function clr() {
+    document.querySelectorAll('.inp').forEach(i => i.value = '');
+    document.getElementById('hvp').innerText = "0.00";
+    document.getElementById('per').innerText = "%0";
+    document.getElementById('per').style.color = "#00c853";
+    document.getElementById('b_n').style.width = "0%";
+    document.getElementById('sig').innerText = "SİLİNDİ";
+    document.getElementById('sig').style.color = "#78909c";
 }
 </script>
 </body>

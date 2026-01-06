@@ -2,89 +2,198 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>SERIE A - HVP STRATEGY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SERIE A ANALYZER | GOALGEM</title>
     <style>
-        /* Görseldeki tasarıma sadık kalınmıştır */
-        body { background-color: #0b1426; color: white; font-family: sans-serif; }
-        .container { width: 350px; margin: auto; padding: 20px; border: 1px solid #1e2a44; border-radius: 15px; }
-        h1 { color: #40c4ff; text-align: center; font-size: 22px; margin-bottom: 5px; }
-        p.subtitle { text-align: center; font-size: 10px; color: #78909c; margin-top: 0; }
-        .input-group { display: flex; justify-content: space-between; margin-bottom: 10px; }
-        input { width: 45%; background: #1e2a44; border: 1px solid #37474f; color: white; padding: 8px; border-radius: 5px; }
-        button { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        .btn-analiz { background-color: #00c853; color: white; }
-        .results { display: flex; justify-content: space-around; margin-top: 20px; border-top: 1px solid #1e2a44; padding-top: 10px; }
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --accent-blue: #38bdf8;
+            --accent-green: #22c55e;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at top right, #1e293b, #0f172a);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .analyzer-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: var(--accent-blue);
+            text-align: center;
+            font-size: 28px;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 12px;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 12px;
+            color: white;
+            width: 100%;
+            box-sizing: border-box;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .input-box:focus {
+            border-color: var(--accent-blue);
+            outline: none;
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .btn-analyze {
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+
+        .btn-analyze:active { transform: scale(0.98); }
+
+        .results-panel {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 16px;
+        }
+
+        .res-label { font-size: 12px; color: var(--text-dim); }
+        .res-val { font-size: 24px; font-weight: 800; color: var(--accent-green); margin-top: 5px; }
+
+        @media (max-width: 480px) {
+            .analyzer-card { padding: 20px; border-radius: 0; min-height: 100vh; border: none; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>SERIE A ANALYZER</h1>
-    <p class="subtitle">HVP STRATEGY & TACTICAL INTELLIGENCE</p>
+    <div class="analyzer-card">
+        <h1>SERIE A ANALYZER</h1>
+        <p class="subtitle">HVP STRATEGY & TACTICAL AI</p>
 
-    <div class="input-group">
-        <input type="number" id="ev_npxG" placeholder="Ev npxG">
-        <input type="number" id="dep_npxG" placeholder="Dep npxG">
-    </div>
-    <div class="input-group">
-        <input type="number" id="ev_npxGA" placeholder="Ev npxGA">
-        <input type="number" id="dep_npxGA" placeholder="Dep npxGA">
-    </div>
-    <div class="input-group">
-        <input type="number" id="ev_G_xG" placeholder="Ev G-xG">
-        <input type="number" id="dep_G_xG" placeholder="Dep G-xG">
-    </div>
-    <div class="input-group">
-        <input type="number" id="ev_Prg" placeholder="Ev PrgP+PrgC">
-        <input type="number" id="dep_Prg" placeholder="Dep PrgP+PrgC">
-    </div>
-    <div class="input-group">
-        <input type="number" id="ev_Line" placeholder="Ev Def. Line">
-        <input type="number" id="dep_Line" placeholder="Dep Def. Line">
-    </div>
+        <div class="team-grid">
+            <div><label>EV SAHİBİ npxG</label><input type="number" id="ev_npxG" class="input-box" placeholder="0.00"></div>
+            <div><label>DEPLASMAN npxG</label><input type="number" id="dep_npxG" class="input-box" placeholder="0.00"></div>
+            
+            <div><label>EV npxGA</label><input type="number" id="ev_npxGA" class="input-box" placeholder="0.00"></div>
+            <div><label>DEP npxGA</label><input type="number" id="dep_npxGA" class="input-box" placeholder="0.00"></div>
+            
+            <div><label>EV G-xG</label><input type="number" id="ev_G_xG" class="input-box" placeholder="0.00"></div>
+            <div><label>DEP G-xG</label><input type="number" id="dep_G_xG" class="input-box" placeholder="0.00"></div>
+            
+            <div><label>EV PrgP+C</label><input type="number" id="ev_Prg" class="input-box" placeholder="0"></div>
+            <div><label>DEP PrgP+C</label><input type="number" id="dep_Prg" class="input-box" placeholder="0"></div>
+            
+            <div style="grid-column: span 2;">
+                <label>TOPLAM SAVUNMA HATTI (DEF. LINE)</label>
+                <input type="number" id="avg_Line" class="input-box" placeholder="45+ m">
+            </div>
+        </div>
 
-    <button class="btn-analiz" onclick="analizEtSerieA()">ANALİZİ BAŞLAT</button>
+        <button class="btn-analyze" onclick="analizEtSerieA()">STRATEJİYİ ÇALIŞTIR</button>
 
-    <div class="results">
-        <div>ÜST %<br><b id="ust_sonuc">-</b></div>
-        <div>FAVORİ<br><b id="favori_notu">-</b></div>
+        <div class="results-panel">
+            <div>
+                <div class="res-label">ÜST İHTİMALİ</div>
+                <div class="res-val" id="ust_sonuc">%0</div>
+            </div>
+            <div>
+                <div class="res-label">SİNYAL</div>
+                <div class="res-val" id="favori_notu">-</div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
 function analizEtSerieA() {
-    // Verileri çek
-    const evNpxG = parseFloat(document.getElementById('ev_npxG').value) || 0;
-    const depNpxG = parseFloat(document.getElementById('dep_npxG').value) || 0;
-    const evNpxGA = parseFloat(document.getElementById('ev_npxGA').value) || 0;
-    const depNpxGA = parseFloat(document.getElementById('dep_npxGA').value) || 0;
-    const evG_xG = parseFloat(document.getElementById('ev_G_xG').value) || 0;
-    const depG_xG = parseFloat(document.getElementById('dep_G_xG').value) || 0;
-    const toplamPrg = (parseFloat(document.getElementById('ev_Prg').value) || 0) + (parseFloat(document.getElementById('dep_Prg').value) || 0);
-    const evLine = parseFloat(document.getElementById('ev_Line').value) || 0;
-    const depLine = parseFloat(document.getElementById('dep_Line').value) || 0;
+    const v = {
+        en: parseFloat(document.getElementById('ev_npxG').value) || 0,
+        dn: parseFloat(document.getElementById('dep_npxG').value) || 0,
+        ea: parseFloat(document.getElementById('ev_npxGA').value) || 0,
+        da: parseFloat(document.getElementById('dep_npxGA').value) || 0,
+        eg: parseFloat(document.getElementById('ev_G_xG').value) || 0,
+        dg: parseFloat(document.getElementById('dep_G_xG').value) || 0,
+        prg: (parseFloat(document.getElementById('ev_Prg').value) || 0) + (parseFloat(document.getElementById('dep_Prg').value) || 0),
+        line: parseFloat(document.getElementById('avg_Line').value) || 0
+    };
 
-    let puan = 0;
+    let p = 0;
+    if ((v.en + v.dn) >= 1.95) p += 40;
+    if (v.ea > 1.4 || v.da > 1.4) p += 20;
+    if (v.line > 45) p += 10;
+    if (v.prg >= 85) p += 20;
+    if ((v.eg + v.dg) > 0.1) p += 10;
 
-    // 1. SERIE A EŞİĞİ (npxG)
-    const toplamNpxG = evNpxG + depNpxG;
-    if (toplamNpxG >= 1.95) puan += 40;
-    else if (toplamNpxG >= 1.70) puan += 20;
-
-    // 2. TAKTİKSEL HATA (npxGA & Def. Line)
-    // İtalya'da bir takımın kalesinde 1.4+ npxGA vermesi büyük risktir.
-    if (evNpxGA > 1.4 || depNpxGA > 1.4) puan += 20;
-    if (evLine > 45 || depLine > 45) puan += 10;
-
-    // 3. İLERLEME VE BİTİRİCİLİK
-    if (toplamPrg >= 85) puan += 20;
-    if ((evG_xG + depG_xG) > 0.1) puan += 10;
-
-    // Sonuçları Yazdır
-    document.getElementById('ust_sonuc').innerText = "%" + Math.min(puan, 100);
-    document.getElementById('favori_notu').innerText = puan >= 80 ? "GÜÇLÜ ÜST" : (puan >= 50 ? "PLASE" : "RİSKLİ");
+    document.getElementById('ust_sonuc').innerText = "%" + Math.min(p, 100);
+    const note = document.getElementById('favori_notu');
+    if(p >= 80) { note.innerText = "GÜÇLÜ ÜST"; note.style.color = "#22c55e"; }
+    else if(p >= 55) { note.innerText = "PLASE"; note.style.color = "#eab308"; }
+    else { note.innerText = "BEKLE"; note.style.color = "#ef4444"; }
 }
 </script>
-
 </body>
 </html>

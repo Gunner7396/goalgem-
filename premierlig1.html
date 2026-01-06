@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOALGEM | PREMIER LEAGUE</title>
+    <style>
+        :root { --accent: #3d195d; --neon: #00ff85; --bg: #050a18; --card: #11192e; }
+        body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; padding-top: 10px; }
+        .main-card { width: 95%; max-width: 420px; background: var(--card); border-radius: 20px; padding: 15px; border: 1px solid rgba(0, 255, 133, 0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.7); }
+        h1 { color: var(--neon); text-align: center; font-size: 22px; margin: 0; letter-spacing: 1px; font-weight: 900; }
+        .subtitle { text-align: center; color: #94a3b8; font-size: 10px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .team-input { width: 100%; background: transparent; border: none; border-bottom: 2px solid var(--accent); color: white; text-align: center; font-weight: 800; font-size: 14px; margin-bottom: 12px; padding: 5px 0; outline: none; text-transform: uppercase; }
+        .input-group { margin-bottom: 8px; }
+        label { display: block; font-size: 9px; color: #64748b; margin-bottom: 3px; font-weight: bold; text-transform: uppercase; }
+        input { width: 100%; background: #0f172a; border: 1px solid #1e293b; color: #00ff85; padding: 7px; border-radius: 6px; box-sizing: border-box; font-size: 13px; font-weight: bold; }
+        .btn-box { display: flex; gap: 10px; margin: 20px 0; }
+        button { flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; font-size: 14px; transition: 0.3s; text-transform: uppercase; }
+        .btn-run { background: var(--neon); color: var(--accent); box-shadow: 0 4px 15px rgba(0, 255, 133, 0.3); }
+        .btn-clear { background: #1e293b; color: white; }
+        .res-panel { background: linear-gradient(145deg, #0f172a, #1e293b); border-radius: 18px; padding: 15px; border: 1px solid #334155; }
+        .res-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 10px; }
+        .hvp-val { font-size: 22px; font-weight: 900; color: #ffffff; text-shadow: 0 0 10px rgba(0,255,133,0.5); }
+        .percent-val { font-size: 34px; font-weight: 900; color: var(--neon); line-height: 1; }
+        #match_title { font-size: 12px; font-weight: 900; color: #f8fafc; text-align: center; margin-bottom: 10px; letter-spacing: 1px; }
+        .stat-row { display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; margin-top: 5px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="main-card">
+    <h1>GOALGEM</h1>
+    <p class="subtitle">PREMIER LEAGUE | TACTICAL MOTOR</p>
+
+    <div class="grid">
+        <div class="col">
+            <input type="text" id="name_e" class="team-input" placeholder="HOME TEAM">
+            <div class="input-group"><label>npxG</label><input type="number" id="e_n" step="0.01"></div>
+            <div class="input-group"><label>G-xG</label><input type="number" id="e_g" step="0.01"></div>
+            <div class="input-group"><label>PrgP+C</label><input type="number" id="e_p"></div>
+            <div class="input-group"><label>Box Touches</label><input type="number" id="e_b"></div>
+            <div class="input-group"><label>Direct Speed</label><input type="number" id="e_s" step="0.1"></div>
+            <div class="input-group"><label>Def. Line</label><input type="number" id="e_l"></div>
+            <div class="input-group"><label>npxGA</label><input type="number" id="e_a" step="0.01"></div>
+        </div>
+        <div class="col">
+            <input type="text" id="name_d" class="team-input" placeholder="AWAY TEAM">
+            <div class="input-group"><label>npxG</label><input type="number" id="d_n" step="0.01"></div>
+            <div class="input-group"><label>G-xG</label><input type="number" id="d_g" step="0.01"></div>
+            <div class="input-group"><label>PrgP+C</label><input type="number" id="d_p"></div>
+            <div class="input-group"><label>Box Touches</label><input type="number" id="d_b"></div>
+            <div class="input-group"><label>Direct Speed</label><input type="number" id="d_s" step="0.1"></div>
+            <div class="input-group"><label>Def. Line</label><input type="number" id="d_l"></div>
+            <div class="input-group"><label>npxGA</label><input type="number" id="d_a" step="0.01"></div>
+        </div>
+    </div>
+
+    <div class="btn-box">
+        <button class="btn-run" onclick="run()">ANALYZE EPL</button>
+        <button class="btn-clear" onclick="clr()">CLEAR</button>
+    </div>
+
+    <div class="res-panel">
+        <div id="match_title">WAITING FOR DATA</div>
+        <div class="res-top">
+            <div><div style="font-size: 9px; color: #94a3b8; font-weight: 800;">HVP SCORE</div><div id="hvp" class="hvp-val">0.00</div></div>
+            <div style="text-align: right;"><div id="sig" style="font-size: 10px; font-weight: 900; color: #94a3b8;">SIGNAL</div><div id="per" class="percent-val">%0</div></div>
+        </div>
+        <div class="stat-row"><span>EXPECTED ATTACK (npxG):</span><span id="t_n" style="color: var(--neon);">0.00</span></div>
+    </div>
+</div>
+
+<script>
+function run() {
+    const v = (id) => parseFloat(document.getElementById(id).value) || 0;
+    const t = (id) => document.getElementById(id).value || (id === 'name_e' ? 'HOME' : 'AWAY');
+    
+    const e = { n:v('e_n'), a:v('e_a'), g:v('e_g'), p:v('e_p'), b:v('e_b'), s:v('e_s'), l:v('e_l') };
+    const d = { n:v('d_n'), a:v('d_a'), g:v('d_g'), p:v('d_p'), b:v('d_b'), s:v('d_s'), l:v('d_l') };
+
+    // Senin HVP Formülün: ((npxG * 2) + (PrgP + PrgC)) / 10 + (G - xG)
+    const hvp = (((e.n * 2) + e.p) / 10 + e.g) + (((d.n * 2) + d.p) / 10 + d.g);
+    
+    let p = 0;
+    // PREMIER LEAGUE AGRESİF EŞİK DEĞERLERİ
+    if ((e.n + d.n) >= 2.15) p += 35; // İtalya'dan yüksek (EPL standardı)
+    if (e.a > 1.45 || d.a > 1.45) p += 20; 
+    if (e.l > 48 || d.l > 48) p += 10; // Daha önde kurulan savunmalar
+    if ((e.p + d.p) >= 92) p += 15; // Top taşıma trafiği
+    if ((e.b + d.b) >= 46) p += 10; // Ceza sahası aksiyonu
+    if ((e.s + d.s) >= 3.6) p += 10; // EPL dikey hız toplamı
+
+    document.getElementById('match_title').innerText = t('name_e') + " vs " + t('name_d');
+    document.getElementById('hvp').innerText = hvp.toFixed(2);
+    document.getElementById('per').innerText = "%" + Math.min(p, 100);
+    document.getElementById('t_n').innerText = (e.n + d.n).toFixed(2);
+
+    const s = document.getElementById('sig');
+    const pr = document.getElementById('per');
+    if(p >= 80) { s.innerText="HIGH VOLTAGE (O2.5)"; s.style.color="#00ff85"; }
+    else if(p >= 55) { s.innerText="EPL STANDARD"; s.style.color="#ffd600"; }
+    else { s.innerText="LOW INTENSITY"; s.style.color="#ff5252"; }
+}
+
+function clr() {
+    document.querySelectorAll('input').forEach(i => i.value = '');
+    document.getElementById('match_title').innerText = "WAITING FOR DATA";
+    document.getElementById('hvp').innerText = "0.00";
+    document.getElementById('per').innerText = "%0";
+    document.getElementById('sig').innerText = "SIGNAL";
+    document.getElementById('sig').style.color = "#94a3b8";
+}
+</script>
+</body>
+</html>

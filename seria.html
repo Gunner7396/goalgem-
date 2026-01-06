@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOALGEM | SERIE A TACTICAL</title>
+    <title>GOALGEM | SERIE A ANALYZER</title>
     <style>
         body {
             background-color: #0b1426;
             color: white;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             display: flex;
             justify-content: center;
             padding: 20px;
@@ -16,62 +16,81 @@
         }
         .main-card {
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             background: #16213a;
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            border: 1px solid rgba(64, 196, 255, 0.1);
         }
-        h1 { color: #40c4ff; text-align: center; font-size: 24px; margin-bottom: 5px; text-transform: uppercase; }
-        .subtitle { text-align: center; color: #78909c; font-size: 11px; margin-bottom: 25px; }
+        h1 { color: #40c4ff; text-align: center; font-size: 26px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px; }
+        .subtitle { text-align: center; color: #78909c; font-size: 11px; margin-bottom: 30px; border-bottom: 1px solid #1e2a44; padding-bottom: 15px; }
         
-        .section-title {
-            color: #90a4ae;
+        .team-container { display: flex; gap: 20px; margin-bottom: 20px; }
+        .team-column { flex: 1; }
+        
+        .team-header {
             font-size: 14px;
+            font-weight: bold;
             text-align: center;
-            border-bottom: 1px solid #40c4ff;
-            padding-bottom: 5px;
+            padding: 8px;
             margin-bottom: 15px;
+            border-radius: 6px;
             text-transform: uppercase;
         }
+        .header-ev { background: rgba(64, 196, 255, 0.15); color: #40c4ff; border: 1px solid #40c4ff; }
+        .header-dep { background: rgba(255, 255, 255, 0.05); color: #cfd8dc; border: 1px solid #546e7a; }
 
-        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 10px; color: #40c4ff; margin-bottom: 5px; }
+        .input-group { margin-bottom: 12px; }
+        .input-group label { display: block; font-size: 10px; color: #90a4ae; margin-bottom: 4px; font-weight: 600; }
         
         input {
             width: 100%;
-            background: #1e2a44;
-            border: 1px solid #37474f;
+            background: #0f172a;
+            border: 1px solid #334155;
             color: white;
             padding: 10px;
             border-radius: 8px;
             box-sizing: border-box;
+            font-size: 13px;
+            transition: 0.3s;
         }
 
+        .button-group { display: flex; gap: 10px; margin-top: 15px; }
+        
         .btn-analiz {
-            width: 100%;
-            background: #00c853;
+            flex: 2;
+            background: linear-gradient(135deg, #00c853, #009624);
             color: white;
             border: none;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 16px;
+            border-radius: 12px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(0,200,83,0.3);
+        }
+        
+        .btn-reset {
+            flex: 1;
+            background: #37474f;
+            color: #eceff1;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
-        .results {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .result-overlay {
             margin-top: 25px;
-            padding-top: 15px;
-            border-top: 1px solid #1e2a44;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
             text-align: center;
+            border: 1px dashed #334155;
         }
-        .res-box div:first-child { font-size: 11px; color: #40c4ff; margin-bottom: 5px; }
-        .res-box div:last-child { font-size: 20px; font-weight: bold; }
+        .res-percent { font-size: 42px; font-weight: 900; color: #78909c; line-height: 1; }
+        .res-signal { font-size: 14px; font-weight: bold; margin-top: 10px; color: #78909c; }
     </style>
 </head>
 <body>
@@ -80,99 +99,92 @@
     <h1>GOALGEM</h1>
     <p class="subtitle">SERIE A - HVP STRATEGY & TACTICAL INTELLIGENCE</p>
 
-    <div class="input-row">
-        <div class="section-title" style="grid-column: 1;">EV SAHİBİ</div>
-        <div class="section-title" style="grid-column: 2;">DEPLASMAN</div>
-    </div>
-
-    <div class="input-row">
-        <div class="input-group">
-            <label>npxG (Hücum)</label>
-            <input type="number" id="ev_npxG" placeholder="0.00">
+    <div class="team-container">
+        <div class="team-column">
+            <div class="team-header header-ev">EV SAHİBİ</div>
+            <div class="input-group"><label>npxG</label><input type="number" id="ev_npxG" class="inp" placeholder="0.00"></div>
+            <div class="input-group"><label>npxGA</label><input type="number" id="ev_npxGA" class="inp" placeholder="0.00"></div>
+            <div class="input-group"><label>G-xG</label><input type="number" id="ev_G_xG" class="inp" placeholder="0.00"></div>
+            <div class="input-group"><label>PrgP + PrgC</label><input type="number" id="ev_Prg" class="inp" placeholder="0"></div>
+            <div class="input-group"><label>Savunma Hattı</label><input type="number" id="ev_Line" class="inp" placeholder="45"></div>
         </div>
-        <div class="input-group">
-            <label>npxG (Hücum)</label>
-            <input type="number" id="dep_npxG" placeholder="0.00">
-        </div>
-    </div>
-
-    <div class="input-row">
-        <div class="input-group">
-            <label>npxGA (Savunma)</label>
-            <input type="number" id="ev_npxGA" placeholder="0.00">
-        </div>
-        <div class="input-group">
-            <label>npxGA (Savunma)</label>
-            <input type="number" id="dep_npxGA" placeholder="0.00">
+        <div class="team-column">
+            <div class="team-header header-dep">DEPLASMAN</div>
+            <div class="input-group"><label>npxG</label><input type="number" id="dep_npxG" class="inp" placeholder="0.00"></div>
+            <div class="input-group"><label>npxGA</label><input type="number" id="dep_npxGA" class="inp" placeholder="0.00"></div>
+            <div class="input-group"><label>G-xG</label><input type="number" id="dep_G_xG" class="inp" placeholder="0.00"></div>
+            <div class="input-group"><label>PrgP + PrgC</label><input type="number" id="dep_Prg" class="inp" placeholder="0"></div>
+            <div class="input-group"><label>Savunma Hattı</label><input type="number" id="dep_Line" class="inp" placeholder="45"></div>
         </div>
     </div>
 
-    <div class="input-row">
-        <div class="input-group">
-            <label>G-xG (Bitiricilik)</label>
-            <input type="number" id="ev_G_xG" placeholder="0.00">
-        </div>
-        <div class="input-group">
-            <label>G-xG (Bitiricilik)</label>
-            <input type="number" id="dep_G_xG" placeholder="0.00">
-        </div>
+    <div class="button-group">
+        <button class="btn-analiz" onclick="analizEtSerieA()">ANALİZ ET</button>
+        <button class="btn-reset" onclick="temizle()">SİL</button>
     </div>
 
-    <div class="input-row">
-        <div class="input-group">
-            <label>PrgP + PrgC</label>
-            <input type="number" id="ev_Prg" placeholder="0">
-        </div>
-        <div class="input-group">
-            <label>PrgP + PrgC</label>
-            <input type="number" id="dep_Prg" placeholder="0">
-        </div>
-    </div>
-
-    <div class="input-group" style="margin-bottom: 20px;">
-        <label>ORTALAMA SAVUNMA HATTI (DEF. LINE)</label>
-        <input type="number" id="avg_Line" placeholder="45+ m">
-    </div>
-
-    <button class="btn-analiz" onclick="analizEtSerieA()">ANALİZİ BAŞLAT</button>
-
-    <div class="results">
-        <div class="res-box">
-            <div>ÜST %</div>
-            <div id="ust_sonuc">-</div>
-        </div>
-        <div class="res-box">
-            <div>FAVORİ</div>
-            <div id="favori_notu">-</div>
-        </div>
+    <div class="result-overlay" id="result_box">
+        <div style="font-size: 11px; color: #78909c; margin-bottom: 8px;">ANALİZ SONUCU</div>
+        <div id="res_percent" class="res-percent">%0</div>
+        <div id="res_signal" class="res-signal">VERİ BEKLENİYOR</div>
     </div>
 </div>
 
 <script>
 function analizEtSerieA() {
-    const v = {
-        en: parseFloat(document.getElementById('ev_npxG').value) || 0,
-        dn: parseFloat(document.getElementById('dep_npxG').value) || 0,
-        ea: parseFloat(document.getElementById('ev_npxGA').value) || 0,
-        da: parseFloat(document.getElementById('dep_npxGA').value) || 0,
-        eg: parseFloat(document.getElementById('ev_G_xG').value) || 0,
-        dg: parseFloat(document.getElementById('dep_G_xG').value) || 0,
-        prg: (parseFloat(document.getElementById('ev_Prg').value) || 0) + (parseFloat(document.getElementById('dep_Prg').value) || 0),
-        line: parseFloat(document.getElementById('avg_Line').value) || 0
+    const e = {
+        npxG: parseFloat(document.getElementById('ev_npxG').value) || 0,
+        npxGA: parseFloat(document.getElementById('ev_npxGA').value) || 0,
+        G_xG: parseFloat(document.getElementById('ev_G_xG').value) || 0,
+        prg: parseFloat(document.getElementById('ev_Prg').value) || 0,
+        line: parseFloat(document.getElementById('ev_Line').value) || 0
+    };
+    const d = {
+        npxG: parseFloat(document.getElementById('dep_npxG').value) || 0,
+        npxGA: parseFloat(document.getElementById('dep_npxGA').value) || 0,
+        G_xG: parseFloat(document.getElementById('dep_G_xG').value) || 0,
+        prg: parseFloat(document.getElementById('dep_Prg').value) || 0,
+        line: parseFloat(document.getElementById('dep_Line').value) || 0
     };
 
     let p = 0;
-    if ((v.en + v.dn) >= 1.95) p += 40;
-    if (v.ea > 1.4 || v.da > 1.4) p += 20;
-    if (v.line > 45) p += 10;
-    if (v.prg >= 85) p += 20;
-    if ((v.eg + v.dg) > 0.1) p += 10;
+    if ((e.npxG + d.npxG) >= 1.95) p += 40;
+    if (e.npxGA > 1.4 || d.npxGA > 1.4) p += 20;
+    if (e.line > 45 || d.line > 45) p += 10;
+    if ((e.prg + d.prg) >= 85) p += 20;
+    if ((e.G_xG + d.G_xG) > 0.1) p += 10;
 
-    document.getElementById('ust_sonuc').innerText = "%" + Math.min(p, 100);
-    const note = document.getElementById('favori_notu');
-    if(p >= 80) { note.innerText = "GÜÇLÜ ÜST"; note.style.color = "#00c853"; }
-    else if(p >= 55) { note.innerText = "PLASE"; note.style.color = "#ffd600"; }
-    else { note.innerText = "RİSKLİ"; note.style.color = "#ff5252"; }
+    const displayP = Math.min(p, 100);
+    const resPercent = document.getElementById('res_percent');
+    const resSignal = document.getElementById('res_signal');
+    
+    resPercent.innerText = "%" + displayP;
+    
+    if(displayP >= 80) {
+        resSignal.innerText = "GÜÇLÜ ÜST SİNYALİ";
+        resPercent.style.color = "#00c853";
+        resSignal.style.color = "#00c853";
+    } else if(displayP >= 55) {
+        resSignal.innerText = "PLASE SİNYAL";
+        resPercent.style.color = "#ffd600";
+        resSignal.style.color = "#ffd600";
+    } else {
+        resSignal.innerText = "DÜŞÜK İHTİMAL / RİSKLİ";
+        resPercent.style.color = "#ff5252";
+        resSignal.style.color = "#ff5252";
+    }
+}
+
+function temizle() {
+    // Inputları temizle
+    const inputs = document.getElementsByClassName('inp');
+    for(let i=0; i<inputs.length; i++) { inputs[i].value = ''; }
+    
+    // Sonucu sıfırla
+    document.getElementById('res_percent').innerText = "%0";
+    document.getElementById('res_percent').style.color = "#78909c";
+    document.getElementById('res_signal').innerText = "VERİ SİLİNDİ";
+    document.getElementById('res_signal').style.color = "#78909c";
 }
 </script>
 </body>

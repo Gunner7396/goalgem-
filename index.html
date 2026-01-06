@@ -3,46 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoalGem</title>
+    <title>GoalGem | AI Match Analyzer</title>
     <style>
         :root {
-            --bg: #0f172a; --card: #1e293b; --accent: #38bdf8;
-            --green: #10b981; --red: #f43f5e; --text: #f1f5f9;
+            --bg: #0b0f1a; --card: #161e2d; --accent: #38bdf8;
+            --green: #10b981; --red: #f43f5e; --text: #f1f5f9; --warning: #f59e0b;
         }
         body {
-            font-family: sans-serif; background: var(--bg); color: var(--text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg); color: var(--text);
             margin: 0; padding: 10px; display: flex; justify-content: center;
         }
-        .container { width: 100%; max-width: 450px; background: var(--card); padding: 15px; border-radius: 12px; }
-        .header { text-align: center; margin-bottom: 10px; }
-        .header h1 { color: var(--accent); margin: 0; font-size: 1.4rem; }
-        .header p { font-size: 0.7rem; opacity: 0.7; }
+        .container { width: 100%; max-width: 480px; background: var(--card); padding: 15px; border-radius: 16px; border: 1px solid #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        .header { text-align: center; margin-bottom: 12px; }
+        .header h1 { color: var(--accent); margin: 0; font-size: 1.6rem; letter-spacing: 1.5px; text-transform: uppercase; }
+        .header p { font-size: 0.7rem; opacity: 0.5; margin: 4px 0; letter-spacing: 1px; }
         
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .team-box { background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .team-box { background: #0f172a; padding: 12px; border-radius: 10px; border: 1px solid #334155; }
         
-        .field { margin-bottom: 6px; }
-        label { display: block; font-size: 0.65rem; color: #94a3b8; margin-bottom: 1px; }
+        .field { margin-bottom: 8px; }
+        label { display: block; font-size: 0.6rem; color: #94a3b8; margin-bottom: 2px; font-weight: bold; }
         input {
-            width: 100%; background: #1e293b; border: 1px solid #475569;
-            color: white; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem; box-sizing: border-box;
+            width: 100%; background: #1e293b; border: 1px solid #334155;
+            color: white; padding: 5px 8px; border-radius: 5px; font-size: 0.8rem; box-sizing: border-box; transition: 0.2s;
         }
-        .name-input { border-color: var(--accent); margin-bottom: 8px; font-weight: bold; }
+        input:focus { border-color: var(--accent); outline: none; background: #262f3f; }
+        .name-input { border: none !important; border-bottom: 2px solid var(--accent) !important; background: transparent !important; margin-bottom: 12px; text-align: center; font-size: 0.9rem; border-radius: 0 !important; }
 
-        .btns { display: flex; gap: 8px; margin: 15px 0; }
-        button { flex: 1; padding: 10px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
-        .analyze { background: var(--green); color: white; }
-        .clear { background: var(--red); color: white; }
+        .btns { display: flex; gap: 10px; margin: 20px 0; }
+        button { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; }
+        .analyze { background: var(--green); color: white; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
+        .clear { background: var(--red); color: white; opacity: 0.8; }
+        button:active { transform: translateY(2px); }
 
+        /* ANALİZ KARTI TASARIMI */
         #res {
-            padding: 10px; border-radius: 6px; text-align: center; 
-            display: none; font-size: 0.85rem; margin-bottom: 10px;
+            padding: 16px; border-radius: 12px; text-align: center; 
+            display: none; margin-bottom: 20px; background: #1e293b;
+            border-left: 5px solid var(--accent);
         }
-
-        .history { border-top: 1px solid #334155; padding-top: 10px; max-height: 200px; overflow-y: auto; }
+        .prob-bar-bg { background: #0f172a; border-radius: 10px; height: 14px; width: 100%; margin: 12px 0; overflow: hidden; }
+        .prob-bar-fill { height: 100%; transition: width 1s ease-in-out; border-radius: 10px; }
+        .tag { padding: 3px 8px; border-radius: 4px; font-size: 0.6rem; font-weight: bold; margin: 2px; display: inline-block; }
+        
+        .history { border-top: 1px solid #334155; padding-top: 15px; max-height: 180px; overflow-y: auto; }
         table { width: 100%; font-size: 0.7rem; border-collapse: collapse; }
-        th { text-align: left; color: var(--accent); padding: 4px; border-bottom: 1px solid #334155; }
-        td { padding: 6px 4px; border-bottom: 1px solid #0f172a; }
+        th { text-align: left; color: var(--accent); padding: 8px; border-bottom: 1px solid #334155; text-transform: uppercase; }
+        td { padding: 10px 8px; border-bottom: 1px solid #0f172a; }
     </style>
 </head>
 <body>
@@ -50,41 +58,43 @@
 <div class="container">
     <div class="header">
         <h1>GoalGem</h1>
-        <p>HVP & Savunma Analiz Paneli</p>
+        <p>HVP STRATEGY & TACTICAL INTELLIGENCE</p>
     </div>
 
     <div class="grid">
         <div class="team-box" id="A">
-            <input type="text" class="t-name name-input" placeholder="A Takımı">
-            <div class="field"><label>npxG</label><input type="number" step="0.1" class="npxG"></div>
-            <div class="field"><label>G-xG</label><input type="number" step="0.1" class="GxG"></div>
-            <div class="field"><label>Touches Box</label><input type="number" class="tib"></div>
-            <div class="field"><label>PrgP+C</label><input type="number" class="prg"></div>
-            <div class="field"><label>Direct Spd</label><input type="number" step="0.1" class="ds"></div>
+            <input type="text" class="t-name name-input" placeholder="EV SAHİBİ">
+            <div class="field"><label>npxG (Hücum)</label><input type="number" step="0.01" class="npxG"></div>
+            <div class="field"><label>npxGA (Savunma)</label><input type="number" step="0.01" class="npxGA"></div>
+            <div class="field"><label>G-xG (Bitiricilik)</label><input type="number" step="0.01" class="GxG"></div>
+            <div class="field"><label>Touches in Box</label><input type="number" class="tib"></div>
+            <div class="field"><label>PrgP + PrgC</label><input type="number" class="prg"></div>
+            <div class="field"><label>Direct Speed</label><input type="number" step="0.1" class="ds"></div>
             <div class="field"><label>Def. Line</label><input type="number" class="dl"></div>
         </div>
 
         <div class="team-box" id="B">
-            <input type="text" class="t-name name-input" placeholder="B Takımı">
-            <div class="field"><label>npxG</label><input type="number" step="0.1" class="npxG"></div>
-            <div class="field"><label>G-xG</label><input type="number" step="0.1" class="GxG"></div>
-            <div class="field"><label>Touches Box</label><input type="number" class="tib"></div>
-            <div class="field"><label>PrgP+C</label><input type="number" class="prg"></div>
-            <div class="field"><label>Direct Spd</label><input type="number" step="0.1" class="ds"></div>
+            <input type="text" class="t-name name-input" placeholder="DEPLASMAN">
+            <div class="field"><label>npxG (Hücum)</label><input type="number" step="0.01" class="npxG"></div>
+            <div class="field"><label>npxGA (Savunma)</label><input type="number" step="0.01" class="npxGA"></div>
+            <div class="field"><label>G-xG (Bitiricilik)</label><input type="number" step="0.01" class="GxG"></div>
+            <div class="field"><label>Touches in Box</label><input type="number" class="tib"></div>
+            <div class="field"><label>PrgP + PrgC</label><input type="number" class="prg"></div>
+            <div class="field"><label>Direct Speed</label><input type="number" step="0.1" class="ds"></div>
             <div class="field"><label>Def. Line</label><input type="number" class="dl"></div>
         </div>
     </div>
 
     <div class="btns">
-        <button class="analyze" onclick="run()">ANALİZ ET</button>
-        <button class="clear" onclick="reset()">TEMİZLE</button>
+        <button class="analyze" onclick="run()">ANALİZİ BAŞLAT</button>
+        <button class="clear" onclick="reset()">SİFİRLA</button>
     </div>
 
     <div id="res"></div>
 
     <div class="history">
         <table>
-            <thead><tr><th>Maç</th><th>HVP</th><th>%</th><th>Skor</th></tr></thead>
+            <thead><tr><th>Maç</th><th>HVP</th><th>Üst %</th><th>Favori</th></tr></thead>
             <tbody id="hist"></tbody>
         </table>
     </div>
@@ -93,8 +103,9 @@
 <script>
     function run() {
         const get = (id) => ({
-            name: document.querySelector(`#${id} .t-name`).value || id,
+            name: document.querySelector(`#${id} .t-name`).value || (id === 'A' ? 'EV' : 'DEP'),
             npxG: parseFloat(document.querySelector(`#${id} .npxG`).value) || 0,
+            npxGA: parseFloat(document.querySelector(`#${id} .npxGA`).value) || 0,
             GxG: parseFloat(document.querySelector(`#${id} .GxG`).value) || 0,
             tib: parseFloat(document.querySelector(`#${id} .tib`).value) || 0,
             prg: parseFloat(document.querySelector(`#${id} .prg`).value) || 0,
@@ -107,22 +118,48 @@
         const hA = hvp(a), hB = hvp(b);
         const avgH = (hA + hB) / 2;
 
-        let pct = 10; // Taban ihtimal
-        if ((a.npxG + b.npxG) > 2.3) pct += 30;
+        let pct = 0;
+        const potential = ((a.npxG + b.npxGA) / 2) + ((b.npxG + a.npxGA) / 2);
+        
+        if (potential > 1.3) pct += 35;
         if ((a.tib + b.tib) > 40) pct += 20;
         if (a.ds > 1.8 || b.ds > 1.8) pct += 15;
-        if (a.dl > 45 || b.dl > 45) pct += 15;
+        if (a.dl > 46 && b.dl > 46) pct += 20;
+        else if (a.dl > 46 || b.dl > 46) pct += 10;
         if (avgH > 1.5) pct += 10;
-        if (pct > 95) pct = 95;
+
+        pct = Math.min(Math.max(pct, 5), 95);
+        let winner = "Dengeli";
+        if (hA > hB + 0.2) winner = a.name;
+        else if (hB > hA + 0.2) winner = b.name;
 
         const r = document.getElementById('res');
         r.style.display = 'block';
-        r.style.background = pct >= 70 ? '#064e3b' : '#450a0a';
-        r.innerHTML = `<b>${a.name} - ${b.name}</b><br>Üst İhtimali: %${pct} | HVP: ${avgH.toFixed(2)}`;
+        r.style.borderLeftColor = pct >= 70 ? '#10b981' : (pct > 45 ? '#f59e0b' : '#ef4444');
+
+        r.innerHTML = `
+            <div style="font-weight: bold; color: var(--accent); margin-bottom: 5px;">${a.name} vs ${b.name}</div>
+            <div class="prob-bar-bg">
+                <div class="prob-bar-fill" style="width: ${pct}%; background: ${pct >= 70 ? '#10b981' : (pct > 45 ? '#f59e0b' : '#ef4444')};"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 10px;">
+                <span>İhtimal: <b>%${pct}</b></span>
+                <span>HVP: <b>${avgH.toFixed(2)}</b></span>
+            </div>
+            <div id="tags">
+                ${a.dl > 47 && b.dl > 47 ? '<span class="tag" style="background:#ef4444">🔥 YÜKSEK RİSK</span>' : ''}
+                ${a.ds > 1.9 || b.ds > 1.9 ? '<span class="tag" style="background:#f59e0b">⚡ HIZLI HÜCUM</span>' : ''}
+                ${potential > 1.5 ? '<span class="tag" style="background:#10b981">🎯 POZİSYON KALİTESİ</span>' : ''}
+                ${a.npxGA < 0.9 && b.npxGA < 0.9 ? '<span class="tag" style="background:#334155">🛡️ SAVUNMA DUVARI</span>' : ''}
+            </div>
+            <div style="margin-top: 10px; border-top: 1px solid #334155; padding-top: 10px; color: #fcd34d; font-size: 0.8rem;">
+                ⭐ Gole Yakın: <b>${winner}</b>
+            </div>
+        `;
 
         const h = document.getElementById('hist');
         const row = h.insertRow(0);
-        row.innerHTML = `<td>${a.name.slice(0,3)}-${b.name.slice(0,3)}</td><td>${avgH.toFixed(2)}</td><td>%${pct}</td><td>${pct>=70?'✅':'❌'}</td>`;
+        row.innerHTML = `<td>${a.name.slice(0,3)}-${b.name.slice(0,3)}</td><td>${avgH.toFixed(2)}</td><td>%${pct}</td><td>${winner.slice(0,5)}</td>`;
     }
 
     function reset() {

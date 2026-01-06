@@ -3,144 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoalGem | HVP Analiz</title>
+    <title>GoalGem</title>
     <style>
         :root {
-            --bg-color: #0b0f1a;
-            --card-bg: #161e2d;
-            --text-color: #e2e8f0;
-            --accent: #38bdf8;
-            --btn-green: #10b981;
-            --btn-red: #f43f5e;
-            --input-border: #334155;
+            --bg: #0f172a; --card: #1e293b; --accent: #38bdf8;
+            --green: #10b981; --red: #f43f5e; --text: #f1f5f9;
         }
-
         body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
+            font-family: sans-serif; background: var(--bg); color: var(--text);
+            margin: 0; padding: 10px; display: flex; justify-content: center;
         }
-
-        .container {
-            width: 100%;
-            max-width: 850px;
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .header h1 {
-            font-size: 1.5rem;
-            color: var(--accent);
-            margin: 0;
-            letter-spacing: 1px;
-        }
-
-        .header p { font-size: 0.75rem; color: #94a3b8; margin: 5px 0 0; }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .team-box {
-            background: #1e293b;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--input-border);
-        }
-
-        .team-box h3 {
-            font-size: 0.9rem;
-            margin: 0 0 10px;
-            text-align: center;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 5px;
-        }
-
-        .field { margin-bottom: 8px; }
-
-        label {
-            display: block;
-            font-size: 0.7rem;
-            color: #94a3b8;
-            margin-bottom: 2px;
-        }
-
+        .container { width: 100%; max-width: 450px; background: var(--card); padding: 15px; border-radius: 12px; }
+        .header { text-align: center; margin-bottom: 10px; }
+        .header h1 { color: var(--accent); margin: 0; font-size: 1.4rem; }
+        .header p { font-size: 0.7rem; opacity: 0.7; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .team-box { background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155; }
+        
+        .field { margin-bottom: 6px; }
+        label { display: block; font-size: 0.65rem; color: #94a3b8; margin-bottom: 1px; }
         input {
-            width: 100%;
-            background: #0f172a;
-            border: 1px solid var(--input-border);
-            color: white;
-            padding: 5px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            outline: none;
+            width: 100%; background: #1e293b; border: 1px solid #475569;
+            color: white; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem; box-sizing: border-box;
         }
+        .name-input { border-color: var(--accent); margin-bottom: 8px; font-weight: bold; }
 
-        input:focus { border-color: var(--accent); }
-
-        .btns {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        button {
-            flex: 1;
-            padding: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .analyze { background: var(--btn-green); color: white; }
-        .clear { background: var(--btn-red); color: white; }
-        button:hover { opacity: 0.9; transform: scale(1.02); }
+        .btns { display: flex; gap: 8px; margin: 15px 0; }
+        button { flex: 1; padding: 10px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
+        .analyze { background: var(--green); color: white; }
+        .clear { background: var(--red); color: white; }
 
         #res {
-            padding: 10px;
-            border-radius: 6px;
-            text-align: center;
-            margin-bottom: 15px;
-            display: none;
-            font-size: 0.9rem;
-            font-weight: bold;
+            padding: 10px; border-radius: 6px; text-align: center; 
+            display: none; font-size: 0.85rem; margin-bottom: 10px;
         }
 
-        .history-section {
-            border-top: 1px solid #334155;
-            padding-top: 10px;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-
-        table {
-            width: 100%;
-            font-size: 0.75rem;
-            border-collapse: collapse;
-        }
-
-        th { text-align: left; color: var(--accent); padding: 5px; }
-        td { padding: 5px; border-bottom: 1px solid #2d3748; }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .history { border-top: 1px solid #334155; padding-top: 10px; max-height: 200px; overflow-y: auto; }
+        table { width: 100%; font-size: 0.7rem; border-collapse: collapse; }
+        th { text-align: left; color: var(--accent); padding: 4px; border-bottom: 1px solid #334155; }
+        td { padding: 6px 4px; border-bottom: 1px solid #0f172a; }
     </style>
 </head>
 <body>
@@ -148,28 +50,28 @@
 <div class="container">
     <div class="header">
         <h1>GoalGem</h1>
-        <p>HVP & Savunma Çatışma Analizi</p>
+        <p>HVP & Savunma Analiz Paneli</p>
     </div>
 
     <div class="grid">
         <div class="team-box" id="A">
-            <h3>A TAKIMI</h3>
-            <div class="field"><label>npxG</label><input type="number" step="0.01" class="npxG"></div>
-            <div class="field"><label>G - xG</label><input type="number" step="0.01" class="GxG"></div>
-            <div class="field"><label>Touches in Box</label><input type="number" class="tib"></div>
-            <div class="field"><label>PrgP + PrgC</label><input type="number" class="prg"></div>
-            <div class="field"><label>Direct Speed (m/s)</label><input type="number" step="0.1" class="ds"></div>
-            <div class="field"><label>Def. Line (m)</label><input type="number" class="dl"></div>
+            <input type="text" class="t-name name-input" placeholder="A Takımı">
+            <div class="field"><label>npxG</label><input type="number" step="0.1" class="npxG"></div>
+            <div class="field"><label>G-xG</label><input type="number" step="0.1" class="GxG"></div>
+            <div class="field"><label>Touches Box</label><input type="number" class="tib"></div>
+            <div class="field"><label>PrgP+C</label><input type="number" class="prg"></div>
+            <div class="field"><label>Direct Spd</label><input type="number" step="0.1" class="ds"></div>
+            <div class="field"><label>Def. Line</label><input type="number" class="dl"></div>
         </div>
 
         <div class="team-box" id="B">
-            <h3>B TAKIMI</h3>
-            <div class="field"><label>npxG</label><input type="number" step="0.01" class="npxG"></div>
-            <div class="field"><label>G - xG</label><input type="number" step="0.01" class="GxG"></div>
-            <div class="field"><label>Touches in Box</label><input type="number" class="tib"></div>
-            <div class="field"><label>PrgP + PrgC</label><input type="number" class="prg"></div>
-            <div class="field"><label>Direct Speed (m/s)</label><input type="number" step="0.1" class="ds"></div>
-            <div class="field"><label>Def. Line (m)</label><input type="number" class="dl"></div>
+            <input type="text" class="t-name name-input" placeholder="B Takımı">
+            <div class="field"><label>npxG</label><input type="number" step="0.1" class="npxG"></div>
+            <div class="field"><label>G-xG</label><input type="number" step="0.1" class="GxG"></div>
+            <div class="field"><label>Touches Box</label><input type="number" class="tib"></div>
+            <div class="field"><label>PrgP+C</label><input type="number" class="prg"></div>
+            <div class="field"><label>Direct Spd</label><input type="number" step="0.1" class="ds"></div>
+            <div class="field"><label>Def. Line</label><input type="number" class="dl"></div>
         </div>
     </div>
 
@@ -180,9 +82,9 @@
 
     <div id="res"></div>
 
-    <div class="history-section">
+    <div class="history">
         <table>
-            <thead><tr><th>Maç</th><th>HVP</th><th>Üst %</th><th>Sonuç</th></tr></thead>
+            <thead><tr><th>Maç</th><th>HVP</th><th>%</th><th>Skor</th></tr></thead>
             <tbody id="hist"></tbody>
         </table>
     </div>
@@ -191,6 +93,7 @@
 <script>
     function run() {
         const get = (id) => ({
+            name: document.querySelector(`#${id} .t-name`).value || id,
             npxG: parseFloat(document.querySelector(`#${id} .npxG`).value) || 0,
             GxG: parseFloat(document.querySelector(`#${id} .GxG`).value) || 0,
             tib: parseFloat(document.querySelector(`#${id} .tib`).value) || 0,
@@ -204,21 +107,22 @@
         const hA = hvp(a), hB = hvp(b);
         const avgH = (hA + hB) / 2;
 
-        let pct = 0;
+        let pct = 10; // Taban ihtimal
         if ((a.npxG + b.npxG) > 2.3) pct += 30;
         if ((a.tib + b.tib) > 40) pct += 20;
-        if (a.ds > 1.8 || b.ds > 1.8) pct += 20;
-        if (a.dl > 45 || b.dl > 45) pct += 20;
-        if (avgH > 1.4) pct += 10;
+        if (a.ds > 1.8 || b.ds > 1.8) pct += 15;
+        if (a.dl > 45 || b.dl > 45) pct += 15;
+        if (avgH > 1.5) pct += 10;
+        if (pct > 95) pct = 95;
 
         const r = document.getElementById('res');
         r.style.display = 'block';
-        r.style.background = pct >= 75 ? '#064e3b' : '#450a0a';
-        r.innerHTML = `ÜST İHTİMALİ: %${pct} | HVP: ${avgH.toFixed(2)}`;
+        r.style.background = pct >= 70 ? '#064e3b' : '#450a0a';
+        r.innerHTML = `<b>${a.name} - ${b.name}</b><br>Üst İhtimali: %${pct} | HVP: ${avgH.toFixed(2)}`;
 
         const h = document.getElementById('hist');
         const row = h.insertRow(0);
-        row.innerHTML = `<td>#${h.rows.length}</td><td>${avgH.toFixed(2)}</td><td>%${pct}</td><td>${pct>=75?'🔥':'⚠️'}</td>`;
+        row.innerHTML = `<td>${a.name.slice(0,3)}-${b.name.slice(0,3)}</td><td>${avgH.toFixed(2)}</td><td>%${pct}</td><td>${pct>=70?'✅':'❌'}</td>`;
     }
 
     function reset() {

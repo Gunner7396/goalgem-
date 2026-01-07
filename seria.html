@@ -3,141 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Serie A PRO Analiz</title>
+    <title>Serie A PRO V2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0c0a09; color: #f5f5f4; font-family: sans-serif; }
-        .serie-a-blue { border-left: 4px solid #0053a0; }
+        .serie-a-blue { border-left: 4px solid #3b82f6; }
         .glass { background: #1c1917; border: 1px solid #292524; }
-        input, select { background: #292524 !important; color: #3b82f6 !important; border: 1px solid #44403c !important; }
-        .history-card { animation: fadeIn 0.3s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        input, select { background: #292524 !important; color: #3b82f6 !important; border: 1px solid #44403c !important; text-align: center; }
+        input::placeholder { color: #57534e; }
+        .btn-blue { background: #3b82f6; color: white; transition: all 0.2s; }
+        .btn-blue:active { transform: scale(0.95); }
     </style>
 </head>
 <body class="p-4 pb-20">
 
     <div class="max-w-md mx-auto">
-        <h1 class="text-xl font-900 tracking-tighter text-blue-500 italic uppercase mb-4 text-center">SERIE A <span class="text-white">PRO ANALİZ</span></h1>
+        <h1 class="text-xl font-black tracking-tighter text-blue-500 italic uppercase mb-6 text-center text-opacity-90">SERIE A <span class="text-white">PRO ANALİZ</span></h1>
 
-        <div class="glass p-4 rounded-3xl mb-6 shadow-2xl border-t-2 border-blue-600">
-            <div class="grid grid-cols-2 gap-4 mb-4">
-                <div class="space-y-2">
-                    <select id="teamA" class="w-full p-2 rounded-xl text-xs font-bold outline-none">
+        <div class="glass p-6 rounded-[2rem] mb-8 shadow-2xl">
+            <div class="grid grid-cols-2 gap-4 mb-5">
+                <div class="space-y-3">
+                    <select id="teamA" class="w-full p-3 rounded-2xl text-xs font-bold outline-none appearance-none">
                         <option value="">Ev Sahibi</option>
-                        <option>Inter</option><option>Juventus</option><option>Milan</option>
-                        <option>Napoli</option><option>Atalanta</option><option>Roma</option>
-                        <option>Lazio</option><option>Fiorentina</option><option>Bologna</option>
-                        <option>Torino</option><option>Udinese</option><option>Empoli</option>
+                        <option>Inter</option><option>Juventus</option><option>Milan</option><option>Napoli</option><option>Atalanta</option><option>Roma</option>
                     </select>
-                    <input type="number" step="0.01" id="anpxG" placeholder="npxG/Sh" class="w-full p-2 rounded-xl text-xs font-bold">
-                    <input type="number" id="aSCA" placeholder="SCA" class="w-full p-2 rounded-xl text-xs font-bold">
-                    <input type="number" id="aPrgR" placeholder="PrgR" class="w-full p-2 rounded-xl text-xs font-bold">
-                    <input type="number" id="aPPA" placeholder="PPA" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" step="0.01" id="anpxG" placeholder="npxG/Sh" class="w-full p-3 rounded-2xl text-xs font-bold">
+                    <input type="number" id="aSCA" placeholder="SCA" class="w-full p-3 rounded-2xl text-xs font-bold">
+                    <input type="number" id="aPrgR" placeholder="PrgR" class="w-full p-3 rounded-2xl text-xs font-bold">
+                    <input type="number" id="aPPA" placeholder="PPA" class="w-full p-3 rounded-2xl text-xs font-bold">
                 </div>
-                <div class="space-y-2">
-                    <select id="teamB" class="w-full p-2 rounded-xl text-xs font-bold outline-none">
+                <div class="space-y-3">
+                    <select id="teamB" class="w-full p-3 rounded-2xl text-xs font-bold outline-none appearance-none">
                         <option value="">Deplasman</option>
-                        <option>Inter</option><option>Juventus</option><option>Milan</option>
-                        <option>Napoli</option><option>Atalanta</option><option>Roma</option>
-                        <option>Lazio</option><option>Fiorentina</option><option>Bologna</option>
-                        <option>Torino</option><option>Udinese</option><option>Empoli</option>
+                        <option>Inter</option><option>Juventus</option><option>Milan</option><option>Napoli</option><option>Atalanta</option><option>Roma</option>
                     </select>
-                    <input type="number" step="0.01" id="bnpxG" placeholder="npxG/Sh" class="w-full p-2 rounded-xl text-xs font-bold">
-                    <input type="number" id="bSCA" placeholder="SCA" class="w-full p-2 rounded-xl text-xs font-bold">
-                    <input type="number" id="bPrgR" placeholder="PrgR" class="w-full p-2 rounded-xl text-xs font-bold">
-                    <input type="number" id="bPPA" placeholder="PPA" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" step="0.01" id="bnpxG" placeholder="npxG/Sh" class="w-full p-3 rounded-2xl text-xs font-bold">
+                    <input type="number" id="bSCA" placeholder="SCA" class="w-full p-3 rounded-2xl text-xs font-bold">
+                    <input type="number" id="bPrgR" placeholder="PrgR" class="w-full p-3 rounded-2xl text-xs font-bold">
+                    <input type="number" id="bPPA" placeholder="PPA" class="w-full p-3 rounded-2xl text-xs font-bold">
                 </div>
             </div>
-            <button onclick="runAnalysis()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-2xl transition-all shadow-xl text-xs uppercase tracking-widest">
+            <button onclick="calculate()" class="w-full btn-blue font-black py-4 rounded-2xl shadow-lg uppercase tracking-widest text-sm">
                 ANALİZ YAP
             </button>
         </div>
 
-        <div id="historyList" class="space-y-4"></div>
-        <button onclick="clearAll()" class="w-full mt-6 text-[10px] text-gray-600 uppercase tracking-widest hover:text-red-500">Tüm Geçmişi Temizle</button>
+        <div id="results" class="space-y-6"></div>
+        <button onclick="localStorage.removeItem('it_hist'); location.reload();" class="w-full mt-10 text-[10px] text-gray-700 uppercase tracking-[0.2em]">TÜM GEÇMİŞİ TEMİZLE</button>
     </div>
 
     <script>
-        window.onload = loadHistory;
-
-        function runAnalysis() {
+        function calculate() {
             const tA = document.getElementById('teamA').value;
             const tB = document.getElementById('teamB').value;
-            if(!tA || !tB) return alert("Takımları seçin.");
+            if(!tA || !tB) return;
 
-            const an = parseFloat(document.getElementById('anpxG').value || 0);
-            const as = parseFloat(document.getElementById('aSCA').value || 0);
-            const ar = parseFloat(document.getElementById('aPrgR').value || 0);
-            const ap = parseFloat(document.getElementById('aPPA').value || 0);
-            const bn = parseFloat(document.getElementById('bnpxG').value || 0);
-            const bs = parseFloat(document.getElementById('bSCA').value || 0);
-            const br = parseFloat(document.getElementById('bPrgR').value || 0);
-            const bp = parseFloat(document.getElementById('bPPA').value || 0);
+            const d = {
+                an: parseFloat(document.getElementById('anpxG').value || 0),
+                as: parseFloat(document.getElementById('aSCA').value || 0),
+                ar: parseFloat(document.getElementById('aPrgR').value || 0),
+                ap: parseFloat(document.getElementById('aPPA').value || 0),
+                bn: parseFloat(document.getElementById('bnpxG').value || 0),
+                bs: parseFloat(document.getElementById('bSCA').value || 0),
+                br: parseFloat(document.getElementById('bPrgR').value || 0),
+                bp: parseFloat(document.getElementById('bPPA').value || 0)
+            };
 
-            const maxQ = Math.max(an, bn);
-            const tSCA = as + bs;
-            const tPPA = ap + bp;
-            const tPrgR = ar + br;
+            const maxQ = Math.max(d.an, d.bn);
+            const totalSCA = d.as + d.bs;
+            const totalPPA = d.ap + d.bp;
+            const totalPR = d.ar + d.br;
 
-            let probs = { g01: 0, g2: 0, g3plus: 0 };
-            let tavan = ""; let color = "";
+            // --- AGIRLIKLI PUANLAMA MANTIGI (0-100) ---
+            let score = 0;
+            score += (totalSCA / 55) * 35; // SCA ağırlığı %35
+            score += (maxQ / 0.22) * 35;   // Kalite ağırlığı %35
+            score += (totalPPA / 25) * 15; // PPA ağırlığı %15
+            score += (totalPR / 110) * 15; // PR ağırlığı %15
 
-            // SERIE A ÖZEL %80+ ALGORİTMASI
-            if (maxQ < 0.09 && tSCA < 23 && tPPA < 12 && tPrgR < 60) {
-                probs = { g01: 82, g2: 12, g3plus: 6 };
-                tavan = "MAX 1 GOL"; color = "emerald";
-            } else if (tSCA <= 29 && tPPA <= 16 && tPrgR <= 70) {
-                probs = { g01: 20, g2: 62, g3plus: 18 };
-                tavan = "MAX 2 GOL"; color = "amber";
+            let res, col, p01, p2, p3;
+
+            if (score < 38) {
+                res = "MAX 1 GOL"; col = "emerald";
+                p01 = 82; p2 = 13; p3 = 5;
+            } else if (score < 58) {
+                res = "MAX 2 GOL"; col = "amber";
+                p01 = 25; p2 = 60; p3 = 15;
+            } else if (score < 78) {
+                res = "MAX 3 GOL"; col = "orange";
+                p01 = 12; p2 = 23; p3 = 65;
             } else {
-                probs = { g01: 8, g2: 22, g3plus: 70 };
-                tavan = "3+ GOL"; color = "red";
+                res = "3+ GOL"; col = "red";
+                p01 = 5; p2 = 15; p3 = 80;
             }
 
-            const matchData = { id: Date.now(), tA, tB, maxQ, tSCA, tPPA, tPrgR, probs, tavan, color };
-            saveMatch(matchData);
-            loadHistory();
-        }
-
-        function saveMatch(data) {
-            let history = JSON.parse(localStorage.getItem('serieAHistory') || '[]');
-            history.unshift(data);
-            localStorage.setItem('serieAHistory', JSON.stringify(history));
-        }
-
-        function loadHistory() {
-            const history = JSON.parse(localStorage.getItem('serieAHistory') || '[]');
-            const list = document.getElementById('historyList');
-            list.innerHTML = history.map(m => `
-                <div class="glass p-4 rounded-2xl serie-a-blue history-card mb-4 relative">
-                    <button onclick="deleteMatch(${m.id})" class="absolute top-2 right-2 text-gray-600 hover:text-red-500 text-xs">×</button>
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-[10px] font-black uppercase text-gray-400">${m.tA} x ${m.tB}</span>
-                        <span class="text-xs font-black text-${m.color}-500 uppercase">${m.tavan}</span>
+            const html = `
+                <div class="glass p-5 rounded-[1.5rem] serie-a-blue relative animate-in fade-in duration-300">
+                    <div class="flex justify-between items-center mb-5">
+                        <span class="text-[11px] font-black text-gray-400 uppercase tracking-tighter">${tA} X ${tB}</span>
+                        <span class="text-sm font-black text-${col}-500 tracking-tighter uppercase">${res}</span>
                     </div>
-                    <div class="space-y-2 mb-4">
-                        <div class="flex justify-between text-[9px] font-bold mb-1"><span>0-1 GOL</span><span>%${m.probs.g01}</span></div>
-                        <div class="w-full bg-gray-800 h-1 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full" style="width: ${m.probs.g01}%"></div></div>
-                        <div class="flex justify-between text-[9px] font-bold mb-1"><span>2 GOL</span><span>%${m.probs.g2}</span></div>
-                        <div class="w-full bg-gray-800 h-1 rounded-full overflow-hidden"><div class="bg-amber-500 h-full" style="width: ${m.probs.g2}%"></div></div>
-                        <div class="flex justify-between text-[9px] font-bold mb-1"><span>3+ GOL</span><span>%${m.probs.g3plus}</span></div>
-                        <div class="w-full bg-gray-800 h-1 rounded-full overflow-hidden"><div class="bg-red-500 h-full" style="width: ${m.probs.g3plus}%"></div></div>
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between text-[10px] font-bold"><span>0-1 GOL</span><span>%${p01}</span></div>
+                        <div class="w-full bg-gray-900 h-1.5 rounded-full"><div class="bg-emerald-500 h-full rounded-full" style="width:${p01}%"></div></div>
+                        <div class="flex justify-between text-[10px] font-bold"><span>2 GOL</span><span>%${p2}</span></div>
+                        <div class="w-full bg-gray-900 h-1.5 rounded-full"><div class="bg-amber-500 h-full rounded-full" style="width:${p2}%"></div></div>
+                        <div class="flex justify-between text-[10px] font-bold"><span>3+ GOL</span><span>%${p3}</span></div>
+                        <div class="w-full bg-gray-900 h-1.5 rounded-full"><div class="bg-red-500 h-full rounded-full" style="width:${p3}%"></div></div>
                     </div>
-                    <div class="grid grid-cols-4 gap-1 text-[8px] text-center text-gray-600 font-mono italic">
-                        <div>Q:${m.maxQ}</div><div>SCA:${m.tSCA}</div><div>PPA:${m.tPPA}</div><div>PR:${m.tPrgR}</div>
+                    <div class="flex justify-around bg-black/40 py-2 rounded-xl border border-white/5 text-[9px] font-mono text-gray-500 italic">
+                        <span>Q:${maxQ}</span><span>SCA:${totalSCA}</span><span>PPA:${totalPPA}</span><span>PR:${totalPR}</span>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            document.getElementById('results').innerHTML = html + document.getElementById('results').innerHTML;
         }
-
-        function deleteMatch(id) {
-            let history = JSON.parse(localStorage.getItem('serieAHistory') || '[]');
-            history = history.filter(m => m.id !== id);
-            localStorage.setItem('serieAHistory', JSON.stringify(history));
-            loadHistory();
-        }
-
-        function clearAll() { if(confirm("Temizlensin mi?")) { localStorage.removeItem('serieAHistory'); loadHistory(); } }
     </script>
 </body>
 </html>

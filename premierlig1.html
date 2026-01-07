@@ -1,134 +1,44 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PremierPRO Compact v2.6 - Quality Focus</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #020617; color: #f1f5f9; }
-        .glass-card { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .compact-input { background: #0f172a !important; border: 1px solid #334155 !important; font-size: 13px !important; padding: 8px !important; color: #60a5fa !important; font-weight: bold; }
-        select { background: #1e293b !important; font-size: 13px !important; border: 1px solid #334155 !important; }
-        .result-badge { font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 900; }
-        .label-unit { font-size: 9px; color: #94a3b8; font-weight: bold; margin-bottom: 2px; display: block; }
-    </style>
-</head>
-<body class="p-2 md:p-4">
+function analyzeMatch() {
+    const d = {
+        tA: document.getElementById('teamA').value, tB: document.getElementById('teamB').value,
+        an: parseFloat(document.getElementById('anpxG').value || 0), as: parseFloat(document.getElementById('aSCA').value || 0),
+        ar: parseFloat(document.getElementById('aPrgR').value || 0), ap: parseFloat(document.getElementById('aPPA').value || 0),
+        bn: parseFloat(document.getElementById('bnpxG').value || 0), bs: parseFloat(document.getElementById('bSCA').value || 0),
+        br: parseFloat(document.getElementById('bPrgR').value || 0), bp: parseFloat(document.getElementById('bPPA').value || 0)
+    };
 
-    <div class="max-w-md mx-auto">
-        <div class="flex justify-between items-center mb-4 px-1">
-            <h1 class="text-lg font-900 tracking-tighter text-blue-500 italic">P-PRO <span class="text-white text-xs">Quality Engine</span></h1>
-            <button onclick="clearHistory()" class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Temizle</button>
-        </div>
-        
-        <div class="glass-card rounded-xl p-4 shadow-2xl mb-4 border-t-2 border-blue-600">
-            <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <select id="teamA" class="w-full rounded-lg text-white p-2 outline-none">
-                            <option value="">Ev Sahibi</option>
-                            <optgroup label="Premier Lig">
-                                <option>Arsenal</option><option>Aston Villa</option><option>Bournemouth</option><option>Brentford</option><option>Brighton</option><option>Chelsea</option><option>Crystal Palace</option><option>Everton</option><option>Fulham</option><option>Ipswich Town</option><option>Leicester City</option><option>Liverpool</option><option>Man City</option><option>Man Utd</option><option>Newcastle</option><option>Nott'm Forest</option><option>Southampton</option><option>Tottenham</option><option>West Ham</option><option>Wolves</option>
-                            </optgroup>
-                            <optgroup label="Diğer">
-                                <option>Leeds United</option><option>Burnley</option><option>Luton Town</option><option>Sheffield Utd</option>
-                            </optgroup>
-                        </select>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div><span class="label-unit uppercase">npxG/Sh</span><input type="number" step="0.01" id="anpxG" placeholder="0.08" class="compact-input rounded-md w-full"></div>
-                            <div><span class="label-unit uppercase">SCA</span><input type="number" step="0.1" id="aSCA" placeholder="15.0" class="compact-input rounded-md w-full"></div>
-                            <div><span class="label-unit uppercase">PrgR</span><input type="number" id="aPrgR" placeholder="30" class="compact-input rounded-md w-full"></div>
-                            <div><span class="label-unit uppercase">PPA</span><input type="number" id="aPPA" placeholder="8" class="compact-input rounded-md w-full"></div>
-                        </div>
-                    </div>
+    if(!d.tA || !d.tB) return;
 
-                    <div class="space-y-2">
-                        <select id="teamB" class="w-full rounded-lg text-white p-2 outline-none">
-                            <option value="">Deplasman</option>
-                            <optgroup label="Premier Lig">
-                                <option>Arsenal</option><option>Aston Villa</option><option>Bournemouth</option><option>Brentford</option><option>Brighton</option><option>Chelsea</option><option>Crystal Palace</option><option>Everton</option><option>Fulham</option><option>Ipswich Town</option><option>Leicester City</option><option>Liverpool</option><option>Man City</option><option>Man Utd</option><option>Newcastle</option><option>Nott'm Forest</option><option>Southampton</option><option>Tottenham</option><option>West Ham</option><option>Wolves</option>
-                            </optgroup>
-                        </select>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div><span class="label-unit uppercase">npxG/Sh</span><input type="number" step="0.01" id="bnpxG" placeholder="0.08" class="compact-input rounded-md w-full"></div>
-                            <div><span class="label-unit uppercase">SCA</span><input type="number" step="0.1" id="bSCA" placeholder="15.0" class="compact-input rounded-md w-full"></div>
-                            <div><span class="label-unit uppercase">PrgR</span><input type="number" id="bPrgR" placeholder="30" class="compact-input rounded-md w-full"></div>
-                            <div><span class="label-unit uppercase">PPA</span><input type="number" id="bPPA" placeholder="8" class="compact-input rounded-md w-full"></div>
-                        </div>
-                    </div>
-                </div>
+    const maxQuality = Math.max(d.an, d.bn);
+    const totalSCA = d.as + d.bs;
+    const totalPrgR = d.ar + d.br;
+    const totalPPA = d.ap + d.bp;
+    
+    let res, cls, bg, note, prob;
 
-                <button onclick="analyzeMatch()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-3 rounded-xl text-xs tracking-widest transition-all shadow-lg active:scale-95">
-                    KALİTE ODAKLI ANALİZ
-                </button>
-            </div>
-        </div>
+    // GELİŞMİŞ İHTİMAL ALGORİTMASI
+    if (maxQuality < 0.09 && totalSCA < 24 && totalPPA < 12) {
+        res = "1.5 ALT"; cls = "text-emerald-400"; bg = "bg-emerald-400/10";
+        prob = Math.min(85, 70 + (0.09 - maxQuality) * 100); 
+        note = "Savunmalar kilit, üretim kısır. 1.5 Alt havuzuna tam uyum.";
+    } else if (maxQuality > 0.12 || totalSCA > 38 || totalPrgR > 70) {
+        res = "3+ GOL"; cls = "text-red-400"; bg = "bg-red-400/10";
+        prob = Math.min(92, 65 + (maxQuality - 0.11) * 200 + (totalSCA / 2));
+        note = `Yüksek patlama riski! Kalite ${maxQuality} ve üretim ${totalSCA} SCA ile savunma felç olur.`;
+    } else {
+        res = "TAM 2 GOL"; cls = "text-amber-400"; bg = "bg-amber-400/10";
+        prob = 75; 
+        note = "Sınır bölgesi. Takımlar birbirini bir yere kadar çözer. En yakın skorlar 1-1 veya 2-0.";
+    }
 
-        <div id="history" class="space-y-3"></div>
-    </div>
+    const analysis = { id: Date.now(), ...d, res, cls, bg, note, maxQuality, totalSCA, totalPrgR, totalPPA, prob: prob.toFixed(0) };
+    let logs = JSON.parse(localStorage.getItem('pLogs') || '[]');
+    logs.unshift(analysis);
+    localStorage.setItem('pLogs', JSON.stringify(logs));
+    displayHistory();
+}
 
-    <script>
-        window.onload = () => displayHistory();
-
-        function analyzeMatch() {
-            const d = {
-                tA: document.getElementById('teamA').value, tB: document.getElementById('teamB').value,
-                an: parseFloat(document.getElementById('anpxG').value || 0), as: parseFloat(document.getElementById('aSCA').value || 0),
-                ar: parseFloat(document.getElementById('aPrgR').value || 0), ap: parseFloat(document.getElementById('aPPA').value || 0),
-                bn: parseFloat(document.getElementById('bnpxG').value || 0), bs: parseFloat(document.getElementById('bSCA').value || 0),
-                br: parseFloat(document.getElementById('bPrgR').value || 0), bp: parseFloat(document.getElementById('bPPA').value || 0)
-            };
-
-            if(!d.tA || !d.tB) return;
-
-            // STRATEJİK HESAPLAMA (npxG/Sh Üzerinden)
-            const maxQuality = Math.max(d.an, d.bn);
-            const totalSCA = d.as + d.bs;
-            const totalPrgR = d.ar + d.br;
-            const totalPPA = d.ap + d.bp;
-
-            let res, cls, bg, note;
-            
-            // Hassas Filtreleme
-            if (maxQuality < 0.09 && totalSCA < 24 && totalPPA < 12) {
-                res = "1.5 ALT"; cls = "text-emerald-400"; bg = "bg-emerald-400/10";
-                note = `Saf kısırlık! En yüksek kalite ${maxQuality} (0.09 altı) ve sızma sınırlı. 232 maçlık güvenli bölge.`;
-            } else if (maxQuality > 0.12 || totalSCA > 35 || totalPrgR > 65) {
-                res = "3+ GOL"; cls = "text-red-400"; bg = "bg-red-400/10";
-                note = `Tehlikeli kalite: ${maxQuality}. Bu seviyede şut kalitesi ve ${totalSCA} SCA ile 1.5 Alt imkansız.`;
-            } else {
-                res = "TAM 2 GOL"; cls = "text-amber-400"; bg = "bg-amber-400/10";
-                note = "Kalite sınırda (0.10-0.11). Maç 245 maçlık '2 gol' havuzuna düşüyor. 1-1 veya 2-0 kokusu var.";
-            }
-
-            const analysis = { id: Date.now(), ...d, res, cls, bg, note, maxQuality, totalSCA, totalPrgR, totalPPA };
-            let logs = JSON.parse(localStorage.getItem('pLogs') || '[]');
-            logs.unshift(analysis);
-            localStorage.setItem('pLogs', JSON.stringify(logs));
-            displayHistory();
-        }
-
-        function displayHistory() {
-            const logs = JSON.parse(localStorage.getItem('pLogs') || '[]');
-            document.getElementById('history').innerHTML = logs.map(l => `
-                <div class="glass-card rounded-xl p-3 border-l-4 ${l.res === '1.5 ALT' ? 'border-emerald-500' : l.res === '3+ GOL' ? 'border-red-500' : 'border-amber-500'}">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[11px] font-bold">${l.tA} x ${l.tB}</span>
-                        <span class="result-badge ${l.bg} ${l.cls}">${l.res}</span>
-                    </div>
-                    <div class="grid grid-cols-4 gap-1 text-[9px] text-center mb-2 text-gray-400">
-                        <div class="bg-white/5 py-1 rounded">Q: ${l.maxQuality.toFixed(2)}</div>
-                        <div class="bg-white/5 py-1 rounded">SCA: ${l.totalSCA}</div>
-                        <div class="bg-white/5 py-1 rounded">PrgR: ${l.totalPrgR}</div>
-                        <div class="bg-white/5 py-1 rounded">PPA: ${l.totalPPA}</div>
-                    </div>
-                    <p class="text-[10px] text-gray-400 leading-tight"><strong>NOT:</strong> ${l.note}</p>
-                </div>
-            `).join('');
-        }
-        function clearHistory() { if(confirm('Sıfırlansın mı?')) { localStorage.removeItem('pLogs'); displayHistory(); } }
-    </script>
-</body>
-</html>
+// displayHistory içindeki HTML yapısını da şu görsel bar ile güncelle:
+// <div class="w-full bg-gray-800 h-1.5 rounded-full mt-2 overflow-hidden">
+//    <div class="h-full ${l.bg.replace('bg-', 'bg-').replace('/10', '')}" style="width: ${l.prob}%"></div>
+// </div>

@@ -2,131 +2,184 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premier Analiz Pro - 1.5 Alt/Üst Süzgeci</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Premier Gold Predictor v2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        .card { background: #1e293b; border: 1px solid #334155; }
-        body { background: #0f172a; color: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background-color: #020617; color: #f8fafc; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gradient-border-alt { border-left: 4px solid #10b981; }
+        .gradient-border-two { border-left: 4px solid #f59e0b; }
+        .gradient-border-three { border-left: 4px solid #ef4444; }
+        input, select { background: #0f172a !important; border: 1px solid #334155 !important; color: white !important; }
+        .tab-active { border-bottom: 2px solid #3b82f6; color: #3b82f6; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="pb-10">
 
-    <div class="max-w-6xl mx-auto">
-        <h1 class="text-3xl font-bold text-center text-blue-400 mb-8">Premier Analiz Pro <span class="text-sm font-normal text-gray-400">v1.0</span></h1>
+    <header class="p-6 border-b border-white/10 mb-6 bg-slate-950/50 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-800 tracking-tighter text-blue-500">PREMIER<span class="text-white">PRO</span></h1>
+            <span class="text-[10px] bg-blue-600/20 text-blue-400 px-2 py-1 rounded-full uppercase tracking-widest font-bold">2026 Engine</span>
+        </div>
+    </header>
 
-        <div class="card p-6 rounded-xl shadow-2xl mb-8">
+    <main class="max-w-4xl mx-auto px-4">
+        
+        <section class="glass-card rounded-2xl p-6 mb-8 shadow-2xl">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="space-y-4 border-r border-gray-700 pr-4">
-                    <h2 class="text-xl font-semibold text-blue-300">A Takımı (Ev / Deplasman)</h2>
-                    <input type="text" id="teamA" placeholder="Takım Adı" class="w-full p-2 rounded bg-gray-800 border border-gray-600 focus:outline-none focus:border-blue-500">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div><label class="block text-xs text-gray-400">npxG</label><input type="number" step="0.01" id="anpxG" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
-                        <div><label class="block text-xs text-gray-400">SCA</label><input type="number" step="0.1" id="aSCA" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
-                        <div><label class="block text-xs text-gray-400">PrgR</label><input type="number" id="aPrgR" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
-                        <div><label class="block text-xs text-gray-400">PPA</label><input type="number" id="aPPA" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
+                
+                <div class="space-y-4">
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Ev Sahibi Takım</label>
+                    <select id="teamA" class="w-full p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                        <option value="">Takım Seçin...</option>
+                        <optgroup label="Premier Lig">
+                            <option>Arsenal</option><option>Aston Villa</option><option>Bournemouth</option>
+                            <option>Brentford</option><option>Brighton</option><option>Chelsea</option>
+                            <option>Crystal Palace</option><option>Everton</option><option>Fulham</option>
+                            <option>Ipswich Town</option><option>Leicester City</option><option>Liverpool</option>
+                            <option>Man City</option><option>Man Utd</option><option>Newcastle</option>
+                            <option>Nott'm Forest</option><option>Southampton</option><option>Tottenham</option>
+                            <option>West Ham</option><option>Wolves</option>
+                        </optgroup>
+                    </select>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <span class="text-[10px] text-gray-500 ml-1">npxG</span>
+                            <input type="number" step="0.01" id="anpxG" placeholder="0.10" class="w-full p-3 rounded-xl">
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-[10px] text-gray-500 ml-1">SCA</span>
+                            <input type="number" step="0.1" id="aSCA" placeholder="15.0" class="w-full p-3 rounded-xl">
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-[10px] text-gray-500 ml-1">PrgR</span>
+                            <input type="number" id="aPrgR" placeholder="30" class="w-full p-3 rounded-xl">
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-[10px] text-gray-500 ml-1">PPA</span>
+                            <input type="number" id="aPPA" placeholder="8" class="w-full p-3 rounded-xl">
+                        </div>
                     </div>
                 </div>
 
                 <div class="space-y-4">
-                    <h2 class="text-xl font-semibold text-red-300">B Takımı (Ev / Deplasman)</h2>
-                    <input type="text" id="teamB" placeholder="Takım Adı" class="w-full p-2 rounded bg-gray-800 border border-gray-600 focus:outline-none focus:border-red-500">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div><label class="block text-xs text-gray-400">npxG</label><input type="number" step="0.01" id="bnpxG" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
-                        <div><label class="block text-xs text-gray-400">SCA</label><input type="number" step="0.1" id="bSCA" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
-                        <div><label class="block text-xs text-gray-400">PrgR</label><input type="number" id="bPrgR" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
-                        <div><label class="block text-xs text-gray-400">PPA</label><input type="number" id="bPPA" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Deplasman Takımı</label>
+                    <select id="teamB" class="w-full p-3 rounded-xl focus:ring-2 focus:ring-red-500 outline-none transition-all">
+                        <option value="">Takım Seçin...</option>
+                        <optgroup label="Premier Lig">
+                            <option>Arsenal</option><option>Aston Villa</option><option>Bournemouth</option>
+                            <option>Brentford</option><option>Brighton</option><option>Chelsea</option>
+                            <option>Crystal Palace</option><option>Everton</option><option>Fulham</option>
+                            <option>Ipswich Town</option><option>Leicester City</option><option>Liverpool</option>
+                            <option>Man City</option><option>Man Utd</option><option>Newcastle</option>
+                            <option>Nott'm Forest</option><option>Southampton</option><option>Tottenham</option>
+                            <option>West Ham</option><option>Wolves</option>
+                        </optgroup>
+                    </select>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <span class="text-[10px] text-gray-500 ml-1">npxG</span>
+                            <input type="number" step="0.01" id="bnpxG" placeholder="0.10" class="w-full p-3 rounded-xl">
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-[10px] text-gray-500 ml-1">SCA</span>
+                            <input type="number" step="0.1" id="bSCA" placeholder="15.0" class="w-full p-3 rounded-xl">
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-[10px] text-gray-500 ml-1">PrgR</span>
+                            <input type="number" id="bPrgR" placeholder="30" class="w-full p-3 rounded-xl">
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-[10px] text-gray-500 ml-1">PPA</span>
+                            <input type="number" id="bPPA" placeholder="8" class="w-full p-3 rounded-xl">
+                        </div>
                     </div>
                 </div>
             </div>
-            <button onclick="analyzeMatch()" class="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">ANALİZ ET VE KAYDET</button>
-        </div>
 
-        <div id="history" class="space-y-6">
-            </div>
-    </div>
+            <button onclick="analyzeMatch()" class="w-full mt-8 bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-4 rounded-2xl shadow-lg shadow-blue-900/20 transition-all active:scale-95">
+                MAÇI DERİNDEN ANALİZ ET
+            </button>
+        </section>
+
+        <h2 class="text-sm font-bold text-gray-500 mb-4 px-2 uppercase tracking-tighter">Son Analizlerin</h2>
+        <div id="history" class="space-y-4"></div>
+        
+        <button onclick="clearHistory()" class="w-full mt-6 text-xs text-gray-600 hover:text-red-400 transition">Geçmişi Temizle</button>
+
+    </main>
 
     <script>
-        // Sayfa yüklendiğinde geçmişi getir
-        window.onload = () => { displayHistory(); };
+        window.onload = () => displayHistory();
 
         function analyzeMatch() {
-            const data = {
-                id: Date.now(),
-                tA: document.getElementById('teamA').value || 'A Takımı',
-                tB: document.getElementById('teamB').value || 'B Takımı',
-                anpxG: parseFloat(document.getElementById('anpxG').value),
-                aSCA: parseFloat(document.getElementById('aSCA').value),
-                aPrgR: parseFloat(document.getElementById('aPrgR').value),
-                aPPA: parseFloat(document.getElementById('aPPA').value),
-                bnpxG: parseFloat(document.getElementById('bnpxG').value),
-                bSCA: parseFloat(document.getElementById('bSCA').value),
-                bPrgR: parseFloat(document.getElementById('bPrgR').value),
-                bPPA: parseFloat(document.getElementById('bPPA').value),
+            const d = {
+                tA: document.getElementById('teamA').value,
+                tB: document.getElementById('teamB').value,
+                an: parseFloat(document.getElementById('anpxG').value || 0),
+                as: parseFloat(document.getElementById('aSCA').value || 0),
+                ar: parseFloat(document.getElementById('aPrgR').value || 0),
+                ap: parseFloat(document.getElementById('aPPA').value || 0),
+                bn: parseFloat(document.getElementById('bnpxG').value || 0),
+                bs: parseFloat(document.getElementById('bSCA').value || 0),
+                br: parseFloat(document.getElementById('bPrgR').value || 0),
+                bp: parseFloat(document.getElementById('bPPA').value || 0)
             };
 
-            // Hesaplamalar
-            const totalSCA = data.aSCA + data.bSCA;
-            const avgNpxG = (data.anpxG + data.bnpxG) / 2;
-            const totalPrgR = data.aPrgR + data.bPrgR;
-            const totalPPA = data.aPPA + data.bPPA;
+            if(!d.tA || !d.tB) return alert("Lütfen takımları seçin!");
 
-            let result = "";
-            let color = "";
-            let reason = "";
+            const avgNpxG = (d.an + d.bn) / 2;
+            const totalSCA = d.as + d.bs;
+            const totalPrgR = d.ar + d.br;
+            const totalPPA = d.ap + d.bp;
 
-            // Karar Mantığı (Seninle oluşturduğumuz kurallar)
-            if (avgNpxG < 0.08 && totalSCA < 20 && totalPPA < 11) {
-                result = "1.5 ALT (%80 GÜVEN)";
-                color = "text-green-400";
-                reason = "Sistemdeki 232 maçlık 'Saf Alt' havuzuna tam uyum sağlıyor. Pozisyon kalitesi (npxG) çok düşük ve ceza sahasına sızma yok.";
+            let res, cls, note, brd;
+
+            // ANALİZ MOTORU
+            if (avgNpxG < 0.08 && totalSCA < 22 && totalPPA < 11) {
+                res = "1.5 ALT"; cls = "text-emerald-400"; brd = "gradient-border-alt";
+                note = "Saf kısırlık bölgesi. 232 maçlık havuzla %80 uyumlu. Şut kalitesi ve sızma yerlerde.";
             } else if (avgNpxG > 0.12 || totalSCA > 35 || totalPrgR > 65) {
-                result = "3 GOL VE ÜSTÜ";
-                color = "text-red-400";
-                reason = `Yüksek riskli bölge! Toplam SCA (${totalSCA.toFixed(1)}) ve PrgR (${totalPrgR}) değerleri 216 maçlık 'Gollü' havuzunu işaret ediyor. Kalite 1.5 Alt sınırını çoktan aşmış.`;
+                res = "3 GOL VE ÜSTÜ"; cls = "text-red-400"; brd = "gradient-border-three";
+                note = `Yüksek tempo tespit edildi! SCA (${totalSCA}) ve PrgR (${totalPrgR}) değerleri savunmaların çökeceğini söylüyor.`;
             } else {
-                result = "TAM 2 GOL (SINIR)";
-                color = "text-yellow-400";
-                reason = "Maç 245 maçlık 'Sınır' bölgesinde. Ne tam kısır ne de tam patlamaya hazır. 1-1 veya 2-0 bitme olasılığı %70'in üzerinde.";
+                res = "TAM 2 GOL (SINIR)"; cls = "text-amber-400"; brd = "gradient-border-two";
+                note = "Maç 245 maçlık sınır bölgesinde. Skor 1-1 veya 2-0'a kilitlenmeye çok müsait. 3. gol için ekstra üretim yetersiz.";
             }
 
-            const analysis = { ...data, result, color, reason, totalSCA, avgNpxG, totalPrgR };
-            saveAnalysis(analysis);
-        }
-
-        function saveAnalysis(item) {
-            let logs = JSON.parse(localStorage.getItem('matchLogs')) || [];
-            logs.unshift(item);
+            const analysis = { id: Date.now(), ...d, res, cls, note, brd, avgNpxG, totalSCA, totalPrgR, totalPPA };
+            let logs = JSON.parse(localStorage.getItem('matchLogs') || '[]');
+            logs.unshift(analysis);
             localStorage.setItem('matchLogs', JSON.stringify(logs));
             displayHistory();
         }
 
         function displayHistory() {
-            const logs = JSON.parse(localStorage.getItem('matchLogs')) || [];
-            const container = document.getElementById('history');
-            container.innerHTML = logs.map(log => `
-                <div class="card p-6 rounded-xl relative overflow-hidden">
-                    <div class="flex justify-between items-start border-b border-gray-700 pb-4 mb-4">
-                        <div>
-                            <h3 class="text-2xl font-bold font-mono">${log.tA} vs ${log.tB}</h3>
-                            <p class="text-sm text-gray-400">${new Date(log.id).toLocaleString()}</p>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-xl font-black ${log.color}">${log.result}</span>
-                        </div>
+            const logs = JSON.parse(localStorage.getItem('matchLogs') || '[]');
+            document.getElementById('history').innerHTML = logs.map(l => `
+                <div class="glass-card rounded-2xl p-5 ${l.brd} animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-sm font-extrabold text-white">${l.tA} <span class="text-gray-500 px-1">vs</span> ${l.tB}</span>
+                        <span class="text-xs font-black ${l.cls} bg-white/5 px-3 py-1 rounded-lg">${l.res}</span>
                     </div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-4">
-                        <div class="bg-gray-900 p-2 rounded"><div class="text-xs text-gray-500">Ort. npxG</div><div class="font-bold">${log.avgNpxG.toFixed(2)}</div></div>
-                        <div class="bg-gray-900 p-2 rounded"><div class="text-xs text-gray-500">Top. SCA</div><div class="font-bold">${log.totalSCA.toFixed(1)}</div></div>
-                        <div class="bg-gray-900 p-2 rounded"><div class="text-xs text-gray-500">Top. PrgR</div><div class="font-bold">${log.totalPrgR}</div></div>
-                        <div class="bg-gray-900 p-2 rounded"><div class="text-xs text-gray-500">Top. PPA</div><div class="font-bold">${log.aPPA + log.bPPA}</div></div>
+                    <div class="grid grid-cols-4 gap-2 mb-4 text-center">
+                        <div class="bg-black/40 py-2 rounded-xl"><p class="text-[9px] text-gray-500 uppercase">npxG</p><p class="text-xs font-bold">${l.avgNpxG.toFixed(2)}</p></div>
+                        <div class="bg-black/40 py-2 rounded-xl"><p class="text-[9px] text-gray-500 uppercase">SCA</p><p class="text-xs font-bold">${l.totalSCA.toFixed(1)}</p></div>
+                        <div class="bg-black/40 py-2 rounded-xl"><p class="text-[9px] text-gray-500 uppercase">PrgR</p><p class="text-xs font-bold">${l.totalPrgR}</p></div>
+                        <div class="bg-black/40 py-2 rounded-xl"><p class="text-[9px] text-gray-500 uppercase">PPA</p><p class="text-xs font-bold">${l.totalPPA}</p></div>
                     </div>
-                    <div class="text-sm bg-black/30 p-4 rounded border-l-4 border-blue-500 italic">
-                        <strong>Neden?</strong> ${log.reason}
-                    </div>
+                    <p class="text-[11px] leading-relaxed text-gray-300 bg-blue-900/10 p-3 rounded-xl border border-blue-500/10">
+                        <span class="text-blue-400 font-bold">ANALİZ:</span> ${l.note}
+                    </p>
                 </div>
             `).join('');
         }
+
+        function clearHistory() { if(confirm('Tüm analizler silinsin mi?')) { localStorage.removeItem('matchLogs'); displayHistory(); } }
     </script>
 </body>
 </html>

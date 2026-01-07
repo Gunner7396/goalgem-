@@ -1,44 +1,152 @@
-function analyzeMatch() {
-    const d = {
-        tA: document.getElementById('teamA').value, tB: document.getElementById('teamB').value,
-        an: parseFloat(document.getElementById('anpxG').value || 0), as: parseFloat(document.getElementById('aSCA').value || 0),
-        ar: parseFloat(document.getElementById('aPrgR').value || 0), ap: parseFloat(document.getElementById('aPPA').value || 0),
-        bn: parseFloat(document.getElementById('bnpxG').value || 0), bs: parseFloat(document.getElementById('bSCA').value || 0),
-        br: parseFloat(document.getElementById('bPrgR').value || 0), bp: parseFloat(document.getElementById('bPPA').value || 0)
-    };
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>P-PRO v3.0 | İhtimal Motoru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #020617; color: #f1f5f9; overflow-x: hidden; }
+        .glass-card { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .compact-input { background: #0f172a !important; border: 1px solid #334155 !important; font-size: 14px !important; padding: 10px !important; color: #60a5fa !important; font-weight: bold; }
+        select { background: #1e293b !important; font-size: 13px !important; border: 1px solid #334155 !important; color: white !important; }
+        .label-unit { font-size: 9px; color: #94a3b8; font-weight: bold; margin-bottom: 2px; display: block; letter-spacing: 0.5px; }
+        .history-card { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="p-2 md:p-4 pb-12">
 
-    if(!d.tA || !d.tB) return;
+    <div class="max-w-md mx-auto">
+        <div class="flex justify-between items-center mb-4 px-1">
+            <h1 class="text-xl font-900 tracking-tighter text-blue-500 italic uppercase">P-PRO <span class="text-white">v3.0</span></h1>
+            <button onclick="clearHistory()" class="text-[10px] text-gray-500 font-bold tracking-widest hover:text-red-400 transition uppercase">Temizle</button>
+        </div>
+        
+        <div class="glass-card rounded-2xl p-4 shadow-2xl mb-6 border-t-4 border-blue-600">
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <select id="teamA" class="w-full rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Ev Sahibi</option>
+                            <optgroup label="Premier Lig">
+                                <option>Arsenal</option><option>Aston Villa</option><option>Bournemouth</option><option>Brentford</option><option>Brighton</option><option>Chelsea</option><option>Crystal Palace</option><option>Everton</option><option>Fulham</option><option>Ipswich Town</option><option>Leicester City</option><option>Liverpool</option><option>Man City</option><option>Man Utd</option><option>Newcastle</option><option>Nott'm Forest</option><option>Southampton</option><option>Tottenham</option><option>West Ham</option><option>Wolves</option>
+                            </optgroup>
+                            <optgroup label="Diğer İngiliz">
+                                <option>Leeds United</option><option>Burnley</option><option>Sunderland</option><option>West Brom</option>
+                            </optgroup>
+                        </select>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><span class="label-unit uppercase">npxG/Sh</span><input type="number" step="0.01" id="anpxG" placeholder="0.10" class="compact-input rounded-xl w-full"></div>
+                            <div><span class="label-unit uppercase">SCA</span><input type="number" step="0.1" id="aSCA" placeholder="15" class="compact-input rounded-xl w-full"></div>
+                            <div><span class="label-unit uppercase">PrgR</span><input type="number" id="aPrgR" placeholder="30" class="compact-input rounded-xl w-full"></div>
+                            <div><span class="label-unit uppercase">PPA</span><input type="number" id="aPPA" placeholder="8" class="compact-input rounded-xl w-full"></div>
+                        </div>
+                    </div>
 
-    const maxQuality = Math.max(d.an, d.bn);
-    const totalSCA = d.as + d.bs;
-    const totalPrgR = d.ar + d.br;
-    const totalPPA = d.ap + d.bp;
-    
-    let res, cls, bg, note, prob;
+                    <div class="space-y-2">
+                        <select id="teamB" class="w-full rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Deplasman</option>
+                            <optgroup label="Premier Lig">
+                                <option>Arsenal</option><option>Aston Villa</option><option>Bournemouth</option><option>Brentford</option><option>Brighton</option><option>Chelsea</option><option>Crystal Palace</option><option>Everton</option><option>Fulham</option><option>Ipswich Town</option><option>Leicester City</option><option>Liverpool</option><option>Man City</option><option>Man Utd</option><option>Newcastle</option><option>Nott'm Forest</option><option>Southampton</option><option>Tottenham</option><option>West Ham</option><option>Wolves</option>
+                            </optgroup>
+                        </select>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><span class="label-unit uppercase">npxG/Sh</span><input type="number" step="0.01" id="bnpxG" placeholder="0.10" class="compact-input rounded-xl w-full"></div>
+                            <div><span class="label-unit uppercase">SCA</span><input type="number" step="0.1" id="bSCA" placeholder="15" class="compact-input rounded-xl w-full"></div>
+                            <div><span class="label-unit uppercase">PrgR</span><input type="number" id="bPrgR" placeholder="30" class="compact-input rounded-xl w-full"></div>
+                            <div><span class="label-unit uppercase">PPA</span><input type="number" id="bPPA" placeholder="8" class="compact-input rounded-xl w-full"></div>
+                        </div>
+                    </div>
+                </div>
 
-    // GELİŞMİŞ İHTİMAL ALGORİTMASI
-    if (maxQuality < 0.09 && totalSCA < 24 && totalPPA < 12) {
-        res = "1.5 ALT"; cls = "text-emerald-400"; bg = "bg-emerald-400/10";
-        prob = Math.min(85, 70 + (0.09 - maxQuality) * 100); 
-        note = "Savunmalar kilit, üretim kısır. 1.5 Alt havuzuna tam uyum.";
-    } else if (maxQuality > 0.12 || totalSCA > 38 || totalPrgR > 70) {
-        res = "3+ GOL"; cls = "text-red-400"; bg = "bg-red-400/10";
-        prob = Math.min(92, 65 + (maxQuality - 0.11) * 200 + (totalSCA / 2));
-        note = `Yüksek patlama riski! Kalite ${maxQuality} ve üretim ${totalSCA} SCA ile savunma felç olur.`;
-    } else {
-        res = "TAM 2 GOL"; cls = "text-amber-400"; bg = "bg-amber-400/10";
-        prob = 75; 
-        note = "Sınır bölgesi. Takımlar birbirini bir yere kadar çözer. En yakın skorlar 1-1 veya 2-0.";
-    }
+                <button onclick="analyzeMatch()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-2xl text-xs tracking-widest transition-all shadow-xl active:scale-95 uppercase">
+                    İhtimal Motorunu Çalıştır
+                </button>
+            </div>
+        </div>
 
-    const analysis = { id: Date.now(), ...d, res, cls, bg, note, maxQuality, totalSCA, totalPrgR, totalPPA, prob: prob.toFixed(0) };
-    let logs = JSON.parse(localStorage.getItem('pLogs') || '[]');
-    logs.unshift(analysis);
-    localStorage.setItem('pLogs', JSON.stringify(logs));
-    displayHistory();
-}
+        <div id="history" class="space-y-4"></div>
+    </div>
 
-// displayHistory içindeki HTML yapısını da şu görsel bar ile güncelle:
-// <div class="w-full bg-gray-800 h-1.5 rounded-full mt-2 overflow-hidden">
-//    <div class="h-full ${l.bg.replace('bg-', 'bg-').replace('/10', '')}" style="width: ${l.prob}%"></div>
-// </div>
+    <script>
+        window.onload = () => displayHistory();
+
+        function analyzeMatch() {
+            const d = {
+                tA: document.getElementById('teamA').value, tB: document.getElementById('teamB').value,
+                an: parseFloat(document.getElementById('anpxG').value || 0), as: parseFloat(document.getElementById('aSCA').value || 0),
+                ar: parseFloat(document.getElementById('aPrgR').value || 0), ap: parseFloat(document.getElementById('aPPA').value || 0),
+                bn: parseFloat(document.getElementById('bnpxG').value || 0), bs: parseFloat(document.getElementById('bSCA').value || 0),
+                br: parseFloat(document.getElementById('bPrgR').value || 0), bp: parseFloat(document.getElementById('bPPA').value || 0)
+            };
+
+            if(!d.tA || !d.tB) return alert("Lütfen takımları seçin!");
+
+            const maxQ = Math.max(d.an, d.bn);
+            const totalSCA = d.as + d.bs;
+            const totalPrgR = d.ar + d.br;
+            const totalPPA = d.ap + d.bp;
+
+            let res, cls, barCls, note, prob;
+
+            // 1.5 ALT FİLTRESİ (232 MAÇ)
+            if (maxQ < 0.09 && totalSCA < 24 && totalPPA < 12) {
+                res = "1.5 ALT"; cls = "text-emerald-400"; barCls = "bg-emerald-500";
+                prob = Math.min(88, 65 + (0.09 - maxQ) * 200);
+                note = "Saf kısırlık bölgesi. Şut kalitesi ve sızma eşiklerin altında.";
+            } 
+            // 3+ GOL FİLTRESİ (216 MAÇ)
+            else if (maxQ > 0.12 || totalSCA > 38 || totalPrgR > 68) {
+                res = "3+ GOL"; cls = "text-red-400"; barCls = "bg-red-500";
+                prob = Math.min(94, 60 + (maxQ - 0.11) * 150 + (totalSCA / 2.5));
+                note = "Patlama riski çok yüksek. Kalite ve SCA savunma direncini kırar.";
+            } 
+            // TAM 2 GOL (245 MAÇ)
+            else {
+                res = "TAM 2 GOL"; cls = "text-amber-400"; barCls = "bg-amber-500";
+                prob = 75;
+                note = "245 maçlık havuz sınırı. 1-1 veya 2-0 ihtimali öne çıkıyor.";
+            }
+
+            const analysis = { id: Date.now(), ...d, res, cls, barCls, note, maxQ, totalSCA, totalPrgR, totalPPA, prob: prob.toFixed(0) };
+            let logs = JSON.parse(localStorage.getItem('pLogs') || '[]');
+            logs.unshift(analysis);
+            localStorage.setItem('pLogs', JSON.stringify(logs));
+            displayHistory();
+        }
+
+        function displayHistory() {
+            const logs = JSON.parse(localStorage.getItem('pLogs') || '[]');
+            document.getElementById('history').innerHTML = logs.map(l => `
+                <div class="glass-card rounded-2xl p-4 history-card border-l-4 ${l.barCls.replace('bg-', 'border-')} shadow-lg">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-black tracking-tight">${l.tA} <span class="text-gray-600">vs</span> ${l.tB}</span>
+                        <div class="text-right">
+                            <span class="block text-[10px] font-black ${l.cls} uppercase tracking-widest">${l.res}</span>
+                            <span class="text-[9px] text-gray-500 font-bold uppercase">%${l.prob} GÜVEN</span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-full bg-gray-800 h-1 rounded-full mb-3 overflow-hidden">
+                        <div class="h-full ${l.barCls}" style="width: ${l.prob}%"></div>
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-1 text-[10px] text-center mb-3">
+                        <div class="bg-white/5 py-1.5 rounded-lg"><p class="text-[8px] text-gray-500">Q (max)</p><p class="font-bold">${l.maxQ.toFixed(2)}</p></div>
+                        <div class="bg-white/5 py-1.5 rounded-lg"><p class="text-[8px] text-gray-500">SCA</p><p class="font-bold">${l.totalSCA}</p></div>
+                        <div class="bg-white/5 py-1.5 rounded-lg"><p class="text-[8px] text-gray-500">PrgR</p><p class="font-bold">${l.totalPrgR}</p></div>
+                        <div class="bg-white/5 py-1.5 rounded-lg"><p class="text-[8px] text-gray-500">PPA</p><p class="font-bold">${l.totalPPA}</p></div>
+                    </div>
+                    <p class="text-[10px] text-gray-400 bg-blue-900/10 p-3 rounded-xl border border-blue-500/10 italic">
+                        <span class="text-blue-400 font-bold uppercase tracking-widest mr-1">Rapor:</span> ${l.note}
+                    </p>
+                </div>
+            `).join('');
+        }
+
+        function clearHistory() { if(confirm('Tüm geçmiş silinecek, emin misin?')) { localStorage.removeItem('pLogs'); displayHistory(); } }
+    </script>
+</body>
+</html>

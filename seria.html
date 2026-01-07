@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Serie A Engine | Pro Memory</title>
+    <title>Serie A Engine | Clean Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Rajdhani', sans-serif; background-color: #020617; color: #f8fafc; overflow-x: hidden; }
-        .glass-card { background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(59, 130, 246, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .glass-card { background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(59, 130, 246, 0.2); }
         .input-accent { background: #0f172a; border: 1px solid #1e293b; color: #fff; transition: 0.3s; }
         .input-accent:focus { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); outline: none; }
-        .neon-text { text-shadow: 0 0 8px rgba(59, 130, 246, 0.6); }
-        .history-item { border-left: 3px solid #3b82f6; background: rgba(30, 41, 59, 0.3); margin-top: 5px; padding: 8px; border-radius: 4px; font-size: 11px; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        .history-item { border-left: 3px solid #3b82f6; background: rgba(30, 41, 59, 0.3); padding: 8px; border-radius: 4px; font-size: 11px; }
     </style>
 </head>
 <body class="p-2 md:p-6" onload="loadData()">
 
     <div class="max-w-md mx-auto space-y-3">
         <header class="flex justify-between items-center px-1">
-            <h1 class="text-xl font-bold text-blue-500 neon-text tracking-tighter uppercase">Serie A Engine <span class="text-[10px] text-white opacity-40 italic">V5.0</span></h1>
-            <button onclick="clearHistory()" class="text-[9px] text-red-500 hover:underline uppercase font-bold">Geçmişi Sil</button>
+            <h1 class="text-xl font-bold text-blue-500 tracking-tighter uppercase">Serie A Engine</h1>
+            <div class="flex gap-3">
+                <button onclick="resetInputs()" class="text-[9px] text-yellow-500 hover:underline uppercase font-bold">Yeni Maç</button>
+                <button onclick="clearHistory()" class="text-[9px] text-red-500 hover:underline uppercase font-bold">Geçmişi Sil</button>
+            </div>
         </header>
 
         <div class="glass-card p-3 rounded-xl grid grid-cols-2 gap-2">
@@ -34,56 +34,53 @@
             <div class="grid grid-cols-3 gap-3">
                 <div class="space-y-1 text-center">
                     <label class="text-[9px] text-slate-500 uppercase font-bold">npxG</label>
-                    <input type="number" id="v_npxg" step="0.1" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="1.2" oninput="saveCurrent()">
+                    <input type="number" id="v_npxg" step="0.1" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
                 </div>
                 <div class="space-y-1 text-center">
                     <label class="text-[9px] text-slate-500 uppercase font-bold">TiB</label>
-                    <input type="number" id="v_tib" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="30" oninput="saveCurrent()">
+                    <input type="number" id="v_tib" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
                 </div>
                 <div class="space-y-1 text-center">
                     <label class="text-[9px] text-slate-500 uppercase font-bold">PrgP+C</label>
-                    <input type="number" id="v_prg" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="75" oninput="saveCurrent()">
+                    <input type="number" id="v_prg" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
                 </div>
                 <div class="space-y-1 text-center">
                     <label class="text-[9px] text-slate-500 uppercase font-bold">High T.</label>
-                    <input type="number" id="v_ht" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="10" oninput="saveCurrent()">
+                    <input type="number" id="v_ht" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
                 </div>
                 <div class="space-y-1 text-center">
                     <label class="text-[9px] text-slate-500 uppercase font-bold">G-xG</label>
-                    <input type="number" id="v_gxg" step="0.1" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="0.1" oninput="saveCurrent()">
+                    <input type="number" id="v_gxg" step="0.1" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
                 </div>
                 <div class="space-y-1 text-center">
                     <label class="text-[9px] text-slate-500 uppercase font-bold">npxGA</label>
-                    <input type="number" id="v_npxga" step="0.1" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="1.0" oninput="saveCurrent()">
+                    <input type="number" id="v_npxga" step="0.1" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
                 </div>
             </div>
-            <button onclick="runEngine()" class="w-full mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg text-xs uppercase tracking-[0.2em] transition-all active:scale-95 shadow-lg shadow-blue-900/20">ANALİZİ BAŞLAT</button>
+            <button onclick="runEngine()" class="w-full mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg text-xs uppercase tracking-widest shadow-lg shadow-blue-900/20">ANALİZ ET</button>
         </div>
 
         <div id="output" class="hidden">
-            <div class="glass-card p-4 rounded-xl border-l-4 border-blue-500 bg-gradient-to-r from-blue-950/20 to-transparent">
-                <div class="flex justify-between items-center mb-1">
+            <div class="glass-card p-4 rounded-xl border-l-4 border-blue-500">
+                <div class="flex justify-between items-center">
                     <h2 id="r_pred" class="text-3xl font-black text-white italic tracking-tighter"></h2>
                     <span id="r_conf" class="text-blue-400 font-bold text-lg"></span>
                 </div>
-                <p id="r_mode" class="text-[10px] text-blue-300 font-bold uppercase tracking-widest mb-3"></p>
-                <div id="r_reasons" class="text-[11px] text-slate-300 space-y-1 leading-tight border-t border-slate-800 pt-2 italic"></div>
+                <div id="r_reasons" class="text-[11px] text-slate-300 space-y-1 mt-2 border-t border-slate-800 pt-2 italic"></div>
             </div>
         </div>
 
         <div class="pt-2">
-            <h3 class="text-[10px] text-slate-500 font-bold uppercase px-1 mb-2 tracking-widest">Geçmiş Analiz Kayıtları</h3>
-            <div id="history-list" class="max-h-[180px] overflow-y-auto space-y-1">
-                </div>
+            <h3 class="text-[10px] text-slate-500 font-bold uppercase px-1 mb-2 tracking-widest">Geçmiş Kayıtlar</h3>
+            <div id="history-list" class="max-h-[150px] overflow-y-auto space-y-1"></div>
         </div>
     </div>
 
     <datalist id="teams">
-        <option value="Inter"><option value="Juventus"><option value="Milan"><option value="Napoli"><option value="Roma"><option value="Atalanta"><option value="Lazio"><option value="Fiorentina"><option value="Bologna"><option value="Torino"><option value="Udinese"><option value="Genoa"><option value="Lecce"><option value="Parma"><option value="Como"><option value="Verona"><option value="Cagliari"><option value="Empoli"><option value="Monza"><option value="Venezia">
+        <option value="Inter"><option value="Juventus"><option value="Milan"><option value="Napoli"><option value="Roma"><option value="Atalanta"><option value="Lazio"><option value="Fiorentina"><option value="Bologna"><option value="Torino"><option value="Lecce"><option value="Parma"><option value="Como"><option value="Verona">
     </datalist>
 
     <script>
-        // 1. Verileri Kaydet ve Yükle
         function saveCurrent() {
             const data = {
                 home: document.getElementById('home').value,
@@ -101,16 +98,19 @@
         function loadData() {
             const lastData = JSON.parse(localStorage.getItem('serie_a_last_input'));
             if (lastData) {
-                document.getElementById('home').value = lastData.home || "";
-                document.getElementById('away').value = lastData.away || "";
-                document.getElementById('v_npxg').value = lastData.npxg || "";
-                document.getElementById('v_tib').value = lastData.tib || "";
-                document.getElementById('v_prg').value = lastData.prg || "";
-                document.getElementById('v_ht').value = lastData.ht || "";
-                document.getElementById('v_gxg').value = lastData.gxg || "";
-                document.getElementById('v_npxga').value = lastData.npxga || "";
+                Object.keys(lastData).forEach(key => {
+                    const el = document.getElementById(key === 'home' || key === 'away' ? key : 'v_' + key);
+                    if(el) el.value = lastData[key];
+                });
             }
             displayHistory();
+        }
+
+        function resetInputs() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => input.value = "");
+            document.getElementById('output').classList.add('hidden');
+            localStorage.removeItem('serie_a_last_input');
         }
 
         function runEngine() {
@@ -128,7 +128,7 @@
             if (data.tib < 32 && data.prg < 72 && data.ht < 9) {
                 pred = "1.5 ALT"; conf = "%85"; 
                 reasons.push("• TiB ve Prg eşik altı; hücum kilitli.");
-                reasons.push("• HT < 9; savunma hatası riski düşük.");
+                reasons.push("• HT düşük; savunma hatası beklenmiyor.");
             } else if (data.npxg > 2.2 && data.ht > 14) {
                 pred = "2.5 ÜST"; conf = "%82";
                 reasons.push("• Kaotik pres ve yüksek npxG üretimi.");
@@ -142,35 +142,24 @@
             document.getElementById('r_reasons').innerHTML = reasons.join("<br>");
             document.getElementById('output').classList.remove('hidden');
 
-            addToHistory(home, away, pred, conf);
-        }
-
-        function addToHistory(h, a, p, c) {
             const history = JSON.parse(localStorage.getItem('serie_a_history')) || [];
-            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            history.unshift({h, a, p, c, time});
-            localStorage.setItem('serie_a_history', JSON.stringify(history.slice(0, 10))); // Son 10 kayıt
+            history.unshift({h: home, a: away, p: pred, c: conf, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})});
+            localStorage.setItem('serie_a_history', JSON.stringify(history.slice(0, 10)));
             displayHistory();
         }
 
         function displayHistory() {
             const history = JSON.parse(localStorage.getItem('serie_a_history')) || [];
-            const list = document.getElementById('history-list');
-            list.innerHTML = history.map(item => `
-                <div class="history-item flex justify-between items-center animate-fade-in">
-                    <span><b>${item.h} - ${item.a}</b></span>
-                    <span class="text-blue-400 font-bold">${item.p} (${item.c})</span>
+            document.getElementById('history-list').innerHTML = history.map(item => `
+                <div class="history-item flex justify-between items-center">
+                    <span><b>${item.h}-${item.a}</b></span>
+                    <span class="text-blue-400 font-bold">${item.p}</span>
                     <span class="opacity-30 text-[8px]">${item.time}</span>
                 </div>
             `).join('');
         }
 
-        function clearHistory() {
-            if(confirm("Tüm geçmiş silinecek?")) {
-                localStorage.removeItem('serie_a_history');
-                displayHistory();
-            }
-        }
+        function clearHistory() { if(confirm("Geçmiş silinsin mi?")) { localStorage.removeItem('serie_a_history'); displayHistory(); } }
     </script>
 </body>
 </html>

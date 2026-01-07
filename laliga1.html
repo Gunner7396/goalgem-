@@ -2,114 +2,120 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOALGEM | LA LIGA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>La Liga %80+ Stop Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --accent: #ee1d23; --gold: #ffcc00; --bg: #0d0d0d; --card: #1a1a1a; }
-        body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; padding-top: 10px; }
-        .main-card { width: 95%; max-width: 420px; background: var(--card); border-radius: 20px; padding: 15px; border: 1px solid rgba(255, 204, 0, 0.3); box-shadow: 0 10px 40px rgba(238, 29, 35, 0.15); }
-        h1 { color: var(--gold); text-align: center; font-size: 22px; margin: 0; letter-spacing: 2px; font-weight: 900; }
-        .subtitle { text-align: center; color: #888; font-size: 10px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .team-input { width: 100%; background: transparent; border: none; border-bottom: 2px solid var(--accent); color: white; text-align: center; font-weight: 800; font-size: 14px; margin-bottom: 12px; padding: 5px 0; outline: none; text-transform: uppercase; }
-        .input-group { margin-bottom: 8px; }
-        label { display: block; font-size: 9px; color: #777; margin-bottom: 3px; font-weight: bold; text-transform: uppercase; }
-        input { width: 100%; background: #222; border: 1px solid #333; color: var(--gold); padding: 7px; border-radius: 6px; box-sizing: border-box; font-size: 13px; font-weight: bold; }
-        .btn-box { display: flex; gap: 10px; margin: 20px 0; }
-        button { flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; font-size: 14px; transition: 0.3s; text-transform: uppercase; }
-        .btn-run { background: var(--accent); color: white; box-shadow: 0 4px 15px rgba(238, 29, 35, 0.4); }
-        .btn-clear { background: #333; color: #ccc; }
-        .res-panel { background: linear-gradient(145deg, #000, #1a1a1a); border-radius: 18px; padding: 15px; border: 1px solid #333; }
-        .res-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 10px; }
-        .hvp-val { font-size: 22px; font-weight: 900; color: var(--gold); }
-        .percent-val { font-size: 34px; font-weight: 900; color: var(--accent); line-height: 1; }
-        #match_title { font-size: 12px; font-weight: 900; color: #eee; text-align: center; margin-bottom: 10px; }
-        .stat-row { display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 5px; font-weight: bold; }
+        body { background-color: #0c0a09; color: #f5f5f4; font-family: sans-serif; }
+        .la-liga-gold { border-left: 4px solid #fbbf24; }
+        .glass { background: #1c1917; border: 1px solid #292524; }
+        input, select { background: #292524 !important; color: #fbbf24 !important; border: 1px solid #44403c !important; }
+        .stop-bar { height: 4px; border-radius: 10px; background: #262626; overflow: hidden; }
     </style>
 </head>
-<body>
+<body class="p-4 pb-12">
 
-<div class="main-card">
-    <h1>GOALGEM</h1>
-    <p class="subtitle">LA LIGA | STRATEGIC ANALYZER</p>
+    <div class="max-w-md mx-auto">
+        <h1 class="text-xl font-900 tracking-tighter text-yellow-500 italic uppercase mb-4 text-center">LA LIGA <span class="text-white">STOP ENGINE</span></h1>
 
-    <div class="grid">
-        <div class="col">
-            <input type="text" id="name_e" class="team-input" placeholder="LOCAL">
-            <div class="input-group"><label>npxG</label><input type="number" id="e_n" step="0.01"></div>
-            <div class="input-group"><label>G-xG</label><input type="number" id="e_g" step="0.01"></div>
-            <div class="input-group"><label>PrgP+C</label><input type="number" id="e_p"></div>
-            <div class="input-group"><label>Box Touches</label><input type="number" id="e_b"></div>
-            <div class="input-group"><label>Direct Speed</label><input type="number" id="e_s" step="0.1"></div>
-            <div class="input-group"><label>Def. Line</label><input type="number" id="e_l"></div>
-            <div class="input-group"><label>npxGA</label><input type="number" id="e_a" step="0.01"></div>
+        <div class="glass p-4 rounded-3xl mb-6 shadow-2xl border-b-4 border-yellow-600">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="space-y-2">
+                    <select id="teamA" class="w-full p-2 rounded-xl text-xs font-bold outline-none">
+                        <option value="">Ev Sahibi</option>
+                        <option>Real Madrid</option><option>Barcelona</option><option>Atletico Madrid</option>
+                        <option>Girona</option><option>Athletic Club</option><option>Real Sociedad</option>
+                        <option>Getafe</option><option>Villarreal</option><option>Sevilla</option>
+                        <option>Valencia</option><option>Osasuna</option><option>Mallorca</option>
+                    </select>
+                    <input type="number" step="0.01" id="anpxG" placeholder="npxG/Sh" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" id="aSCA" placeholder="SCA" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" id="aPrgR" placeholder="PrgR" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" id="aPPA" placeholder="PPA" class="w-full p-2 rounded-xl text-xs font-bold">
+                </div>
+                <div class="space-y-2">
+                    <select id="teamB" class="w-full p-2 rounded-xl text-xs font-bold outline-none">
+                        <option value="">Deplasman</option>
+                        <option>Real Madrid</option><option>Barcelona</option><option>Atletico Madrid</option>
+                        <option>Girona</option><option>Athletic Club</option><option>Real Sociedad</option>
+                        <option>Getafe</option><option>Villarreal</option><option>Sevilla</option>
+                        <option>Valencia</option><option>Osasuna</option><option>Mallorca</option>
+                    </select>
+                    <input type="number" step="0.01" id="bnpxG" placeholder="npxG/Sh" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" id="bSCA" placeholder="SCA" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" id="bPrgR" placeholder="PrgR" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" id="bPPA" placeholder="PPA" class="w-full p-2 rounded-xl text-xs font-bold">
+                </div>
+            </div>
+            <button onclick="analyze()" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-black py-4 rounded-2xl transition-all shadow-xl active:scale-95 text-xs uppercase tracking-widest">
+                İstatistiki Tavanı Bul
+            </button>
         </div>
-        <div class="col">
-            <input type="text" id="name_d" class="team-input" placeholder="VISITANTE">
-            <div class="input-group"><label>npxG</label><input type="number" id="d_n" step="0.01"></div>
-            <div class="input-group"><label>G-xG</label><input type="number" id="d_g" step="0.01"></div>
-            <div class="input-group"><label>PrgP+C</label><input type="number" id="d_p"></div>
-            <div class="input-group"><label>Box Touches</label><input type="number" id="d_b"></div>
-            <div class="input-group"><label>Direct Speed</label><input type="number" id="d_s" step="0.1"></div>
-            <div class="input-group"><label>Def. Line</label><input type="number" id="d_l"></div>
-            <div class="input-group"><label>npxGA</label><input type="number" id="d_a" step="0.01"></div>
-        </div>
+
+        <div id="results" class="space-y-4"></div>
     </div>
 
-    <div class="btn-box">
-        <button class="btn-run" onclick="run()">ANALYZE LA LIGA</button>
-        <button class="btn-clear" onclick="clr()">CLEAR</button>
-    </div>
+    <script>
+        function analyze() {
+            const tA = document.getElementById('teamA').value;
+            const tB = document.getElementById('teamB').value;
+            if(!tA || !tB) return;
 
-    <div class="res-panel">
-        <div id="match_title">WAITING FOR DATA</div>
-        <div class="res-top">
-            <div><div style="font-size: 9px; color: #888; font-weight: 800;">HVP SCORE</div><div id="hvp" class="hvp-val">0.00</div></div>
-            <div style="text-align: right;"><div id="sig" style="font-size: 10px; font-weight: 900; color: #888;">SIGNAL</div><div id="per" class="percent-val">%0</div></div>
-        </div>
-        <div class="stat-row"><span>EXPECTED ATTACK (npxG):</span><span id="t_n" style="color: var(--gold);">0.00</span></div>
-    </div>
-</div>
+            const d = {
+                an: parseFloat(document.getElementById('anpxG').value || 0),
+                as: parseFloat(document.getElementById('aSCA').value || 0),
+                ar: parseFloat(document.getElementById('aPrgR').value || 0),
+                ap: parseFloat(document.getElementById('aPPA').value || 0),
+                bn: parseFloat(document.getElementById('bnpxG').value || 0),
+                bs: parseFloat(document.getElementById('bSCA').value || 0),
+                br: parseFloat(document.getElementById('bPrgR').value || 0),
+                bp: parseFloat(document.getElementById('bPPA').value || 0)
+            };
 
-<script>
-function run() {
-    const v = (id) => parseFloat(document.getElementById(id).value) || 0;
-    const t = (id) => document.getElementById(id).value || (id === 'name_e' ? 'LOCAL' : 'VISITANTE');
-    
-    const e = { n:v('e_n'), a:v('e_a'), g:v('e_g'), p:v('e_p'), b:v('e_b'), s:v('e_s'), l:v('e_l') };
-    const d = { n:v('d_n'), a:v('d_a'), g:v('d_g'), p:v('d_p'), b:v('d_b'), s:v('d_s'), l:v('d_l') };
+            const maxQ = Math.max(d.an, d.bn);
+            const tSCA = d.as + d.bs;
+            const tPPA = d.ap + d.bp;
+            const tPrgR = d.ar + d.br;
 
-    const hvp = (((e.n * 2) + e.p) / 10 + e.g) + (((d.n * 2) + d.p) / 10 + d.g);
-    
-    let p = 0;
-    // LA LIGA ÖZEL ANALİZ EŞİKLERİ
-    if ((e.n + d.n) >= 1.95) p += 35; // İspanya için pozisyon kalitesi kritiktir
-    if (e.a > 1.35 || d.a > 1.35) p += 20; // Defansif zafiyet puanı
-    if (e.l > 44 || d.l > 44) p += 10; // Savunma hattı yüksekliği
-    if ((e.p + d.p) >= 88) p += 15; // Pas ve top taşıma trafiği
-    if ((e.b + d.b) >= 42) p += 10; // Ceza sahası etkinliği
-    if ((e.s + d.s) >= 3.3) p += 10; // İspanya'da dikey hız 3.3 üzeri çok etkilidir
+            let stopGoal, col, prob, msg;
 
-    document.getElementById('match_title').innerText = t('name_e') + " vs " + t('name_d');
-    document.getElementById('hvp').innerText = hvp.toFixed(2);
-    document.getElementById('per').innerText = "%" + Math.min(p, 100);
-    document.getElementById('t_n').innerText = (e.n + d.n).toFixed(2);
+            // %80+ GÜVENLİK HAVUZLARI
+            if (maxQ < 0.085 && tSCA < 21 && tPPA < 10 && tPrgR < 55) {
+                stopGoal = "MAX 1 GOL"; col = "emerald"; prob = 82;
+                msg = "Maç bu gol sayısında durur. Saf kısırlık havuzu.";
+            } else if (tSCA <= 28 && tPPA <= 15 && tPrgR <= 65) {
+                stopGoal = "MAX 2 GOL"; col = "amber"; prob = 80;
+                msg = "Üretim sınırlı. 1-1 veya 2-0 tavan skorlardır.";
+            } else if (tSCA <= 35 && tPPA <= 20) {
+                stopGoal = "MAX 3 GOL"; col = "orange"; prob = 78;
+                msg = "Tempo var ama kaos yok. Maç 3 golde kilitlenir.";
+            } else {
+                stopGoal = "GOL ÜSTÜ"; col = "red"; prob = 70;
+                msg = "Veriler La Liga kilitlerini kırmış durumda.";
+            }
 
-    const s = document.getElementById('sig');
-    const pr = document.getElementById('per');
-    if(p >= 80) { s.innerText="ALTA PROBABILIDAD"; s.style.color=var(--gold); }
-    else if(p >= 55) { s.innerText="JUEGO ABIERTO"; s.style.color="#ffd600"; }
-    else { s.innerText="BAJA INTENSIDAD"; s.style.color="#ff5252"; }
-}
-
-function clr() {
-    document.querySelectorAll('input').forEach(i => i.value = '');
-    document.getElementById('match_title').innerText = "WAITING FOR DATA";
-    document.getElementById('hvp').innerText = "0.00";
-    document.getElementById('per').innerText = "%0";
-    document.getElementById('sig').innerText = "SIGNAL";
-    document.getElementById('sig').style.color = "#888";
-}
-</script>
+            const card = `
+                <div class="glass p-4 rounded-2xl la-liga-gold shadow-lg border-l-4 border-${col}-500">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="text-[10px] font-black uppercase text-gray-500">${tA} <br> ${tB}</div>
+                        <div class="text-right">
+                            <span class="text-lg font-black text-${col}-400">${stopGoal}</span>
+                            <div class="text-[9px] font-bold text-gray-600 uppercase">GÜVEN ORANI: %${prob}</div>
+                        </div>
+                    </div>
+                    <div class="stop-bar mb-3">
+                        <div class="h-full bg-${col}-500 shadow-[0_0_8px_${col}]" style="width: ${prob}%"></div>
+                    </div>
+                    <div class="grid grid-cols-4 gap-1 text-[8px] text-center text-gray-500 mb-2">
+                        <div class="bg-black/30 p-1 rounded">Q:${maxQ}</div>
+                        <div class="bg-black/30 p-1 rounded">SCA:${tSCA}</div>
+                        <div class="bg-black/30 p-1 rounded">PPA:${tPPA}</div>
+                        <div class="bg-black/30 p-1 rounded">PR:${tPrgR}</div>
+                    </div>
+                    <p class="text-[10px] text-gray-400 italic"><strong>ANALİZ:</strong> ${msg}</p>
+                </div>`;
+            document.getElementById('results').innerHTML = card + document.getElementById('results').innerHTML;
+        }
+    </script>
 </body>
 </html>

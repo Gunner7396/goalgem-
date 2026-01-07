@@ -3,163 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Serie A Engine | Clean Pro</title>
+    <title>Serie A PRO Analiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Rajdhani', sans-serif; background-color: #020617; color: #f8fafc; overflow-x: hidden; }
-        .glass-card { background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(59, 130, 246, 0.2); }
-        .input-accent { background: #0f172a; border: 1px solid #1e293b; color: #fff; transition: 0.3s; }
-        .input-accent:focus { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); outline: none; }
-        .history-item { border-left: 3px solid #3b82f6; background: rgba(30, 41, 59, 0.3); padding: 8px; border-radius: 4px; font-size: 11px; }
+        body { background-color: #0c0a09; color: #f5f5f4; font-family: sans-serif; }
+        .serie-a-blue { border-left: 4px solid #0053a0; }
+        .glass { background: #1c1917; border: 1px solid #292524; }
+        input, select { background: #292524 !important; color: #3b82f6 !important; border: 1px solid #44403c !important; }
+        .history-card { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="p-2 md:p-6" onload="loadData()">
+<body class="p-4 pb-20">
 
-    <div class="max-w-md mx-auto space-y-3">
-        <header class="flex justify-between items-center px-1">
-            <h1 class="text-xl font-bold text-blue-500 tracking-tighter uppercase">Serie A Engine</h1>
-            <div class="flex gap-3">
-                <button onclick="resetInputs()" class="text-[9px] text-yellow-500 hover:underline uppercase font-bold">Yeni Maç</button>
-                <button onclick="clearHistory()" class="text-[9px] text-red-500 hover:underline uppercase font-bold">Geçmişi Sil</button>
-            </div>
-        </header>
+    <div class="max-w-md mx-auto">
+        <h1 class="text-xl font-900 tracking-tighter text-blue-500 italic uppercase mb-4 text-center">SERIE A <span class="text-white">PRO ANALİZ</span></h1>
 
-        <div class="glass-card p-3 rounded-xl grid grid-cols-2 gap-2">
-            <input list="teams" id="home" class="input-accent p-2 rounded-lg text-sm text-center" placeholder="Ev Sahibi" onchange="saveCurrent()">
-            <input list="teams" id="away" class="input-accent p-2 rounded-lg text-sm text-center" placeholder="Deplasman" onchange="saveCurrent()">
-        </div>
-
-        <div class="glass-card p-4 rounded-xl">
-            <div class="grid grid-cols-3 gap-3">
-                <div class="space-y-1 text-center">
-                    <label class="text-[9px] text-slate-500 uppercase font-bold">npxG</label>
-                    <input type="number" id="v_npxg" step="0.1" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
+        <div class="glass p-4 rounded-3xl mb-6 shadow-2xl border-t-2 border-blue-600">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="space-y-2">
+                    <select id="teamA" class="w-full p-2 rounded-xl text-xs font-bold outline-none">
+                        <option value="">Ev Sahibi</option>
+                        <option>Inter</option><option>Juventus</option><option>Milan</option>
+                        <option>Napoli</option><option>Atalanta</option><option>Roma</option>
+                        <option>Lazio</option><option>Fiorentina</option><option>Bologna</option>
+                        <option>Torino</option><option>Udinese</option><option>Empoli</option>
+                    </select>
+                    <input type="number" step="0.01" id="anpxG" placeholder="npxG/Sh" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" id="aSCA" placeholder="SCA" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" id="aPrgR" placeholder="PrgR" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" id="aPPA" placeholder="PPA" class="w-full p-2 rounded-xl text-xs font-bold">
                 </div>
-                <div class="space-y-1 text-center">
-                    <label class="text-[9px] text-slate-500 uppercase font-bold">TiB</label>
-                    <input type="number" id="v_tib" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
-                </div>
-                <div class="space-y-1 text-center">
-                    <label class="text-[9px] text-slate-500 uppercase font-bold">PrgP+C</label>
-                    <input type="number" id="v_prg" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
-                </div>
-                <div class="space-y-1 text-center">
-                    <label class="text-[9px] text-slate-500 uppercase font-bold">High T.</label>
-                    <input type="number" id="v_ht" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
-                </div>
-                <div class="space-y-1 text-center">
-                    <label class="text-[9px] text-slate-500 uppercase font-bold">G-xG</label>
-                    <input type="number" id="v_gxg" step="0.1" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
-                </div>
-                <div class="space-y-1 text-center">
-                    <label class="text-[9px] text-slate-500 uppercase font-bold">npxGA</label>
-                    <input type="number" id="v_npxga" step="0.1" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
+                <div class="space-y-2">
+                    <select id="teamB" class="w-full p-2 rounded-xl text-xs font-bold outline-none">
+                        <option value="">Deplasman</option>
+                        <option>Inter</option><option>Juventus</option><option>Milan</option>
+                        <option>Napoli</option><option>Atalanta</option><option>Roma</option>
+                        <option>Lazio</option><option>Fiorentina</option><option>Bologna</option>
+                        <option>Torino</option><option>Udinese</option><option>Empoli</option>
+                    </select>
+                    <input type="number" step="0.01" id="bnpxG" placeholder="npxG/Sh" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" id="bSCA" placeholder="SCA" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" id="bPrgR" placeholder="PrgR" class="w-full p-2 rounded-xl text-xs font-bold">
+                    <input type="number" id="bPPA" placeholder="PPA" class="w-full p-2 rounded-xl text-xs font-bold">
                 </div>
             </div>
-            <button onclick="runEngine()" class="w-full mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg text-xs uppercase tracking-widest shadow-lg shadow-blue-900/20">ANALİZ ET</button>
+            <button onclick="runAnalysis()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-2xl transition-all shadow-xl text-xs uppercase tracking-widest">
+                ANALİZ YAP
+            </button>
         </div>
 
-        <div id="output" class="hidden">
-            <div class="glass-card p-4 rounded-xl border-l-4 border-blue-500">
-                <div class="flex justify-between items-center">
-                    <h2 id="r_pred" class="text-3xl font-black text-white italic tracking-tighter"></h2>
-                    <span id="r_conf" class="text-blue-400 font-bold text-lg"></span>
-                </div>
-                <div id="r_reasons" class="text-[11px] text-slate-300 space-y-1 mt-2 border-t border-slate-800 pt-2 italic"></div>
-            </div>
-        </div>
-
-        <div class="pt-2">
-            <h3 class="text-[10px] text-slate-500 font-bold uppercase px-1 mb-2 tracking-widest">Geçmiş Kayıtlar</h3>
-            <div id="history-list" class="max-h-[150px] overflow-y-auto space-y-1"></div>
-        </div>
+        <div id="historyList" class="space-y-4"></div>
+        <button onclick="clearAll()" class="w-full mt-6 text-[10px] text-gray-600 uppercase tracking-widest hover:text-red-500">Tüm Geçmişi Temizle</button>
     </div>
 
-    <datalist id="teams">
-        <option value="Inter"><option value="Juventus"><option value="Milan"><option value="Napoli"><option value="Roma"><option value="Atalanta"><option value="Lazio"><option value="Fiorentina"><option value="Bologna"><option value="Torino"><option value="Lecce"><option value="Parma"><option value="Como"><option value="Verona">
-    </datalist>
-
     <script>
-        function saveCurrent() {
-            const data = {
-                home: document.getElementById('home').value,
-                away: document.getElementById('away').value,
-                npxg: document.getElementById('v_npxg').value,
-                tib: document.getElementById('v_tib').value,
-                prg: document.getElementById('v_prg').value,
-                ht: document.getElementById('v_ht').value,
-                gxg: document.getElementById('v_gxg').value,
-                npxga: document.getElementById('v_npxga').value
-            };
-            localStorage.setItem('serie_a_last_input', JSON.stringify(data));
-        }
+        window.onload = loadHistory;
 
-        function loadData() {
-            const lastData = JSON.parse(localStorage.getItem('serie_a_last_input'));
-            if (lastData) {
-                Object.keys(lastData).forEach(key => {
-                    const el = document.getElementById(key === 'home' || key === 'away' ? key : 'v_' + key);
-                    if(el) el.value = lastData[key];
-                });
-            }
-            displayHistory();
-        }
+        function runAnalysis() {
+            const tA = document.getElementById('teamA').value;
+            const tB = document.getElementById('teamB').value;
+            if(!tA || !tB) return alert("Takımları seçin.");
 
-        function resetInputs() {
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => input.value = "");
-            document.getElementById('output').classList.add('hidden');
-            localStorage.removeItem('serie_a_last_input');
-        }
+            const an = parseFloat(document.getElementById('anpxG').value || 0);
+            const as = parseFloat(document.getElementById('aSCA').value || 0);
+            const ar = parseFloat(document.getElementById('aPrgR').value || 0);
+            const ap = parseFloat(document.getElementById('aPPA').value || 0);
+            const bn = parseFloat(document.getElementById('bnpxG').value || 0);
+            const bs = parseFloat(document.getElementById('bSCA').value || 0);
+            const br = parseFloat(document.getElementById('bPrgR').value || 0);
+            const bp = parseFloat(document.getElementById('bPPA').value || 0);
 
-        function runEngine() {
-            const home = document.getElementById('home').value || "Takım A";
-            const away = document.getElementById('away').value || "Takım B";
-            const data = {
-                npxg: parseFloat(document.getElementById('v_npxg').value || 0),
-                tib: parseFloat(document.getElementById('v_tib').value || 0),
-                prg: parseFloat(document.getElementById('v_prg').value || 0),
-                ht: parseFloat(document.getElementById('v_ht').value || 0)
-            };
+            const maxQ = Math.max(an, bn);
+            const tSCA = as + bs;
+            const tPPA = ap + bp;
+            const tPrgR = ar + br;
 
-            let pred = ""; let conf = ""; let reasons = [];
-            
-            if (data.tib < 32 && data.prg < 72 && data.ht < 9) {
-                pred = "1.5 ALT"; conf = "%85"; 
-                reasons.push("• TiB ve Prg eşik altı; hücum kilitli.");
-                reasons.push("• HT düşük; savunma hatası beklenmiyor.");
-            } else if (data.npxg > 2.2 && data.ht > 14) {
-                pred = "2.5 ÜST"; conf = "%82";
-                reasons.push("• Kaotik pres ve yüksek npxG üretimi.");
+            let probs = { g01: 0, g2: 0, g3plus: 0 };
+            let tavan = ""; let color = "";
+
+            // SERIE A ÖZEL %80+ ALGORİTMASI
+            if (maxQ < 0.09 && tSCA < 23 && tPPA < 12 && tPrgR < 60) {
+                probs = { g01: 82, g2: 12, g3plus: 6 };
+                tavan = "MAX 1 GOL"; color = "emerald";
+            } else if (tSCA <= 29 && tPPA <= 16 && tPrgR <= 70) {
+                probs = { g01: 20, g2: 62, g3plus: 18 };
+                tavan = "MAX 2 GOL"; color = "amber";
             } else {
-                pred = "TAM 2 GOL"; conf = "%70";
-                reasons.push("• Metrikler dengeli, skor mühürlenebilir.");
+                probs = { g01: 8, g2: 22, g3plus: 70 };
+                tavan = "3+ GOL"; color = "red";
             }
 
-            document.getElementById('r_pred').innerText = pred;
-            document.getElementById('r_conf').innerText = conf;
-            document.getElementById('r_reasons').innerHTML = reasons.join("<br>");
-            document.getElementById('output').classList.remove('hidden');
-
-            const history = JSON.parse(localStorage.getItem('serie_a_history')) || [];
-            history.unshift({h: home, a: away, p: pred, c: conf, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})});
-            localStorage.setItem('serie_a_history', JSON.stringify(history.slice(0, 10)));
-            displayHistory();
+            const matchData = { id: Date.now(), tA, tB, maxQ, tSCA, tPPA, tPrgR, probs, tavan, color };
+            saveMatch(matchData);
+            loadHistory();
         }
 
-        function displayHistory() {
-            const history = JSON.parse(localStorage.getItem('serie_a_history')) || [];
-            document.getElementById('history-list').innerHTML = history.map(item => `
-                <div class="history-item flex justify-between items-center">
-                    <span><b>${item.h}-${item.a}</b></span>
-                    <span class="text-blue-400 font-bold">${item.p}</span>
-                    <span class="opacity-30 text-[8px]">${item.time}</span>
+        function saveMatch(data) {
+            let history = JSON.parse(localStorage.getItem('serieAHistory') || '[]');
+            history.unshift(data);
+            localStorage.setItem('serieAHistory', JSON.stringify(history));
+        }
+
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('serieAHistory') || '[]');
+            const list = document.getElementById('historyList');
+            list.innerHTML = history.map(m => `
+                <div class="glass p-4 rounded-2xl serie-a-blue history-card mb-4 relative">
+                    <button onclick="deleteMatch(${m.id})" class="absolute top-2 right-2 text-gray-600 hover:text-red-500 text-xs">×</button>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-[10px] font-black uppercase text-gray-400">${m.tA} x ${m.tB}</span>
+                        <span class="text-xs font-black text-${m.color}-500 uppercase">${m.tavan}</span>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between text-[9px] font-bold mb-1"><span>0-1 GOL</span><span>%${m.probs.g01}</span></div>
+                        <div class="w-full bg-gray-800 h-1 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full" style="width: ${m.probs.g01}%"></div></div>
+                        <div class="flex justify-between text-[9px] font-bold mb-1"><span>2 GOL</span><span>%${m.probs.g2}</span></div>
+                        <div class="w-full bg-gray-800 h-1 rounded-full overflow-hidden"><div class="bg-amber-500 h-full" style="width: ${m.probs.g2}%"></div></div>
+                        <div class="flex justify-between text-[9px] font-bold mb-1"><span>3+ GOL</span><span>%${m.probs.g3plus}</span></div>
+                        <div class="w-full bg-gray-800 h-1 rounded-full overflow-hidden"><div class="bg-red-500 h-full" style="width: ${m.probs.g3plus}%"></div></div>
+                    </div>
+                    <div class="grid grid-cols-4 gap-1 text-[8px] text-center text-gray-600 font-mono italic">
+                        <div>Q:${m.maxQ}</div><div>SCA:${m.tSCA}</div><div>PPA:${m.tPPA}</div><div>PR:${m.tPrgR}</div>
+                    </div>
                 </div>
             `).join('');
         }
 
-        function clearHistory() { if(confirm("Geçmiş silinsin mi?")) { localStorage.removeItem('serie_a_history'); displayHistory(); } }
+        function deleteMatch(id) {
+            let history = JSON.parse(localStorage.getItem('serieAHistory') || '[]');
+            history = history.filter(m => m.id !== id);
+            localStorage.setItem('serieAHistory', JSON.stringify(history));
+            loadHistory();
+        }
+
+        function clearAll() { if(confirm("Temizlensin mi?")) { localStorage.removeItem('serieAHistory'); loadHistory(); } }
     </script>
 </body>
 </html>

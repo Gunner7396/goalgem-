@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>La Liga %80+ Stop Engine</title>
+    <title>La Liga PRO Analiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0c0a09; color: #f5f5f4; font-family: sans-serif; }
         .la-liga-gold { border-left: 4px solid #fbbf24; }
         .glass { background: #1c1917; border: 1px solid #292524; }
         input, select { background: #292524 !important; color: #fbbf24 !important; border: 1px solid #44403c !important; }
-        .stop-bar { height: 4px; border-radius: 10px; background: #262626; overflow: hidden; }
+        .history-card { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="p-4 pb-12">
+<body class="p-4 pb-20">
 
     <div class="max-w-md mx-auto">
-        <h1 class="text-xl font-900 tracking-tighter text-yellow-500 italic uppercase mb-4 text-center">LA LIGA <span class="text-white">STOP ENGINE</span></h1>
+        <h1 class="text-xl font-900 tracking-tighter text-yellow-500 italic uppercase mb-4 text-center">LA LIGA <span class="text-white">PRO ANALİZ</span></h1>
 
-        <div class="glass p-4 rounded-3xl mb-6 shadow-2xl border-b-4 border-yellow-600">
+        <div class="glass p-4 rounded-3xl mb-6 shadow-2xl">
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div class="space-y-2">
                     <select id="teamA" class="w-full p-2 rounded-xl text-xs font-bold outline-none">
@@ -47,74 +48,127 @@
                     <input type="number" id="bPPA" placeholder="PPA" class="w-full p-2 rounded-xl text-xs font-bold">
                 </div>
             </div>
-            <button onclick="analyze()" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-black py-4 rounded-2xl transition-all shadow-xl active:scale-95 text-xs uppercase tracking-widest">
-                İstatistiki Tavanı Bul
+            <button onclick="runAnalysis()" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-black py-4 rounded-2xl transition-all shadow-xl text-xs uppercase tracking-widest">
+                ANALİZ YAP
             </button>
         </div>
 
-        <div id="results" class="space-y-4"></div>
+        <div id="historyList" class="space-y-4"></div>
+        
+        <button onclick="clearAll()" class="w-full mt-6 text-[10px] text-gray-600 uppercase tracking-widest hover:text-red-500">Tüm Geçmişi Temizle</button>
     </div>
 
     <script>
-        function analyze() {
+        window.onload = loadHistory;
+
+        function runAnalysis() {
             const tA = document.getElementById('teamA').value;
             const tB = document.getElementById('teamB').value;
-            if(!tA || !tB) return;
+            if(!tA || !tB) return alert("Takımları seçin.");
 
-            const d = {
-                an: parseFloat(document.getElementById('anpxG').value || 0),
-                as: parseFloat(document.getElementById('aSCA').value || 0),
-                ar: parseFloat(document.getElementById('aPrgR').value || 0),
-                ap: parseFloat(document.getElementById('aPPA').value || 0),
-                bn: parseFloat(document.getElementById('bnpxG').value || 0),
-                bs: parseFloat(document.getElementById('bSCA').value || 0),
-                br: parseFloat(document.getElementById('bPrgR').value || 0),
-                bp: parseFloat(document.getElementById('bPPA').value || 0)
-            };
+            const an = parseFloat(document.getElementById('anpxG').value || 0);
+            const as = parseFloat(document.getElementById('aSCA').value || 0);
+            const ar = parseFloat(document.getElementById('aPrgR').value || 0);
+            const ap = parseFloat(document.getElementById('aPPA').value || 0);
+            const bn = parseFloat(document.getElementById('bnpxG').value || 0);
+            const bs = parseFloat(document.getElementById('bSCA').value || 0);
+            const br = parseFloat(document.getElementById('bPrgR').value || 0);
+            const bp = parseFloat(document.getElementById('bPPA').value || 0);
 
-            const maxQ = Math.max(d.an, d.bn);
-            const tSCA = d.as + d.bs;
-            const tPPA = d.ap + d.bp;
-            const tPrgR = d.ar + d.br;
+            const maxQ = Math.max(an, bn);
+            const tSCA = as + bs;
+            const tPPA = ap + bp;
+            const tPrgR = ar + br;
 
-            let stopGoal, col, prob, msg;
+            let probs = { g01: 0, g2: 0, g3plus: 0 };
+            let tavan = "";
+            let color = "";
 
-            // %80+ GÜVENLİK HAVUZLARI
+            // LAS LIGA SON 3 SEZON HAVUZ DAĞILIMI ALGORİTMASI
             if (maxQ < 0.085 && tSCA < 21 && tPPA < 10 && tPrgR < 55) {
-                stopGoal = "MAX 1 GOL"; col = "emerald"; prob = 82;
-                msg = "Maç bu gol sayısında durur. Saf kısırlık havuzu.";
+                probs = { g01: 82, g2: 13, g3plus: 5 };
+                tavan = "MAX 1 GOL"; color = "emerald";
             } else if (tSCA <= 28 && tPPA <= 15 && tPrgR <= 65) {
-                stopGoal = "MAX 2 GOL"; col = "amber"; prob = 80;
-                msg = "Üretim sınırlı. 1-1 veya 2-0 tavan skorlardır.";
+                probs = { g01: 22, g2: 60, g3plus: 18 };
+                tavan = "MAX 2 GOL"; color = "amber";
             } else if (tSCA <= 35 && tPPA <= 20) {
-                stopGoal = "MAX 3 GOL"; col = "orange"; prob = 78;
-                msg = "Tempo var ama kaos yok. Maç 3 golde kilitlenir.";
+                probs = { g01: 10, g2: 25, g3plus: 65 };
+                tavan = "MAX 3 GOL"; color = "orange";
             } else {
-                stopGoal = "GOL ÜSTÜ"; col = "red"; prob = 70;
-                msg = "Veriler La Liga kilitlerini kırmış durumda.";
+                probs = { g01: 5, g2: 15, g3plus: 80 };
+                tavan = "3+ GOL"; color = "red";
             }
 
-            const card = `
-                <div class="glass p-4 rounded-2xl la-liga-gold shadow-lg border-l-4 border-${col}-500">
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="text-[10px] font-black uppercase text-gray-500">${tA} <br> ${tB}</div>
-                        <div class="text-right">
-                            <span class="text-lg font-black text-${col}-400">${stopGoal}</span>
-                            <div class="text-[9px] font-bold text-gray-600 uppercase">GÜVEN ORANI: %${prob}</div>
+            const matchData = {
+                id: Date.now(), tA, tB, maxQ, tSCA, tPPA, tPrgR, probs, tavan, color
+            };
+
+            saveMatch(matchData);
+            loadHistory();
+        }
+
+        function saveMatch(data) {
+            let history = JSON.parse(localStorage.getItem('laLigaHistory') || '[]');
+            history.unshift(data);
+            localStorage.setItem('laLigaHistory', JSON.stringify(history));
+        }
+
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('laLigaHistory') || '[]');
+            const list = document.getElementById('historyList');
+            list.innerHTML = history.map(m => `
+                <div class="glass p-4 rounded-2xl la-liga-gold history-card mb-4 relative">
+                    <button onclick="deleteMatch(${m.id})" class="absolute top-2 right-2 text-gray-600 hover:text-red-500 text-xs">×</button>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-[10px] font-black uppercase text-gray-400">${m.tA} x ${m.tB}</span>
+                        <span class="text-xs font-black text-${m.color}-500 uppercase">${m.tavan}</span>
+                    </div>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between text-[9px] font-bold mb-1">
+                            <span>0-1 GOL</span><span>%${m.probs.g01}</span>
+                        </div>
+                        <div class="w-full bg-gray-800 h-1 rounded-full overflow-hidden">
+                            <div class="bg-emerald-500 h-full" style="width: ${m.probs.g01}%"></div>
+                        </div>
+
+                        <div class="flex justify-between text-[9px] font-bold mb-1">
+                            <span>2 GOL</span><span>%${m.probs.g2}</span>
+                        </div>
+                        <div class="w-full bg-gray-800 h-1 rounded-full overflow-hidden">
+                            <div class="bg-amber-500 h-full" style="width: ${m.probs.g2}%"></div>
+                        </div>
+
+                        <div class="flex justify-between text-[9px] font-bold mb-1">
+                            <span>3+ GOL</span><span>%${m.probs.g3plus}</span>
+                        </div>
+                        <div class="w-full bg-gray-800 h-1 rounded-full overflow-hidden">
+                            <div class="bg-red-500 h-full" style="width: ${m.probs.g3plus}%"></div>
                         </div>
                     </div>
-                    <div class="stop-bar mb-3">
-                        <div class="h-full bg-${col}-500 shadow-[0_0_8px_${col}]" style="width: ${prob}%"></div>
+
+                    <div class="grid grid-cols-4 gap-1 text-[8px] text-center text-gray-600 font-mono">
+                        <div class="bg-black/40 p-1 rounded">Q:${m.maxQ}</div>
+                        <div class="bg-black/40 p-1 rounded">SCA:${m.tSCA}</div>
+                        <div class="bg-black/40 p-1 rounded">PPA:${m.tPPA}</div>
+                        <div class="bg-black/40 p-1 rounded">PR:${m.tPrgR}</div>
                     </div>
-                    <div class="grid grid-cols-4 gap-1 text-[8px] text-center text-gray-500 mb-2">
-                        <div class="bg-black/30 p-1 rounded">Q:${maxQ}</div>
-                        <div class="bg-black/30 p-1 rounded">SCA:${tSCA}</div>
-                        <div class="bg-black/30 p-1 rounded">PPA:${tPPA}</div>
-                        <div class="bg-black/30 p-1 rounded">PR:${tPrgR}</div>
-                    </div>
-                    <p class="text-[10px] text-gray-400 italic"><strong>ANALİZ:</strong> ${msg}</p>
-                </div>`;
-            document.getElementById('results').innerHTML = card + document.getElementById('results').innerHTML;
+                </div>
+            `).join('');
+        }
+
+        function deleteMatch(id) {
+            let history = JSON.parse(localStorage.getItem('laLigaHistory') || '[]');
+            history = history.filter(m => m.id !== id);
+            localStorage.setItem('laLigaHistory', JSON.stringify(history));
+            loadHistory();
+        }
+
+        function clearAll() {
+            if(confirm("Tüm veriler silinecek?")) {
+                localStorage.removeItem('laLigaHistory');
+                loadHistory();
+            }
         }
     </script>
 </body>

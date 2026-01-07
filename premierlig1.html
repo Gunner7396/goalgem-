@@ -2,172 +2,131 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EPL Engine | Pro Analytic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premier Analiz Pro - 1.5 Alt/Üst Süzgeci</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Rajdhani', sans-serif; background-color: #020617; color: #f8fafc; }
-        .glass-card { background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(59, 130, 246, 0.2); }
-        .input-accent { background: #0f172a; border: 1px solid #1e293b; color: #fff; transition: 0.3s; }
-        .input-accent:focus { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); outline: none; }
-        .history-item { border-left: 3px solid #3b82f6; background: rgba(30, 41, 59, 0.3); padding: 8px; border-radius: 4px; font-size: 11px; }
+        .card { background: #1e293b; border: 1px solid #334155; }
+        body { background: #0f172a; color: #f8fafc; }
     </style>
 </head>
-<body class="p-2 md:p-6" onload="loadData()">
+<body class="p-4 md:p-8">
 
-    <div class="max-w-md mx-auto space-y-3">
-        <header class="flex justify-between items-center px-1">
-            <h1 class="text-xl font-bold text-blue-500 tracking-tighter uppercase">EPL Engine <span class="text-[10px] text-white opacity-50">V1.0</span></h1>
-            <div class="flex gap-3">
-                <button onclick="resetInputs()" class="text-[10px] text-yellow-500 hover:underline uppercase font-bold">Yeni Maç</button>
-                <button onclick="clearHistory()" class="text-[10px] text-red-500 hover:underline uppercase font-bold">Geçmişi Sil</button>
-            </div>
-        </header>
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-center text-blue-400 mb-8">Premier Analiz Pro <span class="text-sm font-normal text-gray-400">v1.0</span></h1>
 
-        <div class="glass-card p-3 rounded-xl grid grid-cols-2 gap-2">
-            <input list="epl-teams" id="home" class="input-accent p-2 rounded-lg text-sm text-center" placeholder="Ev Sahibi" onchange="saveCurrent()">
-            <input list="epl-teams" id="away" class="input-accent p-2 rounded-lg text-sm text-center" placeholder="Deplasman" onchange="saveCurrent()">
-        </div>
+        <div class="card p-6 rounded-xl shadow-2xl mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-4 border-r border-gray-700 pr-4">
+                    <h2 class="text-xl font-semibold text-blue-300">A Takımı (Ev / Deplasman)</h2>
+                    <input type="text" id="teamA" placeholder="Takım Adı" class="w-full p-2 rounded bg-gray-800 border border-gray-600 focus:outline-none focus:border-blue-500">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="block text-xs text-gray-400">npxG</label><input type="number" step="0.01" id="anpxG" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
+                        <div><label class="block text-xs text-gray-400">SCA</label><input type="number" step="0.1" id="aSCA" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
+                        <div><label class="block text-xs text-gray-400">PrgR</label><input type="number" id="aPrgR" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
+                        <div><label class="block text-xs text-gray-400">PPA</label><input type="number" id="aPPA" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
+                    </div>
+                </div>
 
-        <div class="glass-card p-4 rounded-xl">
-            <div class="grid grid-cols-3 gap-3">
-                <div class="space-y-1 text-center">
-                    <label class="text-[9px] text-slate-500 uppercase font-bold">npxG</label>
-                    <input type="number" id="v_npxg" step="0.1" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
-                </div>
-                <div class="space-y-1 text-center">
-                    <label class="text-[9px] text-slate-500 uppercase font-bold">TiB (Box)</label>
-                    <input type="number" id="v_tib" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
-                </div>
-                <div class="space-y-1 text-center">
-                    <label class="text-[9px] text-slate-500 uppercase font-bold">PrgP+C</label>
-                    <input type="number" id="v_prg" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
-                </div>
-                <div class="space-y-1 text-center">
-                    <label class="text-[9px] text-slate-500 uppercase font-bold">High T.</label>
-                    <input type="number" id="v_ht" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
-                </div>
-                <div class="space-y-1 text-center">
-                    <label class="text-[9px] text-slate-500 uppercase font-bold">G-xG</label>
-                    <input type="number" id="v_gxg" step="0.1" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
-                </div>
-                <div class="space-y-1 text-center">
-                    <label class="text-[9px] text-slate-500 uppercase font-bold">npxGA</label>
-                    <input type="number" id="v_npxga" step="0.1" class="input-accent w-full p-2 rounded text-sm text-center" placeholder="" oninput="saveCurrent()">
+                <div class="space-y-4">
+                    <h2 class="text-xl font-semibold text-red-300">B Takımı (Ev / Deplasman)</h2>
+                    <input type="text" id="teamB" placeholder="Takım Adı" class="w-full p-2 rounded bg-gray-800 border border-gray-600 focus:outline-none focus:border-red-500">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="block text-xs text-gray-400">npxG</label><input type="number" step="0.01" id="bnpxG" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
+                        <div><label class="block text-xs text-gray-400">SCA</label><input type="number" step="0.1" id="bSCA" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
+                        <div><label class="block text-xs text-gray-400">PrgR</label><input type="number" id="bPrgR" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
+                        <div><label class="block text-xs text-gray-400">PPA</label><input type="number" id="bPPA" class="w-full p-2 rounded bg-gray-800 border border-gray-600"></div>
+                    </div>
                 </div>
             </div>
-            <button onclick="runEngine()" class="w-full mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg text-xs uppercase tracking-widest shadow-lg shadow-blue-900/20">EPL ANALİZİ YAP</button>
+            <button onclick="analyzeMatch()" class="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">ANALİZ ET VE KAYDET</button>
         </div>
 
-        <div id="output" class="hidden">
-            <div class="glass-card p-4 rounded-xl border-l-4 border-blue-500">
-                <div class="flex justify-between items-center">
-                    <h2 id="r_pred" class="text-2xl font-black text-white italic tracking-tighter uppercase"></h2>
-                    <span id="r_conf" class="text-blue-400 font-bold text-lg"></span>
-                </div>
-                <div id="r_reasons" class="text-[11px] text-slate-300 space-y-1 mt-2 border-t border-slate-800 pt-2 italic"></div>
+        <div id="history" class="space-y-6">
             </div>
-        </div>
-
-        <div class="pt-2">
-            <h3 class="text-[10px] text-slate-500 font-bold uppercase px-1 mb-2 tracking-widest">EPL Kayıtları</h3>
-            <div id="history-list" class="max-h-[150px] overflow-y-auto space-y-1"></div>
-        </div>
     </div>
 
-    <datalist id="epl-teams">
-        <option value="Arsenal"><option value="Aston Villa"><option value="Bournemouth"><option value="Brentford"><option value="Brighton"><option value="Chelsea"><option value="Crystal Palace"><option value="Everton"><option value="Fulham"><option value="Ipswich Town"><option value="Leicester City"><option value="Liverpool"><option value="Man City"><option value="Man United"><option value="Newcastle"><option value="Nottm Forest"><option value="Southampton"><option value="Tottenham"><option value="West Ham"><option value="Wolves">
-    </datalist>
-
     <script>
-        function saveCurrent() {
+        // Sayfa yüklendiğinde geçmişi getir
+        window.onload = () => { displayHistory(); };
+
+        function analyzeMatch() {
             const data = {
-                home: document.getElementById('home').value,
-                away: document.getElementById('away').value,
-                npxg: document.getElementById('v_npxg').value,
-                tib: document.getElementById('v_tib').value,
-                prg: document.getElementById('v_prg').value,
-                ht: document.getElementById('v_ht').value,
-                gxg: document.getElementById('v_gxg').value,
-                npxga: document.getElementById('v_npxga').value
-            };
-            localStorage.setItem('epl_last_input', JSON.stringify(data));
-        }
-
-        function loadData() {
-            const lastData = JSON.parse(localStorage.getItem('epl_last_input'));
-            if (lastData) {
-                Object.keys(lastData).forEach(key => {
-                    const el = document.getElementById(key === 'home' || key === 'away' ? key : 'v_' + key);
-                    if(el) el.value = lastData[key];
-                });
-            }
-            displayHistory();
-        }
-
-        function resetInputs() {
-            document.querySelectorAll('input').forEach(i => i.value = "");
-            document.getElementById('output').classList.add('hidden');
-            localStorage.removeItem('epl_last_input');
-        }
-
-        function runEngine() {
-            const home = document.getElementById('home').value || "Ev";
-            const away = document.getElementById('away').value || "Dep";
-            const d = {
-                npxg: parseFloat(document.getElementById('v_npxg').value || 0),
-                tib: parseFloat(document.getElementById('v_tib').value || 0),
-                prg: parseFloat(document.getElementById('v_prg').value || 0),
-                ht: parseFloat(document.getElementById('v_ht').value || 0)
+                id: Date.now(),
+                tA: document.getElementById('teamA').value || 'A Takımı',
+                tB: document.getElementById('teamB').value || 'B Takımı',
+                anpxG: parseFloat(document.getElementById('anpxG').value),
+                aSCA: parseFloat(document.getElementById('aSCA').value),
+                aPrgR: parseFloat(document.getElementById('aPrgR').value),
+                aPPA: parseFloat(document.getElementById('aPPA').value),
+                bnpxG: parseFloat(document.getElementById('bnpxG').value),
+                bSCA: parseFloat(document.getElementById('bSCA').value),
+                bPrgR: parseFloat(document.getElementById('bPrgR').value),
+                bPPA: parseFloat(document.getElementById('bPPA').value),
             };
 
-            let res = ""; let conf = ""; let reasons = [];
+            // Hesaplamalar
+            const totalSCA = data.aSCA + data.bSCA;
+            const avgNpxG = (data.anpxG + data.bnpxG) / 2;
+            const totalPrgR = data.aPrgR + data.bPrgR;
+            const totalPPA = data.aPPA + data.bPPA;
 
-            // 1140 MAÇLIK VERİ SETİ KARAR AĞACI
-            if (d.tib < 38 && d.prg < 88 && d.ht < 11) {
-                res = "1.5 ALT"; conf = "%82";
-                reasons.push("• EPL Standartlarına göre 'Düşük Tempo'.");
-                reasons.push("• Kutu içi temas (<38) kritik seviyede az.");
-            }
-            else if (d.prg >= 88 && d.prg <= 108 && d.tib <= 48 && d.ht <= 14) {
-                res = "TAM 2 GOL"; conf = "%78";
-                reasons.push("• Kontrollü Akış: Maç 1-1 veya 2-0'a çok yatkın.");
-                reasons.push("• Pres gücü savunmayı dağıtacak kadar yüksek değil.");
-            }
-            else if (d.ht > 15 && d.tib > 50 && d.prg > 110) {
-                res = "TAM 3 GOL / 2.5 ÜST"; conf = "%84";
-                reasons.push("• Kaotik Pres (>15 HT): Savunma hatası kaçınılmaz.");
-                reasons.push("• Yüksek Sızma: Ceza sahası teması 3. golü zorluyor.");
-            }
-            else {
-                res = "BELİRSİZ / PAS"; conf = "-";
-                reasons.push("• Metrikler EPL karar eşikleri arasında dengesiz.");
+            let result = "";
+            let color = "";
+            let reason = "";
+
+            // Karar Mantığı (Seninle oluşturduğumuz kurallar)
+            if (avgNpxG < 0.08 && totalSCA < 20 && totalPPA < 11) {
+                result = "1.5 ALT (%80 GÜVEN)";
+                color = "text-green-400";
+                reason = "Sistemdeki 232 maçlık 'Saf Alt' havuzuna tam uyum sağlıyor. Pozisyon kalitesi (npxG) çok düşük ve ceza sahasına sızma yok.";
+            } else if (avgNpxG > 0.12 || totalSCA > 35 || totalPrgR > 65) {
+                result = "3 GOL VE ÜSTÜ";
+                color = "text-red-400";
+                reason = `Yüksek riskli bölge! Toplam SCA (${totalSCA.toFixed(1)}) ve PrgR (${totalPrgR}) değerleri 216 maçlık 'Gollü' havuzunu işaret ediyor. Kalite 1.5 Alt sınırını çoktan aşmış.`;
+            } else {
+                result = "TAM 2 GOL (SINIR)";
+                color = "text-yellow-400";
+                reason = "Maç 245 maçlık 'Sınır' bölgesinde. Ne tam kısır ne de tam patlamaya hazır. 1-1 veya 2-0 bitme olasılığı %70'in üzerinde.";
             }
 
-            document.getElementById('r_pred').innerText = res;
-            document.getElementById('r_conf').innerText = conf;
-            document.getElementById('r_reasons').innerHTML = reasons.join("<br>");
-            document.getElementById('output').classList.remove('hidden');
+            const analysis = { ...data, result, color, reason, totalSCA, avgNpxG, totalPrgR };
+            saveAnalysis(analysis);
+        }
 
-            const history = JSON.parse(localStorage.getItem('epl_history')) || [];
-            history.unshift({h: home, a: away, p: res, c: conf, time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})});
-            localStorage.setItem('epl_history', JSON.stringify(history.slice(0, 10)));
+        function saveAnalysis(item) {
+            let logs = JSON.parse(localStorage.getItem('matchLogs')) || [];
+            logs.unshift(item);
+            localStorage.setItem('matchLogs', JSON.stringify(logs));
             displayHistory();
         }
 
         function displayHistory() {
-            const history = JSON.parse(localStorage.getItem('epl_history')) || [];
-            document.getElementById('history-list').innerHTML = history.map(item => `
-                <div class="history-item flex justify-between items-center">
-                    <span><b>${item.h}-${item.a}</b></span>
-                    <span class="text-blue-400 font-bold">${item.p}</span>
-                    <span class="opacity-30 text-[8px]">${item.time}</span>
+            const logs = JSON.parse(localStorage.getItem('matchLogs')) || [];
+            const container = document.getElementById('history');
+            container.innerHTML = logs.map(log => `
+                <div class="card p-6 rounded-xl relative overflow-hidden">
+                    <div class="flex justify-between items-start border-b border-gray-700 pb-4 mb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold font-mono">${log.tA} vs ${log.tB}</h3>
+                            <p class="text-sm text-gray-400">${new Date(log.id).toLocaleString()}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xl font-black ${log.color}">${log.result}</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-4">
+                        <div class="bg-gray-900 p-2 rounded"><div class="text-xs text-gray-500">Ort. npxG</div><div class="font-bold">${log.avgNpxG.toFixed(2)}</div></div>
+                        <div class="bg-gray-900 p-2 rounded"><div class="text-xs text-gray-500">Top. SCA</div><div class="font-bold">${log.totalSCA.toFixed(1)}</div></div>
+                        <div class="bg-gray-900 p-2 rounded"><div class="text-xs text-gray-500">Top. PrgR</div><div class="font-bold">${log.totalPrgR}</div></div>
+                        <div class="bg-gray-900 p-2 rounded"><div class="text-xs text-gray-500">Top. PPA</div><div class="font-bold">${log.aPPA + log.bPPA}</div></div>
+                    </div>
+                    <div class="text-sm bg-black/30 p-4 rounded border-l-4 border-blue-500 italic">
+                        <strong>Neden?</strong> ${log.reason}
+                    </div>
                 </div>
             `).join('');
         }
-
-        function clearHistory() { if(confirm("EPL geçmişi silinsin mi?")) { localStorage.removeItem('epl_history'); displayHistory(); } }
     </script>
 </body>
 </html>

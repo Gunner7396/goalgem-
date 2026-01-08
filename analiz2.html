@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MASTER ENGINE v3.0 - P-PRO SHELL</title>
+    <title>MASTER ENGINE v3.0 - PERSISTENT</title>
     <style>
-        /* GÖRSEL KABUK - SENİN TASARIMIN */
         :root {
             --bg: #05070a; --panel: #0f1217; --accent: #00ffa3; --border: #1e2530;
             --text: #f0f3f5; --dim: #64748b;
@@ -18,23 +17,25 @@
         .wrapper { width: 100%; max-width: 400px; }
         .main-card { background: rgba(15, 18, 23, 0.95); border: 1px solid var(--border); padding: 15px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin-bottom: 20px; position: relative; z-index: 100; }
         
-        .dropdown { background: #161b22; border: 1px solid var(--border); padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--accent); border-left: 4px solid var(--accent); position: relative; }
+        .dropdown { background: #161b22; border: 1px solid var(--border); padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--accent); border-left: 4px solid var(--accent); position: relative; }
         .dd-menu { 
             display: none; position: absolute; top: 110%; left: 0; right: 0; 
             background: #1c2128; border: 1px solid var(--border); border-radius: 12px; 
             z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.9); border: 1px solid var(--accent);
         }
-        .dd-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 12px; color: #fff; }
+        .dd-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 11px; color: #fff; }
         .dd-item:hover { background: var(--accent); color: #000; }
         
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .input-grid label { grid-column: span 2; font-size: 9px; color: var(--accent); text-align: center; font-weight: 800; text-transform: uppercase; margin-top: 4px; opacity: 0.8; }
         input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: #fff; font-size: 14px; text-align: center; font-weight: 600; }
-        
-        #btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-weight: 900; margin-top: 15px; cursor: pointer; font-size: 13px; text-transform: uppercase; }
+        input::placeholder { color: #334155; font-size: 11px; }
+
+        #btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-weight: 900; margin-top: 15px; cursor: pointer; font-size: 13px; text-transform: uppercase; transition: 0.2s; }
+        #btn:active { transform: scale(0.97); opacity: 0.8; }
         
         .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; position: relative; border-top: 3px solid var(--accent); }
-        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 800; font-size: 13px; }
+        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 800; font-size: 12px; }
         .lig-badge { padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 900; color: #000; }
         .bar-wrap { margin-bottom: 6px; }
         .bar-info { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 3px; font-weight: 700; }
@@ -58,33 +59,29 @@
         <div class="dropdown" id="lg-btn">
             <span id="lg-text">HOLLANDA EREDIVISIE (ERE)</span>
             <div id="dd" class="dd-menu">
-                <div class="dd-item" data-id="ERE" data-name="HOLLANDA EREDIVISIE (ERE)" data-color="#00ffa3">ERE (HOLLANDA)</div>
-                <div class="dd-item" data-id="POR" data-name="PORTUGAL LIGA (POR)" data-color="#fbff00">POR (PORTEKİZ)</div>
-                <div class="dd-item" data-id="TSL" data-name="TÜRKİYE SÜPER LİG (TSL)" data-color="#00d4ff">TSL (TÜRKİYE)</div>
-                <div class="dd-item" data-id="BPL" data-name="BELGIUM PRO LEAGUE (BPL)" data-color="#ff4d4d">BPL (BELÇİKA)</div>
-                <div class="dd-item" data-id="CHP" data-name="CHAMPIONSHIP (CHP)" data-color="#da70d6">CHP (İNGİLTERE)</div>
+                <div class="dd-item" data-id="ERE" data-name="HOLLANDA EREDIVISIE (ERE)" data-color="#00ffa3">ERE - HOLLANDA</div>
+                <div class="dd-item" data-id="POR" data-name="PORTUGAL LIGA (POR)" data-color="#fbff00">POR - PORTEKİZ</div>
+                <div class="dd-item" data-id="TSL" data-name="TÜRKİYE SÜPER LİG (TSL)" data-color="#00d4ff">TSL - TÜRKİYE</div>
+                <div class="dd-item" data-id="BPL" data-name="BELGIUM PRO LEAGUE (BPL)" data-color="#ff4d4d">BPL - BELÇİKA</div>
+                <div class="dd-item" data-id="CHP" data-name="CHAMPIONSHIP (CHP)" data-color="#da70d6">CHP - İNGİLTERE</div>
             </div>
         </div>
 
         <div class="input-grid">
             <input type="text" id="t1" placeholder="EV TAKIM">
             <input type="text" id="t2" placeholder="DEP TAKIM">
-            
             <label>1. npxG/Sh (Kalite Değeri)</label>
-            <input type="number" id="t1-q" placeholder="0.00" step="0.01" inputmode="decimal">
-            <input type="number" id="t2-q" placeholder="0.00" step="0.01" inputmode="decimal">
-            
+            <input type="number" id="t1-q" placeholder="0.00" step="0.01">
+            <input type="number" id="t2-q" placeholder="0.00" step="0.01">
             <label>2. SCA (Şut Yaratma)</label>
-            <input type="number" id="t1-s" placeholder="SCA" inputmode="numeric">
-            <input type="number" id="t2-s" placeholder="SCA" inputmode="numeric">
-            
+            <input type="number" id="t1-s" placeholder="SCA">
+            <input type="number" id="t2-s" placeholder="SCA">
             <label>3. PrgR (İlerleyen Pas)</label>
-            <input type="number" id="t1-p" placeholder="PrgR" inputmode="numeric">
-            <input type="number" id="t2-p" placeholder="PrgR" inputmode="numeric">
-            
+            <input type="number" id="t1-p" placeholder="PrgR">
+            <input type="number" id="t2-p" placeholder="PrgR">
             <label>4. PPA (C. Sahasına Pas)</label>
-            <input type="number" id="t1-x" placeholder="PPA" inputmode="numeric">
-            <input type="number" id="t2-x" placeholder="PPA" inputmode="numeric">
+            <input type="number" id="t1-x" placeholder="PPA">
+            <input type="number" id="t2-x" placeholder="PPA">
         </div>
         <button id="btn" onclick="analyze()">ANALİZİ BAŞLAT</button>
     </div>
@@ -97,24 +94,19 @@
 </div>
 
 <script>
-    let activeL = 'ERE'; // Varsayılan Lig Hollanda
-
-    // DROPDOWN MANTIĞI
+    // DROPDOWN KONTROLÜ
     const lgBtn = document.getElementById('lg-btn');
     const ddMenu = document.getElementById('dd');
 
-    lgBtn.addEventListener('click', function(e) {
+    lgBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         ddMenu.style.display = ddMenu.style.display === 'block' ? 'none' : 'block';
     });
 
     document.querySelectorAll('.dd-item').forEach(item => {
         item.addEventListener('click', function(e) {
-            e.stopPropagation();
-            activeL = this.getAttribute('data-id');
             const color = this.getAttribute('data-color');
             const name = this.getAttribute('data-name');
-            
             document.documentElement.style.setProperty('--accent', color);
             document.getElementById('lg-text').innerText = name;
             lgBtn.style.borderColor = color;
@@ -122,91 +114,85 @@
         });
     });
 
-    window.onclick = () => { ddMenu.style.display = 'none'; };
+    window.onclick = () => ddMenu.style.display = 'none';
 
-    // MOTOR: %80 BAŞARI ODAKLI ANALİZ (GÜNCELLENEN KISIM)
+    // ANALİZ MOTORU
     function analyze() {
+        const lgText = document.getElementById('lg-text').innerText;
+        let activeL = "ERE";
+        if(lgText.includes("POR")) activeL = "POR";
+        else if(lgText.includes("TSL")) activeL = "TSL";
+        else if(lgText.includes("BPL")) activeL = "BPL";
+        else if(lgText.includes("CHP")) activeL = "CHP";
+
         const s1 = parseFloat(document.getElementById('t1-s').value || 0);
         const s2 = parseFloat(document.getElementById('t2-s').value || 0);
         const q1 = parseFloat(document.getElementById('t1-q').value || 0.1);
         const q2 = parseFloat(document.getElementById('t2-q').value || 0.1);
-        const pr1 = parseFloat(document.getElementById('t1-p').value || 0);
-        const pr2 = parseFloat(document.getElementById('t2-p').value || 0);
-        const x1 = parseFloat(document.getElementById('t1-x').value || 0);
-        const x2 = parseFloat(document.getElementById('t2-x').value || 0);
+        const p1_p = parseFloat(document.getElementById('t1-p').value || 0);
+        const p2_p = parseFloat(document.getElementById('t2-p').value || 0);
+        const p1_x = parseFloat(document.getElementById('t1-x').value || 0);
+        const p2_x = parseFloat(document.getElementById('t2-x').value || 0);
 
-        if (s1 === 0 && s2 === 0) { alert("Metrikleri giriniz!"); return; }
+        if(s1 === 0 && s2 === 0) { alert("Lütfen verileri girin!"); return; }
 
         const sca = s1 + s2;
         const qAvg = (q1 + q2) / 2;
-        const prTotal = pr1 + pr2;
-        const ppaTotal = x1 + x2;
+        const pr = p1_p + p2_p;
+        const ppa = p1_x + p2_x;
         
-        const t1Name = document.getElementById('t1').value || "EV";
-        const t2Name = document.getElementById('t2').value || "DEP";
-        const curLname = document.getElementById('lg-text').innerText;
-        const curLcol = getComputedStyle(document.documentElement).getPropertyValue('--accent');
+        const t1 = document.getElementById('t1').value || "EV";
+        const t2 = document.getElementById('t2').value || "DEP";
+        const lc = getComputedStyle(document.documentElement).getPropertyValue('--accent');
 
-        let p1, p2, p3;
+        let prob1, prob2, prob3;
 
-        // %80 BAŞARI TUNEL MANTIGI
-        switch(activeL) {
-            case 'ERE': // Hollanda
-                if (sca <= 24 && ppaTotal <= 12) { p1 = 80; p2 = 15; p3 = 5; }
-                else if (sca <= 38 && qAvg <= 0.10) { p1 = 10; p2 = 80; p3 = 10; }
-                else { p1 = 5; p2 = 15; p3 = 80; }
-                break;
-            case 'POR': // Portekiz
-                if (sca <= 32 && ppaTotal <= 15) { p1 = 80; p2 = 15; p3 = 5; }
-                else if (sca <= 44 && qAvg <= 0.11) { p1 = 15; p2 = 75; p3 = 10; }
-                else { p1 = 10; p2 = 20; p3 = 70; }
-                break;
-            case 'TSL': // Türkiye
-                if (prTotal <= 50 && sca <= 28) { p1 = 80; p2 = 15; p3 = 5; }
-                else if (sca <= 42 && qAvg <= 0.11) { p1 = 15; p2 = 70; p3 = 15; }
-                else { p1 = 5; p2 = 20; p3 = 75; }
-                break;
-            case 'BPL': // Belçika
-                if (sca <= 26 && ppaTotal <= 13) { p1 = 80; p2 = 15; p3 = 5; }
-                else if (prTotal <= 85 && sca <= 39) { p1 = 15; p2 = 75; p3 = 10; }
-                else { p1 = 5; p2 = 15; p3 = 80; }
-                break;
-            case 'CHP': // Championship
-                if (sca <= 30 && prTotal <= 70) { p1 = 80; p2 = 15; p3 = 5; }
-                else if (sca <= 46 && qAvg <= 0.10) { p1 = 20; p2 = 70; p3 = 10; }
-                else { p1 = 5; p2 = 25; p3 = 70; }
-                break;
+        // %80 DOĞRULUK TÜNELLERİ
+        if (activeL === 'ERE') {
+            if (sca <= 24 && ppa <= 12) { prob1 = 80; prob2 = 15; prob3 = 5; }
+            else if (sca <= 38 && qAvg <= 0.10) { prob1 = 10; prob2 = 80; prob3 = 10; }
+            else { prob1 = 5; prob2 = 15; prob3 = 80; }
+        } else if (activeL === 'POR') {
+            if (sca <= 32 && ppa <= 15) { prob1 = 80; prob2 = 15; prob3 = 5; }
+            else if (sca <= 44 && qAvg <= 0.11) { prob1 = 15; prob2 = 75; prob3 = 10; }
+            else { prob1 = 10; prob2 = 20; prob3 = 70; }
+        } else if (activeL === 'TSL') {
+            if (pr <= 50 && sca <= 28) { prob1 = 82; prob2 = 13; prob3 = 5; }
+            else if (sca <= 42 && qAvg <= 0.11) { prob1 = 15; prob2 = 70; prob3 = 15; }
+            else { prob1 = 5; prob2 = 20; prob3 = 75; }
+        } else if (activeL === 'BPL') {
+            if (sca <= 26 && ppa <= 13) { prob1 = 80; prob2 = 15; prob3 = 5; }
+            else if (pr <= 85 && sca <= 39) { prob1 = 15; prob2 = 75; prob3 = 10; }
+            else { prob1 = 5; prob2 = 15; prob3 = 80; }
+        } else if (activeL === 'CHP') {
+            if (sca <= 30 && pr <= 70) { prob1 = 80; prob2 = 15; prob3 = 5; }
+            else if (sca <= 46 && qAvg <= 0.10) { prob1 = 20; prob2 = 70; prob3 = 10; }
+            else { prob1 = 5; prob2 = 25; prob3 = 70; }
         }
 
-        addHistory(t1Name.toUpperCase(), t2Name.toUpperCase(), p1, p2, p3, qAvg, sca, prTotal, ppaTotal, curLname, curLcol);
+        addHistory(t1.toUpperCase(), t2.toUpperCase(), prob1, prob2, prob3, qAvg, sca, pr, ppa, lgText.split(' ')[0], lc);
     }
 
     function addHistory(t1, t2, p1, p2, p3, q, sca, pr, ppa, ln, lc) {
         const card = document.createElement('div');
         card.className = 'hist-card';
         card.style.borderTopColor = lc;
-        
         let pred = p3 >= 70 ? "3+ GOL" : (p1 >= 75 ? "0-1 GOL" : "2 GOL");
-        let qual = q >= 0.12 ? "ELİT" : (q >= 0.09 ? "ORTALAMA" : "DÜŞÜK");
-        
         card.innerHTML = `
-            <div class="match-header"><span>${t1} v ${t2}</span><span class="lig-badge" style="background:${lc}">${ln.split(' ')[0]}</span></div>
-            ${row("0-1 GOL (1.5 ALT)", p1, "#ff4d4d")} 
-            ${row("TAM 2 GOL", p2, "#fbff00")} 
-            ${row("3+ GOL (2.5 ÜST)", p3, "#00ffa3")}
+            <div class="match-header"><span>${t1} v ${t2}</span><span class="lig-badge" style="background:${lc}">${ln}</span></div>
+            ${row("0-1 GOL", p1, "#ff4d4d")} ${row("TAM 2 GOL", p2, "#fbff00")} ${row("3+ GOL", p3, "#00ffa3")}
             <div class="report-grid">
-                <div class="report-item"><span class="report-val">${pred}</span><span class="report-lab">ANALİZ ÇIKTISI</span></div>
-                <div class="report-item"><span class="report-val">${qual}</span><span class="report-lab">BİTİRİCİLİK</span></div>
+                <div class="report-item"><span class="report-val">${pred}</span><span class="report-lab">TAHMİN</span></div>
+                <div class="report-item"><span class="report-val">${q >= 0.11 ? 'ELİT' : 'NORMAL'}</span><span class="report-lab">BİTİRİCİLİK</span></div>
             </div>
             <div class="footer-metrics"><span>Q: ${q.toFixed(2)}</span><span>SCA: ${sca}</span><span>PR: ${pr}</span><span>PPA: ${ppa}</span></div>`;
-        const list = document.getElementById('history-list');
-        list.prepend(card);
-        localStorage.setItem('pProHistory', list.innerHTML);
+        document.getElementById('history-list').prepend(card);
+        localStorage.setItem('pProHistory', document.getElementById('history-list').innerHTML);
     }
 
     function row(l, v, c) { return `<div class="bar-wrap"><div class="bar-info"><span>${l}</span><span>%${Math.round(v)}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${v}%; background:${c}"></div></div></div>`; }
-    function clearHistory() { if(confirm("Geçmiş silinsin mi?")) { localStorage.removeItem('pProHistory'); document.getElementById('history-list').innerHTML = ''; } }
-
+    function clearHistory() { if(confirm("Temizlensin mi?")) { localStorage.removeItem('pProHistory'); document.getElementById('history-list').innerHTML = ''; } }
+    
     window.onload = () => {
         const saved = localStorage.getItem('pProHistory');
         if (saved) document.getElementById('history-list').innerHTML = saved;

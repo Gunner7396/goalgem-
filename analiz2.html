@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO V13 - PRO TRACKER</title>
+    <title>P-PRO V13 - ULTIMATE</title>
     <style>
         :root {
             --bg: #05070a; --panel: #0f1217; --accent: #00ffa3; --border: #1e2530;
@@ -13,7 +13,6 @@
         body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
         .wrapper { width: 100%; max-width: 400px; }
         
-        /* Dashboard Kartı */
         .dash-card { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-around; text-align: center; position: relative; }
         .stat-val { font-size: 18px; font-weight: 900; color: var(--accent); display: block; }
         .stat-lbl { font-size: 9px; color: var(--dim); text-transform: uppercase; }
@@ -28,11 +27,13 @@
         label { grid-column: span 2; font-size: 9px; color: var(--accent); text-align: center; font-weight: 800; margin-top: 5px; }
         input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: #fff; text-align: center; font-weight: 600; }
         
-        #btn { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--accent); color: #000; font-weight: 900; margin-top: 15px; cursor: pointer; }
+        .action-row { display: flex; gap: 10px; margin-top: 15px; }
+        #btn { flex: 4; padding: 15px; border-radius: 12px; border: none; background: var(--accent); color: #000; font-weight: 900; cursor: pointer; font-size: 13px; }
+        #clear-inputs { flex: 1; padding: 15px; border-radius: 12px; border: 1px solid #ff4d4d55; background: #ff4d4d11; color: #ff4d4d; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
         .hist-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; border-top: 3px solid var(--accent); }
-        .res-btns { display: flex; gap: 5px; margin-top: 10px; }
-        .res-btn { flex: 1; padding: 8px; border-radius: 6px; border: none; font-size: 9px; font-weight: 800; cursor: pointer; }
+        .res-btns { display: flex; gap: 8px; margin-top: 10px; }
+        .res-btn { flex: 1; padding: 10px; border-radius: 8px; border: none; font-size: 16px; cursor: pointer; transition: 0.2s; }
         .bar-bg { width: 100%; height: 6px; background: #1e2530; border-radius: 4px; overflow: hidden; margin-top: 3px; }
         .bar-fill { height: 100%; transition: width 0.8s; }
     </style>
@@ -41,7 +42,7 @@
 
 <div class="wrapper">
     <div class="dash-card">
-        <span class="reset-stats" onclick="clearStats()">BAŞARIYI SIFIRLA</span>
+        <span class="reset-stats" onclick="clearStats()">SIFIRLA</span>
         <div><span id="st-total" class="stat-val">0</span><span class="stat-lbl">Analiz</span></div>
         <div><span id="st-rate" class="stat-val" style="color:#fbff00">%0</span><span class="stat-lbl">Başarı</span></div>
         <div><span id="st-win" class="stat-val" style="color:#00ffa3">0</span><span class="stat-lbl">Doğru</span></div>
@@ -60,27 +61,31 @@
         </div>
 
         <div class="input-grid">
-            <input type="text" id="t1" value="EV TAKIM">
-            <input type="text" id="t2" value="DEP TAKIM">
+            <input type="text" id="t1" placeholder="EV TAKIM">
+            <input type="text" id="t2" placeholder="DEP TAKIM">
             <label>1. npxG/Sh (Kalite - Ort.)</label>
-            <input type="number" id="t1-q" placeholder="0.00">
-            <input type="number" id="t2-q" placeholder="0.00">
+            <input type="number" id="t1-q" inputmode="decimal" placeholder="0.00">
+            <input type="number" id="t2-q" inputmode="decimal" placeholder="0.00">
             <label>2. SCA (Üretim - Toplam)</label>
-            <input type="number" id="t1-s" placeholder="SCA">
-            <input type="number" id="t2-s" placeholder="SCA">
+            <input type="number" id="t1-s" inputmode="numeric" placeholder="SCA">
+            <input type="number" id="t2-s" inputmode="numeric" placeholder="SCA">
             <label>3. PrgR (İlerleme - Toplam)</label>
-            <input type="number" id="t1-p" placeholder="PrgR">
-            <input type="number" id="t2-p" placeholder="PrgR">
+            <input type="number" id="t1-p" inputmode="numeric" placeholder="PrgR">
+            <input type="number" id="t2-p" inputmode="numeric" placeholder="PrgR">
             <label>4. PPA (Giriş - Toplam)</label>
-            <input type="number" id="t1-x" placeholder="PPA">
-            <input type="number" id="t2-x" placeholder="PPA">
+            <input type="number" id="t1-x" inputmode="numeric" placeholder="PPA">
+            <input type="number" id="t2-x" inputmode="numeric" placeholder="PPA">
         </div>
-        <button id="btn" onclick="analyze()">ANALİZİ BAŞLAT</button>
+        
+        <div class="action-row">
+            <button id="btn" onclick="analyze()">ANALİZİ BAŞLAT</button>
+            <button id="clear-inputs" onclick="resetInputs()" title="Kutuları Temizle">🧹</button>
+        </div>
     </div>
 
     <div style="display:flex; justify-content:space-between; margin-top:15px; padding:0 5px;">
         <span style="font-size:10px; color:var(--dim); font-weight:bold;">GEÇMİŞ ANALİZLER</span>
-        <span onclick="clearHistory()" style="font-size:10px; color:#ff4d4d; cursor:pointer; font-weight: bold;">LİSTEYİ TEMİZLE</span>
+        <span onclick="clearHistory()" style="font-size:10px; color:#ff4d4d; cursor:pointer; font-weight: bold;">LİSTEYİ SİL</span>
     </div>
     <div id="history-list"></div>
 </div>
@@ -94,7 +99,6 @@
     };
 
     function toggleDD() { const d = document.getElementById('dd'); d.style.display = d.style.display === 'block' ? 'none' : 'block'; }
-    
     function setLig(id, col) {
         const t = document.getElementById('lg-text');
         t.innerText = event.target.innerText;
@@ -110,17 +114,23 @@
         document.getElementById('st-rate').innerText = '%' + r;
     }
 
+    function resetInputs() {
+        document.querySelectorAll('.input-grid input').forEach(i => i.value = '');
+    }
+
     function analyze() {
         const lg = document.getElementById('lg-text').getAttribute('data-league');
+        const t1 = document.getElementById('t1').value || 'EV';
+        const t2 = document.getElementById('t2').value || 'DEP';
         const q = (parseFloat(document.getElementById('t1-q').value||0) + parseFloat(document.getElementById('t2-q').value||0))/2;
         const s = parseFloat(document.getElementById('t1-s').value||0) + parseFloat(document.getElementById('t2-s').value||0);
         const p = parseFloat(document.getElementById('t1-p').value||0) + parseFloat(document.getElementById('t2-p').value||0);
         const x = parseFloat(document.getElementById('t1-x').value||0) + parseFloat(document.getElementById('t2-x').value||0);
         
-        if(s===0) return;
+        if(s===0) { alert("Lütfen SCA verilerini girin!"); return; }
         let p1, p2, p3;
 
-        // MOTOR DNA
+        // MOTOR DNA (Sabit Tüneller)
         if(lg==='ERE'){ if(s<=24&&x<=12) {p1=80;p2=15;p3=5} else if(s<=38&&q<=0.10) {p1=10;p2=80;p3=10} else {p1=5;p2=15;p3=80} }
         else if(lg==='POR'){ if(s<=32&&x<=15) {p1=80;p2=15;p3=5} else if(s<=44&&q<=0.11) {p1=15;p2=75;p3=10} else {p1=10;p2=20;p3=70} }
         else if(lg==='TSL'){ if(p<=50&&s<=28) {p1=85;p2=10;p3=5} else if(s<=42&&q<=0.11) {p1=15;p2=70;p3=15} else {p1=5;p2=20;p3=75} }
@@ -131,13 +141,13 @@
         card.className = 'hist-card';
         card.innerHTML = `
             <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:800; margin-bottom:10px;">
-                <span>${document.getElementById('t1').value} v ${document.getElementById('t2').value}</span>
+                <span>${t1.toUpperCase()} v ${t2.toUpperCase()}</span>
                 <span style="color:var(--accent)">${lg}</span>
             </div>
             ${row("0-1 GOL", p1, "#ff4d4d")} ${row("2 GOL", p2, "#fbff00")} ${row("3+ GOL", p3, "#00ffa3")}
             <div class="res-btns">
-                <button class="res-btn" style="background:#00ffa322; color:#00ffa3; border:1px solid #00ffa3" onclick="mark(true, this)">TUTTU ✅</button>
-                <button class="res-btn" style="background:#ff4d4d22; color:#ff4d4d; border:1px solid #ff4d4d" onclick="mark(false, this)">YATMADI ❌</button>
+                <button class="res-btn" style="background:#00ffa311; color:#00ffa3; border:1px solid #00ffa333" onclick="mark(true, this)">✅</button>
+                <button class="res-btn" style="background:#ff4d4d11; color:#ff4d4d; border:1px solid #ff4d4d33" onclick="mark(false, this)">❌</button>
             </div>
         `;
         const list = document.getElementById('history-list');
@@ -151,14 +161,12 @@
         stats.total++; if(win) stats.wins++;
         localStorage.setItem('ppro_stats', JSON.stringify(stats));
         updateUI();
-        btn.parentElement.innerHTML = `<div style="text-align:center; width:100%; font-size:10px; font-weight:900; color:${win?'#00ffa3':'#ff4d4d'}">${win?'TUTTU ✅':'YATMADI ❌'}</div>`;
+        btn.parentElement.innerHTML = `<div style="text-align:center; width:100%; font-size:20px;">${win?'✅':'❌'}</div>`;
         localStorage.setItem('ppro_history', document.getElementById('history-list').innerHTML);
     }
 
-    function clearHistory() { if(confirm("Geçmiş maç listesi silinsin mi? (Başarı oranınız korunur)")){ localStorage.removeItem('ppro_history'); document.getElementById('history-list').innerHTML = ''; } }
-    
-    function clearStats() { if(confirm("Başarı istatistikleri sıfırlansın mı? (Geçmiş maçlar listenizde kalır)")){ stats = { total: 0, wins: 0 }; localStorage.setItem('ppro_stats', JSON.stringify(stats)); updateUI(); } }
+    function clearHistory() { if(confirm("Geçmiş silinsin mi?")){ localStorage.removeItem('ppro_history'); document.getElementById('history-list').innerHTML = ''; } }
+    function clearStats() { if(confirm("İstatistikler sıfırlansın mı?")){ stats = { total: 0, wins: 0 }; localStorage.setItem('ppro_stats', JSON.stringify(stats)); updateUI(); } }
 </script>
-
 </body>
 </html>

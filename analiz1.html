@@ -3,42 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO V14 - ENGINE</title>
+    <title>P-PRO V15 - ELITE</title>
     <style>
         :root {
             --bg: #05070a; --panel: #0f1217; --accent: #00ffa3; --border: #1e2530;
-            --text: #f0f3f5; --dim: #64748b;
+            --text: #f0f3f5; --dim: #64748b; --gold: #fbff00; --red: #ff4d4d;
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; transition: all 0.2s ease; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
         .wrapper { width: 100%; max-width: 400px; }
         
-        .dash-card { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-around; text-align: center; position: relative; }
-        .stat-val { font-size: 18px; font-weight: 900; color: var(--accent); display: block; }
-        .stat-lbl { font-size: 9px; color: var(--dim); text-transform: uppercase; }
-        .reset-stats { position: absolute; top: 5px; right: 10px; font-size: 8px; color: #ff4d4d; cursor: pointer; border: 1px solid #ff4d4d33; padding: 2px 5px; border-radius: 4px; font-weight: bold; }
+        /* DASHBOARD MODERNiZASYON */
+        .dash-card { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-around; text-align: center; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .stat-val { font-size: 20px; font-weight: 900; color: var(--accent); display: block; text-shadow: 0 0 10px rgba(0,255,163,0.3); }
+        .stat-lbl { font-size: 9px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+        .reset-stats { position: absolute; top: 5px; right: 10px; font-size: 8px; color: var(--red); cursor: pointer; border: 1px solid #ff4d4d33; padding: 2px 6px; border-radius: 4px; font-weight: bold; background: rgba(255,77,77,0.05); }
 
-        .main-card { background: rgba(15, 18, 23, 0.95); border: 1px solid var(--border); padding: 15px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin-bottom: 10px; }
+        .main-card { background: linear-gradient(145deg, #0f1217 0%, #080a0c 100%); border: 1px solid var(--border); padding: 15px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); margin-bottom: 10px; }
         
+        /* DROPDOWN */
         .dropdown-container { margin-bottom: 15px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #161b22; border-left: 4px solid var(--accent); }
-        .dropdown-header { padding: 12px; font-weight: 800; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--accent); }
+        .dropdown-header { padding: 12px; font-weight: 800; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--accent); text-transform: uppercase; }
         .dd-menu { display: none; background: #1c2128; border-top: 1px solid var(--border); }
-        .dd-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 11px; transition: 0.2s; }
-        .dd-item:hover { background: rgba(0, 255, 163, 0.1); }
+        .dd-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 11px; }
+        .dd-item:hover { background: rgba(0, 255, 163, 0.1); color: #fff; }
         
+        /* INPUT GRID */
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        label { grid-column: span 2; font-size: 9px; color: var(--accent); text-align: center; font-weight: 800; margin-top: 5px; }
-        input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: #fff; text-align: center; font-weight: 600; font-size: 12px; }
+        label { grid-column: span 2; font-size: 10px; color: var(--dim); text-align: center; font-weight: 600; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 12px; border-radius: 10px; color: #fff; text-align: center; font-weight: 700; font-size: 13px; }
+        input:focus { border-color: var(--accent); background: #0c0f13; box-shadow: 0 0 10px rgba(0,255,163,0.15); transform: translateY(-1px); }
         
-        .action-row { display: flex; gap: 10px; margin-top: 15px; }
-        #btn { flex: 4; padding: 15px; border-radius: 12px; border: none; background: var(--accent); color: #000; font-weight: 900; cursor: pointer; font-size: 13px; text-transform: uppercase; }
-        #clear-inputs { flex: 1; padding: 15px; border-radius: 12px; border: 1px solid #ff4d4d55; background: #ff4d4d11; color: #ff4d4d; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        /* ACTIONS */
+        .action-row { display: flex; gap: 10px; margin-top: 18px; }
+        #btn { flex: 4; padding: 16px; border-radius: 12px; border: none; background: var(--accent); color: #000; font-weight: 900; cursor: pointer; font-size: 14px; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,255,163,0.3); }
+        #btn:active { transform: scale(0.96); box-shadow: none; }
+        #clear-inputs { flex: 1; padding: 16px; border-radius: 12px; border: 1px solid #ff4d4d44; background: #ff4d4d11; color: var(--red); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
-        .hist-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; border-top: 3px solid var(--accent); position: relative; }
-        .res-btns { display: flex; gap: 8px; margin-top: 10px; }
-        .res-btn { flex: 1; padding: 10px; border-radius: 8px; border: none; font-size: 24px; cursor: pointer; background: #1e2530; color: #fff; }
-        .bar-bg { width: 100%; height: 6px; background: #1e2530; border-radius: 4px; overflow: hidden; margin-top: 3px; }
-        .bar-fill { height: 100%; transition: width 0.8s; }
+        /* ANALiZ KARTLARI */
+        .hist-card { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-top: 12px; position: relative; overflow: hidden; }
+        .high-confidence { border: 1px solid var(--accent); box-shadow: 0 0 15px rgba(0,255,163,0.15); }
+        .res-btns { display: flex; gap: 8px; margin-top: 12px; }
+        .res-btn { flex: 1; padding: 12px; border-radius: 10px; border: none; font-size: 22px; cursor: pointer; background: #1e2530; color: #fff; opacity: 0.8; }
+        .res-btn:hover { opacity: 1; background: #2a3442; }
+        
+        .bar-bg { width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 6px; overflow: hidden; margin-top: 4px; }
+        .bar-fill { height: 100%; border-radius: 6px; transition: width 1.2s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+        
+        /* SCROLL GİZLEME */
+        #history-list { padding-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -47,8 +60,8 @@
     <div class="dash-card">
         <span class="reset-stats" onclick="clearStats()">SIFIRLA</span>
         <div><span id="st-total" class="stat-val">0</span><span class="stat-lbl">Analiz</span></div>
-        <div><span id="st-rate" class="stat-val" style="color:#fbff00">%0</span><span class="stat-lbl">Başarı</span></div>
-        <div><span id="st-win" class="stat-val" style="color:#00ffa3">0</span><span class="stat-lbl">Doğru</span></div>
+        <div><span id="st-rate" class="stat-val" style="color:var(--gold)">%0</span><span class="stat-lbl">Başarı</span></div>
+        <div><span id="st-win" class="stat-val" style="color:var(--accent)">0</span><span class="stat-lbl">Doğru</span></div>
     </div>
 
     <div class="main-card">
@@ -89,14 +102,15 @@
         </div>
     </div>
 
-    <div style="display:flex; justify-content:space-between; padding:5px 10px;">
-        <span style="font-size:10px; color:var(--dim); font-weight:bold;">GEÇMİŞ ANALİZLER</span>
-        <span onclick="clearHistory()" style="font-size:10px; color:#ff4d4d; cursor:pointer; font-weight:bold;">LİSTEYİ SİL</span>
+    <div style="display:flex; justify-content:space-between; padding:5px 12px;">
+        <span style="font-size:10px; color:var(--dim); font-weight:800; letter-spacing:1px;">GEÇMİŞ ANALİZLER</span>
+        <span onclick="clearHistory()" style="font-size:10px; color:var(--red); cursor:pointer; font-weight:800;">TEMİZLE</span>
     </div>
     <div id="history-list"></div>
 </div>
 
 <script>
+    /* JavaScript mantığı aynı kalıyor, sadece renderCard fonksiyonuna "Neon Parlama" (high-confidence) sınıfı eklendi */
     const engineData = {
         PL: { q: 0.08, s: 28, x: 10, p: 60 },
         SA: { q: 0.07, s: 30, x: 11, p: 58 },
@@ -106,11 +120,7 @@
     };
 
     let stats = JSON.parse(localStorage.getItem('ppro_stats')) || { total: 0, wins: 0 };
-
-    window.onload = () => {
-        updateUI();
-        document.getElementById('history-list').innerHTML = localStorage.getItem('ppro_history') || '';
-    };
+    window.onload = () => { updateUI(); document.getElementById('history-list').innerHTML = localStorage.getItem('ppro_history') || ''; };
 
     function toggleDD() { const d = document.getElementById('dd'); d.style.display = (d.style.display === 'block') ? 'none' : 'block'; }
     function setLig(id, col, text) { const t = document.getElementById('lg-text'); t.innerText = text; t.setAttribute('data-league', id); document.documentElement.style.setProperty('--accent', col); toggleDD(); }
@@ -120,14 +130,13 @@
     function analyze() {
         const lg = document.getElementById('lg-text').getAttribute('data-league');
         const config = engineData[lg];
-        
         const q1 = parseFloat(document.getElementById('t1-q').value || 0);
         const q2 = parseFloat(document.getElementById('t2-q').value || 0);
         const s = (parseFloat(document.getElementById('t1-s').value || 0) + parseFloat(document.getElementById('t2-s').value || 0));
         const x = (parseFloat(document.getElementById('t1-x').value || 0) + parseFloat(document.getElementById('t2-x').value || 0));
         const p = (parseFloat(document.getElementById('t1-p').value || 0) + parseFloat(document.getElementById('t2-p').value || 0));
 
-        if(s === 0 || q1 === 0) { alert("Lütfen verileri girin!"); return; }
+        if(s === 0 || q1 === 0) { alert("Verileri girin!"); return; }
 
         let score15 = 0;
         if(q1 <= config.q && q2 <= config.q) score15 += 45;
@@ -140,22 +149,22 @@
         let p3 = Math.max(100 - p1 - (Math.random() * 15 + 10), 5); 
         let p2 = 100 - (p1 + p3);
 
-        renderCard(p1.toFixed(0), p2.toFixed(0), p3.toFixed(0));
+        renderCard(p1.toFixed(0), p2.toFixed(0), p3.toFixed(0), lg);
     }
 
-    function renderCard(p1, p2, p3) {
+    function renderCard(p1, p2, p3, lg) {
         const t1 = (document.getElementById('t1').value || 'EV').toUpperCase();
         const t2 = (document.getElementById('t2').value || 'DEP').toUpperCase();
-        const lg = document.getElementById('lg-text').getAttribute('data-league');
         const card = document.createElement('div');
-        card.className = 'hist-card';
+        // %80 üzeri sonuçlara neon parlama ekle
+        card.className = `hist-card ${p1 >= 80 ? 'high-confidence' : ''}`;
         card.innerHTML = `
-            <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:800; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:900; margin-bottom:12px;">
                 <span>${t1} v ${t2}</span><span style="color:var(--accent)">${lg}</span>
             </div>
-            ${row("1.5 ALT GOL", p1, "#ff4d4d")}
-            ${row("TAM 2 GOL", p2, "#fbff00")}
-            ${row("3+ GOL", p3, "#00ffa3")}
+            ${row("1.5 ALT GOL", p1, "var(--red)")}
+            ${row("TAM 2 GOL", p2, "var(--gold)")}
+            ${row("3+ GOL", p3, "var(--accent)")}
             <div class="res-btns"><button class="res-btn" onclick="mark(true, this)">✅</button><button class="res-btn" onclick="mark(false, this)">❌</button></div>
         `;
         const list = document.getElementById('history-list');
@@ -163,18 +172,10 @@
         localStorage.setItem('ppro_history', list.innerHTML);
     }
 
-    function row(l, v, c) { return `<div style="margin-bottom:5px;"><div style="display:flex; justify-content:space-between; font-size:9px; font-weight:700;"><span>${l}</span><span>%${v}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${v}%; background:${c}"></div></div></div>`; }
-    
-    function mark(win, btn) {
-        stats.total++; if(win) stats.wins++;
-        localStorage.setItem('ppro_stats', JSON.stringify(stats));
-        updateUI();
-        btn.parentElement.innerHTML = `<div style="text-align:center; width:100%; font-size:24px; padding:10px;">${win?'✅':'❌'}</div>`;
-        localStorage.setItem('ppro_history', document.getElementById('history-list').innerHTML);
-    }
-
-    function clearHistory() { if(confirm("Tüm analiz geçmişi silinsin mi?")){ localStorage.removeItem('ppro_history'); document.getElementById('history-list').innerHTML = ''; } }
-    function clearStats() { if(confirm("Başarı istatistikleri sıfırlansın mı?")){ stats = { total: 0, wins: 0 }; localStorage.setItem('ppro_stats', JSON.stringify(stats)); updateUI(); } }
+    function row(l, v, c) { return `<div style="margin-bottom:8px;"><div style="display:flex; justify-content:space-between; font-size:10px; font-weight:800; letter-spacing:0.5px;"><span>${l}</span><span>%${v}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${v}%; background:${c}; box-shadow: 0 0 10px ${c}44;"></div></div></div>`; }
+    function mark(win, btn) { stats.total++; if(win) stats.wins++; localStorage.setItem('ppro_stats', JSON.stringify(stats)); updateUI(); btn.parentElement.innerHTML = `<div style="text-align:center; width:100%; font-size:24px; padding:10px;">${win?'✅':'❌'}</div>`; localStorage.setItem('ppro_history', document.getElementById('history-list').innerHTML); }
+    function clearHistory() { if(confirm("Silinsin mi?")){ localStorage.removeItem('ppro_history'); document.getElementById('history-list').innerHTML = ''; } }
+    function clearStats() { if(confirm("Sıfırlansın mı?")){ stats={total:0,wins:0}; localStorage.setItem('ppro_stats',JSON.stringify(stats)); updateUI(); }}
 </script>
 </body>
 </html>

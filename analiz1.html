@@ -3,48 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO MASTER ENGINE V3</title>
+    <title>P-PRO SCOUT MASTER V3</title>
     <style>
         :root {
-            --bg: #0a0b0d; --card: #16181c; --accent: #fbff00;
-            --input: #1f2227; --border: #2d3035; --text: #8e8e93;
+            --bg: #08090a; --card: #121417; --accent: #fbff00;
+            --input: #1a1d21; --border: #40444b; --text: #9da3ae;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: white; font-family: system-ui, -apple-system; margin: 0; padding: 15px; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 12px; font-size: 0.9rem; }
 
         /* LİG SEÇ */
         .dropdown {
-            width: 100%; background: var(--card); border: 1px solid var(--border);
-            padding: 18px; border-radius: 14px; margin-bottom: 20px;
+            width: 100%; background: var(--card); border: 2px solid var(--border);
+            padding: 12px; border-radius: 10px; margin-bottom: 15px;
             cursor: pointer; text-align: center; font-weight: bold; color: var(--accent); position: relative;
+            font-size: 0.85rem;
         }
         .dd-menu {
             display: none; position: absolute; top: 110%; left: 0; width: 100%;
-            background: var(--card); border: 1px solid var(--border); border-radius: 12px; z-index: 100;
+            background: var(--card); border: 2px solid var(--border); border-radius: 10px; z-index: 100;
         }
-        .dd-menu div { padding: 15px; border-bottom: 1px solid var(--border); color: white; }
+        .dd-menu div { padding: 12px; border-bottom: 1px solid var(--border); color: white; font-size: 0.8rem; }
 
         /* SCOUTING GRID */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .head { text-align: center; font-size: 11px; color: var(--text); text-transform: uppercase; }
-        .label { grid-column: span 2; background: #1f2227; padding: 8px; border-radius: 8px; font-size: 12px; text-align: center; color: var(--accent); margin-top: 5px; }
-        input { width: 100%; background: var(--input); border: 1px solid var(--border); padding: 14px; border-radius: 10px; color: white; font-size: 16px; text-align: center; outline: none; }
-        input:focus { border-color: var(--accent); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .head { text-align: center; font-size: 10px; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }
+        .label { grid-column: span 2; background: #1c1f24; padding: 6px; border-radius: 6px; font-size: 11px; text-align: center; color: var(--accent); margin-top: 4px; border: 1px solid var(--border); font-weight: bold; }
+        input { width: 100%; background: var(--input); border: 2px solid var(--border); padding: 10px; border-radius: 8px; color: white; font-size: 14px; text-align: center; outline: none; transition: 0.2s; }
+        input:focus { border-color: var(--accent); background: #22262c; }
 
         /* BUTONLAR */
-        #btn { width: 100%; padding: 18px; border-radius: 14px; border: none; background: var(--accent); color: black; font-weight: 900; font-size: 16px; margin-bottom: 10px; cursor: pointer; }
-        #clear-btn { width: 100%; padding: 10px; background: transparent; color: #ff4d4d; border: none; font-size: 13px; cursor: pointer; text-decoration: underline; }
+        #btn { width: 100%; padding: 15px; border-radius: 10px; border: none; background: var(--accent); color: black; font-weight: 800; font-size: 14px; margin-bottom: 8px; cursor: pointer; text-transform: uppercase; }
+        #clear-btn { width: 100%; padding: 8px; background: transparent; color: #ff6b6b; border: none; font-size: 11px; cursor: pointer; opacity: 0.8; }
 
         /* GEÇMİŞ (HISTORY) */
-        .history-title { margin: 30px 0 15px; font-size: 14px; color: var(--text); border-left: 3px solid var(--accent); padding-left: 10px; }
-        .hist-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 15px; margin-bottom: 15px; position: relative; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .hist-header { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 10px; font-weight: bold; }
-        .bar-row { margin-bottom: 8px; }
-        .bar-info { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; color: var(--text); }
-        .bar-w { width: 100%; height: 6px; background: #2d3035; border-radius: 3px; overflow: hidden; }
+        .history-title { margin: 20px 0 10px; font-size: 12px; color: var(--text); border-left: 3px solid var(--accent); padding-left: 8px; font-weight: bold; }
+        .hist-card { background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; position: relative; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .hist-header { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px; font-weight: bold; padding-right: 20px; }
+        .bar-row { margin-bottom: 6px; }
+        .bar-info { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 2px; color: var(--text); }
+        .bar-w { width: 100%; height: 5px; background: #2a2d33; border-radius: 3px; overflow: hidden; border: 1px solid #333; }
         .bar-f { height: 100%; border-radius: 3px; }
-        .del-hist { position: absolute; top: 10px; right: 10px; color: #555; font-size: 18px; cursor: pointer; }
+        .del-hist { position: absolute; top: 8px; right: 8px; color: #666; font-size: 16px; cursor: pointer; padding: 2px; }
     </style>
 </head>
 <body>
@@ -65,7 +66,7 @@
         <input type="text" id="t1" placeholder="Takım A">
         <input type="text" id="t2" placeholder="Takım B">
 
-        <div class="label">NPXG / ŞUT</div>
+        <div class="label">npxG/Sh</div>
         <input type="number" id="t1-q" placeholder="0.00" step="0.01">
         <input type="number" id="t2-q" placeholder="0.00" step="0.01">
 
@@ -73,17 +74,17 @@
         <input type="number" id="t1-s" placeholder="0">
         <input type="number" id="t2-s" placeholder="0">
 
-        <div class="label">PAS ALIŞ</div>
+        <div class="label">PrgR</div>
         <input type="number" id="t1-p" placeholder="0">
         <input type="number" id="t2-p" placeholder="0">
 
-        <div class="label">CEZA SAHASI SIZMA</div>
+        <div class="label">PPA</div>
         <input type="number" id="t1-x" placeholder="0">
         <input type="number" id="t2-x" placeholder="0">
     </div>
 
     <button id="btn" onclick="analyze()">ANALİZ ET</button>
-    <button id="clear-btn" onclick="clearInputs()">Verileri Temizle</button>
+    <button id="clear-btn" onclick="clearInputs()">VERİLERİ TEMİZLE</button>
 
     <div class="history-title">ANALİZ GEÇMİŞİ</div>
     <div id="history-list"></div>
@@ -100,6 +101,7 @@
         activeL = id; document.getElementById('lg-text').innerText = n;
         document.getElementById('lg-text').style.color = c;
         document.documentElement.style.setProperty('--accent', c);
+        toggleDD();
     }
 
     function analyze() {

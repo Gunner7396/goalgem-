@@ -3,137 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO V16 - COMPACT</title>
+    <title>P-PRO V17 - SMART COMPACT</title>
     <style>
         :root {
             --bg: #05070a; --panel: #0f1217; --accent: #00ffa3; --border: #1e2530;
             --text: #f0f3f5; --dim: #64748b; --gold: #fbff00; --red: #ff4d4d;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; font-family: sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
-        .wrapper { width: 100%; max-width: 400px; }
+        body { background: var(--bg); color: var(--text); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
+        .wrapper { width: 100%; max-width: 400px; display: flex; flex-direction: column; height: 100%; }
         
-        /* DASHBOARD */
+        /* SABİT ÜST PANEL */
+        .sticky-top { background: var(--bg); padding: 10px; z-index: 100; border-bottom: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        
         .dash-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-around; text-align: center; position: relative; }
         .stat-val { font-size: 16px; font-weight: 900; color: var(--accent); display: block; }
         .stat-lbl { font-size: 8px; color: var(--dim); text-transform: uppercase; }
-        .reset-stats { position: absolute; top: 4px; right: 8px; font-size: 7px; color: var(--red); cursor: pointer; border: 1px solid #ff4d4d33; padding: 1px 4px; border-radius: 3px; }
 
-        .main-card { background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 15px; margin-bottom: 10px; }
-        
-        /* INPUTS */
-        .dropdown-container { margin-bottom: 10px; border: 1px solid var(--border); border-radius: 8px; background: #161b22; border-left: 3px solid var(--accent); }
-        .dropdown-header { padding: 10px; font-weight: 800; cursor: pointer; display: flex; justify-content: space-between; font-size: 10px; color: var(--accent); }
-        .dd-menu { display: none; background: #1c2128; border-top: 1px solid var(--border); }
-        .dd-item { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 10px; }
+        .main-card { background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 15px; }
         
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
         label { grid-column: span 2; font-size: 9px; color: var(--dim); text-align: center; font-weight: 600; margin-top: 4px; }
-        input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: #fff; text-align: center; font-weight: 700; font-size: 12px; }
+        input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 8px; border-radius: 8px; color: #fff; text-align: center; font-weight: 700; font-size: 12px; }
         
-        .action-row { display: flex; gap: 8px; margin-top: 12px; }
-        #btn { flex: 4; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-weight: 900; cursor: pointer; font-size: 13px; }
-        #clear-inputs { flex: 1; border-radius: 10px; border: 1px solid #ff4d4d44; background: #ff4d4d11; color: var(--red); cursor: pointer; font-size: 16px; }
+        .action-row { display: flex; gap: 8px; margin-top: 10px; }
+        #btn { flex: 4; padding: 12px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-weight: 900; cursor: pointer; font-size: 13px; }
+        #clear-inputs { flex: 1; border-radius: 10px; border: 1px solid #ff4d4d44; background: #ff4d4d11; color: var(--red); cursor: pointer; }
 
-        /* COMPACT HISTORY LIST */
-        #history-list { max-height: 350px; overflow-y: auto; padding-right: 2px; }
-        .hist-card { 
-            background: #0f1217; border: 1px solid var(--border); border-radius: 8px; 
-            padding: 8px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;
-        }
+        /* KAYDIRILABİLİR LİSTE */
+        .scroll-area { flex: 1; overflow-y: auto; padding: 10px; padding-bottom: 20px; }
+        .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 8px; padding: 8px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
         .high-conf { border-left: 3px solid var(--accent); background: linear-gradient(90deg, #00ffa305, transparent); }
         
-        .h-teams { flex: 1.5; font-size: 9px; font-weight: 800; line-height: 1.2; }
+        .h-teams { flex: 1.5; font-size: 9px; font-weight: 800; }
         .h-lig { color: var(--accent); font-size: 7px; display: block; }
-        
-        .h-preds { flex: 3; display: flex; justify-content: space-around; border-left: 1px solid var(--border); border-right: 1px solid var(--border); margin: 0 8px; }
+        .h-preds { flex: 3; display: flex; justify-content: space-around; margin: 0 8px; }
         .p-box { text-align: center; }
         .p-lbl { font-size: 7px; color: var(--dim); display: block; }
         .p-val { font-size: 11px; font-weight: 900; }
-
         .h-actions { flex: 0.8; display: flex; flex-direction: column; gap: 3px; }
-        .mini-btn { padding: 4px; border: none; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; color: #fff; }
+        .mini-btn { padding: 4px; border: none; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        
+        /* DROPDOWN */
+        .dropdown-container { margin-bottom: 8px; border: 1px solid var(--border); border-radius: 8px; background: #161b22; }
+        .dropdown-header { padding: 8px; font-weight: 800; cursor: pointer; display: flex; justify-content: space-between; font-size: 10px; color: var(--accent); }
+        .dd-menu { display: none; background: #1c2128; border-top: 1px solid var(--border); }
+        .dd-item { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 10px; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
-    <div class="dash-card">
-        <span class="reset-stats" onclick="clearStats()">SIFIRLA</span>
-        <div><span id="st-total" class="stat-val">0</span><span class="stat-lbl">Analiz</span></div>
-        <div><span id="st-rate" class="stat-val" style="color:var(--gold)">%0</span><span class="stat-lbl">Başarı</span></div>
-        <div><span id="st-win" class="stat-val" style="color:var(--accent)">0</span><span class="stat-lbl">Doğru</span></div>
-    </div>
+    <div class="sticky-top">
+        <div class="dash-card">
+            <div><span id="st-total" class="stat-val">0</span><span class="stat-lbl">Analiz</span></div>
+            <div><span id="st-rate" class="stat-val" style="color:var(--gold)">%0</span><span class="stat-lbl">Başarı</span></div>
+            <div><span id="st-win" class="stat-val" style="color:var(--accent)">0</span><span class="stat-lbl">Doğru</span></div>
+        </div>
 
-    <div class="main-card">
-        <div class="dropdown-container">
-            <div class="dropdown-header" onclick="toggleDD()">
-                <span id="lg-text" data-league="PL">PREMIER LEAGUE (İNGİLTERE)</span>
-                <span>▼</span>
+        <div class="main-card">
+            <div class="dropdown-container">
+                <div class="dropdown-header" onclick="toggleDD()"><span id="lg-text" data-league="PL">PREMIER LEAGUE</span><span>▼</span></div>
+                <div id="dd" class="dd-menu">
+                    <div class="dd-item" onclick="setLig('PL','#00ffa3', 'PREMIER LEAGUE')">PL</div>
+                    <div class="dd-item" onclick="setLig('SA','#fbff00', 'SERIE A')">SA</div>
+                    <div class="dd-item" onclick="setLig('LL','#ff4d4d', 'LA LIGA')">LL</div>
+                    <div class="dd-item" onclick="setLig('BL','#00d4ff', 'BUNDESLIGA')">BL</div>
+                </div>
             </div>
-            <div id="dd" class="dd-menu">
-                <div class="dd-item" onclick="setLig('PL','#00ffa3', 'PREMIER LEAGUE (İNGİLTERE)')">PL</div>
-                <div class="dd-item" onclick="setLig('SA','#fbff00', 'SERIE A (İTALYA)')">SA</div>
-                <div class="dd-item" onclick="setLig('LL','#ff4d4d', 'LA LIGA (İSPANYA)')">LL</div>
-                <div class="dd-item" onclick="setLig('BL','#00d4ff', 'BUNDESLIGA (ALMANYA)')">BL</div>
-                <div class="dd-item" onclick="setLig('L1','#da70d6', 'LIGUE 1 (FRANSA)')">L1</div>
+
+            <div class="input-grid">
+                <input type="text" id="t1" placeholder="EV">
+                <input type="text" id="t2" placeholder="DEP">
+                <label>Q | SCA | PrgR | PPA</label>
+                <input type="number" id="t1-q" step="0.01" placeholder="0.10">
+                <input type="number" id="t2-q" step="0.01" placeholder="0.10">
+                <input type="number" id="t1-s" placeholder="SCA">
+                <input type="number" id="t2-s" placeholder="SCA">
+                <input type="number" id="t1-p" placeholder="PrgR">
+                <input type="number" id="t2-p" placeholder="PrgR">
+                <input type="number" id="t1-x" placeholder="PPA">
+                <input type="number" id="t2-x" placeholder="PPA">
+            </div>
+            <div class="action-row">
+                <button id="btn" onclick="analyze()">BAŞLAT</button>
+                <button id="clear-inputs" onclick="resetInputs()">🧹</button>
             </div>
         </div>
-
-        <div class="input-grid">
-            <input type="text" id="t1" placeholder="EV">
-            <input type="text" id="t2" placeholder="DEP">
-            <label>npxG/Sh | SCA | PrgR | PPA</label>
-            <input type="number" id="t1-q" step="0.01" placeholder="0.00">
-            <input type="number" id="t2-q" step="0.01" placeholder="0.00">
-            <input type="number" id="t1-s" placeholder="SCA">
-            <input type="number" id="t2-s" placeholder="SCA">
-            <input type="number" id="t1-p" placeholder="PrgR">
-            <input type="number" id="t2-p" placeholder="PrgR">
-            <input type="number" id="t1-x" placeholder="PPA">
-            <input type="number" id="t2-x" placeholder="PPA">
-        </div>
-        
-        <div class="action-row">
-            <button id="btn" onclick="analyze()">BAŞLAT</button>
-            <button id="clear-inputs" onclick="resetInputs()">🧹</button>
-        </div>
     </div>
 
-    <div style="display:flex; justify-content:space-between; padding:4px 8px;">
-        <span style="font-size:9px; color:var(--dim); font-weight:800;">GEÇMİŞ</span>
-        <span onclick="clearHistory()" style="font-size:9px; color:var(--red); cursor:pointer;">SİL</span>
+    <div class="scroll-area">
+        <div style="display:flex; justify-content:space-between; padding:4px 8px; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
+            <span style="font-size:9px; color:var(--dim); font-weight:800;">GEÇMİŞ ANALİZLER</span>
+            <span onclick="clearHistory()" style="font-size:9px; color:var(--red); cursor:pointer;">LİSTEYİ TEMİZLE</span>
+        </div>
+        <div id="history-list"></div>
     </div>
-    <div id="history-list"></div>
 </div>
 
 <script>
-    const engineData = { PL: { q: 0.08, s: 28, x: 10, p: 60 }, SA: { q: 0.07, s: 30, x: 11, p: 58 }, LL: { q: 0.06, s: 34, x: 13, p: 75 }, BL: { q: 0.08, s: 38, x: 15, p: 85 }, L1: { q: 0.08, s: 28, x: 10, p: 62 } };
+    const engineData = { PL: { q: 0.08, s: 28, x: 10, p: 60 }, SA: { q: 0.07, s: 30, x: 11, p: 58 }, LL: { q: 0.06, s: 34, x: 13, p: 75 }, BL: { q: 0.08, s: 38, x: 15, p: 85 } };
     let stats = JSON.parse(localStorage.getItem('ppro_stats')) || { total: 0, wins: 0 };
 
-    window.onload = () => { updateUI(); document.getElementById('history-list').innerHTML = localStorage.getItem('ppro_history') || ''; };
+    window.onload = () => { 
+        updateUI(); 
+        const savedLig = localStorage.getItem('ppro_last_lig') || 'PL';
+        const ligNames = { PL: 'PREMIER LEAGUE', SA: 'SERIE A', LL: 'LA LIGA', BL: 'BUNDESLIGA' };
+        const ligCols = { PL: '#00ffa3', SA: '#fbff00', LL: '#ff4d4d', BL: '#00d4ff' };
+        setLig(savedLig, ligCols[savedLig], ligNames[savedLig]);
+        document.getElementById('history-list').innerHTML = localStorage.getItem('ppro_history') || ''; 
+    };
+
     function toggleDD() { const d = document.getElementById('dd'); d.style.display = (d.style.display === 'block') ? 'none' : 'block'; }
-    function setLig(id, col, text) { const t = document.getElementById('lg-text'); t.innerText = text; t.setAttribute('data-league', id); document.documentElement.style.setProperty('--accent', col); toggleDD(); }
+    function setLig(id, col, text) { 
+        const t = document.getElementById('lg-text'); t.innerText = text; t.setAttribute('data-league', id); 
+        document.documentElement.style.setProperty('--accent', col); 
+        localStorage.setItem('ppro_last_lig', id);
+        if(document.getElementById('dd').style.display === 'block') toggleDD(); 
+    }
+    
     function resetInputs() { document.querySelectorAll('.input-grid input').forEach(i => i.value = ''); }
     function updateUI() { document.getElementById('st-total').innerText = stats.total; document.getElementById('st-win').innerText = stats.wins; const r = stats.total === 0 ? 0 : Math.round((stats.wins / stats.total) * 100); document.getElementById('st-rate').innerText = '%' + r; }
 
     function analyze() {
         const lg = document.getElementById('lg-text').getAttribute('data-league');
         const config = engineData[lg];
-        const q1 = parseFloat(document.getElementById('t1-q').value || 0);
-        const q2 = parseFloat(document.getElementById('t2-q').value || 0);
-        const s = (parseFloat(document.getElementById('t1-s').value || 0) + parseFloat(document.getElementById('t2-s').value || 0));
-        const x = (parseFloat(document.getElementById('t1-x').value || 0) + parseFloat(document.getElementById('t2-x').value || 0));
-        const p = (parseFloat(document.getElementById('t1-p').value || 0) + parseFloat(document.getElementById('t2-p').value || 0));
-
-        if(s === 0 || q1 === 0) return;
-
+        const x1 = parseFloat(document.getElementById('t1-x').value || 0);
+        const x2 = parseFloat(document.getElementById('t2-x').value || 0);
+        const xTotal = x1 + x2;
+        const xDiff = Math.abs(x1 - x2);
+        
+        // PPA Denge Zekası: Fark az ama toplam yüksekse Alt puanını kır
         let score15 = 0;
-        if(q1 <= config.q && q2 <= config.q) score15 += 45;
-        else if(q1 <= config.q + 0.02 || q2 <= config.q + 0.02) score15 += 20;
-        if(x <= config.x) score15 += 25;
+        if(xTotal <= config.x) score15 += 45;
+        if(xDiff < 3 && xTotal > (config.x * 1.3)) score15 -= 15; // Rekabet Bonusu
+        
+        // Diğer Metrikler (SCA, PrgR, Quality)
+        const q1 = parseFloat(document.getElementById('t1-q').value || 0);
+        const s = (parseFloat(document.getElementById('t1-s').value || 0) + parseFloat(document.getElementById('t2-s').value || 0));
+        if(q1 <= config.q) score15 += 20;
         if(s <= config.s) score15 += 20;
-        if(p <= config.p) score15 += 10;
 
         let p1 = Math.min(Math.max(score15, 10), 90);
         let p3 = Math.max(100 - p1 - (Math.random() * 15 + 10), 5); 
@@ -146,35 +155,15 @@
         const t2 = (document.getElementById('t2').value || 'DEP').toUpperCase();
         const card = document.createElement('div');
         card.className = `hist-card ${p1 >= 80 ? 'high-conf' : ''}`;
-        card.innerHTML = `
-            <div class="h-teams">
-                <span>${t1} - ${t2}</span>
-                <span class="h-lig">${lg}</span>
-            </div>
-            <div class="h-preds">
-                <div class="p-box"><span class="p-lbl">1.5 ALT</span><span class="p-val" style="color:var(--red)">%${p1}</span></div>
-                <div class="p-box"><span class="p-lbl">T2 GOL</span><span class="p-val" style="color:var(--gold)">%${p2}</span></div>
-                <div class="p-box"><span class="p-lbl">3+ GOL</span><span class="p-val" style="color:var(--accent)">%${p3}</span></div>
-            </div>
-            <div class="h-actions">
-                <button class="mini-btn" style="background:#00ffa333; color:var(--accent)" onclick="mark(true, this)">✓</button>
-                <button class="mini-btn" style="background:#ff4d4d33; color:var(--red)" onclick="mark(false, this)">✕</button>
-            </div>
-        `;
+        card.innerHTML = `<div class="h-teams"><span>${t1}-${t2}</span><span class="h-lig">${lg}</span></div><div class="h-preds"><div class="p-box"><span class="p-lbl">1.5 ALT</span><span class="p-val" style="color:var(--red)">%${p1}</span></div><div class="p-box"><span class="p-lbl">T2</span><span class="p-val" style="color:var(--gold)">%${p2}</span></div><div class="p-box"><span class="p-lbl">3+</span><span class="p-val" style="color:var(--accent)">%${p3}</span></div></div><div class="h-actions"><button class="mini-btn" style="background:#00ffa322; color:var(--accent)" onclick="mark(true, this)">✓</button><button class="mini-btn" style="background:#ff4d4d22; color:var(--red)" onclick="mark(false, this)">✕</button></div>`;
         const list = document.getElementById('history-list');
         list.prepend(card);
         localStorage.setItem('ppro_history', list.innerHTML);
     }
 
-    function mark(win, btn) {
-        stats.total++; if(win) stats.wins++;
-        localStorage.setItem('ppro_stats', JSON.stringify(stats)); updateUI();
-        btn.parentElement.innerHTML = `<span style="font-size:14px; text-align:center">${win?'✅':'❌'}</span>`;
-        localStorage.setItem('ppro_history', document.getElementById('history-list').innerHTML);
-    }
-
-    function clearHistory() { if(confirm("Sil?")){ localStorage.removeItem('ppro_history'); document.getElementById('history-list').innerHTML = ''; } }
-    function clearStats() { if(confirm("Sıfırla?")){ stats={total:0,wins:0}; localStorage.setItem('ppro_stats',JSON.stringify(stats)); updateUI(); }}
+    function mark(win, btn) { stats.total++; if(win) stats.wins++; localStorage.setItem('ppro_stats', JSON.stringify(stats)); updateUI(); btn.parentElement.innerHTML = `<span style="font-size:12px;">${win?'✅':'❌'}</span>`; localStorage.setItem('ppro_history', document.getElementById('history-list').innerHTML); }
+    function clearHistory() { if(confirm("SİL?")){ localStorage.removeItem('ppro_history'); document.getElementById('history-list').innerHTML = ''; } }
+    function clearStats() { if(confirm("SIFIRLA?")){ stats={total:0,wins:0}; localStorage.setItem('ppro_stats',JSON.stringify(stats)); updateUI(); }}
 </script>
 </body>
 </html>

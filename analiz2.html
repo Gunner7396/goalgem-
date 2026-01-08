@@ -3,62 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO V13 - PERSISTENT</title>
+    <title>P-PRO V13 - PRO TRACKER</title>
     <style>
         :root {
             --bg: #05070a; --panel: #0f1217; --accent: #00ffa3; --border: #1e2530;
             --text: #f0f3f5; --dim: #64748b;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { 
-            background: var(--bg); color: var(--text); font-family: sans-serif; 
-            margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center;
-        }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
         .wrapper { width: 100%; max-width: 400px; }
-        .main-card { background: rgba(15, 18, 23, 0.95); border: 1px solid var(--border); padding: 15px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin-bottom: 20px; position: relative; z-index: 100; }
         
-        .dropdown { background: #161b22; border: 1px solid var(--border); padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--accent); border-left: 4px solid var(--accent); position: relative; }
-        .dd-menu { 
-            display: none; position: absolute; top: 110%; left: 0; right: 0; 
-            background: #1c2128; border: 1px solid var(--border); border-radius: 12px; 
-            z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.9); border: 1px solid var(--accent);
-        }
-        .dd-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 11px; color: #fff; }
-        .dd-item:hover { background: var(--accent); color: #000; }
+        /* Dashboard Kartı */
+        .dash-card { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-around; text-align: center; position: relative; }
+        .stat-val { font-size: 18px; font-weight: 900; color: var(--accent); display: block; }
+        .stat-lbl { font-size: 9px; color: var(--dim); text-transform: uppercase; }
+        .reset-stats { position: absolute; top: 5px; right: 10px; font-size: 8px; color: #ff4d4d; cursor: pointer; border: 1px solid #ff4d4d33; padding: 2px 5px; border-radius: 4px; }
+
+        .main-card { background: rgba(15, 18, 23, 0.95); border: 1px solid var(--border); padding: 15px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); position: relative; z-index: 100; }
+        .dropdown { background: #161b22; border: 1px solid var(--border); padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--accent); border-left: 4px solid var(--accent); }
+        .dd-menu { display: none; position: absolute; top: 110%; left: 0; right: 0; background: #1c2128; border: 1px solid var(--accent); border-radius: 12px; z-index: 9999; }
+        .dd-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 11px; }
         
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .input-grid label { grid-column: span 2; font-size: 9px; color: var(--accent); text-align: center; font-weight: 800; text-transform: uppercase; margin-top: 4px; opacity: 0.8; }
-        input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: #fff; font-size: 14px; text-align: center; font-weight: 600; }
-        input::placeholder { color: #334155; font-size: 10px; font-weight: 400; }
-
-        #btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-weight: 900; margin-top: 15px; cursor: pointer; font-size: 13px; text-transform: uppercase; }
+        label { grid-column: span 2; font-size: 9px; color: var(--accent); text-align: center; font-weight: 800; margin-top: 5px; }
+        input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: #fff; text-align: center; font-weight: 600; }
         
-        .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; border-top: 3px solid var(--accent); position: relative; }
-        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 800; font-size: 12px; }
-        .lig-badge { padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 900; color: #000; }
-        .bar-wrap { margin-bottom: 6px; }
-        .bar-info { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 3px; font-weight: 700; }
-        .bar-bg { width: 100%; height: 6px; background: #1e2530; border-radius: 4px; overflow: hidden; }
-        .bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
-        .footer-metrics { display: flex; justify-content: space-between; font-size: 8.5px; color: var(--dim); margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.05); }
+        #btn { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--accent); color: #000; font-weight: 900; margin-top: 15px; cursor: pointer; }
         
-        .hist-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 10px; padding: 0 5px; }
-        .hist-title-row h3 { font-size: 11px; color: var(--dim); margin: 0; letter-spacing: 1px; }
-        .clear-btn { background: transparent; border: 1px solid #334155; color: #ff4d4d; font-size: 9px; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-weight: 700; }
+        .hist-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; border-top: 3px solid var(--accent); }
+        .res-btns { display: flex; gap: 5px; margin-top: 10px; }
+        .res-btn { flex: 1; padding: 8px; border-radius: 6px; border: none; font-size: 9px; font-weight: 800; cursor: pointer; }
+        .bar-bg { width: 100%; height: 6px; background: #1e2530; border-radius: 4px; overflow: hidden; margin-top: 3px; }
+        .bar-fill { height: 100%; transition: width 0.8s; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
+    <div class="dash-card">
+        <span class="reset-stats" onclick="clearStats()">BAŞARIYI SIFIRLA</span>
+        <div><span id="st-total" class="stat-val">0</span><span class="stat-lbl">Analiz</span></div>
+        <div><span id="st-rate" class="stat-val" style="color:#fbff00">%0</span><span class="stat-lbl">Başarı</span></div>
+        <div><span id="st-win" class="stat-val" style="color:#00ffa3">0</span><span class="stat-lbl">Doğru</span></div>
+    </div>
+
     <div class="main-card">
-        <div class="dropdown" id="lg-btn">
+        <div class="dropdown" onclick="toggleDD()">
             <span id="lg-text" data-league="ERE">HOLLANDA EREDIVISIE (ERE)</span>
             <div id="dd" class="dd-menu">
-                <div class="dd-item" data-id="ERE" data-color="#00ffa3">HOLLANDA EREDIVISIE (ERE)</div>
-                <div class="dd-item" data-id="POR" data-color="#fbff00">PORTUGAL LIGA (POR)</div>
-                <div class="dd-item" data-id="TSL" data-color="#00d4ff">TÜRKİYE SÜPER LİG (TSL)</div>
-                <div class="dd-item" data-id="BPL" data-color="#ff4d4d">BELGIUM PRO LEAGUE (BPL)</div>
-                <div class="dd-item" data-id="CHP" data-color="#da70d6">CHAMPIONSHIP (CHP)</div>
+                <div class="dd-item" onclick="setLig('ERE','#00ffa3')">HOLLANDA EREDIVISIE (ERE)</div>
+                <div class="dd-item" onclick="setLig('POR','#fbff00')">PORTUGAL LIGA (POR)</div>
+                <div class="dd-item" onclick="setLig('TSL','#00d4ff')">TÜRKİYE SÜPER LİG (TSL)</div>
+                <div class="dd-item" onclick="setLig('BPL','#ff4d4d')">BELGIUM PRO LEAGUE (BPL)</div>
+                <div class="dd-item" onclick="setLig('CHP','#da70d6')">CHAMPIONSHIP (CHP)</div>
             </div>
         </div>
 
@@ -81,107 +78,87 @@
         <button id="btn" onclick="analyze()">ANALİZİ BAŞLAT</button>
     </div>
 
-    <div class="hist-title-row">
-        <h3>ANALİZ GEÇMİŞİ</h3>
-        <button class="clear-btn" onclick="clearHistory()">TEMİZLE</button>
+    <div style="display:flex; justify-content:space-between; margin-top:15px; padding:0 5px;">
+        <span style="font-size:10px; color:var(--dim); font-weight:bold;">GEÇMİŞ ANALİZLER</span>
+        <span onclick="clearHistory()" style="font-size:10px; color:#ff4d4d; cursor:pointer; font-weight: bold;">LİSTEYİ TEMİZLE</span>
     </div>
     <div id="history-list"></div>
 </div>
 
 <script>
-    const lgBtn = document.getElementById('lg-btn');
-    const ddMenu = document.getElementById('dd');
-    const lgText = document.getElementById('lg-text');
-    const historyList = document.getElementById('history-list');
-
-    // Sayfa yüklendiğinde geçmişi getir
+    let stats = JSON.parse(localStorage.getItem('ppro_stats')) || { total: 0, wins: 0 };
+    
     window.onload = () => {
-        const savedHistory = localStorage.getItem('ppro_v13_history');
-        if(savedHistory) historyList.innerHTML = savedHistory;
+        document.getElementById('history-list').innerHTML = localStorage.getItem('ppro_history') || '';
+        updateUI();
     };
 
-    lgBtn.onclick = (e) => { e.stopPropagation(); ddMenu.style.display = ddMenu.style.display === 'block' ? 'none' : 'block'; };
+    function toggleDD() { const d = document.getElementById('dd'); d.style.display = d.style.display === 'block' ? 'none' : 'block'; }
+    
+    function setLig(id, col) {
+        const t = document.getElementById('lg-text');
+        t.innerText = event.target.innerText;
+        t.setAttribute('data-league', id);
+        document.documentElement.style.setProperty('--accent', col);
+        toggleDD();
+    }
 
-    document.querySelectorAll('.dd-item').forEach(item => {
-        item.onclick = function(e) {
-            e.stopPropagation();
-            const id = this.getAttribute('data-id');
-            const color = this.getAttribute('data-color');
-            lgText.innerText = this.innerText;
-            lgText.setAttribute('data-league', id);
-            document.documentElement.style.setProperty('--accent', color);
-            lgBtn.style.borderColor = color;
-            ddMenu.style.display = 'none';
-        };
-    });
-
-    window.onclick = () => { ddMenu.style.display = 'none'; };
+    function updateUI() {
+        document.getElementById('st-total').innerText = stats.total;
+        document.getElementById('st-win').innerText = stats.wins;
+        const r = stats.total === 0 ? 0 : Math.round((stats.wins / stats.total) * 100);
+        document.getElementById('st-rate').innerText = '%' + r;
+    }
 
     function analyze() {
-        const activeL = lgText.getAttribute('data-league');
-        const h_q = parseFloat(document.getElementById('t1-q').value || 0);
-        const a_q = parseFloat(document.getElementById('t2-q').value || 0);
-        const h_s = parseFloat(document.getElementById('t1-s').value || 0);
-        const a_s = parseFloat(document.getElementById('t2-s').value || 0);
-        const h_p = parseFloat(document.getElementById('t1-p').value || 0);
-        const a_p = parseFloat(document.getElementById('t2-p').value || 0);
-        const h_x = parseFloat(document.getElementById('t1-x').value || 0);
-        const a_x = parseFloat(document.getElementById('t2-x').value || 0);
-
-        const qAvg = (h_q + a_q) / 2;
-        const sca = h_s + a_s;
-        const pr = h_p + a_p;
-        const ppa = h_x + a_x;
+        const lg = document.getElementById('lg-text').getAttribute('data-league');
+        const q = (parseFloat(document.getElementById('t1-q').value||0) + parseFloat(document.getElementById('t2-q').value||0))/2;
+        const s = parseFloat(document.getElementById('t1-s').value||0) + parseFloat(document.getElementById('t2-s').value||0);
+        const p = parseFloat(document.getElementById('t1-p').value||0) + parseFloat(document.getElementById('t2-p').value||0);
+        const x = parseFloat(document.getElementById('t1-x').value||0) + parseFloat(document.getElementById('t2-x').value||0);
         
-        if(sca === 0) { alert("SCA verisi girmelisiniz!"); return; }
-
+        if(s===0) return;
         let p1, p2, p3;
 
-        // --- DNA MOTORU ---
-        if (activeL === 'ERE') {
-            if (sca <= 24 && ppa <= 12) { p1 = 80; p2 = 15; p3 = 5; }
-            else if (sca <= 38 && qAvg <= 0.10) { p1 = 10; p2 = 80; p3 = 10; }
-            else { p1 = 5; p2 = 15; p3 = 80; }
-        } else if (activeL === 'POR') {
-            if (sca <= 32 && ppa <= 15) { p1 = 80; p2 = 15; p3 = 5; }
-            else if (sca <= 44 && qAvg <= 0.11) { p1 = 15; p2 = 75; p3 = 10; }
-            else { p1 = 10; p2 = 20; p3 = 70; }
-        } else if (activeL === 'TSL') {
-            if (pr <= 50 && sca <= 28) { p1 = 85; p2 = 10; p3 = 5; }
-            else if (sca <= 42 && qAvg <= 0.11) { p1 = 15; p2 = 70; p3 = 15; }
-            else { p1 = 5; p2 = 20; p3 = 75; }
-        } else if (activeL === 'BPL') {
-            if (sca <= 26 && ppa <= 13) { p1 = 80; p2 = 15; p3 = 5; }
-            else if (pr <= 85 && sca <= 39) { p1 = 15; p2 = 75; p3 = 10; }
-            else { p1 = 5; p2 = 15; p3 = 80; }
-        } else if (activeL === 'CHP') {
-            if (sca <= 30 && pr <= 70) { p1 = 80; p2 = 15; p3 = 5; }
-            else if (sca <= 46 && qAvg <= 0.10) { p1 = 20; p2 = 70; p3 = 10; }
-            else { p1 = 5; p2 = 25; p3 = 70; }
-        }
+        // MOTOR DNA
+        if(lg==='ERE'){ if(s<=24&&x<=12) {p1=80;p2=15;p3=5} else if(s<=38&&q<=0.10) {p1=10;p2=80;p3=10} else {p1=5;p2=15;p3=80} }
+        else if(lg==='POR'){ if(s<=32&&x<=15) {p1=80;p2=15;p3=5} else if(s<=44&&q<=0.11) {p1=15;p2=75;p3=10} else {p1=10;p2=20;p3=70} }
+        else if(lg==='TSL'){ if(p<=50&&s<=28) {p1=85;p2=10;p3=5} else if(s<=42&&q<=0.11) {p1=15;p2=70;p3=15} else {p1=5;p2=20;p3=75} }
+        else if(lg==='BPL'){ if(s<=26&&x<=13) {p1=80;p2=15;p3=5} else if(p<=85&&s<=39) {p1=15;p2=75;p3=10} else {p1=5;p2=15;p3=80} }
+        else if(lg==='CHP'){ if(s<=30&&p<=70) {p1=80;p2=15;p3=5} else if(s<=46&&q<=0.10) {p1=20;p2=70;p3=10} else {p1=5;p2=25;p3=70} }
 
-        const lc = getComputedStyle(document.documentElement).getPropertyValue('--accent');
         const card = document.createElement('div');
-        card.className = 'hist-card'; card.style.borderTopColor = lc;
+        card.className = 'hist-card';
         card.innerHTML = `
-            <div class="match-header"><span>${(document.getElementById('t1').value).toUpperCase()} v ${(document.getElementById('t2').value).toUpperCase()}</span><span class="lig-badge" style="background:${lc}">${activeL}</span></div>
-            ${drawRow("0-1 GOL", p1, "#ff4d4d")} ${drawRow("TAM 2 GOL", p2, "#fbff00")} ${drawRow("3+ GOL", p3, "#00ffa3")}
-            <div class="footer-metrics"><span>Q: ${qAvg.toFixed(2)}</span><span>SCA: ${sca}</span><span>PR: ${pr}</span><span>PPA: ${ppa}</span></div>
+            <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:800; margin-bottom:10px;">
+                <span>${document.getElementById('t1').value} v ${document.getElementById('t2').value}</span>
+                <span style="color:var(--accent)">${lg}</span>
+            </div>
+            ${row("0-1 GOL", p1, "#ff4d4d")} ${row("2 GOL", p2, "#fbff00")} ${row("3+ GOL", p3, "#00ffa3")}
+            <div class="res-btns">
+                <button class="res-btn" style="background:#00ffa322; color:#00ffa3; border:1px solid #00ffa3" onclick="mark(true, this)">TUTTU ✅</button>
+                <button class="res-btn" style="background:#ff4d4d22; color:#ff4d4d; border:1px solid #ff4d4d" onclick="mark(false, this)">YATMADI ❌</button>
+            </div>
         `;
-        historyList.prepend(card);
-        
-        // Geçmişi LocalStorage'a kaydet
-        localStorage.setItem('ppro_v13_history', historyList.innerHTML);
+        const list = document.getElementById('history-list');
+        list.prepend(card);
+        localStorage.setItem('ppro_history', list.innerHTML);
     }
 
-    function drawRow(l, v, c) { return `<div class="bar-wrap"><div class="bar-info"><span>${l}</span><span>%${v}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${v}%; background:${c}"></div></div></div>`; }
-    
-    function clearHistory() {
-        if(confirm("Tüm geçmiş silinsin mi?")) {
-            localStorage.removeItem('ppro_v13_history');
-            historyList.innerHTML = '';
-        }
+    function row(l, v, c) { return `<div style="margin-bottom:5px;"><div style="display:flex; justify-content:space-between; font-size:9px; font-weight:700;"><span>${l}</span><span>%${v}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${v}%; background:${c}"></div></div></div>`; }
+
+    function mark(win, btn) {
+        stats.total++; if(win) stats.wins++;
+        localStorage.setItem('ppro_stats', JSON.stringify(stats));
+        updateUI();
+        btn.parentElement.innerHTML = `<div style="text-align:center; width:100%; font-size:10px; font-weight:900; color:${win?'#00ffa3':'#ff4d4d'}">${win?'TUTTU ✅':'YATMADI ❌'}</div>`;
+        localStorage.setItem('ppro_history', document.getElementById('history-list').innerHTML);
     }
+
+    function clearHistory() { if(confirm("Geçmiş maç listesi silinsin mi? (Başarı oranınız korunur)")){ localStorage.removeItem('ppro_history'); document.getElementById('history-list').innerHTML = ''; } }
+    
+    function clearStats() { if(confirm("Başarı istatistikleri sıfırlansın mı? (Geçmiş maçlar listenizde kalır)")){ stats = { total: 0, wins: 0 }; localStorage.setItem('ppro_stats', JSON.stringify(stats)); updateUI(); } }
 </script>
+
 </body>
 </html>

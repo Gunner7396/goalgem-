@@ -1,192 +1,89 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO TERMINAL V8</title>
-    <style>
-        :root {
-            --bg: #06080a; --panel: #111418; --accent: #00ffa3; --border: #24292f;
-            --text: #f0f3f5; --dim: #8b949e; --fire: #ff4d4d;
-        }
+<style>
+    /* LİG SEÇİCİ MODERNİZASYON */
+    .dropdown {
+        background: linear-gradient(145deg, #1c2128, #111418);
+        border: 1px solid var(--border);
+        padding: 16px; border-radius: 14px;
+        text-align: left; /* Sola yaslı daha profesyonel durur */
+        color: var(--accent); font-weight: 800; cursor: pointer;
+        position: relative; margin-bottom: 20px;
+        display: flex; justify-content: space-between; align-items: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .dropdown::after {
+        content: '▼'; font-size: 10px; opacity: 0.5;
+    }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        
-        body { 
-            background: radial-gradient(circle at top, #161b22, #06080a);
-            color: var(--text); font-family: -apple-system, system-ui, sans-serif;
-            margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center;
-        }
+    .dd-menu {
+        display: none; position: absolute; top: 110%; left: 0; right: 0;
+        background: #1c2128; border: 1px solid var(--border);
+        border-radius: 14px; z-index: 1000; overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        backdrop-filter: blur(10px);
+    }
 
-        .wrapper { width: 100%; max-width: 450px; }
+    .dd-item {
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        display: flex; flex-direction: column; /* Yazıları alt alta ferahlatır */
+        transition: 0.2s;
+    }
 
-        /* ANA PANEL */
-        .main-card {
-            background: rgba(17, 20, 24, 0.9); border: 1px solid var(--border);
-            padding: 15px; border-radius: 20px; margin-bottom: 15px;
-            backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+    .dd-item:active { background: rgba(0, 255, 163, 0.1); }
+    
+    .dd-item b { font-size: 14px; letter-spacing: 0.5px; }
+    .dd-item span { font-size: 10px; color: var(--dim); margin-top: 4px; font-weight: 500; }
 
-        .dropdown {
-            background: #1c2128; border: 1px solid var(--border);
-            padding: 12px; border-radius: 10px; text-align: center;
-            color: var(--accent); font-weight: 800; cursor: pointer; margin-bottom: 15px;
-            font-size: 13px; text-transform: uppercase;
-        }
+    /* Input Grid ve Diğer Ayarlar */
+    input::placeholder { font-size: 12px; opacity: 0.5; }
+</style>
 
-        /* 4 METRİKLİ GRID */
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .input-grid label { 
-            grid-column: span 2; font-size: 9px; color: var(--accent); 
-            text-align: center; margin-top: 6px; font-weight: 800; 
-            text-transform: uppercase; letter-spacing: 1px;
-            background: rgba(0, 255, 163, 0.05); padding: 3px; border-radius: 4px;
-        }
-        
-        input {
-            width: 100%; background: #0d1117; border: 1px solid var(--border);
-            padding: 10px; border-radius: 8px; color: #fff; font-size: 14px; text-align: center;
-        }
-        input:focus { border-color: var(--accent); }
-
-        #btn {
-            width: 100%; padding: 16px; border-radius: 14px; border: none;
-            background: linear-gradient(135deg, var(--accent), #00d4ff);
-            color: #000; font-weight: 900; margin-top: 15px; cursor: pointer;
-            font-size: 14px; text-transform: uppercase;
-        }
-
-        /* GEÇMİŞ KARTLARI */
-        .hist-card {
-            background: #111418; border: 1px solid var(--border);
-            border-radius: 16px; padding: 12px; margin-bottom: 10px;
-            position: relative; animation: slideIn 0.3s ease;
-        }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } }
-        
-        .fire-alert { border: 1px solid var(--fire); box-shadow: 0 0 15px rgba(255,77,77,0.1); }
-        
-        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; font-weight: 800; }
-        
-        .bar-wrap { margin-bottom: 6px; }
-        .bar-info { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 3px; color: var(--dim); }
-        .bar-bg { width: 100%; height: 5px; background: #21262d; border-radius: 10px; overflow: hidden; }
-        .bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease; }
-
-        .footer-metrics {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;
-            font-size: 7.5px; color: var(--dim); margin-top: 10px; padding-top: 8px;
-            border-top: 1px solid var(--border); text-align: center;
-        }
-    </style>
-</head>
-<body>
-
-<div class="wrapper">
-    <div class="main-card">
-        <div class="dropdown" onclick="toggleDD()" id="lg-btn">
-            <span id="lg-text">LİG: PREMIER LEAGUE</span>
-            <div id="dd" style="display:none; margin-top:10px;">
-                <div onclick="setL('PL', 'PREMIER LEAGUE', '#00ffa3')">PREMIER LEAGUE</div>
-                <div onclick="setL('LL', 'LA LIGA PRO', '#fbff00')">LA LIGA PRO</div>
-                <div onclick="setL('SA', 'SERIE A ANALİZ', '#00d4ff')">SERIE A ANALİZ</div>
-                <div onclick="setL('BL', 'BUNDESLIGA', '#ff4d4d')">BUNDESLIGA</div>
-                <div onclick="setL('F1', 'LIGUE 1', '#dae025')">LIGUE 1</div>
-            </div>
+<div class="dropdown" onclick="toggleDD()">
+    <span id="lg-text">PREMIER LEAGUE</span>
+    <div id="dd" class="dd-menu">
+        <div class="dd-item" onclick="setL('PL', 'PREMIER LEAGUE', '#00ffa3', 'Yüksek Tempo & Sert Savunma')">
+            <b>PREMIER LEAGUE</b>
+            <span>Dünyanın en zorlu ve hızlı ligi</span>
         </div>
-
-        <div class="input-grid">
-            <input type="text" id="t1" placeholder="EV TAKIMI">
-            <input type="text" id="t2" placeholder="DEP TAKIMI">
-            
-            <label>1. npxG/Sh (KALİTE)</label>
-            <input type="number" id="t1-q" placeholder="0.00" step="0.01">
-            <input type="number" id="t2-q" placeholder="0.00" step="0.01">
-
-            <label>2. SCA (POZİSYON ÜRETİMİ)</label>
-            <input type="number" id="t1-s" placeholder="SCA A">
-            <input type="number" id="t2-s" placeholder="SCA B">
-
-            <label>3. PrgR (PASLA SIZMA)</label>
-            <input type="number" id="t1-p" placeholder="PrgR A">
-            <input type="number" id="t2-p" placeholder="PrgR B">
-
-            <label>4. PPA (CEZA SAHASI PASI)</label>
-            <input type="number" id="t1-x" placeholder="PPA A">
-            <input type="number" id="t2-x" placeholder="PPA B">
+        <div class="dd-item" onclick="setL('LL', 'LA LIGA PRO', '#fbff00', 'Teknik Pas & Taktiksel Oyun')">
+            <b>LA LIGA PRO</b>
+            <span>Düşük tempo, yüksek teknik beceri</span>
         </div>
-
-        <button id="btn" onclick="analyze()">STRATEJİK ANALİZİ BAŞLAT</button>
+        <div class="dd-item" onclick="setL('SA', 'SERIE A ANALİZ', '#00d4ff', 'Katı Defans & Stratejik Hamleler')">
+            <b>SERIE A ANALİZ</b>
+            <span>Taktiğin ve savunmanın ön planda olduğu lig</span>
+        </div>
+        <div class="dd-item" onclick="setL('BL', 'BUNDESLIGA', '#ff4d4d', 'Bol Gol & Açık Alanlar')">
+            <b>BUNDESLIGA</b>
+            <span>En yüksek gol ortalamasına sahip hücum ligi</span>
+        </div>
+        <div class="dd-item" onclick="setL('F1', 'LIGUE 1', '#dae025', 'Fiziksel Güç & Atletizm')">
+            <b>LIGUE 1</b>
+            <span>Genç yetenekler ve sert fiziksel mücadele</span>
+        </div>
     </div>
-
-    <div id="history-list"></div>
 </div>
 
 <script>
-    let activeL = 'PL';
-    const ligs = {
-        'PL': { m: 0.92, qT: 0.11 }, 'LL': { m: 1.4, qT: 0.08 },
-        'SA': { m: 1.0, qT: 0.09 }, 'BL': { m: 1.3, qT: 0.11 }, 'F1': { m: 0.85, qT: 0.07 }
-    };
-
-    function toggleDD() { const d = document.getElementById('dd'); d.style.display = d.style.display==='block'?'none':'block'; }
-    function setL(id, n, c) {
-        activeL = id; document.getElementById('lg-text').innerText = "LİG: " + n;
-        document.getElementById('lg-text').style.color = c;
-        toggleDD();
-    }
-
-    function analyze() {
-        const team1 = document.getElementById('t1').value || "EV";
-        const team2 = document.getElementById('t2').value || "DEP";
+    function setL(id, n, c, desc) {
+        activeL = id;
+        const txt = document.getElementById('lg-text');
+        txt.innerText = n;
+        txt.style.color = c;
         
-        // 4 METRİĞİN TOPLANMASI
-        const qAvg = (parseFloat(document.getElementById('t1-q').value || 0) + parseFloat(document.getElementById('t2-q').value || 0)) / 2;
-        const scaSum = parseFloat(document.getElementById('t1-s').value || 0) + parseFloat(document.getElementById('t2-s').value || 0);
-        const prSum = parseFloat(document.getElementById('t1-p').value || 0) + parseFloat(document.getElementById('t2-p').value || 0);
-        const ppaSum = parseFloat(document.getElementById('t1-x').value || 0) + parseFloat(document.getElementById('t2-x').value || 0);
-
-        const c = ligs[activeL];
-        
-        // 4 METRİKLİ GOL MOTORU MATEMATİĞİ
-        // SCA ve PPA'yı da denkleme %15 ağırlıkla dahil ediyoruz
-        let basePower = (prSum * 0.7) + (ppaSum * 0.2) + (scaSum * 0.1);
-        let p3 = Math.min(97, (basePower * c.m) + (qAvg * 125) / 2.2);
-        
-        if(qAvg > c.qT) p3 += 3; // Kalite bonusu
-
-        let prob2 = (100 - p3) * 0.55;
-        let prob1 = 100 - p3 - prob2;
-
-        addHistory(team1, team2, prob1, prob2, p3, qAvg, scaSum, prSum, ppaSum);
-    }
-
-    function addHistory(t1, t2, p1, p2, p3, q, sca, pr, ppa) {
-        const list = document.getElementById('history-list');
-        const isFire = p3 > 75;
-        const card = document.createElement('div');
-        card.className = `hist-card ${isFire ? 'fire-alert' : ''}`;
-        card.innerHTML = `
-            <div class="match-header"><span>${t1} vs ${t2} ${isFire ? '🔥' : ''}</span></div>
-            ${row("0-1 GOL", p1, "#3fb950")}
-            ${row("2 GOL", p2, "#d29922")}
-            ${row("3+ GOL", p3, "#f85149")}
-            <div class="footer-metrics">
-                <span>Q: ${q.toFixed(2)}</span>
-                <span>SCA: ${sca}</span>
-                <span>PRGR: ${pr}</span>
-                <span>PPA: ${ppa}</span>
-            </div>
-        `;
-        list.prepend(card);
-    }
-
-    function row(l, v, c) {
-        return `<div class="bar-wrap">
-            <div class="bar-info"><span>${l}</span><span>%${Math.round(v)}</span></div>
-            <div class="bar-bg"><div class="bar-fill" style="width:${v}%; background:${c}"></div></div>
-        </div>`;
+        // Alt paneldeki zeka kısmını da bu açıklamalarla besleyebiliriz
+        const intelContent = document.getElementById('intel-content');
+        if(intelContent) {
+            const l = ligs[id];
+            intelContent.innerHTML = `
+                <div class="intel-row"><span>Lig Karakteri</span><b>${desc}</b></div>
+                <div class="intel-row"><span>Ort. Gol</span><b>${l.g || '2.80'}</b></div>
+                <div class="intel-row"><span>Zorluk</span><b>${id === 'PL' ? 'Max' : 'Normal'}</b></div>
+            `;
+        }
+        // Menüyü kapatma işlemi (stopPropagation kullanarak çakışmayı önleriz)
+        event.stopPropagation();
+        document.getElementById('dd').style.display = 'none';
     }
 </script>
-</body>
-</html>

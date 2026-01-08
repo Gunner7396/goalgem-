@@ -3,191 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>B-Tier Pro Analiz | Mobil</title>
+    <title>Pro B-Tier Analiz v3</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent: #38bdf8;
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --text: #f8fafc;
+            --bg: #0f172a; --card: #1e293b; --accent: #38bdf8;
+            --text: #f8fafc; --input-bg: #0f172a; --border: #334155;
         }
-
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background-color: var(--bg-color); 
-            color: var(--text); 
-            margin: 0; padding: 15px; 
-            display: flex; justify-content: center;
-        }
-
-        .app-container { width: 100%; max-width: 480px; }
-
-        .header { text-align: center; padding: 20px 0; }
-        .header h1 { font-size: 22px; color: var(--accent); margin: 0; letter-spacing: 1px; }
-        .header p { font-size: 12px; color: #94a3b8; margin-top: 5px; }
-
-        .card { 
-            background: var(--card-bg); 
-            padding: 20px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .full-width { grid-column: span 2; }
-
-        label { display: block; font-size: 11px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
+        .app { max-width: 500px; margin: auto; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h1 { font-size: 20px; color: var(--accent); text-transform: uppercase; margin: 0; }
         
-        select, input {
-            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #334155;
-            background: #0f172a; color: #fff; font-size: 16px; box-sizing: border-box;
-            outline: none; transition: 0.3s;
-        }
+        .card { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        .section-title { font-size: 13px; font-weight: 800; color: var(--accent); margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 5px; display: flex; justify-content: space-between; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        label { display: block; font-size: 10px; color: #94a3b8; margin-bottom: 4px; text-transform: uppercase; }
+        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--input-bg); color: #fff; font-size: 14px; box-sizing: border-box; }
+        
+        button { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 12px; color: var(--bg); font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        button:active { transform: scale(0.98); }
 
-        select:focus, input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
-
-        button {
-            width: 100%; padding: 16px; background: var(--accent); border: none;
-            border-radius: 14px; color: #0f172a; font-size: 16px; font-weight: 800;
-            margin-top: 20px; cursor: pointer; transition: 0.2s;
-        }
-
-        button:active { transform: scale(0.98); opacity: 0.9; }
-
-        .results { 
-            margin-top: 25px; display: none; 
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .probability-row { 
-            display: flex; justify-content: space-between; gap: 10px; margin-bottom: 15px;
-        }
-
-        .prob-card { 
-            flex: 1; background: #0f172a; padding: 12px; border-radius: 12px; text-align: center;
-            border-bottom: 3px solid #334155;
-        }
-
-        .prob-card span { display: block; font-size: 10px; color: #94a3b8; margin-bottom: 4px; }
-        .prob-card b { font-size: 18px; color: var(--text); }
-
-        .advice-box {
-            background: rgba(56, 189, 248, 0.1); padding: 15px; border-radius: 12px;
-            text-align: center; border: 1px dashed var(--accent);
-        }
-
-        .advice-box i { display: block; font-size: 12px; color: var(--accent); margin-bottom: 5px; font-style: normal; }
-        .advice-box b { font-size: 16px; color: var(--text); }
-
-        .active-p { border-bottom-color: var(--success); }
+        .results { margin-top: 25px; display: none; border-top: 2px dashed var(--border); padding-top: 20px; }
+        .prob-box { background: rgba(15, 23, 42, 0.5); border-radius: 12px; padding: 15px; margin-bottom: 15px; border-left: 4px solid var(--accent); }
+        .prob-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .prob-item b { color: var(--accent); font-size: 16px; }
+        
+        .advice { text-align: center; padding: 15px; background: rgba(56, 189, 248, 0.1); border-radius: 12px; border: 1px solid var(--accent); font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
+<div class="app">
     <div class="header">
-        <h1>B-TIER ENGINE v2</h1>
-        <p>MOBİL OPTİMİZE VERİ ANALİZİ</p>
+        <h1>B-Tier Pro Analiz</h1>
     </div>
 
     <div class="card">
-        <div class="input-grid">
-            <div class="full-width">
-                <label>LİG SEÇİMİ (Ağırlıklandırma Otomatik)</label>
-                <select id="league">
-                    <option value="ERE">Eredivisie (Hollanda)</option>
-                    <option value="BPL">Pro League (Belçika)</option>
-                    <option value="TSL">Süper Lig (Türkiye)</option>
-                    <option value="CHP">Championship (İngiltere)</option>
-                    <option value="POR">Liga Portugal (Portekiz)</option>
-                </select>
-            </div>
-            <div>
-                <label>PPA (C.Saha Giriş)</label>
-                <input type="number" id="ppa" inputmode="numeric" placeholder="18">
-            </div>
-            <div>
-                <label>SCA (Şut Aksiyon)</label>
-                <input type="number" id="sca" inputmode="numeric" placeholder="25">
-            </div>
-            <div>
-                <label>PRGR (İlerleme)</label>
-                <input type="number" id="prgr" inputmode="numeric" placeholder="45">
-            </div>
-            <div>
-                <label>NPXG/SH (Kalite)</label>
-                <input type="number" step="0.01" id="qAvg" inputmode="decimal" placeholder="0.10">
-            </div>
+        <label>LİG SEÇİMİ</label>
+        <select id="league" onchange="saveData()">
+            <option value="ERE">Hollanda Eredivisie (x1.6)</option>
+            <option value="BPL">Belçika Pro League (x1.5)</option>
+            <option value="TSL">Türkiye Süper Lig (x1.4)</option>
+            <option value="CHP">Championship (x1.35)</option>
+            <option value="POR">Portekiz Liga Portugal (x1.3)</option>
+        </select>
+        <br><br>
+
+        <div class="section-title">EV SAHİBİ <span>TAKIM A</span></div>
+        <div class="grid">
+            <div><label>PPA</label><input type="number" id="h_ppa" oninput="saveData()" placeholder="0"></div>
+            <div><label>SCA</label><input type="number" id="h_sca" oninput="saveData()" placeholder="0"></div>
+            <div><label>PRGR</label><input type="number" id="h_prgr" oninput="saveData()" placeholder="0"></div>
+            <div><label>npxG/Sh</label><input type="number" step="0.01" id="h_q" oninput="saveData()" placeholder="0.10"></div>
         </div>
 
-        <button onclick="analyzeBTier()">ANALİZİ ÇALIŞTIR</button>
+        <div class="section-title">DEPLASMAN <span>TAKIM B</span></div>
+        <div class="grid">
+            <div><label>PPA</label><input type="number" id="a_ppa" oninput="saveData()" placeholder="0"></div>
+            <div><label>SCA</label><input type="number" id="a_sca" oninput="saveData()" placeholder="0"></div>
+            <div><label>PRGR</label><input type="number" id="a_prgr" oninput="saveData()" placeholder="0"></div>
+            <div><label>npxG/Sh</label><input type="number" step="0.01" id="a_q" oninput="saveData()" placeholder="0.10"></div>
+        </div>
+
+        <button onclick="calculate()">ANALİZ ET VE KAYDET</button>
 
         <div id="results" class="results">
-            <div class="probability-row">
-                <div class="prob-card" id="c1"><span>0-1 GOL</span><b id="p1">%0</b></div>
-                <div class="prob-card" id="c2"><span>TAM 2 GOL</span><b id="p2">%0</b></div>
-                <div class="prob-card" id="c3"><span>3+ GOL</span><b id="p3">%0</b></div>
+            <div class="prob-box">
+                <div class="prob-item"><span>0-1 GOL (1.5 Alt):</span> <b id="p1">%0</b></div>
+                <div class="prob-item"><span>SADECE 2 GOL:</span> <b id="p2">%0</b></div>
+                <div class="prob-item"><span>SADECE 3 GOL:</span> <b id="p3">%0</b></div>
+                <div class="prob-item"><span>4+ GOL:</span> <b id="p4">%0</b></div>
             </div>
-            <div class="advice-box">
-                <i>SİSTEM TAVSİYESİ</i>
-                <b id="adviceText">-</b>
-            </div>
+            <div class="advice" id="adviceText">TAVSİYE HESAPLANIYOR...</div>
         </div>
     </div>
 </div>
 
 <script>
-function analyzeBTier() {
+const fields = ['league', 'h_ppa', 'h_sca', 'h_prgr', 'h_q', 'a_ppa', 'a_sca', 'a_prgr', 'a_q'];
+
+function saveData() {
+    fields.forEach(f => localStorage.setItem(f, document.getElementById(f).value));
+}
+
+function loadData() {
+    fields.forEach(f => {
+        if(localStorage.getItem(f)) document.getElementById(f).value = localStorage.getItem(f);
+    });
+    if(localStorage.getItem('h_ppa')) calculate(); // Veri varsa otomatik hesapla
+}
+
+function calculate() {
     const lg = document.getElementById('league').value;
-    const ppa = parseFloat(document.getElementById('ppa').value) || 0;
-    const sca = parseFloat(document.getElementById('sca').value) || 0;
-    const prgr = parseFloat(document.getElementById('prgr').value) || 0;
-    const q = parseFloat(document.getElementById('qAvg').value) || 0;
+    const avg = (id1, id2) => (parseFloat(document.getElementById(id1).value || 0) + parseFloat(document.getElementById(id2).value || 0));
+    
+    // Ev + Deplasman Toplam Metrikler
+    const ppa = avg('h_ppa', 'a_ppa');
+    const sca = avg('h_sca', 'a_sca');
+    const prgr = avg('h_prgr', 'a_prgr');
+    const q = (parseFloat(document.getElementById('h_q').value || 0.1) + parseFloat(document.getElementById('a_q').value || 0.1)) / 2;
 
     let mod = 1.0;
     let w = { ppa: 0.25, sca: 0.25, prgr: 0.25, q: 0.25 };
 
-    // LİG ÖZEL MATRİSİ
     if (lg === 'ERE') { mod = 1.6; w.ppa = 0.45; w.q = 0.30; }
     else if (lg === 'BPL') { mod = 1.5; w.prgr = 0.40; w.ppa = 0.30; }
     else if (lg === 'TSL') { mod = 1.4; w.sca = 0.40; w.ppa = 0.30; }
     else if (lg === 'CHP') { mod = 1.35; w.prgr = 0.50; w.ppa = 0.20; }
     else if (lg === 'POR') { mod = 1.3; w.q = 0.45; w.sca = 0.25; }
 
-    // HESAPLAMA MOTORU
-    let score = (ppa * w.ppa + sca * w.sca + prgr * w.prgr) * (q * 12) * mod;
+    let score = (ppa * w.ppa + sca * w.sca + prgr * w.prgr) * (q * 10) * mod;
     
-    let p3 = Math.min(96, score * 1.5);
-    let p1, p2;
+    // Gol Aralığı Dağılım Algoritması
+    let p1, p2, p3, p4;
+    p4 = Math.min(45, score * 0.4); 
+    p3 = Math.min(40, score * 0.5);
+    let remain = 100 - (p3 + p4);
+    p1 = remain * (1 / (score * 0.2 + 1)) * 1.5;
+    p2 = 100 - (p1 + p3 + p4);
 
-    if (p3 > 65) {
-        p2 = (100 - p3) * 0.75;
-        p1 = 100 - p3 - p2;
-    } else {
-        p1 = Math.max(5, (100 - p3) * 0.45);
-        p2 = 100 - p3 - p1;
-    }
-
-    // UI GÜNCELLEME
     document.getElementById('p1').innerText = `%${p1.toFixed(1)}`;
     document.getElementById('p2').innerText = `%${p2.toFixed(1)}`;
     document.getElementById('p3').innerText = `%${p3.toFixed(1)}`;
+    document.getElementById('p4').innerText = `%${p4.toFixed(1)}`;
     
     const adv = document.getElementById('adviceText');
-    if (p3 > 75) adv.innerText = "YÜKSEK GÜVEN: 2.5 ÜST";
+    if (p3 + p4 > 65) adv.innerText = "YÜKSEK GÜVEN: 2.5 ÜST";
     else if (p1 > 40) adv.innerText = "YÜKSEK GÜVEN: 1.5 ALT";
-    else if (p2 > 35) adv.innerText = "DENGE: 2 GOL BEKLENTİSİ";
-    else adv.innerText = "RİSKLİ: VERİ YETERSİZ";
+    else adv.innerText = "DENGE: 2-3 GOL ARALIĞI";
 
     document.getElementById('results').style.display = 'block';
+    saveData();
 }
-</script>
 
+window.onload = loadData;
+</script>
 </body>
 </html>

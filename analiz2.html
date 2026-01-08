@@ -3,120 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>B-Tier Pro Terminal</title>
+    <title>B-TIER PRO TERMINAL V13</title>
     <style>
         :root {
-            --bg: #05070a; --card: #111418; --accent: #00ff88;
-            --text: #e1e4e8; --input-bg: #0a0c10; --border: #21262d;
+            --bg: #05070a; --panel: #0f1217; --accent: #00ffa3; --border: #1e2530;
+            --text: #f0f3f5; --dim: #64748b;
         }
+        /* Lig Renkleri */
         .theme-ERE { --accent: #ff4500; } .theme-BPL { --accent: #ffd700; }
         .theme-TSL { --accent: #ff0000; } .theme-CHP { --accent: #00ff88; } .theme-POR { --accent: #00c853; }
 
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 12px; }
-        .app-container { max-width: 380px; margin: auto; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        .wrapper { width: 100%; max-width: 400px; }
+        .main-card { background: rgba(15, 18, 23, 0.95); border: 1px solid var(--border); padding: 15px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin-bottom: 20px; }
         
-        /* Modern Minimalist Form */
-        .glass-panel { background: var(--card); border-radius: 12px; padding: 12px; border: 1px solid var(--border); margin-bottom: 12px; }
+        .dropdown { background: #161b22; border: 1px solid var(--border); padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--accent); border-left: 4px solid var(--accent); position: relative; }
+        .dd-menu { display: none; position: absolute; top: 110%; left: 0; right: 0; background: #1c2128; border: 1px solid var(--accent); border-radius: 12px; z-index: 9999; }
+        .dd-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 11px; color: #fff; }
+        .dd-item:hover { background: var(--accent); color: #000; }
         
-        select { width: 100%; background: var(--input-bg); border: 1px solid var(--accent); color: var(--accent); padding: 10px; border-radius: 8px; font-weight: 700; margin-bottom: 12px; font-size: 13px; outline: none; appearance: none; text-align: center; }
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .input-grid label { grid-column: span 2; font-size: 9px; color: var(--accent); text-align: center; font-weight: 800; text-transform: uppercase; margin-top: 4px; opacity: 0.8; }
+        input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: #fff; font-size: 14px; text-align: center; font-weight: 600; }
         
-        .header-row { display: flex; justify-content: space-between; padding: 0 10px 5px; font-size: 10px; color: #8b949e; font-weight: 800; }
-        .header-row span { flex: 1; text-align: center; }
-
-        .metric-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; }
-        .metric-row label { width: 60px; font-size: 9px; color: var(--accent); font-weight: 800; text-transform: uppercase; }
-        input { flex: 1; background: var(--input-bg); border: 1px solid var(--border); padding: 8px; border-radius: 6px; color: #fff; text-align: center; font-size: 14px; transition: 0.2s; }
-        input:focus { border-color: var(--accent); background: #000; }
+        #btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-weight: 900; margin-top: 15px; cursor: pointer; text-transform: uppercase; }
         
-        .btn-action { width: 100%; background: var(--accent); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: 8px; text-transform: uppercase; }
-
-        /* Sonuç Listesi */
-        .list-header { display: flex; font-size: 10px; color: #8b949e; padding: 8px 5px; border-bottom: 1px solid var(--border); margin-top: 10px; font-weight: 700; }
-        .col-lg { flex: 1; } .col-res { flex: 1; text-align: center; }
-        .clear-link { color: #f85149; cursor: pointer; text-decoration: none; }
-
-        .list-item { display: flex; padding: 10px 5px; border-bottom: 1px solid #161b22; font-size: 12px; align-items: center; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        /* Analiz Kartları */
+        .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; border-top: 3px solid var(--accent); animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity:0; transform: translateY(-10px); } to { opacity:1; transform: translateY(0); } }
         
-        .val-15 { color: #8b949e; } .val-23 { color: var(--accent); font-weight: 800; }
+        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 800; font-size: 12px; }
+        .lig-badge { padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 900; color: #000; }
+        .bar-wrap { margin-bottom: 6px; }
+        .bar-info { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 3px; font-weight: 700; }
+        .bar-bg { width: 100%; height: 6px; background: #1e2530; border-radius: 4px; overflow: hidden; }
+        .bar-fill { height: 100%; transition: width 0.8s ease; }
+        
+        .footer-metrics { display: flex; justify-content: space-between; font-size: 8px; color: var(--dim); margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .hist-header { display: flex; justify-content: space-between; align-items: center; margin: 15px 5px 5px; }
+        .clear-btn { background: transparent; border: 1px solid var(--border); color: #ff4d4d; font-size: 9px; padding: 4px 8px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body class="theme-ERE">
 
-<div class="app-container">
-    <div class="glass-panel">
-        <select id="league" onchange="document.body.className='theme-'+this.value">
-            <option value="ERE">ERE (HOLLANDA)</option>
-            <option value="BPL">BPL (BELÇİKA)</option>
-            <option value="TSL">TSL (TÜRKİYE)</option>
-            <option value="CHP">CHP (CHAMPIONSHIP)</option>
-            <option value="POR">POR (PORTEKİZ)</option>
-        </select>
-
-        <div class="header-row">
-            <span style="max-width:60px"></span>
-            <span>EV SAHİBİ</span>
-            <span>DEPLASMAN</span>
+<div class="wrapper">
+    <div class="main-card">
+        <div class="dropdown" id="lg-btn">
+            <span id="lg-text">ERE (HOLLANDA)</span>
+            <div id="dd" class="dd-menu">
+                <div class="dd-item" data-id="ERE" data-name="ERE (HOLLANDA)">ERE (HOLLANDA)</div>
+                <div class="dd-item" data-id="BPL" data-name="BPL (BELÇİKA)">BPL (BELÇİKA)</div>
+                <div class="dd-item" data-id="TSL" data-name="TSL (TÜRKİYE)">TSL (TÜRKİYE)</div>
+                <div class="dd-item" data-id="CHP" data-name="CHP (CHAMPIONSHIP)">CHP (CHAMPIONSHIP)</div>
+                <div class="dd-item" data-id="POR" data-name="POR (PORTEKİZ)">POR (PORTEKİZ)</div>
+            </div>
         </div>
 
-        <div class="metric-row"><label>NPXG/SH</label><input type="number" id="h_q" step="0.01" inputmode="decimal" placeholder="0.10"><input type="number" id="a_q" step="0.01" inputmode="decimal" placeholder="0.10"></div>
-        <div class="metric-row"><label>SCA</label><input type="number" id="h_sca" inputmode="numeric" placeholder="0"><input type="number" id="a_sca" inputmode="numeric" placeholder="0"></div>
-        <div class="metric-row"><label>PRGR</label><input type="number" id="h_prgr" inputmode="numeric" placeholder="0"><input type="number" id="a_prgr" inputmode="numeric" placeholder="0"></div>
-        <div class="metric-row"><label>PPA</label><input type="number" id="h_ppa" inputmode="numeric" placeholder="0"><input type="number" id="a_ppa" inputmode="numeric" placeholder="0"></div>
-
-        <button class="btn-action" onclick="analyze()">Analiz Et</button>
+        <div class="input-grid">
+            <input type="text" id="t1" placeholder="EV TAKIM">
+            <input type="text" id="t2" placeholder="DEP TAKIM">
+            <label>1. npxG/Sh (Ortalama)</label>
+            <input type="number" id="h-q" placeholder="0.10" step="0.01" inputmode="decimal">
+            <input type="number" id="a-q" placeholder="0.10" step="0.01" inputmode="decimal">
+            <label>2. SCA (Toplam)</label>
+            <input type="number" id="h-s" placeholder="SCA" inputmode="numeric">
+            <input type="number" id="a-s" placeholder="SCA" inputmode="numeric">
+            <label>3. PrgR (Toplam)</label>
+            <input type="number" id="h-p" placeholder="PrgR" inputmode="numeric">
+            <input type="number" id="a-p" placeholder="PrgR" inputmode="numeric">
+            <label>4. PPA (Toplam)</label>
+            <input type="number" id="h-x" placeholder="PPA" inputmode="numeric">
+            <input type="number" id="a-x" placeholder="PPA" inputmode="numeric">
+        </div>
+        <button id="btn" onclick="analyze()">Analiz Et</button>
     </div>
 
-    <div class="list-header">
-        <span class="col-lg">LİG</span>
-        <span class="col-res">1.5 ALT</span>
-        <span class="col-res">2 GOL</span>
-        <span class="col-res">3 GOL</span>
-        <span onclick="clearHistory()" class="clear-link">TEMİZLE</span>
+    <div class="hist-header">
+        <h3 style="font-size:11px; color:var(--dim); margin:0;">ANALİZ GEÇMİŞİ</h3>
+        <button class="clear-btn" onclick="clearHistory()">TEMİZLE</button>
     </div>
-    <div id="results"></div>
+    <div id="history-list"></div>
 </div>
 
 <script>
-function analyze() {
-    const lg = document.getElementById('league').value;
-    const h_sca = document.getElementById('h_sca').value;
-    if(!h_sca) return;
+    let activeL = 'ERE';
+    const ddMenu = document.getElementById('dd');
+    const lgBtn = document.getElementById('lg-btn');
 
-    // Analiz Motoru
-    const ppa = (parseFloat(document.getElementById('h_ppa').value)||0) + (parseFloat(document.getElementById('a_ppa').value)||0);
-    const sca = (parseFloat(document.getElementById('h_sca').value)||0) + (parseFloat(document.getElementById('a_sca').value)||0);
-    const prgr = (parseFloat(document.getElementById('h_prgr').value)||0) + (parseFloat(document.getElementById('a_prgr').value)||0);
-    const q = ((parseFloat(document.getElementById('h_q').value)||0.1) + (parseFloat(document.getElementById('a_q').value)||0.1)) / 2;
+    lgBtn.onclick = (e) => { e.stopPropagation(); ddMenu.style.display = ddMenu.style.display === 'block' ? 'none' : 'block'; };
+    document.querySelectorAll('.dd-item').forEach(item => {
+        item.onclick = function() {
+            activeL = this.dataset.id;
+            document.getElementById('lg-text').innerText = this.dataset.name;
+            document.body.className = 'theme-' + activeL;
+            ddMenu.style.display = 'none';
+        };
+    });
+    window.onclick = () => ddMenu.style.display = 'none';
 
-    let mod = 1.0;
-    if (lg === 'ERE') mod = 1.6;
-    else if (lg === 'BPL') mod = 1.5;
-    else if (lg === 'TSL') mod = 1.4;
-    else if (lg === 'CHP') mod = 1.35;
-    else if (lg === 'POR') mod = 1.3;
+    function analyze() {
+        const h_s = document.getElementById('h-s').value, a_s = document.getElementById('a-s').value;
+        if (!h_s || !a_s) return;
 
-    let score = (ppa * 0.25 + sca * 0.25 + prgr * 0.25) * (q * 10) * mod;
-    let p3 = Math.min(45, score * 0.55);
-    let rem = 100 - p3;
-    let p1 = Math.max(5, rem * (1 / (score * 0.3 + 1)) * 2);
-    let p2 = 100 - (p1 + p3);
+        const t1 = document.getElementById('t1').value || "EV", t2 = document.getElementById('t2').value || "DEP";
+        const qAvg = (parseFloat(document.getElementById('h-q').value || 0.1) + parseFloat(document.getElementById('a-q').value || 0.1)) / 2;
+        const sca = parseFloat(h_s) + parseFloat(a_s);
+        const prgr = (parseFloat(document.getElementById('h-p').value) || 0) + (parseFloat(document.getElementById('a-p').value) || 0);
+        const ppa = (parseFloat(document.getElementById('h-x').value) || 0) + (parseFloat(document.getElementById('a-x').value) || 0);
 
-    const resultsDiv = document.getElementById('results');
-    const row = document.createElement('div');
-    row.className = 'list-item';
-    row.innerHTML = `
-        <span class="col-lg" style="color:var(--accent); font-weight:800;">${lg}</span>
-        <span class="col-res val-15">%${p1.toFixed(0)}</span>
-        <span class="col-res val-23">%${p2.toFixed(0)}</span>
-        <span class="col-res val-23">%${p3.toFixed(0)}</span>
-    `;
-    resultsDiv.prepend(row);
-}
+        // B-TIER ANALİZ MOTORU (KORUNDU)
+        let mod = 1.0;
+        if (activeL === 'ERE') mod = 1.6;
+        else if (activeL === 'BPL') mod = 1.5;
+        else if (activeL === 'TSL') mod = 1.4;
+        else if (activeL === 'CHP') mod = 1.35;
+        else if (activeL === 'POR') mod = 1.3;
 
-function clearHistory() {
-    if(confirm("Temizlensin mi?")) document.getElementById('results').innerHTML = '';
-}
+        let score = (ppa * 0.25 + sca * 0.25 + prgr * 0.25) * (qAvg * 10) * mod;
+        let p3 = Math.min(45, score * 0.55);
+        let rem = 100 - p3;
+        let p1 = Math.max(5, rem * (1 / (score * 0.3 + 1)) * 2);
+        let p2 = 100 - (p1 + p3);
+
+        const curCol = getComputedStyle(document.documentElement).getPropertyValue('--accent');
+        addCard(t1.toUpperCase(), t2.toUpperCase(), p1, p2, p3, activeL, curCol, qAvg, sca, prgr, ppa);
+    }
+
+    function addCard(t1, t2, p1, p2, p3, lg, col, q, sca, pr, ppa) {
+        const card = document.createElement('div');
+        card.className = 'hist-card';
+        card.style.borderTopColor = col;
+        card.innerHTML = `
+            <div class="match-header"><span>${t1} vs ${t2}</span><span class="lig-badge" style="background:${col}">${lg}</span></div>
+            ${row("1.5 ALT", p1, "#64748b")}
+            ${row("TAM 2 GOL", p2, col)}
+            ${row("TAM 3 GOL", p3, col)}
+            <div class="footer-metrics"><span>Q: ${q.toFixed(2)}</span><span>SCA: ${sca}</span><span>PR: ${pr}</span><span>PPA: ${ppa}</span></div>`;
+        document.getElementById('history-list').prepend(card);
+    }
+
+    function row(l, v, c) { return `<div class="bar-wrap"><div class="bar-info"><span>${l}</span><span>%${v.toFixed(0)}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${v}%; background:${c}"></div></div></div>`; }
+    function clearHistory() { if(confirm("Silinsin mi?")) document.getElementById('history-list').innerHTML = ''; }
 </script>
 </body>
 </html>

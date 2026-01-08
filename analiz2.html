@@ -2,233 +2,224 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Bet Engine v3.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Master Engine v3.0 | Pro Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --accent: #38bdf8;
-            --text: #f8fafc;
-            --p1: #ef4444; /* 1.5 Alt */
-            --p2: #f59e0b; /* Tam 2 Gol */
-            --p3: #10b981; /* Tam 3 Gol */
+            --bg: #0a0f1e;
+            --card: #161e31;
+            --accent: #00d4ff;
+            --text: #ffffff;
+            --subtext: #94a3b8;
+            --p1: #ff4d4d; /* 0-1 Gol */
+            --p2: #ffab00; /* 2 Gol */
+            --p3: #00e676; /* 3 Gol */
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 600px;
-            background: var(--card);
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-
-        h2 { text-align: center; margin-bottom: 25px; color: var(--accent); }
-
-        .league-selector {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            margin-bottom: 25px;
-        }
-
-        .league-btn {
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            background: #334155;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 12px;
-            transition: 0.3s;
-        }
-
-        .league-btn.active {
-            background: var(--accent);
-            color: var(--bg);
-        }
-
-        .input-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
-
-        label { font-size: 13px; color: #94a3b8; font-weight: 600; }
-
-        input {
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #334155;
-            background: #0f172a;
-            color: white;
-            outline: none;
-        }
-
-        input:focus { border-color: var(--accent); }
-
-        .btn-calc {
-            width: 100%;
+        * { box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
             padding: 15px;
-            background: var(--accent);
-            color: var(--bg);
-            border: none;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--card);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        h1 { font-weight: 800; font-size: 22px; text-align: center; margin: 10px 0 25px; color: var(--accent); letter-spacing: 1px; }
+
+        .section-label { font-size: 12px; color: var(--subtext); font-weight: 600; text-transform: uppercase; margin-bottom: 8px; display: block; }
+
+        /* Lig Seçici */
+        .league-box {
+            width: 100%;
+            padding: 14px;
+            background: #1e293b;
+            border: 2px solid #334155;
             border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            outline: none;
+            appearance: none;
+        }
+
+        /* Takım Alanları Yan Yana */
+        .team-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .input-unit { background: #0f172a; padding: 12px; border-radius: 14px; border: 1px solid #1e293b; }
+        
+        /* Metrik Alanları Alt Alta */
+        .metrics-stack { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        
+        input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 15px;
+            padding: 5px 0;
+            border-bottom: 1px solid #334155;
+            outline: none;
+            margin-top: 5px;
+        }
+
+        input::placeholder { color: #475569; font-size: 13px; }
+
+        .btn-analyze {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #00d4ff, #0072ff);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 16px;
             font-weight: 800;
             cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
         }
 
-        .btn-calc:hover { opacity: 0.9; transform: translateY(-2px); }
-
-        #results { margin-top: 25px; display: flex; flex-direction: column; gap: 15px; }
-
+        /* Sonuç Kartı */
+        #result-box { margin-top: 25px; }
         .res-card {
-            background: #334155;
-            padding: 20px;
-            border-radius: 15px;
-            border-left: 5px solid var(--accent);
+            background: #0f172a;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+            animation: slideIn 0.4s ease-out;
         }
 
-        .teams { display: flex; justify-content: space-between; font-weight: 800; margin-bottom: 15px; font-size: 18px; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .prob-bar {
-            height: 25px;
+        .res-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--accent); }
+
+        .bar-container {
+            height: 35px;
             background: #1e293b;
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             overflow: hidden;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
-        .p-part { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; }
+        .bar { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; transition: width 0.5s ease; }
+        
+        .details { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; text-align: center; }
+        .det-item { font-size: 11px; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.03); }
+        .det-val { display: block; font-size: 14px; font-weight: 800; margin-top: 4px; }
 
-        .legend { display: flex; justify-content: space-around; font-size: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>MASTER ENGINE v3.0</h2>
+<div class="app-container">
+    <h1>MASTER ENGINE v3.0</h1>
 
-    <div class="league-selector">
-        <button class="league-btn active" onclick="setLeague('ERE', this)">ERE</button>
-        <button class="league-btn" onclick="setLeague('POR', this)">POR</button>
-        <button class="league-btn" onclick="setLeague('TSL', this)">TSL</button>
-        <button class="league-btn" onclick="setLeague('BPL', this)">BPL</button>
-        <button class="league-btn" onclick="setLeague('CHP', this)">CHP</button>
-    </div>
+    <span class="section-label">Lig Seçimi</span>
+    <select id="league" class="league-box">
+        <option value="ERE">Hollanda Eredivisie (ERE)</option>
+        <option value="POR">Portekiz Liga Portugal (POR)</option>
+        <option value="TSL">Türkiye Süper Ligi (TSL)</option>
+        <option value="BPL">Belçika Pro League (BPL)</option>
+        <option value="CHP">İngiltere Championship (CHP)</option>
+    </select>
 
-    <div class="input-grid">
-        <div class="input-group">
-            <label>Ev Sahibi SCA / Q</label>
-            <input type="number" id="h-s" placeholder="SCA (Şut Yaratan)">
-            <input type="number" id="h-q" step="0.01" placeholder="Q (Kalite 0.01-0.20)">
+    <div class="team-row">
+        <div class="input-unit">
+            <span class="section-label">Ev Sahibi</span>
+            <input type="number" id="h-s" placeholder="SCA">
+            <input type="number" id="h-q" step="0.01" placeholder="Kalite (Q)">
         </div>
-        <div class="input-group">
-            <label>Dep. SCA / Q</label>
-            <input type="number" id="a-s" placeholder="SCA (Şut Yaratan)">
-            <input type="number" id="a-q" step="0.01" placeholder="Q (Kalite 0.01-0.20)">
-        </div>
-        <div class="input-group">
-            <label>Toplam PPA</label>
-            <input type="number" id="ppa" placeholder="Ceza Sahasına Pas">
-        </div>
-        <div class="input-group">
-            <label>Toplam PrgR</label>
-            <input type="number" id="prgr" placeholder="İlerleyen Pas">
+        <div class="input-unit">
+            <span class="section-label">Deplasman</span>
+            <input type="number" id="a-s" placeholder="SCA">
+            <input type="number" id="a-q" step="0.01" placeholder="Kalite (Q)">
         </div>
     </div>
 
-    <button class="btn-calc" onclick="analyze()">ANALİZ ET</button>
+    <div class="metrics-stack">
+        <div class="input-unit">
+            <span class="section-label">Toplam Ceza Sahasına Pas (PPA)</span>
+            <input type="number" id="ppa" placeholder="Örn: 18">
+        </div>
+        <div class="input-unit">
+            <span class="section-label">Toplam İlerleyen Pas (PrgR)</span>
+            <input type="number" id="prgr" placeholder="Örn: 75">
+        </div>
+    </div>
 
-    <div id="results"></div>
+    <button class="btn-analyze" onclick="calculate()">ANALİZİ BAŞLAT</button>
+
+    <div id="result-box"></div>
 </div>
 
 <script>
-    let activeL = 'ERE';
-
-    function setLeague(lig, btn) {
-        activeL = lig;
-        document.querySelectorAll('.league-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    function analyze() {
-        const h_s = parseFloat(document.getElementById('h-s').value || 0);
-        const a_s = parseFloat(document.getElementById('a-s').value || 0);
-        const h_q = parseFloat(document.getElementById('h-q').value || 0.1);
-        const a_q = parseFloat(document.getElementById('a-q').value || 0.1);
+    function calculate() {
+        const league = document.getElementById('league').value;
+        const hs = parseFloat(document.getElementById('h-s').value || 0);
+        const hq = parseFloat(document.getElementById('h-q').value || 0.1);
+        const as = parseFloat(document.getElementById('a-s').value || 0);
+        const aq = parseFloat(document.getElementById('a-q').value || 0.1);
         const ppa = parseFloat(document.getElementById('ppa').value || 0);
         const prgr = parseFloat(document.getElementById('prgr').value || 0);
 
-        const sca = h_s + a_s;
-        const qAvg = (h_q + a_q) / 2;
+        const sca = hs + as;
+        const q = (hq + aq) / 2;
 
-        let p1 = 0, p2 = 0, p3 = 0;
+        let p1, p2, p3;
 
-        switch(activeL) {
-            case 'ERE': // HOLLANDA
-                if (sca <= 24 && ppa <= 12) { p1 = 80; p2 = 15; p3 = 5; }
-                else if (sca <= 38 && qAvg <= 0.10) { p1 = 10; p2 = 80; p3 = 10; }
-                else { p1 = 5; p2 = 15; p3 = 80; }
-                break;
-            case 'POR': // PORTEKİZ
-                if (sca <= 32 && ppa <= 15) { p1 = 80; p2 = 15; p3 = 5; }
-                else if (sca <= 44 && qAvg <= 0.11) { p1 = 15; p2 = 75; p3 = 10; }
-                else { p1 = 10; p2 = 20; p3 = 70; }
-                break;
-            case 'TSL': // TÜRKİYE
-                if (prgr <= 50 && sca <= 28) { p1 = 80; p2 = 15; p3 = 5; }
-                else if (sca <= 42 && qAvg <= 0.11) { p1 = 15; p2 = 70; p3 = 15; }
-                else { p1 = 5; p2 = 20; p3 = 75; }
-                break;
-            case 'BPL': // BELÇİKA
-                if (sca <= 26 && ppa <= 13) { p1 = 80; p2 = 15; p3 = 5; }
-                else if (prgr <= 85 && sca <= 39) { p1 = 15; p2 = 75; p3 = 10; }
-                else { p1 = 5; p2 = 15; p3 = 80; }
-                break;
-            case 'CHP': // CHAMPIONSHIP
-                if (sca <= 30 && prgr <= 70) { p1 = 80; p2 = 15; p3 = 5; }
-                else if (sca <= 46 && qAvg <= 0.10) { p1 = 20; p2 = 70; p3 = 10; }
-                else { p1 = 5; p2 = 25; p3 = 70; }
-                break;
+        // LİG BAZLI %80 BAŞARI ALGORİTMASI
+        if(league === 'ERE') {
+            if(sca <= 24 && ppa <= 12) { p1=80; p2=15; p3=5; }
+            else if(sca <= 38 && q <= 0.10) { p1=10; p2=80; p3=10; }
+            else { p1=5; p2=15; p3=80; }
+        } else if(league === 'POR') {
+            if(sca <= 32 && ppa <= 15) { p1=80; p2=15; p3=5; }
+            else if(sca <= 44 && q <= 0.11) { p1=15; p2=75; p3=10; }
+            else { p1=10; p2=20; p3=70; }
+        } else if(league === 'TSL') {
+            if(prgr <= 50 && sca <= 28) { p1=80; p2=15; p3=5; }
+            else if(sca <= 42 && q <= 0.11) { p1=15; p2=70; p3=15; }
+            else { p1=5; p2=20; p3=75; }
+        } else if(league === 'BPL') {
+            if(sca <= 26 && ppa <= 13) { p1=80; p2=15; p3=5; }
+            else if(prgr <= 85 && sca <= 39) { p1=15; p2=75; p3=10; }
+            else { p1=5; p2=15; p3=80; }
+        } else if(league === 'CHP') {
+            if(sca <= 30 && prgr <= 70) { p1=80; p2=15; p3=5; }
+            else if(sca <= 46 && q <= 0.10) { p1=20; p2=70; p3=10; }
+            else { p1=5; p2=25; p3=70; }
         }
 
-        const resDiv = document.getElementById('results');
-        const card = `
+        const container = document.getElementById('result-box');
+        container.innerHTML = `
             <div class="res-card">
-                <div class="teams"><span>ANALİZ</span> <span>${activeL}</span></div>
-                <div class="prob-bar">
-                    <div class="p-part" style="width:${p1}%; background:var(--p1)">%${p1}</div>
-                    <div class="p-part" style="width:${p2}%; background:var(--p2)">%${p2}</div>
-                    <div class="p-part" style="width:${p3}%; background:var(--p3)">%${p3}</div>
+                <div class="res-header"><span>HEDEF ANALİZ</span><span>${league} LİGİ</span></div>
+                <div class="bar-container">
+                    <div class="bar" style="width:${p1}%; background:var(--p1)">%${p1}</div>
+                    <div class="bar" style="width:${p2}%; background:var(--p2)">%${p2}</div>
+                    <div class="bar" style="width:${p3}%; background:var(--p3)">%${p3}</div>
                 </div>
-                <div class="legend">
-                    <span>🔴 1.5 Alt</span>
-                    <span>🟡 Tam 2 Gol</span>
-                    <span>🟢 Tam 3 Gol</span>
+                <div class="details">
+                    <div class="det-item" style="color:var(--p1)">0-1 GOL<span class="det-val">%${p1}</span></div>
+                    <div class="det-item" style="color:var(--p2)">TAM 2 GOL<span class="det-val">%${p2}</span></div>
+                    <div class="det-item" style="color:var(--p3)">TAM 3 GOL<span class="det-val">%${p3}</span></div>
                 </div>
             </div>
-        `;
-        resDiv.innerHTML = card + resDiv.innerHTML;
+        ` + container.innerHTML;
     }
 </script>
 

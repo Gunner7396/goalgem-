@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO V17.4 - VERIFIED</title>
+    <title>P-PRO V18 - AI INSIGHT</title>
     <style>
         :root {
             --bg: #05070a; --panel: #0f1217; --accent: #00ffa3; --border: #1e2530;
-            --text: #f0f3f5; --dim: #64748b; --gold: #fbff00; --red: #ff4d4d;
+            --text: #f0f3f5; --dim: #64748b; --gold: #fbff00; --red: #ff4d4d; --orange: #ff9500;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; font-family: sans-serif; }
         body { background: var(--bg); color: var(--text); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
@@ -25,19 +25,31 @@
         #btn { flex: 4; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-weight: 900; cursor: pointer; }
         #clear-inputs { flex: 1; border-radius: 10px; border: 1px solid #ff4d4d44; background: #ff4d4d11; color: var(--red); cursor: pointer; font-size: 18px; }
         .scroll-area { flex: 1; overflow-y: auto; padding: 10px; }
-        .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 8px; padding: 8px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
-        .h-teams { flex: 1.2; font-size: 9px; font-weight: 800; }
-        .h-lig { color: var(--accent); font-size: 7px; display: block; }
-        .h-preds { flex: 3; display: flex; justify-content: space-around; margin: 0 8px; }
+        
+        /* ANALİZ KARTI GÜNCELLEME */
+        .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 8px; position: relative; }
+        .card-top { display: flex; justify-content: space-between; align-items: center; }
+        .card-mid { display: flex; justify-content: space-around; background: #080a0c; padding: 8px; border-radius: 8px; }
+        .card-bot { font-size: 10px; color: var(--dim); font-style: italic; border-top: 1px solid #1e2530; padding-top: 6px; display: flex; justify-content: space-between; }
+        
+        .h-teams { font-size: 10px; font-weight: 800; }
+        .h-lig { color: var(--accent); font-size: 8px; }
         .p-box { text-align: center; }
         .p-lbl { font-size: 7px; color: var(--dim); display: block; }
-        .p-val { font-size: 11px; font-weight: 900; }
-        .h-actions { flex: 0.6; display: flex; flex-direction: column; gap: 3px; }
-        .mini-btn { padding: 4px; border: none; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .p-val { font-size: 12px; font-weight: 900; }
+        
+        .risk-bar { height: 3px; background: #1e2530; border-radius: 2px; width: 40px; margin-top: 4px; overflow: hidden; }
+        .risk-fill { height: 100%; transition: width 0.3s; }
+
+        .h-actions { display: flex; gap: 5px; }
+        .mini-btn { padding: 4px 10px; border: none; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        
         .dropdown-container { margin-bottom: 8px; border: 1px solid var(--border); border-radius: 8px; background: #161b22; }
         .dropdown-header { padding: 10px; font-weight: 800; cursor: pointer; display: flex; justify-content: space-between; font-size: 10px; color: var(--accent); }
         .dd-menu { display: none; background: #1c2128; border-top: 1px solid var(--border); }
         .dd-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 11px; }
+
+        .conflict-badge { color: var(--orange); font-weight: bold; font-size: 8px; margin-left: 5px; }
     </style>
 </head>
 <body>
@@ -84,10 +96,6 @@
     </div>
 
     <div class="scroll-area">
-        <div style="display:flex; justify-content:space-between; padding:4px 8px; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
-            <span style="font-size:9px; color:var(--dim); font-weight:800;">GEÇMİŞ ANALİZLER</span>
-            <span onclick="clearHistory()" style="font-size:9px; color:var(--red); cursor:pointer;">TEMİZLE</span>
-        </div>
         <div id="history-list"></div>
     </div>
 </div>
@@ -130,40 +138,72 @@
         const x2 = parseFloat(document.getElementById('t2-x').value || 0);
         const q1 = parseFloat(document.getElementById('t1-q').value || 0);
         const q2 = parseFloat(document.getElementById('t2-q').value || 0);
-        const s1 = parseFloat(document.getElementById('t1-s').value || 0);
-        const s2 = parseFloat(document.getElementById('t2-s').value || 0);
-        const sTotal = s1 + s2;
+        const sTotal = parseFloat(document.getElementById('t1-s').value || 0) + parseFloat(document.getElementById('t2-s').value || 0);
         
         let score15 = 0;
-        // PPA Mantığı
-        if((x1 + x2) <= config.x) score15 += 40;
-        if(Math.abs(x1 - x2) < 3 && (x1+x2) > (config.x * 1.3)) score15 -= 15;
-        
-        // Kalite ve SCA Mantığı (Eksik olan SCA kontrolü eklendi)
+        let insights = "";
+        let conflict = false;
+
+        // Metrik Kontrolleri
+        if((x1 + x2) <= config.x) score15 += 45;
         if(q1 <= config.q && q2 <= config.q) score15 += 25;
-        if(sTotal <= config.s) score15 += 25;
+        if(sTotal <= config.s) score15 += 20;
+
+        // 3. SENARYO METİNLERİ
+        if(score15 >= 70) insights = "Savunma disiplini ön planda, kilitli bir maç.";
+        else if(score15 < 40) insights = "Orta sahalar çok çabuk geçilecek, tempo yüksek.";
+        else insights = "Dengeli bir oyun, hata yapan kaybeder.";
+
+        // 6. ZIT TAHMİN KONTROLÜ
+        if(sTotal > config.s * 1.5 && (x1+x2) < config.x) {
+            insights = "DİKKAT: Çok şut var ama ceza sahasına giremiyorlar!";
+            conflict = true;
+        }
+
+        // 4. RİSK SKORU (Basit Hesaplama)
+        let riskValue = 100 - score15;
+        let riskColor = riskValue > 70 ? 'var(--red)' : (riskValue > 40 ? 'var(--orange)' : 'var(--accent)');
 
         let p1 = Math.min(Math.max(score15, 10), 90);
         let p3 = Math.max(100 - p1 - (Math.random() * 10 + 15), 5); 
         let p2 = 100 - (parseFloat(p1) + parseFloat(p3));
         
-        renderCard(p1.toFixed(0), p2.toFixed(0), p3.toFixed(0), lg);
+        renderCard(p1.toFixed(0), p2.toFixed(0), p3.toFixed(0), lg, insights, riskValue, riskColor, conflict);
     }
 
-    function renderCard(p1, p2, p3, lg) {
+    function renderCard(p1, p2, p3, lg, insight, risk, riskCol, conflict) {
         const t1 = (document.getElementById('t1').value || 'EV').toUpperCase().substring(0, 8);
         const t2 = (document.getElementById('t2').value || 'DEP').toUpperCase().substring(0, 8);
         const card = document.createElement('div');
-        card.className = `hist-card ${p1 >= 80 ? 'high-conf' : ''}`;
-        card.innerHTML = `<div class="h-teams"><span>${t1}-${t2}</span><span class="h-lig">${lg}</span></div><div class="h-preds"><div class="p-box"><span class="p-lbl">1.5 ALT</span><span class="p-val" style="color:var(--red)">%${p1}</span></div><div class="p-box"><span class="p-lbl">T2</span><span class="p-val" style="color:var(--gold)">%${p2}</span></div><div class="p-box"><span class="p-lbl">3+</span><span class="p-val" style="color:var(--accent)">%${p3}</span></div></div><div class="h-actions"><button class="mini-btn" style="background:#00ffa322; color:var(--accent)" onclick="mark(true, this)">✓</button><button class="mini-btn" style="background:#ff4d4d22; color:var(--red)" onclick="mark(false, this)">✕</button></div>`;
+        card.className = `hist-card`;
+        card.innerHTML = `
+            <div class="card-top">
+                <div class="h-teams">${t1}-${t2} <span class="h-lig">${lg}</span> ${conflict ? '<span class="conflict-badge">⚠ ÇELİŞKİ</span>' : ''}</div>
+                <div class="h-actions">
+                    <button class="mini-btn" style="background:#00ffa322; color:var(--accent)" onclick="mark(true, this)">✓</button>
+                    <button class="mini-btn" style="background:#ff4d4d22; color:var(--red)" onclick="mark(false, this)">✕</button>
+                </div>
+            </div>
+            <div class="card-mid">
+                <div class="p-box"><span class="p-lbl">1.5 ALT</span><span class="p-val" style="color:var(--red)">%${p1}</span></div>
+                <div class="p-box"><span class="p-lbl">T2 GOL</span><span class="p-val" style="color:var(--gold)">%${p2}</span></div>
+                <div class="p-box"><span class="p-lbl">3+ GOL</span><span class="p-val" style="color:var(--accent)">%${p3}</span></div>
+            </div>
+            <div class="card-bot">
+                <span>${insight}</span>
+                <div>
+                    <span style="font-size:7px">RİSK</span>
+                    <div class="risk-bar"><div class="risk-fill" style="width:${risk}%; background:${riskCol}"></div></div>
+                </div>
+            </div>
+        `;
         const list = document.getElementById('history-list');
         list.prepend(card);
         localStorage.setItem('ppro_history', list.innerHTML);
     }
 
     function mark(win, btn) { stats.total++; if(win) stats.wins++; localStorage.setItem('ppro_stats', JSON.stringify(stats)); updateUI(); btn.parentElement.innerHTML = `<span style="font-size:12px;">${win?'✅':'❌'}</span>`; localStorage.setItem('ppro_history', document.getElementById('history-list').innerHTML); }
-    function clearHistory() { if(confirm("LİSTEYİ SİL?")){ localStorage.removeItem('ppro_history'); document.getElementById('history-list').innerHTML = ''; } }
-    function clearStats() { if(confirm("BAŞARIYI SIFIRLA?")){ stats={total:0,wins:0}; localStorage.setItem('ppro_stats',JSON.stringify(stats)); updateUI(); }}
+    function clearStats() { if(confirm("SIFIRLA?")){ stats={total:0,wins:0}; localStorage.setItem('ppro_stats',JSON.stringify(stats)); updateUI(); }}
 </script>
 </body>
 </html>

@@ -2,114 +2,160 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Master Engine v3.0 | Professional</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Engine v3.0 | Visual Update</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0f1e;
-            --card: #161e31;
-            --accent: #00d4ff;
-            --text: #ffffff;
-            --subtext: #94a3b8;
-            --p1: #ff4d4d; /* 0-1 Gol */
-            --p2: #ffab00; /* Tam 2 Gol */
-            --p3: #00e676; /* Tam 3 Gol */
+            --main-bg: #1c2229;
+            --panel-bg: #252b33;
+            --input-bg: #ffffff;
+            --accent: #3dc6d1;
+            --text-gray: #a0a6ae;
         }
 
-        * { box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; justify-content: center; }
-
-        .app-container {
-            width: 100%;
-            max-width: 450px;
-            background: var(--card);
-            border-radius: 24px;
+        body {
+            background-color: #121212;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
             padding: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.05);
+            margin: 0;
         }
 
-        h1 { font-weight: 800; font-size: 20px; text-align: center; margin-bottom: 20px; color: var(--accent); }
-
-        .section-label { font-size: 11px; color: var(--subtext); font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 5px; }
-
-        .league-box {
+        .master-container {
+            background-color: var(--main-bg);
             width: 100%;
-            padding: 12px;
-            background: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 12px;
+            max-width: 500px;
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .header {
+            text-align: center;
             color: white;
-            font-size: 15px;
-            margin-bottom: 20px;
-            outline: none;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
         }
 
-        /* Takım Sütunları */
-        .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .team-column { background: #0f172a; padding: 15px; border-radius: 16px; border: 1px solid #1e293b; }
+        .label-main {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+        }
 
-        input {
+        select, input {
             width: 100%;
-            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
             border: none;
-            border-bottom: 1px solid #334155;
-            color: white;
-            padding: 8px 0;
-            margin-bottom: 12px;
+            padding: 12px;
             font-size: 14px;
             outline: none;
         }
 
-        input:focus { border-color: var(--accent); }
-        input::placeholder { color: #475569; font-size: 12px; }
+        select {
+            background-color: var(--input-bg);
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
 
-        .full-width-metrics { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-        .m-box { background: #0f172a; padding: 12px; border-radius: 12px; border: 1px solid #1e293b; }
+        /* İkili Panel Yapısı */
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .sub-panel {
+            background-color: var(--panel-bg);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .input-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .input-box label {
+            color: white;
+            font-size: 12px;
+            flex: 1;
+        }
+
+        .input-box input {
+            width: 100px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        /* Analiz Sonuç Alanı */
+        .result-panel {
+            background-color: var(--panel-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 6px solid var(--accent);
+        }
+
+        .result-title {
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 25px;
+            background: #121212;
+            border-radius: 20px;
+            display: flex;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .bar { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #000; }
 
         .btn-analyze {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #00d4ff, #0072ff);
-            border: none;
-            border-radius: 14px;
+            background-color: var(--accent);
             color: white;
-            font-weight: 800;
-            font-size: 16px;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,212,255,0.2);
+            margin-top: 25px;
+            text-transform: uppercase;
         }
 
-        #result-box { margin-top: 20px; }
-        .res-card {
-            background: #1e293b;
-            border-radius: 18px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--accent);
-            animation: fadeIn 0.3s ease;
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 11px;
+            color: var(--text-gray);
+            margin-top: 10px;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .res-title { display: flex; justify-content: space-between; font-weight: 800; font-size: 14px; margin-bottom: 10px; }
-
-        .bar-wrap { height: 30px; background: #0f172a; border-radius: 8px; display: flex; overflow: hidden; margin-bottom: 15px; }
-        .bar { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
-
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; text-align: center; }
-        .g-item { font-size: 10px; color: var(--subtext); }
-        .g-val { display: block; font-size: 13px; font-weight: 800; color: white; margin-top: 2px; }
+        .dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <h1>MASTER ENGINE v3.0</h1>
+<div class="master-container">
+    <div class="header">MASTER ENGINE v3.0</div>
 
-    <span class="section-label">Lig Seçimi</span>
-    <select id="league" class="league-box">
+    <label class="label-main">League-select</label>
+    <select id="league">
         <option value="ERE">Hollanda Eredivisie (ERE)</option>
         <option value="POR">Portekiz Liga Portugal (POR)</option>
         <option value="TSL">Türkiye Süper Ligi (TSL)</option>
@@ -117,56 +163,48 @@
         <option value="CHP">İngiltere Championship (CHP)</option>
     </select>
 
-    <div class="team-grid">
-        <div class="team-column">
-            <span class="section-label">Ev Takımı</span>
-            <input type="text" id="h-name" placeholder="Takım İsmi">
-            <input type="number" id="h-s" placeholder="SCA (Üretim)">
-            <input type="number" id="h-q" step="0.01" placeholder="npxG/Sh (Kalite)">
+    <div class="row">
+        <div class="sub-panel">
+            <div class="input-box"><label>Ev Takım</label><input type="text" id="h-name" placeholder="İsim"></div>
+            <div class="input-box"><label>SCA</label><input type="number" id="h-s" placeholder="h S"></div>
+            <div class="input-box"><label>npxG/Sh</label><input type="number" id="h-q" step="0.01" placeholder="Q"></div>
         </div>
-        <div class="team-column">
-            <span class="section-label">Dep. Takımı</span>
-            <input type="text" id="a-name" placeholder="Takım İsmi">
-            <input type="number" id="a-s" placeholder="SCA (Üretim)">
-            <input type="number" id="a-q" step="0.01" placeholder="npxG/Sh (Kalite)">
+        <div class="sub-panel">
+            <div class="input-box"><label>Dep. Takım</label><input type="text" id="a-name" placeholder="İsim"></div>
+            <div class="input-box"><label>SCA</label><input type="number" id="a-s" placeholder="a S"></div>
+            <div class="input-box"><label>npxG/Sh</label><input type="number" id="a-q" step="0.01" placeholder="Q"></div>
         </div>
     </div>
 
-    <div class="full-width-metrics">
-        <div class="m-box">
-            <span class="section-label">Toplam Ceza Sahasına Pas (PPA)</span>
-            <input type="number" id="ppa" placeholder="Örn: 22">
+    <div class="row">
+        <div class="sub-panel">
+            <div class="input-box"><label>Toplam PPA</label><input type="number" id="ppa" placeholder="PPA"></div>
         </div>
-        <div class="m-box">
-            <span class="section-label">Toplam İlerleyen Pas (PrgR)</span>
-            <input type="number" id="prgr" placeholder="Örn: 85">
+        <div class="sub-panel">
+            <div class="input-box"><label>Toplam PrgR</label><input type="number" id="prgr" placeholder="PrgR"></div>
         </div>
     </div>
 
-    <button class="btn-analyze" onclick="calculate()">HESAPLA VE ANALİZ ET</button>
+    <div id="display-results"></div>
 
-    <div id="result-box"></div>
+    <button class="btn-analyze" onclick="runAnalysis()">Analiz Et</button>
 </div>
 
 <script>
-    function calculate() {
+    function runAnalysis() {
         const league = document.getElementById('league').value;
-        const hName = document.getElementById('h-name').value || "Ev";
-        const aName = document.getElementById('a-name').value || "Dep";
-        
-        const hs = parseFloat(document.getElementById('h-s').value || 0);
-        const hq = parseFloat(document.getElementById('h-q').value || 0.1);
-        const as = parseFloat(document.getElementById('a-s').value || 0);
-        const aq = parseFloat(document.getElementById('a-q').value || 0.1);
+        const hS = parseFloat(document.getElementById('h-s').value || 0);
+        const aS = parseFloat(document.getElementById('a-s').value || 0);
+        const hQ = parseFloat(document.getElementById('h-q').value || 0.1);
+        const aQ = parseFloat(document.getElementById('a-q').value || 0.1);
         const ppa = parseFloat(document.getElementById('ppa').value || 0);
         const prgr = parseFloat(document.getElementById('prgr').value || 0);
 
-        const sca = hs + as;
-        const q = (hq + aq) / 2;
-
+        const sca = hS + aS;
+        const q = (hQ + aQ) / 2;
         let p1, p2, p3;
 
-        // LİG BAZLI MODEL (Min %80 Güven Aralığı)
+        // Metrik Tünelleri (%80 Güven)
         if(league === 'ERE') {
             if(sca <= 24 && ppa <= 12) { p1=80; p2=15; p3=5; }
             else if(sca <= 38 && q <= 0.10) { p1=10; p2=80; p3=10; }
@@ -189,27 +227,25 @@
             else { p1=5; p2=25; p3=70; }
         }
 
-        const resBox = document.getElementById('result-box');
-        resBox.innerHTML = `
-            <div class="res-card">
-                <div class="res-title">
-                    <span>${hName} vs ${aName}</span>
-                    <span style="color:var(--accent)">${league}</span>
+        const hName = document.getElementById('h-name').value || "EV";
+        const aName = document.getElementById('a-name').value || "DEP";
+
+        document.getElementById('display-results').innerHTML = `
+            <div class="result-panel">
+                <div class="result-title">${hName} vs ${aName} (${league})</div>
+                <div class="progress-bar">
+                    <div class="bar" style="width:${p1}%; background:#ff4b4b;">%${p1}</div>
+                    <div class="bar" style="width:${p2}%; background:#ffae42;">%${p2}</div>
+                    <div class="bar" style="width:${p3}%; background:#2ecc71;">%${p3}</div>
                 </div>
-                <div class="bar-wrap">
-                    <div class="bar" style="width:${p1}%; background:var(--p1)">%${p1}</div>
-                    <div class="bar" style="width:${p2}%; background:var(--p2)">%${p2}</div>
-                    <div class="bar" style="width:${p3}%; background:var(--p3)">%${p3}</div>
-                </div>
-                <div class="grid-3">
-                    <div class="g-item">0-1 GOL<span class="g-val" style="color:var(--p1)">%${p1}</span></div>
-                    <div class="g-item">2 GOL<span class="g-val" style="color:var(--p2)">%${p2}</span></div>
-                    <div class="g-item">3 GOL<span class="g-val" style="color:var(--p3)">%${p3}</span></div>
+                <div class="legend">
+                    <span><span class="dot" style="background:#ff4b4b;"></span>0-1 Gol</span>
+                    <span><span class="dot" style="background:#ffae42;"></span>Tam 2 Gol</span>
+                    <span><span class="dot" style="background:#2ecc71;"></span>Tam 3 Gol</span>
                 </div>
             </div>
-        ` + resBox.innerHTML;
+        `;
     }
 </script>
-
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO SCOUT MASTER V5 - GOLD EDITION</title>
+    <title>P-PRO SCOUT MASTER V5.1</title>
     <style>
         :root {
             --bg: #08090a; --card: #121417; --accent: #00ff85;
@@ -42,9 +42,7 @@
         .history-title { margin: 15px 0 8px; font-size: 11px; color: var(--text); border-left: 3px solid var(--accent); padding-left: 6px; font-weight: bold; }
         .hist-card { background: var(--card); border: 2px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 8px; position: relative; transition: 0.3s; }
         
-        /* GOL ALARMI STİLİ */
-        .goal-alert { border-color: var(--fire) !important; box-shadow: 0 0 10px rgba(255, 77, 77, 0.3); background: linear-gradient(145deg, #121417, #260a0a) !important; }
-        .fire-icon { color: var(--fire); font-size: 12px; margin-left: 5px; display: none; }
+        .goal-alert { border-color: var(--fire) !important; box-shadow: 0 0 12px rgba(255, 77, 77, 0.4); background: linear-gradient(145deg, #121417, #2b0c0c) !important; }
 
         .hist-header { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 6px; font-weight: bold; padding-right: 15px; }
         .bar-row { margin-bottom: 4px; }
@@ -98,11 +96,11 @@
 <script>
     let activeL = 'PL';
     const ligs = {
-        'PL': { m: 0.92, qT: 0.11, prT: 70 }, 
-        'LL': { m: 1.4, qT: 0.08, prT: 60 },
-        'SA': { m: 1.0, qT: 0.09, prT: 65 }, 
-        'BL': { m: 1.3, qT: 0.11, prT: 75 }, 
-        'F1': { m: 0.85, qT: 0.07, prT: 55 }
+        'PL': { m: 0.92, qT: 0.11 }, 
+        'LL': { m: 1.4, qT: 0.08 },
+        'SA': { m: 1.0, qT: 0.09 }, 
+        'BL': { m: 1.3, qT: 0.11 }, 
+        'F1': { m: 0.85, qT: 0.07 }
     };
 
     function toggleDD() { const d = document.getElementById('dd'); d.style.display = d.style.display==='block'?'none':'block'; }
@@ -114,46 +112,44 @@
     }
 
     function analyze() {
-        const t1 = document.getElementById('t1').value || "A";
-        const t2 = document.getElementById('t2').value || "B";
+        const team1 = document.getElementById('t1').value || "A";
+        const team2 = document.getElementById('t2').value || "B";
         const pr = (parseFloat(document.getElementById('t1-p').value)||0) + (parseFloat(document.getElementById('t2-p').value)||0);
         const q = ((parseFloat(document.getElementById('t1-q').value)||0) + (parseFloat(document.getElementById('t2-q').value)||0)) / 2;
         
         const c = ligs[activeL];
         
-        // GOL MOTORU MATEMATİĞİ
+        // HESAPLAMA MANTIGI
         let prob3 = Math.min(96, (pr * c.m) + (q * 118) / 2.3);
-        
-        // Eğer bitiricilik (Q) lig eşiğinin çok üstündeyse ekstra bonus
         if(q > c.qT + 0.03) prob3 += 5;
         
         let prob2 = (100 - prob3) * 0.6; 
         let prob1 = 100 - prob3 - prob2;
 
-        addHistory(t1, t2, p1, p2, p3, q, pr, c);
+        addHistory(team1, team2, prob1, prob2, prob3, q, pr);
     }
 
-    function addHistory(t1, t2, p1, p2, p3, q, pr, c) {
+    function addHistory(t1, t2, p1, p2, p3, qVal, prVal) {
         const list = document.getElementById('history-list');
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         
-        // GOL ALARMI KONTROLÜ
-        const isHighGoal = (p3 > 75 && q >= c.qT) ? "goal-alert" : "";
-        const fire = isHighGoal ? "🔥" : "";
+        // GOL ALARMI (🔥)
+        const isFire = (p3 > 75) ? "goal-alert" : "";
+        const fireIcon = isFire ? "🔥" : "";
 
         const card = document.createElement('div');
-        card.className = `hist-card ${isHighGoal}`;
+        card.className = `hist-card ${isFire}`;
         card.innerHTML = `
             <div class="del-hist" onclick="this.parentElement.remove()">×</div>
             <div class="hist-header">
-                <span>${t1} v ${t2} ${fire}</span>
+                <span>${t1} v ${t2} ${fireIcon}</span>
                 <span style="color:var(--accent)">${time}</span>
             </div>
             ${row("0-1 GOL", p1, "#4caf50")}
             ${row("2 GOL", p2, "#ffc107")}
             ${row("3+ GOL", p3, "#f44336")}
-            <div style="font-size:8px; color:#555; margin-top:5px; text-align:right">
-                Q: ${q.toFixed(2)} | PR: ${pr} | L: ${activeL}
+            <div style="font-size:8px; color:#666; margin-top:5px; text-align:right">
+                npxG/Sh: ${qVal.toFixed(2)} | PrgR Sum: ${prVal} | Lig: ${activeL}
             </div>
         `;
         list.prepend(card);

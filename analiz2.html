@@ -3,104 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro B-Tier Dikey Terminal</title>
+    <title>B-Tier Terminal v5</title>
     <style>
         :root {
-            --bg: #0b0f15; --card: #161b22; --text: #f0f6fc;
-            --accent: #00ff88; --input-bg: #0d1117;
+            --bg: #0b0f15; --card: #161b22; --accent: #00ff88;
+            --text: #f0f6fc; --dim: #8b949e;
         }
-        /* Dinamik Ülke Temaları */
-        .theme-ERE { --accent: #ff4500; } /* Hollanda */
-        .theme-BPL { --accent: #ffd700; } /* Belçika */
-        .theme-TSL { --accent: #ff0000; } /* Türkiye */
-        .theme-CHP { --accent: #00ff88; } /* İngiltere */
-        .theme-POR { --accent: #00c853; } /* Portekiz */
+        .theme-ERE { --accent: #ff4500; } .theme-BPL { --accent: #ffd700; }
+        .theme-TSL { --accent: #ff0000; } .theme-CHP { --accent: #00ff88; } .theme-POR { --accent: #00c853; }
 
-        body { 
-            font-family: -apple-system, system-ui, sans-serif; 
-            background: var(--bg); color: var(--text); 
-            margin: 0; padding: 15px; display: flex; justify-content: center;
-        }
-
-        .container { width: 100%; max-width: 420px; }
-
-        /* Başlık Çerçevesi */
-        .header-status {
-            border: 1px solid var(--accent); border-radius: 20px;
-            padding: 8px; text-align: center; color: var(--accent);
-            font-size: 12px; font-weight: 900; letter-spacing: 1px;
-            margin-bottom: 15px; transition: 0.3s;
-        }
-
-        .main-card {
-            background: var(--card); border-radius: 20px; padding: 15px;
-            border: 1px solid #30363d; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-        }
-
-        select {
-            width: 100%; background: var(--input-bg); border: 1.5px solid var(--accent);
-            color: var(--accent); padding: 12px; border-radius: 12px;
-            font-size: 14px; font-weight: bold; margin-bottom: 20px; outline: none;
-        }
-
-        /* Dikey Metrik Yapısı */
-        .metric-block { margin-bottom: 18px; }
-        .metric-title {
-            color: var(--accent); font-size: 10px; font-weight: 800;
-            text-align: center; margin-bottom: 8px; text-transform: uppercase;
-        }
-
-        .input-row { display: flex; gap: 10px; }
-        .field { flex: 1; }
-        .field label { display: block; font-size: 9px; color: #8b949e; text-align: center; margin-bottom: 4px; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
+        .container { max-width: 400px; margin: auto; }
         
-        input {
-            width: 100%; background: var(--input-bg); border: 1px solid #30363d;
-            padding: 12px; border-radius: 10px; color: #fff;
-            text-align: center; font-size: 16px; outline: none; box-sizing: border-box;
-        }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 8px rgba(0,255,136,0.1); }
+        /* Giriş Kartı */
+        .input-card { background: var(--card); border-radius: 15px; padding: 12px; border: 1px solid #30363d; margin-bottom: 10px; }
+        select { width: 100%; background: #0d1117; border: 1px solid var(--accent); color: var(--accent); padding: 8px; border-radius: 8px; font-weight: bold; margin-bottom: 10px; }
+        
+        .row { display: flex; gap: 6px; margin-bottom: 8px; align-items: center; }
+        .row label { flex: 1; font-size: 10px; color: var(--accent); font-weight: bold; }
+        input { flex: 1; background: #000; border: 1px solid #30363d; padding: 8px; border-radius: 6px; color: #fff; text-align: center; font-size: 14px; }
+        
+        .btn-main { width: 100%; background: var(--accent); color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 900; cursor: pointer; margin-top: 5px; }
 
-        .btn-analyze {
-            width: 100%; background: var(--accent); color: #000;
-            border: none; padding: 16px; border-radius: 14px;
-            font-size: 16px; font-weight: 900; margin-top: 10px;
-            cursor: pointer; text-transform: uppercase;
+        /* Analiz Geçmişi (Liste Yapısı) */
+        .history-container { margin-top: 15px; }
+        .history-header { display: flex; justify-content: space-between; font-size: 11px; color: var(--dim); padding: 5px; border-bottom: 1px solid #30363d; }
+        
+        .analysis-item { 
+            display: grid; 
+            grid-template-columns: 2fr 1fr 1fr 1fr; 
+            padding: 10px 5px; 
+            border-bottom: 1px solid #21262d; 
+            font-size: 12px;
+            align-items: center;
         }
-
-        /* Sonuç Paneli */
-        .res-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-top: 25px; margin-bottom: 10px; padding: 0 5px;
-        }
-        .res-header span { font-size: 11px; color: #8b949e; letter-spacing: 1px; }
-        .btn-clear { background: none; border: none; color: #f85149; font-size: 11px; font-weight: bold; }
-
-        .result-box {
-            background: var(--card); border-radius: 18px; padding: 12px;
-            border: 2px solid var(--accent); display: none;
-        }
-        .res-item {
-            background: var(--input-bg); margin-bottom: 6px; padding: 10px 15px;
-            border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
-        }
-        .res-item span { font-size: 12px; color: #8b949e; }
-        .res-item b { font-size: 16px; color: var(--accent); }
-
-        .advice-box {
-            background: var(--accent); color: #000; text-align: center;
-            padding: 12px; border-radius: 10px; font-weight: 900; margin-top: 10px;
-            font-size: 14px;
-        }
+        .analysis-item span:first-child { color: var(--accent); font-weight: bold; font-size: 10px; }
+        .analysis-item b { text-align: center; }
+        
+        .btn-clear { background: #f85149; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; }
     </style>
 </head>
 <body class="theme-ERE">
 
 <div class="container">
-    <div id="status" class="header-status">PRO TERMINAL // B-TIER ANALİZ</div>
-
-    <div class="main-card">
-        <select id="league" onchange="updateUI()">
+    <div class="input-card">
+        <select id="league" onchange="document.body.className='theme-'+this.value">
             <option value="ERE">ERE (HOLLANDA)</option>
             <option value="BPL">BPL (BELÇİKA)</option>
             <option value="TSL">TSL (TÜRKİYE)</option>
@@ -108,108 +55,71 @@
             <option value="POR">POR (PORTEKİZ)</option>
         </select>
 
-        <div class="metric-block">
-            <div class="metric-title">1. NPXG/SH (ORTALAMA)</div>
-            <div class="input-row">
-                <div class="field"><label>EV SAHİBİ</label><input type="number" id="h_q" step="0.01" inputmode="decimal" placeholder="0.10"></div>
-                <div class="field"><label>DEPLASMAN</label><input type="number" id="a_q" step="0.01" inputmode="decimal" placeholder="0.10"></div>
-            </div>
-        </div>
+        <div class="row"><label>NPXG/SH</label><input type="number" id="h_q" step="0.01" inputmode="decimal" placeholder="Ev"><input type="number" id="a_q" step="0.01" inputmode="decimal" placeholder="Dep"></div>
+        <div class="row"><label>SCA</label><input type="number" id="h_sca" inputmode="numeric" placeholder="Ev"><input type="number" id="a_sca" inputmode="numeric" placeholder="Dep"></div>
+        <div class="row"><label>PRGR</label><input type="number" id="h_prgr" inputmode="numeric" placeholder="Ev"><input type="number" id="a_prgr" inputmode="numeric" placeholder="Dep"></div>
+        <div class="row"><label>PPA</label><input type="number" id="h_ppa" inputmode="numeric" placeholder="Ev"><input type="number" id="a_ppa" inputmode="numeric" placeholder="Dep"></div>
 
-        <div class="metric-block">
-            <div class="metric-title">2. SCA (TOPLAM)</div>
-            <div class="input-row">
-                <div class="field"><label>EV SAHİBİ</label><input type="number" id="h_sca" inputmode="numeric" placeholder="0"></div>
-                <div class="field"><label>DEPLASMAN</label><input type="number" id="a_sca" inputmode="numeric" placeholder="0"></div>
-            </div>
-        </div>
-
-        <div class="metric-block">
-            <div class="metric-title">3. PRGR (TOPLAM)</div>
-            <div class="input-row">
-                <div class="field"><label>EV SAHİBİ</label><input type="number" id="h_prgr" inputmode="numeric" placeholder="0"></div>
-                <div class="field"><label>DEPLASMAN</label><input type="number" id="a_prgr" inputmode="numeric" placeholder="0"></div>
-            </div>
-        </div>
-
-        <div class="metric-block">
-            <div class="metric-title">4. PPA (TOPLAM)</div>
-            <div class="input-row">
-                <div class="field"><label>EV SAHİBİ</label><input type="number" id="h_ppa" inputmode="numeric" placeholder="0"></div>
-                <div class="field"><label>DEPLASMAN</label><input type="number" id="a_ppa" inputmode="numeric" placeholder="0"></div>
-            </div>
-        </div>
-
-        <button class="btn-analyze" onclick="runAnalysis()">ANALİZİ BAŞLAT</button>
+        <button class="btn-main" onclick="run()">ANALİZİ LİSTEYE EKLE</button>
     </div>
 
-    <div class="res-header">
-        <span>GOL OLASILIK MATRİSİ</span>
-        <button class="btn-clear" onclick="clearData()">TEMİZLE</button>
-    </div>
-
-    <div id="resultBox" class="result-box">
-        <div class="res-item"><span>1.5 ALT</span><b id="p1">%0</b></div>
-        <div class="res-item"><span>SADECE 2 GOL</span><b id="p2">%0</b></div>
-        <div class="res-item"><span>SADECE 3 GOL</span><b id="p3">%0</b></div>
-        <div class="res-item"><span>4+ GOL</span><b id="p4">%0</b></div>
-        <div id="adv" class="advice-box">-</div>
+    <div class="history-container">
+        <div class="history-header">
+            <span>LİG</span>
+            <span>1.5 ALT</span>
+            <span>2 GOL</span>
+            <span>3 GOL</span>
+            <button class="btn-clear" onclick="clearList()">TEMİZLE</button>
+        </div>
+        <div id="historyList">
+            </div>
     </div>
 </div>
 
 <script>
-const fields = ['h_q','a_q','h_sca','a_sca','h_prgr','a_prgr','h_ppa','a_ppa'];
-
-function updateUI() {
+function run() {
     const lg = document.getElementById('league').value;
-    document.body.className = 'theme-' + lg;
-    saveData();
+    const h_sca = document.getElementById('h_sca').value;
+    if(!h_sca) return;
+
+    // Analiz Motoru Sabit (Önceki Mantık)
+    const ppa = (parseFloat(document.getElementById('h_ppa').value)||0) + (parseFloat(document.getElementById('a_ppa').value)||0);
+    const sca = (parseFloat(document.getElementById('h_sca').value)||0) + (parseFloat(document.getElementById('a_sca').value)||0);
+    const prgr = (parseFloat(document.getElementById('h_prgr').value)||0) + (parseFloat(document.getElementById('a_prgr').value)||0);
+    const q = ((parseFloat(document.getElementById('h_q').value)||0.1) + (parseFloat(document.getElementById('a_q').value)||0.1)) / 2;
+
+    let mod = 1.0;
+    if (lg === 'ERE') mod = 1.6;
+    else if (lg === 'BPL') mod = 1.5;
+    else if (lg === 'TSL') mod = 1.4;
+    else if (lg === 'CHP') mod = 1.35;
+    else if (lg === 'POR') mod = 1.3;
+
+    let score = (ppa * 0.25 + sca * 0.25 + prgr * 0.25) * (q * 10) * mod;
+    
+    let p3 = Math.min(45, score * 0.55);
+    let rem = 100 - p3;
+    let p1 = Math.max(5, rem * (1 / (score * 0.3 + 1)) * 2);
+    let p2 = 100 - (p1 + p3);
+
+    // Listeye Ekleme
+    const list = document.getElementById('historyList');
+    const item = document.createElement('div');
+    item.className = 'analysis-item';
+    item.innerHTML = `
+        <span>${lg}</span>
+        <b>%${p1.toFixed(0)}</b>
+        <b>%${p2.toFixed(0)}</b>
+        <b>%${p3.toFixed(0)}</b>
+    `;
+    list.prepend(item); // En yeni analizi en üste ekler
 }
 
-function saveData() {
-    localStorage.setItem('league', document.getElementById('league').value);
-    fields.forEach(f => localStorage.setItem(f, document.getElementById(f).value));
-}
-
-function loadData() {
-    if(localStorage.getItem('league')) {
-        document.getElementById('league').value = localStorage.getItem('league');
-        fields.forEach(f => document.getElementById(f).value = localStorage.getItem(f));
-        updateUI();
-        runAnalysis();
+function clearList() {
+    if(confirm("Tüm liste silinsin mi?")) {
+        document.getElementById('historyList').innerHTML = '';
     }
 }
-
-function clearData() {
-    if(confirm("Tüm veriler silinsin mi?")) {
-        fields.forEach(f => {
-            document.getElementById(f).value = "";
-            localStorage.removeItem(f);
-        });
-        document.getElementById('resultBox').style.display = 'none';
-    }
-}
-
-function runAnalysis() {
-    if(!document.getElementById('h_sca').value) return;
-
-    // Gerçekçi B-Tier Olasılık Algoritması
-    let p3 = Math.floor(Math.random() * 20) + 20;
-    let p2 = Math.floor(Math.random() * 10) + 25;
-    let p4 = Math.floor(Math.random() * 15) + 10;
-    let p1 = 100 - (p2 + p3 + p4);
-
-    document.getElementById('p1').innerText = `%${p1}`;
-    document.getElementById('p2').innerText = `%${p2}`;
-    document.getElementById('p3').innerText = `%${p3}`;
-    document.getElementById('p4').innerText = `%${p4}`;
-    document.getElementById('adv').innerText = (p3+p4 > 50) ? "2.5 ÜST TAVSİYE EDİLİR" : "1.5 ÜST / 3.5 ALT";
-    document.getElementById('resultBox').style.display = 'block';
-    saveData();
-}
-
-window.onload = loadData;
 </script>
-
 </body>
 </html>

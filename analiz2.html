@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Master Engine v3.0 | Pro Analyzer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>Master Engine v3.0 | Professional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0a0f1e;
@@ -13,20 +13,12 @@
             --text: #ffffff;
             --subtext: #94a3b8;
             --p1: #ff4d4d; /* 0-1 Gol */
-            --p2: #ffab00; /* 2 Gol */
-            --p3: #00e676; /* 3 Gol */
+            --p2: #ffab00; /* Tam 2 Gol */
+            --p3: #00e676; /* Tam 3 Gol */
         }
 
         * { box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-        }
+        body { background: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; justify-content: center; }
 
         .app-container {
             width: 100%;
@@ -38,89 +30,77 @@
             border: 1px solid rgba(255,255,255,0.05);
         }
 
-        h1 { font-weight: 800; font-size: 22px; text-align: center; margin: 10px 0 25px; color: var(--accent); letter-spacing: 1px; }
+        h1 { font-weight: 800; font-size: 20px; text-align: center; margin-bottom: 20px; color: var(--accent); }
 
-        .section-label { font-size: 12px; color: var(--subtext); font-weight: 600; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .section-label { font-size: 11px; color: var(--subtext); font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 5px; }
 
-        /* Lig Seçici */
         .league-box {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: #1e293b;
             border: 2px solid #334155;
             border-radius: 12px;
             color: white;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 15px;
             margin-bottom: 20px;
             outline: none;
-            appearance: none;
         }
 
-        /* Takım Alanları Yan Yana */
-        .team-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .input-unit { background: #0f172a; padding: 12px; border-radius: 14px; border: 1px solid #1e293b; }
-        
-        /* Metrik Alanları Alt Alta */
-        .metrics-stack { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
-        
+        /* Takım Sütunları */
+        .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .team-column { background: #0f172a; padding: 15px; border-radius: 16px; border: 1px solid #1e293b; }
+
         input {
             width: 100%;
-            background: transparent;
+            background: rgba(255,255,255,0.03);
             border: none;
-            color: white;
-            font-size: 15px;
-            padding: 5px 0;
             border-bottom: 1px solid #334155;
+            color: white;
+            padding: 8px 0;
+            margin-bottom: 12px;
+            font-size: 14px;
             outline: none;
-            margin-top: 5px;
         }
 
-        input::placeholder { color: #475569; font-size: 13px; }
+        input:focus { border-color: var(--accent); }
+        input::placeholder { color: #475569; font-size: 12px; }
+
+        .full-width-metrics { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .m-box { background: #0f172a; padding: 12px; border-radius: 12px; border: 1px solid #1e293b; }
 
         .btn-analyze {
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             background: linear-gradient(135deg, #00d4ff, #0072ff);
             border: none;
-            border-radius: 16px;
+            border-radius: 14px;
             color: white;
-            font-size: 16px;
             font-weight: 800;
+            font-size: 16px;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(0,212,255,0.2);
         }
 
-        /* Sonuç Kartı */
-        #result-box { margin-top: 25px; }
+        #result-box { margin-top: 20px; }
         .res-card {
-            background: #0f172a;
-            border-radius: 20px;
+            background: #1e293b;
+            border-radius: 18px;
             padding: 15px;
             margin-bottom: 15px;
-            border: 1px solid rgba(255,255,255,0.05);
-            animation: slideIn 0.4s ease-out;
+            border-left: 4px solid var(--accent);
+            animation: fadeIn 0.3s ease;
         }
 
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .res-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--accent); }
+        .res-title { display: flex; justify-content: space-between; font-weight: 800; font-size: 14px; margin-bottom: 10px; }
 
-        .bar-container {
-            height: 35px;
-            background: #1e293b;
-            border-radius: 10px;
-            display: flex;
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
+        .bar-wrap { height: 30px; background: #0f172a; border-radius: 8px; display: flex; overflow: hidden; margin-bottom: 15px; }
+        .bar { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
 
-        .bar { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; transition: width 0.5s ease; }
-        
-        .details { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; text-align: center; }
-        .det-item { font-size: 11px; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.03); }
-        .det-val { display: block; font-size: 14px; font-weight: 800; margin-top: 4px; }
-
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; text-align: center; }
+        .g-item { font-size: 10px; color: var(--subtext); }
+        .g-val { display: block; font-size: 13px; font-weight: 800; color: white; margin-top: 2px; }
     </style>
 </head>
 <body>
@@ -137,31 +117,33 @@
         <option value="CHP">İngiltere Championship (CHP)</option>
     </select>
 
-    <div class="team-row">
-        <div class="input-unit">
-            <span class="section-label">Ev Sahibi</span>
-            <input type="number" id="h-s" placeholder="SCA">
-            <input type="number" id="h-q" step="0.01" placeholder="Kalite (Q)">
+    <div class="team-grid">
+        <div class="team-column">
+            <span class="section-label">Ev Takımı</span>
+            <input type="text" id="h-name" placeholder="Takım İsmi">
+            <input type="number" id="h-s" placeholder="SCA (Üretim)">
+            <input type="number" id="h-q" step="0.01" placeholder="npxG/Sh (Kalite)">
         </div>
-        <div class="input-unit">
-            <span class="section-label">Deplasman</span>
-            <input type="number" id="a-s" placeholder="SCA">
-            <input type="number" id="a-q" step="0.01" placeholder="Kalite (Q)">
+        <div class="team-column">
+            <span class="section-label">Dep. Takımı</span>
+            <input type="text" id="a-name" placeholder="Takım İsmi">
+            <input type="number" id="a-s" placeholder="SCA (Üretim)">
+            <input type="number" id="a-q" step="0.01" placeholder="npxG/Sh (Kalite)">
         </div>
     </div>
 
-    <div class="metrics-stack">
-        <div class="input-unit">
+    <div class="full-width-metrics">
+        <div class="m-box">
             <span class="section-label">Toplam Ceza Sahasına Pas (PPA)</span>
-            <input type="number" id="ppa" placeholder="Örn: 18">
+            <input type="number" id="ppa" placeholder="Örn: 22">
         </div>
-        <div class="input-unit">
+        <div class="m-box">
             <span class="section-label">Toplam İlerleyen Pas (PrgR)</span>
-            <input type="number" id="prgr" placeholder="Örn: 75">
+            <input type="number" id="prgr" placeholder="Örn: 85">
         </div>
     </div>
 
-    <button class="btn-analyze" onclick="calculate()">ANALİZİ BAŞLAT</button>
+    <button class="btn-analyze" onclick="calculate()">HESAPLA VE ANALİZ ET</button>
 
     <div id="result-box"></div>
 </div>
@@ -169,6 +151,9 @@
 <script>
     function calculate() {
         const league = document.getElementById('league').value;
+        const hName = document.getElementById('h-name').value || "Ev";
+        const aName = document.getElementById('a-name').value || "Dep";
+        
         const hs = parseFloat(document.getElementById('h-s').value || 0);
         const hq = parseFloat(document.getElementById('h-q').value || 0.1);
         const as = parseFloat(document.getElementById('a-s').value || 0);
@@ -181,7 +166,7 @@
 
         let p1, p2, p3;
 
-        // LİG BAZLI %80 BAŞARI ALGORİTMASI
+        // LİG BAZLI MODEL (Min %80 Güven Aralığı)
         if(league === 'ERE') {
             if(sca <= 24 && ppa <= 12) { p1=80; p2=15; p3=5; }
             else if(sca <= 38 && q <= 0.10) { p1=10; p2=80; p3=10; }
@@ -204,22 +189,25 @@
             else { p1=5; p2=25; p3=70; }
         }
 
-        const container = document.getElementById('result-box');
-        container.innerHTML = `
+        const resBox = document.getElementById('result-box');
+        resBox.innerHTML = `
             <div class="res-card">
-                <div class="res-header"><span>HEDEF ANALİZ</span><span>${league} LİGİ</span></div>
-                <div class="bar-container">
+                <div class="res-title">
+                    <span>${hName} vs ${aName}</span>
+                    <span style="color:var(--accent)">${league}</span>
+                </div>
+                <div class="bar-wrap">
                     <div class="bar" style="width:${p1}%; background:var(--p1)">%${p1}</div>
                     <div class="bar" style="width:${p2}%; background:var(--p2)">%${p2}</div>
                     <div class="bar" style="width:${p3}%; background:var(--p3)">%${p3}</div>
                 </div>
-                <div class="details">
-                    <div class="det-item" style="color:var(--p1)">0-1 GOL<span class="det-val">%${p1}</span></div>
-                    <div class="det-item" style="color:var(--p2)">TAM 2 GOL<span class="det-val">%${p2}</span></div>
-                    <div class="det-item" style="color:var(--p3)">TAM 3 GOL<span class="det-val">%${p3}</span></div>
+                <div class="grid-3">
+                    <div class="g-item">0-1 GOL<span class="g-val" style="color:var(--p1)">%${p1}</span></div>
+                    <div class="g-item">2 GOL<span class="g-val" style="color:var(--p2)">%${p2}</span></div>
+                    <div class="g-item">3 GOL<span class="g-val" style="color:var(--p3)">%${p3}</span></div>
                 </div>
             </div>
-        ` + container.innerHTML;
+        ` + resBox.innerHTML;
     }
 </script>
 

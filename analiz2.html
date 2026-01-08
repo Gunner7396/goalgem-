@@ -2,9 +2,9 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Engine v3.0 | Visual Update</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Master Engine v3.0 | Final Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --main-bg: #1c2229;
@@ -14,37 +14,39 @@
             --text-gray: #a0a6ae;
         }
 
+        * { box-sizing: border-box; }
         body {
             background-color: #121212;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
             display: flex;
             justify-content: center;
-            padding: 20px;
             margin: 0;
+            padding: 10px;
         }
 
         .master-container {
             background-color: var(--main-bg);
             width: 100%;
-            max-width: 500px;
-            border-radius: 30px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            max-width: 420px;
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
         }
 
         .header {
             text-align: center;
             color: white;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            letter-spacing: 1px;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
         }
 
         .label-main {
             color: var(--text-gray);
-            font-size: 14px;
-            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 6px;
             display: block;
         }
 
@@ -52,101 +54,96 @@
             width: 100%;
             border-radius: 8px;
             border: none;
-            padding: 12px;
+            padding: 10px;
             font-size: 14px;
             outline: none;
-        }
-
-        select {
             background-color: var(--input-bg);
-            margin-bottom: 25px;
-            font-weight: bold;
         }
 
-        /* İkili Panel Yapısı */
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+        select { margin-bottom: 15px; font-weight: bold; cursor: pointer; }
 
+        /* Panel Yapısı */
         .sub-panel {
             background-color: var(--panel-bg);
             padding: 15px;
             border-radius: 15px;
+            margin-bottom: 15px;
         }
 
-        .input-box {
+        .input-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 10px;
         }
 
-        .input-box label {
+        .input-row:last-child { margin-bottom: 0; }
+
+        .input-row label {
             color: white;
             font-size: 12px;
+            font-weight: 600;
             flex: 1;
         }
 
-        .input-box input {
-            width: 100px;
+        .input-row input {
+            width: 120px;
             padding: 8px;
             text-align: center;
+            font-weight: bold;
         }
 
-        /* Analiz Sonuç Alanı */
+        /* Analiz Kartı */
         .result-panel {
-            background-color: var(--panel-bg);
+            background-color: #1a1f26;
             border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-            border-left: 6px solid var(--accent);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--accent);
+            display: none;
         }
 
         .result-title {
             color: white;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
+            text-align: center;
         }
 
         .progress-bar {
-            height: 25px;
-            background: #121212;
-            border-radius: 20px;
+            height: 30px;
+            background: #000;
+            border-radius: 10px;
             display: flex;
             overflow: hidden;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
-        .bar { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #000; }
+        .bar { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #000; }
 
         .btn-analyze {
             width: 100%;
             background-color: var(--accent);
-            color: white;
+            color: #121212;
             border: none;
-            padding: 18px;
+            padding: 16px;
             border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 900;
             cursor: pointer;
-            margin-top: 25px;
             text-transform: uppercase;
+            transition: 0.2s;
         }
+
+        .btn-analyze:active { transform: scale(0.98); opacity: 0.9; }
 
         .legend {
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            font-size: 11px;
+            justify-content: space-between;
+            font-size: 10px;
             color: var(--text-gray);
-            margin-top: 10px;
         }
-
-        .dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; }
     </style>
 </head>
 <body>
@@ -154,7 +151,7 @@
 <div class="master-container">
     <div class="header">MASTER ENGINE v3.0</div>
 
-    <label class="label-main">League-select</label>
+    <label class="label-main">Lig Seçimi (League-select)</label>
     <select id="league">
         <option value="ERE">Hollanda Eredivisie (ERE)</option>
         <option value="POR">Portekiz Liga Portugal (POR)</option>
@@ -163,40 +160,47 @@
         <option value="CHP">İngiltere Championship (CHP)</option>
     </select>
 
-    <div class="row">
-        <div class="sub-panel">
-            <div class="input-box"><label>Ev Takım</label><input type="text" id="h-name" placeholder="İsim"></div>
-            <div class="input-box"><label>SCA</label><input type="number" id="h-s" placeholder="h S"></div>
-            <div class="input-box"><label>npxG/Sh</label><input type="number" id="h-q" step="0.01" placeholder="Q"></div>
+    <div class="sub-panel">
+        <div class="input-row"><label>Ev Takımı İsmi</label><input type="text" id="h-name" placeholder="Ev Sahibi"></div>
+        <div class="input-row"><label>npxG/Sh (Kalite)</label><input type="number" id="h-q" step="0.01" placeholder="Örn: 0.12"></div>
+        <div class="input-row"><label>SCA (Üretim)</label><input type="number" id="h-s" placeholder="Şut Yaratan"></div>
+    </div>
+
+    <div class="sub-panel">
+        <div class="input-row"><label>Dep. Takımı İsmi</label><input type="text" id="a-name" placeholder="Deplasman"></div>
+        <div class="input-row"><label>npxG/Sh (Kalite)</label><input type="number" id="a-q" step="0.01" placeholder="Örn: 0.09"></div>
+        <div class="input-row"><label>SCA (Üretim)</label><input type="number" id="a-s" placeholder="Şut Yaratan"></div>
+    </div>
+
+    <div class="sub-panel">
+        <div class="input-row"><label>Toplam PPA</label><input type="number" id="ppa" placeholder="C.Sahası Pas"></div>
+        <div class="input-row"><label>Toplam PrgR</label><input type="number" id="prgr" placeholder="İlerleyen Pas"></div>
+    </div>
+
+    <div id="result-panel" class="result-panel">
+        <div id="result-title" class="result-title">ANALİZ SONUCU</div>
+        <div class="progress-bar">
+            <div id="bar1" class="bar" style="background:#ff4b4b;"></div>
+            <div id="bar2" class="bar" style="background:#ffae42;"></div>
+            <div id="bar3" class="bar" style="background:#2ecc71;"></div>
         </div>
-        <div class="sub-panel">
-            <div class="input-box"><label>Dep. Takım</label><input type="text" id="a-name" placeholder="İsim"></div>
-            <div class="input-box"><label>SCA</label><input type="number" id="a-s" placeholder="a S"></div>
-            <div class="input-box"><label>npxG/Sh</label><input type="number" id="a-q" step="0.01" placeholder="Q"></div>
+        <div class="legend">
+            <span>🔴 0-1 GOL</span>
+            <span>🟡 2 GOL</span>
+            <span>🟢 3 GOL</span>
         </div>
     </div>
 
-    <div class="row">
-        <div class="sub-panel">
-            <div class="input-box"><label>Toplam PPA</label><input type="number" id="ppa" placeholder="PPA"></div>
-        </div>
-        <div class="sub-panel">
-            <div class="input-box"><label>Toplam PrgR</label><input type="number" id="prgr" placeholder="PrgR"></div>
-        </div>
-    </div>
-
-    <div id="display-results"></div>
-
-    <button class="btn-analyze" onclick="runAnalysis()">Analiz Et</button>
+    <button class="btn-analyze" onclick="calculate()">ANALİZ ET</button>
 </div>
 
 <script>
-    function runAnalysis() {
+    function calculate() {
         const league = document.getElementById('league').value;
-        const hS = parseFloat(document.getElementById('h-s').value || 0);
-        const aS = parseFloat(document.getElementById('a-s').value || 0);
         const hQ = parseFloat(document.getElementById('h-q').value || 0.1);
         const aQ = parseFloat(document.getElementById('a-q').value || 0.1);
+        const hS = parseFloat(document.getElementById('h-s').value || 0);
+        const aS = parseFloat(document.getElementById('a-s').value || 0);
         const ppa = parseFloat(document.getElementById('ppa').value || 0);
         const prgr = parseFloat(document.getElementById('prgr').value || 0);
 
@@ -204,7 +208,7 @@
         const q = (hQ + aQ) / 2;
         let p1, p2, p3;
 
-        // Metrik Tünelleri (%80 Güven)
+        // Lig Bazlı Mantık (Aynı Metrikler Farklı Lig Karakteri)
         if(league === 'ERE') {
             if(sca <= 24 && ppa <= 12) { p1=80; p2=15; p3=5; }
             else if(sca <= 38 && q <= 0.10) { p1=10; p2=80; p3=10; }
@@ -230,21 +234,15 @@
         const hName = document.getElementById('h-name').value || "EV";
         const aName = document.getElementById('a-name').value || "DEP";
 
-        document.getElementById('display-results').innerHTML = `
-            <div class="result-panel">
-                <div class="result-title">${hName} vs ${aName} (${league})</div>
-                <div class="progress-bar">
-                    <div class="bar" style="width:${p1}%; background:#ff4b4b;">%${p1}</div>
-                    <div class="bar" style="width:${p2}%; background:#ffae42;">%${p2}</div>
-                    <div class="bar" style="width:${p3}%; background:#2ecc71;">%${p3}</div>
-                </div>
-                <div class="legend">
-                    <span><span class="dot" style="background:#ff4b4b;"></span>0-1 Gol</span>
-                    <span><span class="dot" style="background:#ffae42;"></span>Tam 2 Gol</span>
-                    <span><span class="dot" style="background:#2ecc71;"></span>Tam 3 Gol</span>
-                </div>
-            </div>
-        `;
+        document.getElementById('result-panel').style.display = 'block';
+        document.getElementById('result-title').innerText = `${hName} vs ${aName} (${league})`;
+        
+        document.getElementById('bar1').style.width = p1 + '%';
+        document.getElementById('bar1').innerText = `%${p1}`;
+        document.getElementById('bar2').style.width = p2 + '%';
+        document.getElementById('bar2').innerText = `%${p2}`;
+        document.getElementById('bar3').style.width = p3 + '%';
+        document.getElementById('bar3').innerText = `%${p3}`;
     }
 </script>
 </body>

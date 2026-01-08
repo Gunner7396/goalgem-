@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO V13 - PERSISTENT ENGINE</title>
+    <title>P-PRO V13 - PERSISTENT</title>
     <style>
-        /* TAMAMEN SENİN GÖRSEL TASARIMIN */
         :root {
             --bg: #05070a; --panel: #0f1217; --accent: #00ffa3; --border: #1e2530;
             --text: #f0f3f5; --dim: #64748b;
@@ -30,10 +29,11 @@
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .input-grid label { grid-column: span 2; font-size: 9px; color: var(--accent); text-align: center; font-weight: 800; text-transform: uppercase; margin-top: 4px; opacity: 0.8; }
         input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: #fff; font-size: 14px; text-align: center; font-weight: 600; }
-        
+        input::placeholder { color: #334155; font-size: 10px; font-weight: 400; }
+
         #btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-weight: 900; margin-top: 15px; cursor: pointer; font-size: 13px; text-transform: uppercase; }
         
-        .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; border-top: 3px solid var(--accent); }
+        .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; border-top: 3px solid var(--accent); position: relative; }
         .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 800; font-size: 12px; }
         .lig-badge { padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 900; color: #000; }
         .bar-wrap { margin-bottom: 6px; }
@@ -41,6 +41,10 @@
         .bar-bg { width: 100%; height: 6px; background: #1e2530; border-radius: 4px; overflow: hidden; }
         .bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
         .footer-metrics { display: flex; justify-content: space-between; font-size: 8.5px; color: var(--dim); margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.05); }
+        
+        .hist-title-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 10px; padding: 0 5px; }
+        .hist-title-row h3 { font-size: 11px; color: var(--dim); margin: 0; letter-spacing: 1px; }
+        .clear-btn { background: transparent; border: 1px solid #334155; color: #ff4d4d; font-size: 9px; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -59,11 +63,11 @@
         </div>
 
         <div class="input-grid">
-            <input type="text" id="t1" placeholder="EV TAKIM">
-            <input type="text" id="t2" placeholder="DEP TAKIM">
+            <input type="text" id="t1" value="EV TAKIM">
+            <input type="text" id="t2" value="DEP TAKIM">
             <label>1. npxG/Sh (Kalite - Ort.)</label>
-            <input type="number" id="t1-q" placeholder="0.00" step="0.01">
-            <input type="number" id="t2-q" placeholder="0.00" step="0.01">
+            <input type="number" id="t1-q" placeholder="0.00">
+            <input type="number" id="t2-q" placeholder="0.00">
             <label>2. SCA (Üretim - Toplam)</label>
             <input type="number" id="t1-s" placeholder="SCA">
             <input type="number" id="t2-s" placeholder="SCA">
@@ -76,14 +80,25 @@
         </div>
         <button id="btn" onclick="analyze()">ANALİZİ BAŞLAT</button>
     </div>
+
+    <div class="hist-title-row">
+        <h3>ANALİZ GEÇMİŞİ</h3>
+        <button class="clear-btn" onclick="clearHistory()">TEMİZLE</button>
+    </div>
     <div id="history-list"></div>
 </div>
 
 <script>
-    // --- GÖRSEL KONTROLLER ---
     const lgBtn = document.getElementById('lg-btn');
     const ddMenu = document.getElementById('dd');
     const lgText = document.getElementById('lg-text');
+    const historyList = document.getElementById('history-list');
+
+    // Sayfa yüklendiğinde geçmişi getir
+    window.onload = () => {
+        const savedHistory = localStorage.getItem('ppro_v13_history');
+        if(savedHistory) historyList.innerHTML = savedHistory;
+    };
 
     lgBtn.onclick = (e) => { e.stopPropagation(); ddMenu.style.display = ddMenu.style.display === 'block' ? 'none' : 'block'; };
 
@@ -102,11 +117,8 @@
 
     window.onclick = () => { ddMenu.style.display = 'none'; };
 
-    // --- BİZİM ANALİZ MOTORUMUZ ( DNA ) ---
     function analyze() {
         const activeL = lgText.getAttribute('data-league');
-        
-        // Ev ve Deplasman verilerini oku
         const h_q = parseFloat(document.getElementById('t1-q').value || 0);
         const a_q = parseFloat(document.getElementById('t2-q').value || 0);
         const h_s = parseFloat(document.getElementById('t1-s').value || 0);
@@ -116,38 +128,33 @@
         const h_x = parseFloat(document.getElementById('t1-x').value || 0);
         const a_x = parseFloat(document.getElementById('t2-x').value || 0);
 
-        // Birleştirme (Agregasyon) İşlemi
         const qAvg = (h_q + a_q) / 2;
         const sca = h_s + a_s;
         const pr = h_p + a_p;
         const ppa = h_x + a_x;
         
-        if(sca === 0) { alert("Lütfen verileri giriniz!"); return; }
+        if(sca === 0) { alert("SCA verisi girmelisiniz!"); return; }
 
         let p1, p2, p3;
 
-        // BİREBİR AYNI METRİK TÜNELLERİ
+        // --- DNA MOTORU ---
         if (activeL === 'ERE') {
             if (sca <= 24 && ppa <= 12) { p1 = 80; p2 = 15; p3 = 5; }
             else if (sca <= 38 && qAvg <= 0.10) { p1 = 10; p2 = 80; p3 = 10; }
             else { p1 = 5; p2 = 15; p3 = 80; }
-        } 
-        else if (activeL === 'POR') {
+        } else if (activeL === 'POR') {
             if (sca <= 32 && ppa <= 15) { p1 = 80; p2 = 15; p3 = 5; }
             else if (sca <= 44 && qAvg <= 0.11) { p1 = 15; p2 = 75; p3 = 10; }
             else { p1 = 10; p2 = 20; p3 = 70; }
-        } 
-        else if (activeL === 'TSL') {
+        } else if (activeL === 'TSL') {
             if (pr <= 50 && sca <= 28) { p1 = 85; p2 = 10; p3 = 5; }
             else if (sca <= 42 && qAvg <= 0.11) { p1 = 15; p2 = 70; p3 = 15; }
             else { p1 = 5; p2 = 20; p3 = 75; }
-        } 
-        else if (activeL === 'BPL') {
+        } else if (activeL === 'BPL') {
             if (sca <= 26 && ppa <= 13) { p1 = 80; p2 = 15; p3 = 5; }
             else if (pr <= 85 && sca <= 39) { p1 = 15; p2 = 75; p3 = 10; }
             else { p1 = 5; p2 = 15; p3 = 80; }
-        } 
-        else if (activeL === 'CHP') {
+        } else if (activeL === 'CHP') {
             if (sca <= 30 && pr <= 70) { p1 = 80; p2 = 15; p3 = 5; }
             else if (sca <= 46 && qAvg <= 0.10) { p1 = 20; p2 = 70; p3 = 10; }
             else { p1 = 5; p2 = 25; p3 = 70; }
@@ -157,13 +164,24 @@
         const card = document.createElement('div');
         card.className = 'hist-card'; card.style.borderTopColor = lc;
         card.innerHTML = `
-            <div class="match-header"><span>${(document.getElementById('t1').value || "EV").toUpperCase()} v ${(document.getElementById('t2').value || "DEP").toUpperCase()}</span><span class="lig-badge" style="background:${lc}">${activeL}</span></div>
+            <div class="match-header"><span>${(document.getElementById('t1').value).toUpperCase()} v ${(document.getElementById('t2').value).toUpperCase()}</span><span class="lig-badge" style="background:${lc}">${activeL}</span></div>
             ${drawRow("0-1 GOL", p1, "#ff4d4d")} ${drawRow("TAM 2 GOL", p2, "#fbff00")} ${drawRow("3+ GOL", p3, "#00ffa3")}
             <div class="footer-metrics"><span>Q: ${qAvg.toFixed(2)}</span><span>SCA: ${sca}</span><span>PR: ${pr}</span><span>PPA: ${ppa}</span></div>
         `;
-        document.getElementById('history-list').prepend(card);
+        historyList.prepend(card);
+        
+        // Geçmişi LocalStorage'a kaydet
+        localStorage.setItem('ppro_v13_history', historyList.innerHTML);
     }
+
     function drawRow(l, v, c) { return `<div class="bar-wrap"><div class="bar-info"><span>${l}</span><span>%${v}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${v}%; background:${c}"></div></div></div>`; }
+    
+    function clearHistory() {
+        if(confirm("Tüm geçmiş silinsin mi?")) {
+            localStorage.removeItem('ppro_v13_history');
+            historyList.innerHTML = '';
+        }
+    }
 </script>
 </body>
 </html>

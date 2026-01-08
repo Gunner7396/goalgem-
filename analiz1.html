@@ -20,11 +20,18 @@
             opacity: 0.12; z-index: -1;
         }
         .wrapper { width: 100%; max-width: 400px; }
-        .main-card { background: rgba(15, 18, 23, 0.95); border: 1px solid var(--border); padding: 15px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin-bottom: 20px; }
+        .main-card { background: rgba(15, 18, 23, 0.95); border: 1px solid var(--border); padding: 15px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin-bottom: 20px; position: relative; z-index: 10; }
         
-        .dropdown { background: #161b22; border: 1px solid var(--border); padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--accent); border-left: 4px solid var(--accent); }
-        .dd-menu { display: none; position: absolute; top: 105%; left: 0; right: 0; background: #1c2128; border: 1px solid var(--border); border-radius: 12px; z-index: 1000; }
-        .dd-item { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 12px; }
+        /* Dropdown Düzeltmesi */
+        .dropdown { background: #161b22; border: 1px solid var(--border); padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--accent); border-left: 4px solid var(--accent); position: relative; }
+        .dd-menu { 
+            display: none; position: absolute; top: 110%; left: 0; right: 0; 
+            background: #1c2128; border: 1px solid var(--border); border-radius: 12px; 
+            z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        .dd-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 12px; color: #fff; }
+        .dd-item:last-child { border-bottom: none; }
+        .dd-item:hover { background: rgba(255,255,255,0.05); color: var(--accent); }
         
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .input-grid label { grid-column: span 2; font-size: 9px; color: var(--accent); text-align: center; font-weight: 800; text-transform: uppercase; margin-top: 4px; opacity: 0.8; }
@@ -32,7 +39,7 @@
         
         #btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-weight: 900; margin-top: 15px; cursor: pointer; font-size: 13px; text-transform: uppercase; }
         
-        /* Geçmiş Kartları - Küçültülmüş ve Güzelleştirilmiş */
+        /* Analiz Kartları */
         .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; position: relative; }
         .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 800; font-size: 13px; }
         .lig-badge { padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 900; color: #000; }
@@ -59,7 +66,7 @@
 
 <div class="wrapper">
     <div class="main-card">
-        <div class="dropdown" onclick="toggleDD()" id="lg-btn">
+        <div class="dropdown" onclick="toggleDD(event)" id="lg-btn">
             <span id="lg-text">PREMIER LEAGUE</span>
             <div id="dd" class="dd-menu">
                 <div class="dd-item" onclick="setL('PL', 'PREMIER LEAGUE', '#00ffa3')">PREMIER LEAGUE</div>
@@ -105,16 +112,24 @@
         if (saved) document.getElementById('history-list').innerHTML = saved;
     };
 
-    function toggleDD() { const d = document.getElementById('dd'); d.style.display = d.style.display === 'block' ? 'none' : 'block'; }
+    // Dropdown açma kapama fonksiyonu revize edildi
+    function toggleDD(e) { 
+        e.stopPropagation();
+        const d = document.getElementById('dd'); 
+        d.style.display = d.style.display === 'block' ? 'none' : 'block'; 
+    }
 
+    // Seçim yapınca menüyü kapatan fonksiyon
     function setL(id, n, c) {
         activeL = id;
         document.documentElement.style.setProperty('--accent', c);
         document.getElementById('lg-text').innerText = n;
         document.getElementById('lg-btn').style.borderColor = c;
         document.getElementById('dd').style.display = 'none';
-        event.stopPropagation();
     }
+
+    // Dışarı tıklayınca menüyü kapat
+    window.onclick = function() { document.getElementById('dd').style.display = 'none'; }
 
     function analyze() {
         const s1 = document.getElementById('t1-s').value, s2 = document.getElementById('t2-s').value;

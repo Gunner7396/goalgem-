@@ -3,26 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MASTER ENGINE v3.0 - FIX</title>
+    <title>MASTER ENGINE v3.0 - PERSISTENT</title>
     <style>
         :root {
             --bg: #05070a; --panel: #0f1217; --accent: #00ffa3; --border: #1e2530;
             --text: #f0f3f5; --dim: #64748b;
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         body { 
             background: var(--bg); color: var(--text); font-family: sans-serif; 
             margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center;
         }
         .wrapper { width: 100%; max-width: 400px; }
-        .main-card { background: rgba(15, 18, 23, 0.95); border: 1px solid var(--border); padding: 15px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin-bottom: 20px; position: relative; }
+        .main-card { background: rgba(15, 18, 23, 0.95); border: 1px solid var(--border); padding: 15px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin-bottom: 20px; position: relative; z-index: 100; }
         
-        /* Dropdown Tasarımı */
         .dropdown { background: #161b22; border: 1px solid var(--border); padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--accent); border-left: 4px solid var(--accent); position: relative; }
         .dd-menu { 
             display: none; position: absolute; top: 110%; left: 0; right: 0; 
-            background: #1c2128; border: 1px solid var(--accent); border-radius: 12px; 
-            z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+            background: #1c2128; border: 1px solid var(--border); border-radius: 12px; 
+            z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.9); border: 1px solid var(--accent);
         }
         .dd-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 11px; color: #fff; }
         .dd-item:hover { background: var(--accent); color: #000; }
@@ -30,13 +29,10 @@
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .input-grid label { grid-column: span 2; font-size: 9px; color: var(--accent); text-align: center; font-weight: 800; text-transform: uppercase; margin-top: 4px; opacity: 0.8; }
         input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: #fff; font-size: 14px; text-align: center; font-weight: 600; }
-        
+
         #btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-weight: 900; margin-top: 15px; cursor: pointer; font-size: 13px; text-transform: uppercase; }
         
-        /* Sonuç Kartları */
-        .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; border-top: 3px solid var(--accent); animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
+        .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; border-top: 3px solid var(--accent); }
         .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 800; font-size: 12px; }
         .lig-badge { padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 900; color: #000; }
         .bar-wrap { margin-bottom: 6px; }
@@ -51,13 +47,13 @@
 <div class="wrapper">
     <div class="main-card">
         <div class="dropdown" id="lg-btn">
-            <span id="lg-text" data-current="ERE">HOLLANDA EREDIVISIE (ERE)</span>
+            <span id="lg-text" data-league="ERE">HOLLANDA EREDIVISIE (ERE)</span>
             <div id="dd" class="dd-menu">
-                <div class="dd-item" data-val="ERE" data-color="#00ffa3">HOLLANDA EREDIVISIE (ERE)</div>
-                <div class="dd-item" data-val="POR" data-color="#fbff00">PORTUGAL LIGA (POR)</div>
-                <div class="dd-item" data-val="TSL" data-color="#00d4ff">TÜRKİYE SÜPER LİG (TSL)</div>
-                <div class="dd-item" data-val="BPL" data-color="#ff4d4d">BELGIUM PRO LEAGUE (BPL)</div>
-                <div class="dd-item" data-val="CHP" data-color="#da70d6">CHAMPIONSHIP (CHP)</div>
+                <div class="dd-item" data-id="ERE" data-name="HOLLANDA EREDIVISIE (ERE)" data-color="#00ffa3">ERE - HOLLANDA</div>
+                <div class="dd-item" data-id="POR" data-name="PORTUGAL LIGA (POR)" data-color="#fbff00">POR - PORTEKİZ</div>
+                <div class="dd-item" data-id="TSL" data-name="TÜRKİYE SÜPER LİG (TSL)" data-color="#00d4ff">TSL - TÜRKİYE</div>
+                <div class="dd-item" data-id="BPL" data-name="BELGIUM PRO LEAGUE (BPL)" data-color="#ff4d4d">BPL - BELÇİKA</div>
+                <div class="dd-item" data-id="CHP" data-name="CHAMPIONSHIP (CHP)" data-color="#da70d6">CHP - İNGİLTERE</div>
             </div>
         </div>
 
@@ -83,37 +79,29 @@
 </div>
 
 <script>
-    // DROPDOWN MANTIĞI SIFIRDAN YAZILDI
     const lgBtn = document.getElementById('lg-btn');
     const ddMenu = document.getElementById('dd');
     const lgText = document.getElementById('lg-text');
 
-    lgBtn.onclick = (e) => {
-        e.stopPropagation();
-        ddMenu.style.display = ddMenu.style.display === 'block' ? 'none' : 'block';
-    };
+    lgBtn.onclick = (e) => { e.stopPropagation(); ddMenu.style.display = ddMenu.style.display === 'block' ? 'none' : 'block'; };
 
     document.querySelectorAll('.dd-item').forEach(item => {
         item.onclick = function(e) {
             e.stopPropagation();
-            const val = this.getAttribute('data-val');
+            const id = this.getAttribute('data-id');
             const color = this.getAttribute('data-color');
-            const name = this.innerText;
-            
-            lgText.innerText = name;
-            lgText.setAttribute('data-current', val); // LİGİ BURAYA GÖMÜYORUZ
+            lgText.innerText = this.getAttribute('data-name');
+            lgText.setAttribute('data-league', id);
             document.documentElement.style.setProperty('--accent', color);
             lgBtn.style.borderColor = color;
             ddMenu.style.display = 'none';
         };
     });
 
-    window.onclick = () => ddMenu.style.display = 'none';
+    window.onclick = () => { ddMenu.style.display = 'none'; };
 
     function analyze() {
-        // LİGİ DOĞRUDAN ATTRIBUTE'DAN ÇEKİYORUZ (HATA PAYI SIFIR)
-        const activeL = lgText.getAttribute('data-current');
-        
+        const activeL = lgText.getAttribute('data-league');
         const s1 = parseFloat(document.getElementById('t1-s').value || 0);
         const s2 = parseFloat(document.getElementById('t2-s').value || 0);
         const q1 = parseFloat(document.getElementById('t1-q').value || 0.1);
@@ -123,13 +111,10 @@
 
         const sca = s1 + s2;
         const qAvg = (q1 + q2) / 2;
-        const t1 = (document.getElementById('t1').value || "EV").toUpperCase();
-        const t2 = (document.getElementById('t2').value || "DEP").toUpperCase();
-        const curCol = getComputedStyle(document.documentElement).getPropertyValue('--accent');
-
+        const lc = getComputedStyle(document.documentElement).getPropertyValue('--accent');
         let p1, p2, p3;
 
-        // %80 BAŞARI TÜNELLERİ - KESİN AYRIMLAR
+        // --- ORİJİNAL MOTOR TÜNELLERİ ---
         if (activeL === 'ERE') {
             if (sca <= 24 && ppa <= 12) { p1 = 80; p2 = 15; p3 = 5; }
             else if (sca <= 38 && qAvg <= 0.10) { p1 = 10; p2 = 80; p3 = 10; }
@@ -153,22 +138,15 @@
         }
 
         const card = document.createElement('div');
-        card.className = 'hist-card';
-        card.style.borderTopColor = curCol;
+        card.className = 'hist-card'; card.style.borderTopColor = lc;
         card.innerHTML = `
-            <div class="match-header"><span>${t1} v ${t2}</span><span class="lig-badge" style="background:${curCol}">${activeL}</span></div>
-            ${drawRow("0-1 GOL", p1, "#ff4d4d")}
-            ${drawRow("TAM 2 GOL", p2, "#fbff00")}
-            ${drawRow("3+ GOL", p3, "#00ffa3")}
+            <div class="match-header"><span>${(document.getElementById('t1').value || "EV").toUpperCase()} v ${(document.getElementById('t2').value || "DEP").toUpperCase()}</span><span class="lig-badge" style="background:${lc}">${activeL}</span></div>
+            ${drawRow("0-1 GOL", p1, "#ff4d4d")} ${drawRow("TAM 2 GOL", p2, "#fbff00")} ${drawRow("3+ GOL", p3, "#00ffa3")}
             <div class="footer-metrics"><span>Q: ${qAvg.toFixed(2)}</span><span>SCA: ${sca}</span><span>PR: ${pr}</span><span>PPA: ${ppa}</span></div>
         `;
         document.getElementById('history-list').prepend(card);
     }
-
-    function drawRow(l, v, c) {
-        return `<div class="bar-wrap"><div class="bar-info"><span>${l}</span><span>%${v}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${v}%; background:${c}"></div></div></div>`;
-    }
+    function drawRow(l, v, c) { return `<div class="bar-wrap"><div class="bar-info"><span>${l}</span><span>%${v}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${v}%; background:${c}"></div></div></div>`; }
 </script>
-
 </body>
 </html>

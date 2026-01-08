@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO SCOUT MASTER V4</title>
+    <title>P-PRO SCOUT MASTER V5 - GOLD EDITION</title>
     <style>
         :root {
             --bg: #08090a; --card: #121417; --accent: #00ff85;
             --input: #1a1d21; --border: #444b52; --text: #9da3ae;
+            --fire: #ff4d4d;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; padding: 10px; font-size: 0.85rem; }
 
-        /* LİG SEÇ */
         .dropdown {
             width: 100%; background: var(--card); border: 2px solid var(--border);
             padding: 10px; border-radius: 8px; margin-bottom: 12px;
@@ -24,10 +24,10 @@
         }
         .dd-menu div { padding: 10px; border-bottom: 1px solid var(--border); color: white; font-size: 0.75rem; }
 
-        /* GRID */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; }
-        .head { text-align: center; font-size: 9px; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-        .label { grid-column: span 2; background: #1c1f24; padding: 4px; border-radius: 5px; font-size: 10px; text-align: center; color: var(--accent); border: 1.5px solid var(--border); font-weight: bold; }
+        .head { text-align: center; font-size: 9px; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }
+        .label-box { grid-column: span 2; display: flex; justify-content: center; align-items: center; gap: 5px; background: #1c1f24; padding: 4px; border-radius: 5px; border: 1.5px solid var(--border); margin-top: 4px; }
+        .label-box span { font-size: 10px; color: var(--accent); font-weight: bold; }
         
         input { 
             width: 100%; background: var(--input); border: 2px solid var(--border); 
@@ -36,19 +36,21 @@
         }
         input:focus { border-color: var(--accent); }
 
-        /* BUTONLAR */
         #btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: black; font-weight: 800; font-size: 13px; margin-bottom: 5px; cursor: pointer; text-transform: uppercase; }
         #clear-btn { width: 100%; padding: 5px; background: transparent; color: #ff6b6b; border: none; font-size: 10px; cursor: pointer; opacity: 0.7; }
 
-        /* GEÇMİŞ */
         .history-title { margin: 15px 0 8px; font-size: 11px; color: var(--text); border-left: 3px solid var(--accent); padding-left: 6px; font-weight: bold; }
-        .hist-card { background: var(--card); border: 2px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 8px; position: relative; animation: fadeIn 0.2s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .hist-card { background: var(--card); border: 2px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 8px; position: relative; transition: 0.3s; }
+        
+        /* GOL ALARMI STİLİ */
+        .goal-alert { border-color: var(--fire) !important; box-shadow: 0 0 10px rgba(255, 77, 77, 0.3); background: linear-gradient(145deg, #121417, #260a0a) !important; }
+        .fire-icon { color: var(--fire); font-size: 12px; margin-left: 5px; display: none; }
+
         .hist-header { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 6px; font-weight: bold; padding-right: 15px; }
         .bar-row { margin-bottom: 4px; }
         .bar-info { display: flex; justify-content: space-between; font-size: 9px; margin-bottom: 2px; color: var(--text); }
         .bar-w { width: 100%; height: 4px; background: #2a2d33; border-radius: 2px; overflow: hidden; border: 1px solid #333; }
-        .bar-f { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+        .bar-f { height: 100%; border-radius: 2px; transition: width 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
         .del-hist { position: absolute; top: 6px; right: 6px; color: #555; font-size: 14px; cursor: pointer; }
     </style>
 </head>
@@ -67,22 +69,22 @@
 
     <div class="grid">
         <div class="head">EV SAHİBİ</div><div class="head">DEPLASMAN</div>
-        <input type="text" id="t1" placeholder="A">
-        <input type="text" id="t2" placeholder="B">
+        <input type="text" id="t1" placeholder="TAKIM A">
+        <input type="text" id="t2" placeholder="TAKIM B">
 
-        <div class="label">npxG/Sh</div>
+        <div class="label-box"><span>npxG/Sh</span></div>
         <input type="number" id="t1-q" placeholder="0.00" step="0.01">
         <input type="number" id="t2-q" placeholder="0.00" step="0.01">
 
-        <div class="label">SCA</div>
+        <div class="label-box"><span>SCA</span></div>
         <input type="number" id="t1-s" placeholder="0">
         <input type="number" id="t2-s" placeholder="0">
 
-        <div class="label">PrgR</div>
+        <div class="label-box"><span>PrgR</span></div>
         <input type="number" id="t1-p" placeholder="0">
         <input type="number" id="t2-p" placeholder="0">
 
-        <div class="label">PPA</div>
+        <div class="label-box"><span>PPA</span></div>
         <input type="number" id="t1-x" placeholder="0">
         <input type="number" id="t2-x" placeholder="0">
     </div>
@@ -96,8 +98,11 @@
 <script>
     let activeL = 'PL';
     const ligs = {
-        'PL': { m: 0.92, qT: 0.11 }, 'LL': { m: 1.4, qT: 0.08 },
-        'SA': { m: 1.0, qT: 0.09 }, 'BL': { m: 1.3, qT: 0.11 }, 'F1': { m: 0.85, qT: 0.07 }
+        'PL': { m: 0.92, qT: 0.11, prT: 70 }, 
+        'LL': { m: 1.4, qT: 0.08, prT: 60 },
+        'SA': { m: 1.0, qT: 0.09, prT: 65 }, 
+        'BL': { m: 1.3, qT: 0.11, prT: 75 }, 
+        'F1': { m: 0.85, qT: 0.07, prT: 55 }
     };
 
     function toggleDD() { const d = document.getElementById('dd'); d.style.display = d.style.display==='block'?'none':'block'; }
@@ -115,23 +120,41 @@
         const q = ((parseFloat(document.getElementById('t1-q').value)||0) + (parseFloat(document.getElementById('t2-q').value)||0)) / 2;
         
         const c = ligs[activeL];
-        let p3 = Math.min(95, (pr * c.m) + (q * 115) / 2.3);
-        let p2 = (100 - p3) * 0.6; let p1 = 100 - p3 - p2;
+        
+        // GOL MOTORU MATEMATİĞİ
+        let prob3 = Math.min(96, (pr * c.m) + (q * 118) / 2.3);
+        
+        // Eğer bitiricilik (Q) lig eşiğinin çok üstündeyse ekstra bonus
+        if(q > c.qT + 0.03) prob3 += 5;
+        
+        let prob2 = (100 - prob3) * 0.6; 
+        let prob1 = 100 - prob3 - prob2;
 
-        addHistory(t1, t2, p1, p2, p3);
+        addHistory(t1, t2, p1, p2, p3, q, pr, c);
     }
 
-    function addHistory(t1, t2, p1, p2, p3) {
+    function addHistory(t1, t2, p1, p2, p3, q, pr, c) {
         const list = document.getElementById('history-list');
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        // GOL ALARMI KONTROLÜ
+        const isHighGoal = (p3 > 75 && q >= c.qT) ? "goal-alert" : "";
+        const fire = isHighGoal ? "🔥" : "";
+
         const card = document.createElement('div');
-        card.className = 'hist-card';
+        card.className = `hist-card ${isHighGoal}`;
         card.innerHTML = `
             <div class="del-hist" onclick="this.parentElement.remove()">×</div>
-            <div class="hist-header"><span>${t1} v ${t2}</span><span style="color:var(--accent)">${time}</span></div>
+            <div class="hist-header">
+                <span>${t1} v ${t2} ${fire}</span>
+                <span style="color:var(--accent)">${time}</span>
+            </div>
             ${row("0-1 GOL", p1, "#4caf50")}
             ${row("2 GOL", p2, "#ffc107")}
             ${row("3+ GOL", p3, "#f44336")}
+            <div style="font-size:8px; color:#555; margin-top:5px; text-align:right">
+                Q: ${q.toFixed(2)} | PR: ${pr} | L: ${activeL}
+            </div>
         `;
         list.prepend(card);
     }

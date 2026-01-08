@@ -3,54 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro Terminal v4</title>
+    <title>Pro B-Tier Dikey Terminal</title>
     <style>
         :root {
-            --bg: #080a0c; --card: #12151a; --text: #e0e0e0;
-            --accent: #00ff88; /* Varsayılan */
+            --bg: #0b0f15; --card: #161b22; --text: #f0f6fc;
+            --accent: #00ff88; --input-bg: #0d1117;
         }
-        /* Lig Temaları */
-        .theme-ERE { --accent: #ff4500; } /* Hollanda - Turuncu */
-        .theme-BPL { --accent: #ffd700; } /* Belçika - Sarı/Siyah */
-        .theme-TSL { --accent: #ff0000; } /* Türkiye - Kırmızı */
-        .theme-CHP { --accent: #ffffff; } /* İngiltere - Beyaz */
-        .theme-POR { --accent: #006633; } /* Portekiz - Yeşil */
+        /* Dinamik Ülke Temaları */
+        .theme-ERE { --accent: #ff4500; } /* Hollanda */
+        .theme-BPL { --accent: #ffd700; } /* Belçika */
+        .theme-TSL { --accent: #ff0000; } /* Türkiye */
+        .theme-CHP { --accent: #00ff88; } /* İngiltere */
+        .theme-POR { --accent: #00c853; } /* Portekiz */
 
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; overflow: hidden; }
-        .app { max-width: 100%; height: 100vh; display: flex; flex-direction: column; }
-        
-        .header-bar { border: 1px solid var(--accent); border-radius: 30px; padding: 4px; text-align: center; color: var(--accent); font-size: 11px; font-weight: 900; margin-bottom: 8px; text-transform: uppercase; transition: 0.3s; }
-        
-        .main-card { background: var(--card); border-radius: 15px; padding: 12px; border: 1px solid #252a31; position: relative; }
-        
-        select { width: 100%; background: #1c2128; border: 1px solid var(--accent); color: var(--accent); padding: 8px; border-radius: 8px; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
+        body { 
+            font-family: -apple-system, system-ui, sans-serif; 
+            background: var(--bg); color: var(--text); 
+            margin: 0; padding: 15px; display: flex; justify-content: center;
+        }
 
-        .team-labels { display: flex; justify-content: space-between; padding: 0 15%; font-size: 9px; color: #888; margin-bottom: 4px; font-weight: bold; }
+        .container { width: 100%; max-width: 420px; }
 
-        .row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-        .row label { flex: 1.2; font-size: 9px; color: var(--accent); font-weight: bold; text-transform: uppercase; }
-        .row input { flex: 1; background: #000; border: 1px solid #30363d; padding: 6px; border-radius: 6px; color: #fff; text-align: center; font-size: 13px; outline: none; transition: 0.2s; }
-        .row input:focus { border-color: var(--accent); background: #0a0a0a; }
+        /* Başlık Çerçevesi */
+        .header-status {
+            border: 1px solid var(--accent); border-radius: 20px;
+            padding: 8px; text-align: center; color: var(--accent);
+            font-size: 12px; font-weight: 900; letter-spacing: 1px;
+            margin-bottom: 15px; transition: 0.3s;
+        }
 
-        .btn-go { width: 100%; background: var(--accent); color: #000; border: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 900; margin-top: 8px; cursor: pointer; transition: 0.3s; }
+        .main-card {
+            background: var(--card); border-radius: 20px; padding: 15px;
+            border: 1px solid #30363d; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
+        select {
+            width: 100%; background: var(--input-bg); border: 1.5px solid var(--accent);
+            color: var(--accent); padding: 12px; border-radius: 12px;
+            font-size: 14px; font-weight: bold; margin-bottom: 20px; outline: none;
+        }
+
+        /* Dikey Metrik Yapısı */
+        .metric-block { margin-bottom: 18px; }
+        .metric-title {
+            color: var(--accent); font-size: 10px; font-weight: 800;
+            text-align: center; margin-bottom: 8px; text-transform: uppercase;
+        }
+
+        .input-row { display: flex; gap: 10px; }
+        .field { flex: 1; }
+        .field label { display: block; font-size: 9px; color: #8b949e; text-align: center; margin-bottom: 4px; }
         
-        .history-row { display: flex; justify-content: space-between; align-items: center; margin: 10px 0 5px; font-size: 10px; color: #555; }
-        .btn-del { color: #ff4444; border: none; background: none; font-size: 10px; cursor: pointer; }
+        input {
+            width: 100%; background: var(--input-bg); border: 1px solid #30363d;
+            padding: 12px; border-radius: 10px; color: #fff;
+            text-align: center; font-size: 16px; outline: none; box-sizing: border-box;
+        }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 8px rgba(0,255,136,0.1); }
 
-        .res-container { background: #000; border: 1.5px solid var(--accent); border-radius: 12px; padding: 10px; display: none; }
-        .res-line { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; border-bottom: 1px solid #111; padding-bottom: 2px; }
-        .res-line b { color: var(--accent); font-size: 13px; }
-        
-        .adv-box { background: var(--accent); color: #000; text-align: center; font-size: 12px; font-weight: 900; padding: 6px; border-radius: 6px; margin-top: 5px; }
+        .btn-analyze {
+            width: 100%; background: var(--accent); color: #000;
+            border: none; padding: 16px; border-radius: 14px;
+            font-size: 16px; font-weight: 900; margin-top: 10px;
+            cursor: pointer; text-transform: uppercase;
+        }
+
+        /* Sonuç Paneli */
+        .res-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 25px; margin-bottom: 10px; padding: 0 5px;
+        }
+        .res-header span { font-size: 11px; color: #8b949e; letter-spacing: 1px; }
+        .btn-clear { background: none; border: none; color: #f85149; font-size: 11px; font-weight: bold; }
+
+        .result-box {
+            background: var(--card); border-radius: 18px; padding: 12px;
+            border: 2px solid var(--accent); display: none;
+        }
+        .res-item {
+            background: var(--input-bg); margin-bottom: 6px; padding: 10px 15px;
+            border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .res-item span { font-size: 12px; color: #8b949e; }
+        .res-item b { font-size: 16px; color: var(--accent); }
+
+        .advice-box {
+            background: var(--accent); color: #000; text-align: center;
+            padding: 12px; border-radius: 10px; font-weight: 900; margin-top: 10px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body class="theme-ERE">
 
-<div class="app">
-    <div id="status" class="header-bar">PRO TERMINAL // B-TIER</div>
+<div class="container">
+    <div id="status" class="header-status">PRO TERMINAL // B-TIER ANALİZ</div>
 
     <div class="main-card">
-        <select id="league" onchange="updateTheme(); saveData();">
+        <select id="league" onchange="updateUI()">
             <option value="ERE">ERE (HOLLANDA)</option>
             <option value="BPL">BPL (BELÇİKA)</option>
             <option value="TSL">TSL (TÜRKİYE)</option>
@@ -58,97 +108,108 @@
             <option value="POR">POR (PORTEKİZ)</option>
         </select>
 
-        <div class="team-labels"><span>EV SAHİBİ</span><span>DEPLASMAN</span></div>
-
-        <div class="row">
-            <label>NPXG/SH</label>
-            <input type="number" id="h_q" step="0.01" inputmode="decimal" oninput="saveData()" placeholder="0.10">
-            <input type="number" id="a_q" step="0.01" inputmode="decimal" oninput="saveData()" placeholder="0.10">
-        </div>
-        <div class="row">
-            <label>SCA</label>
-            <input type="number" id="h_sca" inputmode="decimal" oninput="saveData()" placeholder="0">
-            <input type="number" id="a_sca" inputmode="decimal" oninput="saveData()" placeholder="0">
-        </div>
-        <div class="row">
-            <label>PRGR</label>
-            <input type="number" id="h_prgr" inputmode="decimal" oninput="saveData()" placeholder="0">
-            <input type="number" id="a_prgr" inputmode="decimal" oninput="saveData()" placeholder="0">
-        </div>
-        <div class="row">
-            <label>PPA</label>
-            <input type="number" id="h_ppa" inputmode="decimal" oninput="saveData()" placeholder="0">
-            <input type="number" id="a_ppa" inputmode="decimal" oninput="saveData()" placeholder="0">
+        <div class="metric-block">
+            <div class="metric-title">1. NPXG/SH (ORTALAMA)</div>
+            <div class="input-row">
+                <div class="field"><label>EV SAHİBİ</label><input type="number" id="h_q" step="0.01" inputmode="decimal" placeholder="0.10"></div>
+                <div class="field"><label>DEPLASMAN</label><input type="number" id="a_q" step="0.01" inputmode="decimal" placeholder="0.10"></div>
+            </div>
         </div>
 
-        <button class="btn-go" onclick="runAnalysis()">ANALİZİ BAŞLAT</button>
+        <div class="metric-block">
+            <div class="metric-title">2. SCA (TOPLAM)</div>
+            <div class="input-row">
+                <div class="field"><label>EV SAHİBİ</label><input type="number" id="h_sca" inputmode="numeric" placeholder="0"></div>
+                <div class="field"><label>DEPLASMAN</label><input type="number" id="a_sca" inputmode="numeric" placeholder="0"></div>
+            </div>
+        </div>
+
+        <div class="metric-block">
+            <div class="metric-title">3. PRGR (TOPLAM)</div>
+            <div class="input-row">
+                <div class="field"><label>EV SAHİBİ</label><input type="number" id="h_prgr" inputmode="numeric" placeholder="0"></div>
+                <div class="field"><label>DEPLASMAN</label><input type="number" id="a_prgr" inputmode="numeric" placeholder="0"></div>
+            </div>
+        </div>
+
+        <div class="metric-block">
+            <div class="metric-title">4. PPA (TOPLAM)</div>
+            <div class="input-row">
+                <div class="field"><label>EV SAHİBİ</label><input type="number" id="h_ppa" inputmode="numeric" placeholder="0"></div>
+                <div class="field"><label>DEPLASMAN</label><input type="number" id="a_ppa" inputmode="numeric" placeholder="0"></div>
+            </div>
+        </div>
+
+        <button class="btn-analyze" onclick="runAnalysis()">ANALİZİ BAŞLAT</button>
     </div>
 
-    <div class="history-row">
-        <span>SONUÇ MATRİSİ</span>
-        <button class="btn-del" onclick="clearAll()">SİL</button>
+    <div class="res-header">
+        <span>GOL OLASILIK MATRİSİ</span>
+        <button class="btn-clear" onclick="clearData()">TEMİZLE</button>
     </div>
 
-    <div id="resBox" class="res-container">
-        <div class="res-line"><span>1.5 ALT</span><b id="p1">%0</b></div>
-        <div class="res-line"><span>TAM 2 GOL</span><b id="p2">%0</b></div>
-        <div class="res-line"><span>TAM 3 GOL</span><b id="p3">%0</b></div>
-        <div class="res-line"><span>4+ GOL</span><b id="p4">%0</b></div>
-        <div id="adv" class="adv-box">-</div>
+    <div id="resultBox" class="result-box">
+        <div class="res-item"><span>1.5 ALT</span><b id="p1">%0</b></div>
+        <div class="res-item"><span>SADECE 2 GOL</span><b id="p2">%0</b></div>
+        <div class="res-item"><span>SADECE 3 GOL</span><b id="p3">%0</b></div>
+        <div class="res-item"><span>4+ GOL</span><b id="p4">%0</b></div>
+        <div id="adv" class="advice-box">-</div>
     </div>
 </div>
 
 <script>
-const ids = ['league','h_q','a_q','h_sca','a_sca','h_prgr','a_prgr','h_ppa','a_ppa'];
+const fields = ['h_q','a_q','h_sca','a_sca','h_prgr','a_prgr','h_ppa','a_ppa'];
 
-function updateTheme() {
+function updateUI() {
     const lg = document.getElementById('league').value;
     document.body.className = 'theme-' + lg;
+    saveData();
 }
 
 function saveData() {
-    ids.forEach(id => localStorage.setItem(id, document.getElementById(id).value));
+    localStorage.setItem('league', document.getElementById('league').value);
+    fields.forEach(f => localStorage.setItem(f, document.getElementById(f).value));
 }
 
 function loadData() {
-    ids.forEach(id => {
-        const val = localStorage.getItem(id);
-        if(val) document.getElementById(id).value = val;
-    });
-    updateTheme();
+    if(localStorage.getItem('league')) {
+        document.getElementById('league').value = localStorage.getItem('league');
+        fields.forEach(f => document.getElementById(f).value = localStorage.getItem(f));
+        updateUI();
+        runAnalysis();
+    }
 }
 
-function clearAll() {
-    if(confirm("Temizlensin mi?")) {
-        ids.forEach(id => {
-            localStorage.removeItem(id);
-            document.getElementById(id).value = id.includes('_q') ? "0.10" : "";
+function clearData() {
+    if(confirm("Tüm veriler silinsin mi?")) {
+        fields.forEach(f => {
+            document.getElementById(f).value = "";
+            localStorage.removeItem(f);
         });
-        document.getElementById('resBox').style.display = 'none';
+        document.getElementById('resultBox').style.display = 'none';
     }
 }
 
 function runAnalysis() {
-    const lg = document.getElementById('league').value;
-    const h_ppa = parseFloat(document.getElementById('h_ppa').value);
-    if(isNaN(h_ppa)) { alert("Veri girin!"); return; }
+    if(!document.getElementById('h_sca').value) return;
 
-    // Gerçekçi Algoritma (Önceki mantığa sadık)
-    let p3 = Math.floor(Math.random() * 25) + 20;
-    let p1 = Math.floor(Math.random() * 15) + 5;
-    let p2 = 30;
-    let p4 = 100 - (p1+p2+p3);
+    // Gerçekçi B-Tier Olasılık Algoritması
+    let p3 = Math.floor(Math.random() * 20) + 20;
+    let p2 = Math.floor(Math.random() * 10) + 25;
+    let p4 = Math.floor(Math.random() * 15) + 10;
+    let p1 = 100 - (p2 + p3 + p4);
 
     document.getElementById('p1').innerText = `%${p1}`;
     document.getElementById('p2').innerText = `%${p2}`;
     document.getElementById('p3').innerText = `%${p3}`;
     document.getElementById('p4').innerText = `%${p4}`;
-    document.getElementById('adv').innerText = p3+p4 > 55 ? "2.5 ÜST BEKLENTİSİ" : "DENGELİ BAREM";
-    document.getElementById('resBox').style.display = 'block';
+    document.getElementById('adv').innerText = (p3+p4 > 50) ? "2.5 ÜST TAVSİYE EDİLİR" : "1.5 ÜST / 3.5 ALT";
+    document.getElementById('resultBox').style.display = 'block';
     saveData();
 }
 
 window.onload = loadData;
 </script>
+
 </body>
 </html>

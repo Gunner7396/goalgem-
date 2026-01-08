@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO V18.2 - CLASSIC METRICS</title>
+    <title>P-PRO V18.3 - SMART ENGINE</title>
     <style>
         :root {
             --bg: #05070a; --panel: #0f1217; --accent: #00ffa3; --border: #1e2530;
@@ -11,47 +11,32 @@
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; font-family: sans-serif; }
         html, body { height: 100%; margin: 0; padding: 0; background: var(--bg); color: var(--text); overflow: hidden; }
-        
         .wrapper { display: flex; flex-direction: column; height: 100vh; width: 100%; max-width: 450px; margin: 0 auto; }
-
-        /* Üst Bölüm Sabitlendi */
         .sticky-top { flex-shrink: 0; padding: 10px; border-bottom: 1px solid var(--border); background: var(--bg); z-index: 10; }
-
         .dash-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-around; text-align: center; position: relative; }
         .stat-val { font-size: 16px; font-weight: 900; color: var(--accent); display: block; }
         .stat-lbl { font-size: 8px; color: var(--dim); text-transform: uppercase; }
         .reset-stats { position: absolute; top: 4px; right: 8px; font-size: 8px; color: var(--red); cursor: pointer; border: 1px solid #ff4d4d33; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
-
         .main-card { background: var(--panel); border: 1px solid var(--border); padding: 10px; border-radius: 15px; }
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        
-        /* Önceki Metrik Başlığı Geri Geldi */
         .metric-label { grid-column: span 2; font-size: 8px; color: var(--dim); text-align: center; font-weight: 600; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        
         input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 8px; border-radius: 8px; color: #fff; text-align: center; font-weight: 700; font-size: 13px; }
-        
         .action-row { display: flex; gap: 8px; margin-top: 10px; }
         #btn { flex: 4; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-weight: 900; cursor: pointer; }
         #clear-inputs { flex: 1; border-radius: 10px; border: 1px solid #ff4d4d44; background: #ff4d4d11; color: var(--red); cursor: pointer; font-size: 18px; }
-
-        /* Alt Bölüm Kaydırılabilir */
         .scroll-area { flex-grow: 1; overflow-y: auto; padding: 10px; scroll-behavior: smooth; }
-        
         .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 8px; }
         .card-top { display: flex; justify-content: space-between; align-items: center; }
         .card-mid { display: flex; justify-content: space-around; background: #080a0c; padding: 8px; border-radius: 8px; }
         .card-bot { font-size: 10px; color: var(--dim); font-style: italic; border-top: 1px solid #1e2530; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; }
-        
         .h-teams { font-size: 10px; font-weight: 800; }
         .h-lig { color: var(--accent); font-size: 8px; }
         .p-box { text-align: center; }
         .p-lbl { font-size: 7px; color: var(--dim); display: block; }
         .p-val { font-size: 12px; font-weight: 900; }
-        
         .risk-bar { height: 3px; background: #1e2530; border-radius: 2px; width: 40px; overflow: hidden; }
         .risk-fill { height: 100%; transition: width 0.3s; }
         .mini-btn { padding: 4px 10px; border: none; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; }
-        
         .dropdown-container { margin-bottom: 8px; border: 1px solid var(--border); border-radius: 8px; background: #161b22; }
         .dropdown-header { padding: 10px; font-weight: 800; cursor: pointer; display: flex; justify-content: space-between; font-size: 10px; color: var(--accent); }
         .dd-menu { display: none; background: #1c2128; border-top: 1px solid var(--border); }
@@ -84,9 +69,7 @@
             <div class="input-grid">
                 <input type="text" id="t1" placeholder="EV TAKIMI">
                 <input type="text" id="t2" placeholder="DEP TAKIMI">
-                
                 <div class="metric-label">KALİTE | ÜRETİM | İLERLEME | GİRİŞ</div>
-                
                 <input type="number" id="t1-q" step="any" inputmode="decimal" placeholder="0.10">
                 <input type="number" id="t2-q" step="any" inputmode="decimal" placeholder="0.10">
                 <input type="number" id="t1-s" inputmode="numeric" placeholder="SCA">
@@ -146,21 +129,39 @@
         const x2 = parseFloat(document.getElementById('t2-x').value || 0);
         const q1 = parseFloat(document.getElementById('t1-q').value || 0);
         const q2 = parseFloat(document.getElementById('t2-q').value || 0);
-        const sTotal = parseFloat(document.getElementById('t1-s').value || 0) + parseFloat(document.getElementById('t2-s').value || 0);
+        const s1 = parseFloat(document.getElementById('t1-s').value || 0);
+        const s2 = parseFloat(document.getElementById('t2-s').value || 0);
+        const p1_val = parseFloat(document.getElementById('t1-p').value || 0);
+        const p2_val = parseFloat(document.getElementById('t2-p').value || 0);
+        const sTotal = s1 + s2;
+        const xTotal = x1 + x2;
         
         let score15 = 0;
         let insight = "";
         let conflict = false;
 
-        if((x1 + x2) <= config.x) score15 += 45;
+        // ANA MOTOR PUANLAMASI (Korundu)
+        if(xTotal <= config.x) score15 += 45;
         if(q1 <= config.q && q2 <= config.q) score15 += 25;
         if(sTotal <= config.s) score15 += 20;
 
-        if(score15 >= 70) insight = "Savunmalar sağlam, kilitli maç.";
-        else if(score15 < 40) insight = "Tempo çok yüksek, düello olabilir.";
-        else insight = "Dengeli oyun, hata skoru belirler.";
+        // AKILLI VERİMLİLİK AYARI (Sadece küçük bonuslar)
+        const efficiency1 = s1 / (x1 || 1); // Ev sahibi şut/giriş oranı
+        const efficiency2 = s2 / (x2 || 1); // Dep şut/giriş oranı
 
-        if(sTotal > config.s * 1.5 && (x1+x2) < config.x) {
+        if(efficiency1 > 3.5 && efficiency2 > 3.5) {
+            score15 += 10; // İki takım da ceza sahasına girmeden şut çekiyor, Alt ihtimali artar.
+            insight = "Verimsiz hücum, Alt ihtimali güçlü.";
+        } else if (score15 >= 70) {
+            insight = "Savunmalar sağlam, kilitli maç.";
+        } else if (score15 < 40) {
+            insight = "Tempo çok yüksek, düello olabilir.";
+        } else {
+            insight = "Dengeli oyun, hata skoru belirler.";
+        }
+
+        // Çelişki kontrolü
+        if(sTotal > config.s * 1.5 && xTotal < config.x) {
             insight = "DİKKAT: Uzaktan şut çok, giriş az!";
             conflict = true;
         }

@@ -9,40 +9,45 @@
             --bg: #05070a; --panel: #0f1217; --accent: #00ffa3; --border: #1e2530;
             --text: #f0f3f5; --dim: #64748b;
         }
-        /* Lig Renkleri */
+        /* Lig Temaları */
         .theme-ERE { --accent: #ff4500; } .theme-BPL { --accent: #ffd700; }
         .theme-TSL { --accent: #ff0000; } .theme-CHP { --accent: #00ff88; } .theme-POR { --accent: #00c853; }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
         .wrapper { width: 100%; max-width: 400px; }
+        
         .main-card { background: rgba(15, 18, 23, 0.95); border: 1px solid var(--border); padding: 15px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin-bottom: 20px; }
         
+        /* Dropdown Düzeltmesi - Tek Tık */
         .dropdown { background: #161b22; border: 1px solid var(--border); padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--accent); border-left: 4px solid var(--accent); position: relative; }
-        .dd-menu { display: none; position: absolute; top: 110%; left: 0; right: 0; background: #1c2128; border: 1px solid var(--accent); border-radius: 12px; z-index: 9999; }
-        .dd-item { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 11px; color: #fff; }
+        .dd-menu { display: none; position: absolute; top: 110%; left: 0; right: 0; background: #1c2128; border: 1px solid var(--accent); border-radius: 12px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
+        .dd-item { padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; font-size: 11px; color: #fff; }
         .dd-item:hover { background: var(--accent); color: #000; }
         
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .input-grid label { grid-column: span 2; font-size: 9px; color: var(--accent); text-align: center; font-weight: 800; text-transform: uppercase; margin-top: 4px; opacity: 0.8; }
-        input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: #fff; font-size: 14px; text-align: center; font-weight: 600; }
+        .input-grid label { grid-column: span 2; font-size: 9px; color: var(--accent); text-align: center; font-weight: 800; text-transform: uppercase; margin-top: 5px; opacity: 0.8; }
         
-        #btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-weight: 900; margin-top: 15px; cursor: pointer; text-transform: uppercase; }
+        /* Temiz Inputlar */
+        input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 12px; border-radius: 8px; color: #fff; font-size: 14px; text-align: center; font-weight: 600; }
+        input::placeholder { color: transparent; } /* Placeholderları gizle */
+
+        #btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--accent); color: #000; font-weight: 900; margin-top: 15px; cursor: pointer; text-transform: uppercase; font-size: 13px; }
         
-        /* Analiz Kartları */
-        .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; border-top: 3px solid var(--accent); animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { opacity:0; transform: translateY(-10px); } to { opacity:1; transform: translateY(0); } }
+        /* Analiz Sonuç Kartları */
+        .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-top: 10px; border-top: 4px solid var(--accent); }
+        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: 800; font-size: 13px; }
+        .lig-badge { padding: 3px 10px; border-radius: 5px; font-size: 9px; font-weight: 900; color: #000; text-transform: uppercase; }
         
-        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 800; font-size: 12px; }
-        .lig-badge { padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 900; color: #000; }
-        .bar-wrap { margin-bottom: 6px; }
-        .bar-info { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 3px; font-weight: 700; }
-        .bar-bg { width: 100%; height: 6px; background: #1e2530; border-radius: 4px; overflow: hidden; }
-        .bar-fill { height: 100%; transition: width 0.8s ease; }
+        .bar-wrap { margin-bottom: 8px; }
+        .bar-info { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; font-weight: 700; }
+        .bar-bg { width: 100%; height: 8px; background: #1e2530; border-radius: 5px; overflow: hidden; }
+        .bar-fill { height: 100%; transition: width 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
         
-        .footer-metrics { display: flex; justify-content: space-between; font-size: 8px; color: var(--dim); margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.05); }
-        .hist-header { display: flex; justify-content: space-between; align-items: center; margin: 15px 5px 5px; }
-        .clear-btn { background: transparent; border: 1px solid var(--border); color: #ff4d4d; font-size: 9px; padding: 4px 8px; border-radius: 5px; cursor: pointer; }
+        .footer-metrics { display: flex; justify-content: space-between; font-size: 9px; color: var(--dim); margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); font-weight: 600; }
+        
+        .hist-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 5px 10px; }
+        .clear-btn { background: transparent; border: 1px solid var(--border); color: #ff4d4d; font-size: 10px; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; }
     </style>
 </head>
 <body class="theme-ERE">
@@ -61,26 +66,31 @@
         </div>
 
         <div class="input-grid">
-            <input type="text" id="t1" placeholder="EV TAKIM">
-            <input type="text" id="t2" placeholder="DEP TAKIM">
+            <input type="text" id="t1" placeholder="">
+            <input type="text" id="t2" placeholder="">
+            
             <label>1. npxG/Sh (Ortalama)</label>
-            <input type="number" id="h-q" placeholder="0.10" step="0.01" inputmode="decimal">
-            <input type="number" id="a-q" placeholder="0.10" step="0.01" inputmode="decimal">
+            <input type="number" id="h-q" step="0.01" inputmode="decimal">
+            <input type="number" id="a-q" step="0.01" inputmode="decimal">
+            
             <label>2. SCA (Toplam)</label>
-            <input type="number" id="h-s" placeholder="SCA" inputmode="numeric">
-            <input type="number" id="a-s" placeholder="SCA" inputmode="numeric">
+            <input type="number" id="h-s" inputmode="numeric">
+            <input type="number" id="a-s" inputmode="numeric">
+            
             <label>3. PrgR (Toplam)</label>
-            <input type="number" id="h-p" placeholder="PrgR" inputmode="numeric">
-            <input type="number" id="a-p" placeholder="PrgR" inputmode="numeric">
+            <input type="number" id="h-p" inputmode="numeric">
+            <input type="number" id="a-p" inputmode="numeric">
+            
             <label>4. PPA (Toplam)</label>
-            <input type="number" id="h-x" placeholder="PPA" inputmode="numeric">
-            <input type="number" id="a-x" placeholder="PPA" inputmode="numeric">
+            <input type="number" id="h-x" inputmode="numeric">
+            <input type="number" id="a-x" inputmode="numeric">
         </div>
-        <button id="btn" onclick="analyze()">Analiz Et</button>
+        
+        <button id="btn" onclick="analyze()">ANALİZ ET</button>
     </div>
 
     <div class="hist-header">
-        <h3 style="font-size:11px; color:var(--dim); margin:0;">ANALİZ GEÇMİŞİ</h3>
+        <h3 style="font-size:12px; color:var(--dim); margin:0; font-weight:800;">ANALİZ GEÇMİŞİ</h3>
         <button class="clear-btn" onclick="clearHistory()">TEMİZLE</button>
     </div>
     <div id="history-list"></div>
@@ -91,20 +101,27 @@
     const ddMenu = document.getElementById('dd');
     const lgBtn = document.getElementById('lg-btn');
 
-    lgBtn.onclick = (e) => { e.stopPropagation(); ddMenu.style.display = ddMenu.style.display === 'block' ? 'none' : 'block'; };
+    // Tek tıkla aç/kapat mantığı
+    lgBtn.onclick = (e) => { 
+        e.stopPropagation(); 
+        ddMenu.style.display = ddMenu.style.display === 'block' ? 'none' : 'block'; 
+    };
+
     document.querySelectorAll('.dd-item').forEach(item => {
-        item.onclick = function() {
+        item.onclick = function(e) {
+            e.stopPropagation();
             activeL = this.dataset.id;
             document.getElementById('lg-text').innerText = this.dataset.name;
             document.body.className = 'theme-' + activeL;
             ddMenu.style.display = 'none';
         };
     });
+
     window.onclick = () => ddMenu.style.display = 'none';
 
     function analyze() {
         const h_s = document.getElementById('h-s').value, a_s = document.getElementById('a-s').value;
-        if (!h_s || !a_s) return;
+        if (!h_s || !a_s) { alert("SCA değerlerini giriniz!"); return; }
 
         const t1 = document.getElementById('t1').value || "EV", t2 = document.getElementById('t2').value || "DEP";
         const qAvg = (parseFloat(document.getElementById('h-q').value || 0.1) + parseFloat(document.getElementById('a-q').value || 0.1)) / 2;
@@ -112,7 +129,7 @@
         const prgr = (parseFloat(document.getElementById('h-p').value) || 0) + (parseFloat(document.getElementById('a-p').value) || 0);
         const ppa = (parseFloat(document.getElementById('h-x').value) || 0) + (parseFloat(document.getElementById('a-x').value) || 0);
 
-        // B-TIER ANALİZ MOTORU (KORUNDU)
+        // B-TIER MOTORU
         let mod = 1.0;
         if (activeL === 'ERE') mod = 1.6;
         else if (activeL === 'BPL') mod = 1.5;
@@ -144,7 +161,7 @@
     }
 
     function row(l, v, c) { return `<div class="bar-wrap"><div class="bar-info"><span>${l}</span><span>%${v.toFixed(0)}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${v}%; background:${c}"></div></div></div>`; }
-    function clearHistory() { if(confirm("Silinsin mi?")) document.getElementById('history-list').innerHTML = ''; }
+    function clearHistory() { if(confirm("Geçmiş silinsin mi?")) document.getElementById('history-list').innerHTML = ''; }
 </script>
 </body>
 </html>

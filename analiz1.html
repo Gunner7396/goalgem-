@@ -3,150 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO ELITE V7</title>
+    <title>P-PRO MOBILE TERMINAL</title>
     <style>
         :root {
-            --bg: #05070a; --panel: #0f131a; --accent: #00ffa3; --border: #1e2530;
-            --text: #f0f3f5; --dim: #64748b; --fire: #ff4757;
+            --bg: #06080a; --panel: #111418; --accent: #00ffa3; --border: #24292f;
+            --text: #f0f3f5; --dim: #8b949e; --fire: #ff4d4d;
         }
 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        
         body { 
-            background: radial-gradient(circle at top, #111827, #05070a);
-            color: var(--text); font-family: 'Segoe UI', Roboto, sans-serif;
-            margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center;
+            background: radial-gradient(circle at top, #161b22, #06080a);
+            color: var(--text); font-family: -apple-system, system-ui, sans-serif;
+            margin: 0; padding: 12px; display: flex; flex-direction: column; align-items: center;
+            overflow-x: hidden;
         }
 
-        .wrapper { width: 100%; max-width: 440px; }
+        .wrapper { width: 100%; max-width: 480px; }
 
-        /* ÜST STATÜ PANELİ */
-        .top-stats { display: flex; gap: 10px; margin-bottom: 20px; }
+        /* ÜST STATÜ - MOBİL GRID */
+        .top-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
         .stat-card { 
-            flex: 1; background: var(--panel); border: 1px solid var(--border);
-            padding: 12px; border-radius: 12px; text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        .stat-card span { display: block; font-size: 9px; color: var(--dim); margin-bottom: 4px; letter-spacing: 1px; }
-        .stat-card b { font-size: 13px; color: var(--accent); }
-
-        /* ANA ANALİZ KARTI */
-        .main-card {
             background: var(--panel); border: 1px solid var(--border);
-            padding: 20px; border-radius: 20px; margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative;
+            padding: 10px; border-radius: 12px; text-align: center;
+        }
+        .stat-card span { display: block; font-size: 8px; color: var(--dim); text-transform: uppercase; margin-bottom: 2px; }
+        .stat-card b { font-size: 12px; color: var(--accent); }
+
+        /* ANA PANEL */
+        .main-card {
+            background: rgba(17, 20, 24, 0.8); border: 1px solid var(--border);
+            padding: 15px; border-radius: 20px; margin-bottom: 20px;
+            backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
+        /* LİG SEÇİCİ */
         .dropdown {
-            background: #161b22; border: 1px solid var(--border);
-            padding: 15px; border-radius: 12px; text-align: center;
-            color: var(--accent); font-weight: 800; cursor: pointer; margin-bottom: 20px;
+            background: #1c2128; border: 1px solid var(--border);
+            padding: 14px; border-radius: 12px; text-align: center;
+            color: var(--accent); font-weight: 800; cursor: pointer; margin-bottom: 15px;
+            font-size: 14px; text-transform: uppercase;
         }
+        .dd-menu {
+            display: none; position: absolute; left: 0; right: 0; top: 100%;
+            background: #1c2128; border: 1px solid var(--border); border-radius: 12px;
+            z-index: 1000; margin-top: 5px; box-shadow: 0 10px 25px #000;
+        }
+        .dd-menu div { padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
 
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .input-grid label { grid-column: span 2; font-size: 10px; color: var(--dim); text-align: center; margin-top: 10px; font-weight: 700; }
+        /* INPUT GRID - MOBİL UYUMLU */
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .input-grid label { grid-column: span 2; font-size: 10px; color: var(--dim); text-align: center; margin-top: 8px; font-weight: 700; text-transform: uppercase; }
         
         input {
-            background: #05070a; border: 1px solid var(--border);
-            padding: 12px; border-radius: 10px; color: #fff; font-size: 14px; text-align: center;
+            width: 100%; background: #0d1117; border: 1px solid var(--border);
+            padding: 10px; border-radius: 8px; color: #fff; font-size: 14px; text-align: center;
+            -webkit-appearance: none;
         }
-        input:focus { border-color: var(--accent); outline: none; }
+        input:focus { border-color: var(--accent); }
 
+        /* ANALİZ BUTONU */
         #btn {
-            width: 100%; padding: 16px; border-radius: 12px; border: none;
+            width: 100%; padding: 16px; border-radius: 14px; border: none;
             background: linear-gradient(135deg, var(--accent), #00d4ff);
-            color: #000; font-weight: 800; margin-top: 20px; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 255, 163, 0.3);
+            color: #000; font-weight: 900; margin-top: 15px; cursor: pointer;
+            font-size: 15px; text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* CANLI LİG ZEKA PANELİ (YENİ) */
-        .intelligence-panel {
-            background: rgba(0, 255, 163, 0.03); border: 1px dashed var(--border);
-            border-radius: 15px; padding: 15px; margin-top: 20px;
+        /* GEÇMİŞ KARTLARI */
+        .hist-card {
+            background: #111418; border: 1px solid var(--border);
+            border-radius: 16px; padding: 15px; margin-bottom: 12px;
+            position: relative; animation: slideIn 0.3s ease;
         }
-        .intel-title { font-size: 11px; font-weight: 800; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-        .intel-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } }
+        
+        .fire-alert { border: 1px solid var(--fire); box-shadow: 0 0 15px rgba(255,77,77,0.15); }
+        
+        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 12px; font-weight: 800; }
+        .del-btn { color: var(--dim); font-size: 18px; padding: 0 5px; }
+
+        .bar-wrap { margin-bottom: 8px; }
+        .bar-info { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px; color: var(--dim); }
+        .bar-bg { width: 100%; height: 6px; background: #21262d; border-radius: 10px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease-in-out; }
+
+        /* ALT ZEKA PANELİ */
+        .intel-panel {
+            background: rgba(0, 255, 163, 0.03); border: 1px dashed var(--border);
+            border-radius: 15px; padding: 12px; margin-top: 20px; margin-bottom: 40px;
+        }
+        .intel-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 6px; }
         .intel-row span { color: var(--dim); }
         .intel-row b { color: var(--text); }
-
-        /* ANALİZ KARTLARI */
-        .hist-card {
-            background: #11151c; border: 1px solid var(--border);
-            border-radius: 16px; padding: 15px; margin-bottom: 15px;
-            animation: slideUp 0.4s ease;
-        }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .bar-wrap { margin-bottom: 10px; }
-        .bar-label { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px; font-weight: 700; }
-        .bar-bg { width: 100%; height: 6px; background: #1e2530; border-radius: 10px; overflow: hidden; }
-        .bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
     <div class="top-stats">
-        <div class="stat-card"><span>SİSTEM DURUMU</span><b>AKTİF / PRO</b></div>
-        <div class="stat-card"><span>ANALİZ GÜCÜ</span><b>%89.4</b></div>
+        <div class="stat-card"><span>SİSTEM DURUMU</span><b>PRO ONLINE</b></div>
+        <div class="stat-card"><span>GÜNLÜK ANALİZ</span><b id="count">0</b></div>
     </div>
 
     <div class="main-card">
-        <div class="dropdown" onclick="toggleDD()">
-            <span id="lg-text">LİG SEÇİNİZ</span>
-            <div id="dd" style="display:none; margin-top:10px;">
-                </div>
+        <div class="dropdown" onclick="toggleDD()" style="position:relative;">
+            <span id="lg-text">LİG SEÇ</span>
+            <div id="dd" class="dd-menu">
+                <div onclick="setL('PL', 'PREMIER LEAGUE', '#00ffa3')">PREMIER LEAGUE</div>
+                <div onclick="setL('LL', 'LA LIGA PRO', '#fbff00')">LA LIGA PRO</div>
+                <div onclick="setL('SA', 'SERIE A ANALİZ', '#00d4ff')">SERIE A ANALİZ</div>
+                <div onclick="setL('BL', 'BUNDESLIGA', '#ff4d4d')">BUNDESLIGA</div>
+                <div onclick="setL('F1', 'LIGUE 1', '#dae025')">LIGUE 1</div>
+            </div>
         </div>
 
         <div class="input-grid">
-            <input type="text" id="t1" placeholder="EV SAHİBİ">
-            <input type="text" id="t2" placeholder="DEPLASMAN">
+            <input type="text" id="t1" placeholder="EV">
+            <input type="text" id="t2" placeholder="DEP">
             
-            <label>npxG/Sh (VURUŞ KALİTESİ)</label>
-            <input type="number" id="t1-q" placeholder="0.00" step="0.01">
-            <input type="number" id="t2-q" placeholder="0.00" step="0.01">
+            <label>npxG/Sh</label>
+            <input type="number" id="t1-q" placeholder="0.00" step="0.01" inputmode="decimal">
+            <input type="number" id="t2-q" placeholder="0.00" step="0.01" inputmode="decimal">
 
-            <label>PrgR (PAS ALIŞ GÜCÜ)</label>
-            <input type="number" id="t1-p" placeholder="0">
-            <input type="number" id="t2-p" placeholder="0">
+            <label>SCA & PrgR</label>
+            <input type="number" id="t1-s" placeholder="SCA" inputmode="numeric">
+            <input type="number" id="t2-s" placeholder="SCA" inputmode="numeric">
+            <input type="number" id="t1-p" placeholder="PrgR" inputmode="numeric">
+            <input type="number" id="t2-p" placeholder="PrgR" inputmode="numeric">
         </div>
 
-        <button id="btn" onclick="analyze()">STRATEJİYİ ANALİZ ET</button>
+        <button id="btn" onclick="analyze()">ANALİZ ET</button>
     </div>
 
     <div id="history-list"></div>
 
-    <div class="intelligence-panel">
-        <div class="intel-title">⚡ LİG ANALİZ ANALİTİĞİ (GÜNCEL)</div>
+    <div class="intel-panel">
+        <div style="font-size: 10px; font-weight: 800; color: var(--accent); margin-bottom: 10px;">⚡ LİG ANALİTİĞİ</div>
         <div id="intel-content">
             <div class="intel-row"><span>Lig Ortalaması Gol</span><b>2.84</b></div>
-            <div class="intel-row"><span>KG VAR Oranı</span><b>%58</b></div>
-            <div class="intel-row"><span>Beklenen xG Sapması</span><b>+/- 0.12</b></div>
+            <div class="intel-row"><span>KG VAR Oranı</span><b>%54</b></div>
+            <div class="intel-row"><span>Sertlik Derecesi</span><b>Orta</b></div>
         </div>
-        <p style="font-size: 9px; color: var(--dim); margin-top: 10px; text-align: center;">*Veriler son 100 maç baz alınarak otomatik kalibre edilir.</p>
     </div>
 </div>
 
 <script>
-    // Analiz ve UI mantığı buraya entegre edilecek. 
-    // Lig seçildiğinde intel-content içeriği dinamik olarak değişecek.
-    function setL(id, n, c) {
-        // ... Lig seçim kodları ...
-        updateIntel(id);
+    let activeL = 'PL';
+    const ligs = {
+        'PL': { m: 0.92, qT: 0.11, g: '2.85', kg: '%54', s: 'Yüksek' },
+        'LL': { m: 1.4, qT: 0.08, g: '2.51', kg: '%48', s: 'Orta' },
+        'SA': { m: 1.0, qT: 0.09, g: '2.62', kg: '%52', s: 'Yüksek' },
+        'BL': { m: 1.3, qT: 0.11, g: '3.21', kg: '%65', s: 'Düşük' },
+        'F1': { m: 0.85, qT: 0.07, g: '2.70', kg: '%50', s: 'Orta' }
+    };
+
+    let count = 0;
+
+    function toggleDD() { 
+        const d = document.getElementById('dd'); 
+        d.style.display = d.style.display === 'block' ? 'none' : 'block'; 
     }
 
-    function updateIntel(id) {
-        const intel = {
-            'PL': { g: '2.85', kg: '%54', d: 'Düşük' },
-            'BL': { g: '3.21', kg: '%65', d: 'Yüksek' },
-            'LL': { g: '2.51', kg: '%48', d: 'Orta' }
-        };
-        const data = intel[id] || intel['PL'];
+    function setL(id, n, c) {
+        activeL = id;
+        document.getElementById('lg-text').innerText = n;
+        document.getElementById('lg-text').style.color = c;
+        document.documentElement.style.setProperty('--accent', c);
+        const l = ligs[id];
         document.getElementById('intel-content').innerHTML = `
-            <div class="intel-row"><span>Lig Ortalaması Gol</span><b>${data.g}</b></div>
-            <div class="intel-row"><span>KG VAR Oranı</span><b>${data.kg}</b></div>
-            <div class="intel-row"><span>Defansif Sertlik</span><b>${data.d}</b></div>
+            <div class="intel-row"><span>Lig Ortalaması Gol</span><b>${l.g}</b></div>
+            <div class="intel-row"><span>KG VAR Oranı</span><b>${l.kg}</b></div>
+            <div class="intel-row"><span>Sertlik Derecesi</span><b>${l.s}</b></div>
+        `;
+        toggleDD();
+    }
+
+    function analyze() {
+        const team1 = document.getElementById('t1').value || "EV";
+        const team2 = document.getElementById('t2').value || "DEP";
+        const q1 = parseFloat(document.getElementById('t1-q').value) || 0;
+        const q2 = parseFloat(document.getElementById('t2-q').value) || 0;
+        const p1 = parseFloat(document.getElementById('t1-p').value) || 0;
+        const p2 = parseFloat(document.getElementById('t2-p').value) || 0;
+
+        const prSum = p1 + p2;
+        const qAvg = (q1 + q2) / 2;
+        const c = ligs[activeL];
+
+        let p3 = Math.min(96, (prSum * c.m) + (qAvg * 118) / 2.3);
+        if(qAvg > c.qT + 0.02) p3 += 4;
+
+        let prob2 = (100 - p3) * 0.6;
+        let prob1 = 100 - p3 - prob2;
+
+        addHistory(team1, team2, prob1, prob2, p3, qAvg, prSum);
+        count++;
+        document.getElementById('count').innerText = count;
+    }
+
+    function addHistory(t1, t2, p1, p2, p3, q, pr) {
+        const list = document.getElementById('history-list');
+        const isFire = p3 > 75;
+        const card = document.createElement('div');
+        card.className = `hist-card ${isFire ? 'fire-alert' : ''}`;
+        card.innerHTML = `
+            <div class="match-header">
+                <span>${t1} v ${t2} ${isFire ? '🔥' : ''}</span>
+                <span class="del-btn" onclick="this.parentElement.parentElement.remove()">×</span>
+            </div>
+            ${row("0-1 GOL", p1, "#3fb950")}
+            ${row("2 GOL", p2, "#d29922")}
+            ${row("3+ GOL", p3, "#f85149")}
+            <div style="font-size:8px; color:var(--dim); margin-top:8px; display:flex; justify-content:space-between;">
+                <span>npxG/Sh: ${q.toFixed(2)}</span>
+                <span>PrgR: ${pr}</span>
+                <span>LIG: ${activeL}</span>
+            </div>
+        `;
+        list.prepend(card);
+    }
+
+    function row(label, val, color) {
+        return `
+            <div class="bar-wrap">
+                <div class="bar-info"><span>${label}</span><span>%${Math.round(val)}</span></div>
+                <div class="bar-bg"><div class="bar-fill" style="width:${val}%; background:${color}; box-shadow: 0 0 8px ${color}55"></div></div>
+            </div>
         `;
     }
 </script>
-
 </body>
 </html>

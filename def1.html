@@ -3,77 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VELOCITY SCOUT v12.0</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
+    <title>VELOCITY SCOUT v12.1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --bg: #06080a; --card: #111418; --accent: #ff00ff; --border: #1e2530; 
+            --bg: #05070a; --card: #0f1216; --accent: #ff00ff; --border: #1e2530; 
             --text: #f0f3f5; --dim: #8a99af; --l-color: #ff00ff; 
         }
         *:focus { outline: none !important; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Outfit', sans-serif; }
         
-        body { background: var(--bg); color: var(--text); margin: 0; padding: 12px; min-height: 100vh; }
-        .wrapper { width: 100%; max-width: 400px; margin: 0 auto; }
+        body { background: var(--bg); color: var(--text); margin: 0; padding: 10px; min-height: 100vh; }
+        .wrapper { width: 100%; max-width: 380px; margin: 0 auto; }
         
-        /* Header */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .header h1 { font-size: 20px; font-weight: 900; color: var(--l-color); margin: 0; letter-spacing: -1px; }
-        .reset-btn { font-size: 9px; font-weight: 800; border: 1.5px solid var(--border); padding: 5px 12px; border-radius: 30px; color: var(--dim); cursor: pointer; text-transform: uppercase; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .header h1 { font-size: 18px; font-weight: 900; color: var(--l-color); margin: 0; }
+        .reset-btn { font-size: 8px; font-weight: 800; border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; color: var(--dim); cursor: pointer; }
 
-        /* Dashboard */
-        .dash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
-        .stat-box { background: linear-gradient(145deg, #161b22, #0d1117); border: 1px solid var(--border); border-radius: 12px; padding: 10px; text-align: center; }
-        .st-v { font-family: 'JetBrains Mono'; font-size: 16px; font-weight: 800; color: #fff; }
-        .st-l { font-size: 8px; color: var(--dim); text-transform: uppercase; display: block; margin-top: 2px; }
+        .dash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+        .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 6px; text-align: center; }
+        .st-v { font-family: 'JetBrains Mono'; font-size: 14px; font-weight: 700; color: #fff; }
+        .st-l { font-size: 7px; color: var(--dim); text-transform: uppercase; display: block; }
 
-        /* League Picker */
-        .league-box { background: #161b22; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border); position: relative; overflow: hidden; }
-        .league-box::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--l-color); }
-        #league-select { width: 100%; padding: 14px; background: transparent; border: none; color: #fff; font-weight: 800; font-size: 14px; appearance: none; -webkit-appearance: none; }
+        .league-box { background: #111418; border-radius: 10px; margin-bottom: 12px; border: 1px solid var(--border); border-left: 4px solid var(--l-color); }
+        #league-select { width: 100%; padding: 10px; background: transparent; border: none; color: #fff; font-weight: 700; font-size: 13px; appearance: none; }
 
-        /* Input Engine */
-        .engine { background: var(--card); border-radius: 20px; padding: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .row-label { font-size: 11px; font-weight: 900; color: var(--l-color); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; opacity: 0.8; }
+        .engine { background: var(--card); border-radius: 15px; padding: 12px; border: 1px solid var(--border); margin-bottom: 15px; }
+        .row-label { font-size: 10px; font-weight: 900; color: var(--l-color); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .row-label::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
         
-        .input-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 15px; }
-        .unit { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; padding: 10px; position: relative; }
-        .u-label { font-size: 8px; color: var(--dim); font-weight: 800; display: block; margin-bottom: 4px; text-transform: uppercase; }
-        .u-input { width: 100%; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 16px; font-weight: 700; }
+        .input-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
+        .unit { background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; }
+        .u-label { font-size: 7px; color: var(--dim); font-weight: 800; display: block; text-transform: uppercase; }
+        .u-input { width: 100%; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 15px; font-weight: 700; padding: 0; }
 
-        .scan-btn { width: 100%; background: var(--l-color); color: #000; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-size: 15px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(255,0,255,0.3); }
-        .scan-btn:active { transform: scale(0.98); }
+        .scan-btn { width: 100%; background: var(--l-color); color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 900; font-size: 14px; cursor: pointer; }
 
-        /* Report Cards */
+        /* Compact Report Cards */
         .report-card { 
-            background: linear-gradient(160deg, #1a1f26 0%, #0d1117 100%); 
-            border: 1px solid var(--border); border-radius: 18px; padding: 15px; 
-            margin-top: 20px; position: relative; border-left: 4px solid var(--l-color);
-            animation: cardReveal 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            background: #111418; border: 1px solid var(--border); border-radius: 12px; 
+            padding: 8px 12px; margin-top: 10px; position: relative; 
+            border-left: 3px solid var(--l-color);
+            display: grid; grid-template-columns: 45px 1fr 80px; align-items: center; gap: 12px;
         }
-        @keyframes cardReveal { from { opacity: 0; transform: scale(0.9) translateY(20px); } }
         
-        .rep-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .rep-title { font-size: 10px; font-weight: 900; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px; color: #fff; }
-        
-        .rep-content { display: flex; align-items: center; gap: 20px; }
-        .rep-score-circle { 
-            width: 60px; height: 60px; border-radius: 50%; border: 4px solid var(--border);
-            border-top-color: var(--l-color); display: flex; flex-direction: column; align-items: center; justify-content: center;
+        .rep-score { 
+            height: 40px; width: 40px; border-radius: 8px; border: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'JetBrains Mono'; font-size: 14px; font-weight: 700; color: #fff;
         }
-        .sc-val { font-family: 'JetBrains Mono'; font-size: 18px; font-weight: 800; color: #fff; }
-        .sc-pct { font-size: 8px; color: var(--dim); }
 
-        .rep-info { flex: 1; }
-        .info-tag { font-size: 9px; color: var(--l-color); font-weight: 800; margin-bottom: 4px; letter-spacing: 0.5px; }
-        .info-main { font-size: 20px; font-weight: 900; color: #fff; margin: 0; }
+        .rep-info { display: flex; flex-direction: column; justify-content: center; }
+        .info-tag { font-size: 7px; color: var(--dim); font-weight: 800; margin: 0; }
+        .info-main { font-size: 15px; font-weight: 900; color: #fff; margin: 0; line-height: 1.1; }
 
-        .action-zone { display: flex; gap: 12px; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
-        .btn-check { flex: 1; background: rgba(0, 255, 163, 0.1); border: 1px solid rgba(0, 255, 163, 0.3); color: #00ffa3; font-size: 18px; padding: 10px; border-radius: 10px; cursor: pointer; }
-        .btn-fail { flex: 1; background: rgba(255, 77, 77, 0.1); border: 1px solid rgba(255, 77, 77, 0.3); color: #ff4d4d; font-size: 18px; padding: 10px; border-radius: 10px; cursor: pointer; }
+        .rep-actions { display: flex; gap: 6px; }
+        .mini-btn { flex: 1; background: #1a1f26; border: 1px solid var(--border); font-size: 14px; padding: 6px 0; border-radius: 6px; cursor: pointer; }
 
-        /* Themes */
         .theme-eng { --l-color: #ff00ff; }
         .theme-esp { --l-color: #ff4b4b; }
         .theme-ita { --l-color: #0066ff; }
@@ -124,7 +110,7 @@
 </div>
 
 <script>
-    let stats = JSON.parse(localStorage.getItem('v_scout_v12')) || { total: 0, wins: 0 };
+    let stats = JSON.parse(localStorage.getItem('v_scout_v121')) || { total: 0, wins: 0 };
     const dnaConfig = {
         ENG: { ppaA: 15.5, scaA: 27.0, save: 61.0, ppaF: 12.5, npx: 0.12, theme: 'theme-eng' },
         ESP: { ppaA: 11.5, scaA: 21.0, save: 64.0, ppaF: 10.0, npx: 0.11, theme: 'theme-esp' },
@@ -161,20 +147,14 @@
         card.className = `report-card ${config.theme}`;
         card.id = `rep-${id}`;
         card.innerHTML = `
-            <div class="rep-header"><span class="rep-title">${l} DNA ANALİZİ</span></div>
-            <div class="rep-content">
-                <div class="rep-score-circle">
-                    <span class="sc-val">${match}</span>
-                    <span class="sc-pct">%</span>
-                </div>
-                <div class="rep-info">
-                    <p class="info-tag">GOL OLASILIĞI (1.5 ÜST)</p>
-                    <p class="info-main">%${signal} UYUM</p>
-                </div>
+            <div class="rep-score">${match}%</div>
+            <div class="rep-info">
+                <p class="info-tag">GOL OLASILIĞI</p>
+                <p class="info-main">%${signal} UYUM</p>
             </div>
-            <div class="action-zone">
-                <button class="btn-check" onclick="markHit('${id}', true)">✅</button>
-                <button class="btn-fail" onclick="markHit('${id}', false)">❌</button>
+            <div class="rep-actions">
+                <button class="mini-btn" onclick="markHit('${id}', true)">✅</button>
+                <button class="mini-btn" onclick="markHit('${id}', false)">❌</button>
             </div>
         `;
         document.getElementById('feed').prepend(card);
@@ -184,19 +164,14 @@
     }
 
     function markHit(id, isWin) {
-        stats.total++;
-        if (isWin) stats.wins++;
-        localStorage.setItem('v_scout_v12', JSON.stringify(stats));
-        document.getElementById(`rep-${id}`).style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById(`rep-${id}`).remove();
-            saveFeed();
-        }, 200);
-        updateUI();
+        stats.total++; if (isWin) stats.wins++;
+        localStorage.setItem('v_scout_v121', JSON.stringify(stats));
+        document.getElementById(`rep-${id}`).remove();
+        saveFeed(); updateUI();
     }
 
-    function resetStats() { if(confirm("Tüm database sıfırlansın mı?")) { stats = {total:0, wins:0}; localStorage.setItem('v_scout_v12', JSON.stringify(stats)); updateUI(); } }
-    function saveFeed() { localStorage.setItem('v_scout_feed_v12', document.getElementById('feed').innerHTML); }
+    function resetStats() { if(confirm("Sıfırlansın mı?")) { stats = {total:0, wins:0}; localStorage.setItem('v_scout_v121', JSON.stringify(stats)); updateUI(); } }
+    function saveFeed() { localStorage.setItem('v_scout_feed_v121', document.getElementById('feed').innerHTML); }
     function updateUI() {
         document.getElementById('st-total').innerText = stats.total;
         document.getElementById('st-hit').innerText = stats.wins;
@@ -205,9 +180,8 @@
     }
 
     window.onload = () => {
-        document.getElementById('feed').innerHTML = localStorage.getItem('v_scout_feed_v12') || '';
-        updateUI();
-        applyTheme();
+        document.getElementById('feed').innerHTML = localStorage.getItem('v_scout_feed_v121') || '';
+        updateUI(); applyTheme();
     };
 </script>
 </body>

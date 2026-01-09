@@ -3,118 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOAL-PATH PRO V26</title>
+    <title>GP PRO V27</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --fm-bg: #0e0e0e; --fm-card: #1a1a1c; --fm-border: #2c2c2e;
+            --fm-bg: #0e0e0e; --fm-card: #1c1c1e; --fm-border: #2c2c2e;
             --fm-green: #00ff85; --fm-text: #ffffff; --fm-dim: #929292;
             --fm-red: #ff4d4d; --fm-gold: #ffcc00;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
-        body { background: var(--fm-bg); color: var(--fm-text); margin: 0; padding-bottom: 40px; }
+        body { background: var(--fm-bg); color: var(--fm-text); margin: 0; padding-bottom: 30px; }
 
-        /* Navigation */
-        .nav { background: var(--fm-card); padding: 15px; border-bottom: 1px solid var(--fm-border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 18px; font-weight: 800; color: var(--fm-green); }
-        .reset-btn { font-size: 10px; font-weight: 700; color: var(--fm-red); border: 1px solid var(--fm-red); padding: 4px 10px; border-radius: 6px; }
+        /* Modern Nav */
+        .nav { background: var(--fm-card); padding: 12px 15px; border-bottom: 1px solid var(--fm-border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 16px; font-weight: 800; color: var(--fm-green); }
+        .reset-btn { font-size: 9px; font-weight: 700; color: var(--fm-red); text-transform: uppercase; }
 
-        /* Stats */
-        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px; }
-        .stat-box { background: var(--fm-card); padding: 12px; border-radius: 12px; border: 1px solid var(--fm-border); text-align: center; }
-        .stat-v { display: block; font-size: 16px; font-weight: 800; }
-        .stat-l { font-size: 9px; color: var(--fm-dim); font-weight: 700; text-transform: uppercase; }
+        /* Stats Strip */
+        .stats-strip { display: flex; background: #000; padding: 10px; border-bottom: 1px solid var(--fm-border); justify-content: space-around; }
+        .s-item { text-align: center; }
+        .s-v { display: block; font-size: 14px; font-weight: 800; }
+        .s-l { font-size: 8px; color: var(--fm-dim); font-weight: 700; }
 
-        /* Input Card */
-        .main-card { background: var(--fm-card); margin: 0 12px 20px; border-radius: 16px; border: 1px solid var(--fm-border); padding: 15px; }
-        .lg-select { width: 100%; background: #2c2c2e; border: 1px solid var(--fm-border); padding: 10px; border-radius: 8px; color: #fff; margin-bottom: 15px; font-weight: 700; }
+        /* Compact Input Section */
+        .main-card { background: var(--fm-card); margin: 10px; border-radius: 12px; border: 1px solid var(--fm-border); padding: 12px; }
+        .lg-select { width: 100%; background: #2c2c2e; border: 1px solid var(--fm-border); padding: 8px; border-radius: 6px; color: #fff; margin-bottom: 12px; font-size: 12px; font-weight: 700; }
         
-        .team-block { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        .t-input-group { display: flex; flex-direction: column; gap: 8px; }
-        
-        /* Manuel İsim Girişi */
-        .t-name-input { background: #000; border: 1px solid var(--fm-border); padding: 10px; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 600; }
-        
-        /* Metrik Kutuları */
-        .metric-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 5px; }
-        .metric-inputs input { background: #2c2c2e; border: none; padding: 8px; border-radius: 6px; color: #fff; font-size: 12px; text-align: center; font-weight: 600; }
-        .m-lbl { font-size: 8px; color: var(--fm-dim); font-weight: 700; text-align: center; margin-top: 2px; }
+        .team-section { background: rgba(0,0,0,0.2); border-radius: 8px; padding: 10px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.03); }
+        .t-header { display: flex; gap: 8px; margin-bottom: 8px; }
+        .t-name-input { flex: 2; background: #000; border: 1px solid var(--fm-border); padding: 8px; border-radius: 6px; color: #fff; font-size: 12px; font-weight: 600; }
+        .t-select-mini { flex: 1; background: #2c2c2e; color: #fff; border: none; border-radius: 6px; font-size: 10px; }
 
-        .btn-analyze { width: 100%; background: var(--fm-green); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; }
-        .btn-clear { text-align: center; color: var(--fm-dim); font-size: 11px; margin-top: 10px; font-weight: 600; cursor: pointer; }
+        .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+        .m-box { display: flex; flex-direction: column; }
+        .m-box input { background: #000; border: 1px solid var(--fm-border); padding: 8px 2px; border-radius: 4px; color: var(--fm-green); font-size: 11px; text-align: center; font-weight: 700; width: 100%; }
+        .m-box span { font-size: 7px; color: var(--fm-dim); text-align: center; margin-top: 3px; font-weight: 800; }
+
+        .btn-run { width: 100%; background: var(--fm-green); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; margin-top: 5px; }
+        .btn-clear { text-align: center; color: var(--fm-dim); font-size: 10px; margin-top: 10px; cursor: pointer; text-decoration: underline; }
 
         /* Match Card */
-        .match-card { background: var(--fm-card); margin: 0 12px 12px; border-radius: 16px; padding: 15px; border: 1px solid var(--fm-border); }
-        .match-info { font-size: 10px; color: var(--fm-dim); font-weight: 700; margin-bottom: 10px; display: flex; justify-content: space-between; }
-        .teams-disp { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-        .team-n { font-size: 14px; font-weight: 700; flex: 1; text-align: center; }
-        .score-v { font-size: 22px; font-weight: 900; color: var(--fm-green); padding: 0 15px; }
+        .match-card { background: var(--fm-card); margin: 10px; border-radius: 12px; padding: 12px; border: 1px solid var(--fm-border); }
+        .m-head { font-size: 9px; color: var(--fm-dim); font-weight: 800; margin-bottom: 8px; display: flex; justify-content: space-between; text-transform: uppercase; }
+        .m-teams { display: flex; align-items: center; justify-content: space-between; margin: 10px 0; }
+        .m-t-name { font-size: 13px; font-weight: 700; flex: 1; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .m-vs { font-size: 18px; font-weight: 900; color: var(--fm-green); padding: 0 10px; }
         
-        .prob-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .p-item { background: #000; padding: 10px; border-radius: 10px; text-align: center; border: 1px solid var(--fm-border); }
-        .p-lbl { font-size: 8px; color: var(--fm-dim); display: block; margin-bottom: 3px; font-weight: 800; }
-        .p-val { font-size: 13px; font-weight: 800; }
+        .p-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        .p-card { background: #000; padding: 8px; border-radius: 8px; text-align: center; border: 1px solid var(--fm-border); }
+        .p-l { font-size: 7px; color: var(--fm-dim); display: block; font-weight: 800; margin-bottom: 2px; }
+        .p-v { font-size: 12px; font-weight: 800; }
 
-        .card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 15px; border-top: 1px solid var(--fm-border); padding-top: 12px; }
-        .btn-s { padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 800; border: none; cursor: pointer; }
-        .win { background: rgba(0,255,133,0.1); color: var(--fm-green); }
-        .lose { background: rgba(255,77,77,0.1); color: var(--fm-red); }
+        .m-foot { display: flex; justify-content: flex-end; gap: 6px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--fm-border); }
+        .st-btn { padding: 5px 10px; border-radius: 6px; font-size: 9px; font-weight: 800; border: none; }
+        .st-w { background: rgba(0,255,133,0.1); color: var(--fm-green); }
+        .st-l { background: rgba(255,77,77,0.1); color: var(--fm-red); }
+
+        .section-lbl { padding: 5px 15px; font-size: 11px; font-weight: 800; color: var(--fm-green); opacity: 0.8; }
     </style>
 </head>
 <body>
 
 <div class="nav">
     <div class="logo">GOALPATH PRO</div>
-    <div class="reset-btn" onclick="resetStats()">SIFIRLA</div>
+    <div class="reset-btn" onclick="resetStats()">Sıfırla</div>
 </div>
 
-<div class="stats-row">
-    <div class="stat-box"><span id="st-total" class="stat-v">0</span><span class="stat-l">MAÇ</span></div>
-    <div class="stat-box"><span id="st-rate" class="stat-v" style="color:var(--fm-green)">0%</span><span class="stat-l">BAŞARI</span></div>
-    <div class="stat-box"><span id="st-win" class="stat-v">0</span><span class="stat-l">WINS</span></div>
+<div class="stats-strip">
+    <div class="s-item"><span id="st-total" class="s-v">0</span><span class="s-l">MAÇ</span></div>
+    <div class="s-item"><span id="st-rate" class="s-v" style="color:var(--fm-green)">0%</span><span class="s-l">BAŞARI</span></div>
+    <div class="s-item"><span id="st-win" class="s-v">0</span><span class="s-l">WINS</span></div>
 </div>
 
 <div class="main-card">
     <select id="l-sel" class="lg-select" onchange="upTeams()"></select>
     
-    <div class="team-block">
-        <div class="t-input-group">
-            <input type="text" id="t1-name" class="t-name-input" placeholder="Ev Sahibi Takım">
-            <select id="t1-select" onchange="document.getElementById('t1-name').value=this.value" style="background:#000; color:#fff; font-size:11px; border:none; border-radius:4px; padding:2px;"></select>
-            <div class="metric-inputs">
-                <input type="number" id="t1-q" step="any" inputmode="decimal" placeholder="npxG">
-                <input type="number" id="t1-s" inputmode="numeric" placeholder="SCA">
-                <input type="number" id="t1-p" inputmode="numeric" placeholder="PRGR">
-                <input type="number" id="t1-x" inputmode="numeric" placeholder="PPA">
-            </div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px; opacity:0.5">
-                <span class="m-lbl">npxG | SCA</span><span class="m-lbl">PRGR | PPA</span>
-            </div>
+    <div class="team-section">
+        <div class="t-header">
+            <input type="text" id="t1-name" class="t-name-input" placeholder="Ev Sahibi">
+            <select id="t1-select" class="t-select-mini" onchange="document.getElementById('t1-name').value=this.value"></select>
         </div>
-
-        <div class="t-input-group">
-            <input type="text" id="t2-name" class="t-name-input" placeholder="Deplasman Takım">
-            <select id="t2-select" onchange="document.getElementById('t2-name').value=this.value" style="background:#000; color:#fff; font-size:11px; border:none; border-radius:4px; padding:2px;"></select>
-            <div class="metric-inputs">
-                <input type="number" id="t2-q" step="any" inputmode="decimal" placeholder="npxG">
-                <input type="number" id="t2-s" inputmode="numeric" placeholder="SCA">
-                <input type="number" id="t2-p" inputmode="numeric" placeholder="PRGR">
-                <input type="number" id="t2-x" inputmode="numeric" placeholder="PPA">
-            </div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px; opacity:0.5">
-                <span class="m-lbl">npxG | SCA</span><span class="m-lbl">PRGR | PPA</span>
-            </div>
+        <div class="metrics-row">
+            <div class="m-box"><input type="number" id="t1-q" step="any" inputmode="decimal" placeholder="0.00"><span>npxG</span></div>
+            <div class="m-box"><input type="number" id="t1-s" inputmode="numeric" placeholder="0"><span>SCA</span></div>
+            <div class="m-box"><input type="number" id="t1-p" inputmode="numeric" placeholder="0"><span>PRGR</span></div>
+            <div class="m-box"><input type="number" id="t1-x" inputmode="numeric" placeholder="0"><span>PPA</span></div>
         </div>
     </div>
 
-    <button class="btn-analyze" onclick="run()">Analizi Başlat</button>
-    <div class="btn-clear" onclick="cls()">Girdileri Temizle</div>
+    <div class="team-section">
+        <div class="t-header">
+            <input type="text" id="t2-name" class="t-name-input" placeholder="Deplasman">
+            <select id="t2-select" class="t-select-mini" onchange="document.getElementById('t2-name').value=this.value"></select>
+        </div>
+        <div class="metrics-row">
+            <div class="m-box"><input type="number" id="t2-q" step="any" inputmode="decimal" placeholder="0.00"><span>npxG</span></div>
+            <div class="m-box"><input type="number" id="t2-s" inputmode="numeric" placeholder="0"><span>SCA</span></div>
+            <div class="m-box"><input type="number" id="t2-p" inputmode="numeric" placeholder="0"><span>PRGR</span></div>
+            <div class="m-box"><input type="number" id="t2-x" inputmode="numeric" placeholder="0"><span>PPA</span></div>
+        </div>
+    </div>
+
+    <button class="btn-run" onclick="run()">ANALİZİ ÇIKAR</button>
+    <div class="btn-clear" onclick="cls()">Formu Temizle</div>
 </div>
 
+<div class="section-lbl">BEKLEYENLER</div>
 <div id="active-list"></div>
-<div style="padding: 15px; font-size: 12px; font-weight: 800; color: var(--fm-dim);">GEÇMİŞ ARŞİV</div>
+
+<div class="section-lbl">ARŞİV</div>
 <div id="archive-list"></div>
-<div style="text-align:center; padding: 20px; font-size:10px; color:var(--fm-red)" onclick="clsArc()">Arşivi Temizle</div>
+<div style="text-align:center; padding: 15px; font-size:9px; color:var(--fm-red); font-weight:bold" onclick="clsArc()">ARŞİVİ BOŞALT</div>
 
 <script>
     const eData = { 
@@ -126,15 +125,15 @@
     };
 
     const tData = {
-        PL: ["Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Tottenham", "Aston Villa", "Newcastle", "Brighton", "West Ham", "Wolves", "Everton"],
-        LL: ["Real Madrid", "Barcelona", "Atl. Madrid", "Girona", "Real Sociedad", "Villarreal", "Ath. Bilbao", "Sevilla", "Betis", "Valencia"],
-        SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio", "Atalanta", "Fiorentina", "Bologna", "Torino"],
-        BL: ["Bayern Munich", "Leverkusen", "Dortmund", "RB Leipzig", "Stuttgart", "Frankfurt", "Wolfsburg", "Gladbach", "Hoffenheim"],
-        L1: ["PSG", "Monaco", "Marseille", "Lille", "Lyon", "Nice", "Lens", "Rennes", "Reims", "Strasbourg"]
+        PL: ["Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Tottenham", "Aston Villa", "Newcastle"],
+        LL: ["Real Madrid", "Barcelona", "Atl. Madrid", "Girona", "Real Sociedad", "Villarreal"],
+        SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio", "Atalanta"],
+        BL: ["Bayern Munich", "Leverkusen", "Dortmund", "RB Leipzig", "Stuttgart"],
+        L1: ["PSG", "Monaco", "Marseille", "Lille", "Lyon", "Nice"]
     };
 
-    let stats = JSON.parse(localStorage.getItem('gp_v26_stats')) || { total: 0, win: 0 };
-    let matches = JSON.parse(localStorage.getItem('gp_v26_matches')) || [];
+    let stats = JSON.parse(localStorage.getItem('gp_v27_stats')) || { total: 0, win: 0 };
+    let matches = JSON.parse(localStorage.getItem('gp_v27_matches')) || [];
 
     window.onload = () => {
         const sel = document.getElementById('l-sel');
@@ -144,21 +143,20 @@
 
     function upTeams() {
         const l = document.getElementById('l-sel').value;
-        const opts = `<option value="">Takım Seç (veya yaz)</option>` + tData[l].sort().map(t => `<option value="${t}">${t}</option>`).join('');
+        const opts = `<option value="">Seç</option>` + tData[l].sort().map(t => `<option value="${t}">${t}</option>`).join('');
         document.getElementById('t1-select').innerHTML = opts;
         document.getElementById('t2-select').innerHTML = opts;
     }
 
     function cls() { 
         document.querySelectorAll('input').forEach(i => i.value = ''); 
-        document.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
-        upTeams();
+        document.querySelectorAll('select').forEach(s => s.selectedIndex = (s.id==='l-sel'?s.selectedIndex:0));
     }
 
     function run() {
         const t1 = document.getElementById('t1-name').value;
         const t2 = document.getElementById('t2-name').value;
-        if(!t1 || !t2) { alert("Takım isimlerini gir!"); return; }
+        if(!t1 || !t2) return alert("İsimler eksik!");
 
         const l = document.getElementById('l-sel').value;
         const cfg = eData[l];
@@ -167,7 +165,6 @@
         const q1 = parseFloat(document.getElementById('t1-q').value)||0;
         const q2 = parseFloat(document.getElementById('t2-q').value)||0;
         
-        // Orijinal Analiz Motoru Mantığı
         let sc = 0;
         if(xT <= cfg.x) sc += 45;
         if(q1 <= cfg.q && q2 <= cfg.q) sc += 25;
@@ -177,15 +174,12 @@
         let p3 = Math.max(100 - p1 - (Math.random() * 5 + 15), 5); 
         let p2 = 100 - (parseFloat(p1) + parseFloat(p3));
 
-        matches.unshift({
-            id: Date.now(), lg: l, h: t1, a: t2,
-            p1: p1.toFixed(0), p2: p2.toFixed(0), p3: p3.toFixed(0), score: 'VS', status: 'active'
-        });
+        matches.unshift({ id: Date.now(), lg: l, h: t1, a: t2, p1: p1.toFixed(0), p2: p2.toFixed(0), p3: p3.toFixed(0), score: 'VS', status: 'active' });
         save(); render(); cls();
     }
 
     function setRes(id, win) {
-        const s = prompt("Maçın bitmiş skorunu gir:");
+        const s = prompt("Skor?");
         if(s === null) return;
         matches = matches.map(m => {
             if(m.id === id) { m.status = 'archived'; m.res = win ? 'WIN' : 'LOSE'; m.score = s; stats.total++; if(win) stats.win++; }
@@ -194,45 +188,38 @@
         save(); upUI(); render();
     }
 
-    function del(id) { if(confirm("Kaydı sil?")) { matches = matches.filter(m => m.id !== id); save(); render(); } }
+    function del(id) { if(confirm("Sil?")) { matches = matches.filter(m => m.id !== id); save(); render(); } }
 
     function render() {
         const active = matches.filter(m => m.status === 'active');
         const archive = matches.filter(m => m.status === 'archived');
         const html = (list) => list.map(m => `
             <div class="match-card">
-                <div class="match-info"><span>${eData[m.lg].n}</span><span onclick="del(${m.id})">✕</span></div>
-                <div class="teams-disp">
-                    <div class="team-n">${m.h}</div>
-                    <div class="score-v">${m.score}</div>
-                    <div class="team-n">${m.a}</div>
+                <div class="m-head"><span>${m.lg}</span><span onclick="del(${m.id})">✕</span></div>
+                <div class="m-teams"><div class="m-t-name">${m.h}</div><div class="m-vs">${m.score}</div><div class="m-t-name">${m.a}</div></div>
+                <div class="p-grid">
+                    <div class="p-card"><span class="p-l">0-1 GOL</span><span class="p-v" style="color:var(--fm-red)">%${m.p1}</span></div>
+                    <div class="p-card"><span class="p-l">T2</span><span class="p-v" style="color:var(--fm-gold)">%${m.p2}</span></div>
+                    <div class="p-card"><span class="p-l">T3</span><span class="p-v" style="color:var(--fm-green)">%${m.p3}</span></div>
                 </div>
-                <div class="prob-grid">
-                    <div class="p-item"><span class="p-lbl">0-1 GOL</span><span class="p-val" style="color:var(--fm-red)">%${m.p1}</span></div>
-                    <div class="p-item"><span class="p-lbl">T2</span><span class="p-val" style="color:var(--fm-gold)">%${m.p2}</span></div>
-                    <div class="p-item"><span class="p-lbl">T3</span><span class="p-val" style="color:var(--fm-green)">%${m.p3}</span></div>
-                </div>
-                <div class="card-actions">
-                    ${m.status === 'active' ? `
-                        <button class="btn-s win" onclick="setRes(${m.id}, true)">KAZANDI</button>
-                        <button class="btn-s lose" onclick="setRes(${m.id}, false)">KAYBETTİ</button>
-                    ` : `<span style="font-size:11px; font-weight:800; color:${m.res === 'WIN' ? 'var(--fm-green)' : 'var(--fm-red)'}">${m.res === 'WIN' ? 'BAŞARILI ✓' : 'BAŞARISIZ ✕'}</span>`}
+                <div class="m-foot">
+                    ${m.status === 'active' ? `<button class="st-btn st-w" onclick="setRes(${m.id}, true)">W</button><button class="st-btn st-l" onclick="setRes(${m.id}, false)">L</button>` : 
+                    `<span style="font-size:10px; font-weight:800; color:${m.res === 'WIN' ? 'var(--fm-green)' : 'var(--fm-red)'}">${m.res}</span>`}
                 </div>
             </div>
         `).join('');
-
-        document.getElementById('active-list').innerHTML = active.length ? html(active) : '<div style="text-align:center; padding:20px; font-size:12px; color:var(--fm-dim)">Yeni analiz yapın...</div>';
-        document.getElementById('archive-list').innerHTML = archive.length ? html(archive) : '<div style="text-align:center; padding:20px; font-size:12px; color:var(--fm-dim)">Arşiv boş.</div>';
+        document.getElementById('active-list').innerHTML = active.length ? html(active) : '';
+        document.getElementById('archive-list').innerHTML = archive.length ? html(archive) : '';
     }
 
-    function save() { localStorage.setItem('gp_v26_matches', JSON.stringify(matches)); localStorage.setItem('gp_v26_stats', JSON.stringify(stats)); }
+    function save() { localStorage.setItem('gp_v27_matches', JSON.stringify(matches)); localStorage.setItem('gp_v27_stats', JSON.stringify(stats)); }
     function upUI() { 
         document.getElementById('st-total').innerText = stats.total;
         document.getElementById('st-win').innerText = stats.win;
         const r = stats.total === 0 ? 0 : Math.round((stats.win / stats.total) * 100);
         document.getElementById('st-rate').innerText = r + '%';
     }
-    function resetStats() { if(confirm("Tüm istatistikler sıfırlansın mı?")) { stats = {total:0, win:0}; save(); upUI(); } }
+    function resetStats() { if(confirm("Sıfırla?")) { stats = {total:0, win:0}; save(); upUI(); } }
     function clsArc() { if(confirm("Arşiv silinsin mi?")) { matches = matches.filter(m => m.status === 'active'); save(); render(); } }
 </script>
 </body>

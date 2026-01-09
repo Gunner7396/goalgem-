@@ -3,128 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScoreMaster v37 - FotMob UI</title>
+    <title>ScoreMaster v39 - Final</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --fotmob-bg: #121214; --fotmob-card: #1a1a1c; --fotmob-accent: #00ff85; --fotmob-text: #ececed; }
-        body { background-color: var(--fotmob-bg); color: var(--fotmob-text); font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
-        /* FotMob Style Inputs */
-        .fm-input-group { background: var(--fotmob-card); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid #2a2a2c; }
-        .fm-field { background: #252528; border-radius: 8px; border: none; padding: 12px; text-align: center; color: white; font-weight: 700; width: 100%; outline: none; }
-        .fm-field:focus { box-shadow: 0 0 0 2px var(--fotmob-accent); }
-        
-        .team-header-input { background: transparent; border: none; font-size: 18px; font-weight: 800; color: white; width: 100%; border-bottom: 2px solid #2a2a2c; padding-bottom: 4px; margin-bottom: 10px; }
-        .team-header-input:focus { border-color: var(--fotmob-accent); }
-
-        /* League Tabs */
-        .fm-tab { padding: 10px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; background: #252528; color: #8a8a8e; transition: 0.2s; }
-        .fm-tab.active { background: var(--fotmob-accent); color: #000; }
-
-        .fm-btn-primary { background: var(--fotmob-accent); color: #000; padding: 16px; border-radius: 12px; font-weight: 800; width: 100%; text-transform: uppercase; margin-top: 10px; }
-        .fm-match-card { background: var(--fotmob-card); border-radius: 16px; padding: 16px; margin-bottom: 12px; border-left: 4px solid var(--fotmob-accent); }
-        
-        .stat-label { font-size: 9px; font-weight: 600; color: #8a8a8e; text-transform: uppercase; margin-top: 4px; }
+        :root { --bg: #0a0a0b; --card: #151517; --accent: #ff3e3e; --green: #00ff85; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; }
+        .input-group { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid #252528; }
+        .input-field { background: #1f1f22; border-radius: 10px; border: 1px solid #333; padding: 12px; text-align: center; color: #fff; font-weight: 700; width: 100%; outline: none; transition: 0.2s; }
+        .input-field:focus { border-color: var(--green); box-shadow: 0 0 10px rgba(0,255,133,0.2); }
+        .team-name { background: transparent; border: none; border-bottom: 2px solid #333; font-size: 16px; font-weight: 800; color: #fff; width: 100%; padding: 8px; margin-bottom: 15px; outline: none; text-transform: uppercase; }
+        .tab-btn { padding: 10px 15px; border-radius: 12px; font-size: 11px; font-weight: 800; background: #1f1f22; color: #666; transition: 0.2s; }
+        .tab-btn.active { background: var(--green); color: #000; }
+        .result-card { background: var(--card); border-radius: 20px; padding: 20px; border-left: 6px solid var(--green); margin-top: 20px; }
     </style>
 </head>
-<body class="p-4 pb-32">
+<body class="p-4 pb-20">
 
     <div class="flex justify-between items-center mb-6">
         <div>
-            <span class="text-[10px] font-bold text-[#00ff85] tracking-widest uppercase">Live Analysis</span>
-            <h1 class="text-xl font-extrabold tracking-tight">SCOREMASTER</h1>
+            <h1 class="text-2xl font-black italic tracking-tighter">SCORE<span class="text-red-500">MASTER</span></h1>
+            <p class="text-[9px] opacity-40 font-bold uppercase tracking-widest">v39 Final Engine</p>
         </div>
-        <div onclick="resetStats()" class="bg-[#252528] px-4 py-2 rounded-full text-right cursor-pointer">
-            <span id="wr" class="text-sm font-bold text-[#00ff85]">0%</span>
-            <span class="text-[8px] block opacity-50">WIN RATE</span>
+        <div onclick="resetStats()" class="text-right bg-[#1f1f22] px-4 py-2 rounded-xl border border-white/5">
+            <span id="wr" class="text-lg font-black text-[#00ff85]">0%</span>
+            <p class="text-[7px] opacity-40 font-bold uppercase">Başarı</p>
         </div>
     </div>
 
-    <div class="flex gap-2 overflow-x-auto pb-4 mb-4 no-scrollbar">
-        <button onclick="setL('PL')" id="l-PL" class="fm-tab active">Premier League</button>
-        <button onclick="setL('LL')" id="l-LL" class="fm-tab">LaLiga</button>
-        <button onclick="setL('SA')" id="l-SA" class="fm-tab">Serie A</button>
-        <button onclick="setL('BL')" id="l-BL" class="fm-tab">Bundesliga</button>
-        <button onclick="setL('L1')" id="l-L1" class="fm-tab">Ligue 1</button>
+    <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar pb-2">
+        <button onclick="setL('PL')" id="l-PL" class="tab-btn active">PL</button>
+        <button onclick="setL('LL')" id="l-LL" class="tab-btn">LL</button>
+        <button onclick="setL('SA')" id="l-SA" class="tab-btn">SA</button>
+        <button onclick="setL('BL')" id="l-BL" class="tab-btn">BL</button>
+        <button onclick="setL('L1')" id="l-L1" class="tab-btn">L1</button>
     </div>
 
-    <div class="fm-input-group shadow-xl">
-        <div class="flex gap-4 mb-6">
+    <div class="input-group shadow-2xl">
+        <div class="flex gap-4">
             <div class="w-1/2">
-                <input id="hT" placeholder="HOME TEAM" class="team-header-input">
-                <div class="grid grid-cols-1 gap-2">
-                    <input type="number" step="0.01" id="h_xg" class="fm-field" placeholder="npxG">
-                    <input type="number" id="h_ppa" class="fm-field" placeholder="PPA">
-                    <input type="number" id="h_sca" class="fm-field" placeholder="SCA">
-                    <input type="number" id="h_pr" class="fm-field" placeholder="PrgR">
+                <input id="hT" placeholder="EV SAHİBİ" class="team-name" type="text">
+                <div class="space-y-3">
+                    <input type="number" step="0.01" id="h_xg" class="input-field" placeholder="npxG">
+                    <input type="number" id="h_ppa" class="input-field" placeholder="PPA">
+                    <input type="number" id="h_sca" class="input-field" placeholder="SCA">
+                    <input type="number" id="h_pr" class="input-field" placeholder="PrgR">
                 </div>
             </div>
-            <div class="w-1/2">
-                <input id="aT" placeholder="AWAY TEAM" class="team-header-input text-right">
-                <div class="grid grid-cols-1 gap-2">
-                    <input type="number" step="0.01" id="a_xg" class="fm-field" placeholder="npxG">
-                    <input type="number" id="a_ppa" class="fm-field" placeholder="PPA">
-                    <input type="number" id="a_sca" class="fm-field" placeholder="SCA">
-                    <input type="number" id="a_pr" class="fm-field" placeholder="PrgR">
+            <div class="w-1/2 text-right">
+                <input id="aT" placeholder="DEPLASMAN" class="team-name text-right" type="text">
+                <div class="space-y-3">
+                    <input type="number" step="0.01" id="a_xg" class="input-field" placeholder="npxG">
+                    <input type="number" id="a_ppa" class="input-field" placeholder="PPA">
+                    <input type="number" id="a_sca" class="input-field" placeholder="SCA">
+                    <input type="number" id="a_pr" class="input-field" placeholder="PrgR">
                 </div>
             </div>
         </div>
-        <button onclick="calculate()" class="fm-btn-primary">Analyze Match</button>
+        <button onclick="calculate()" class="w-full bg-[#00ff85] text-black font-black p-5 rounded-xl mt-6 uppercase text-sm tracking-widest shadow-lg shadow-green-500/20 active:scale-95 transition">Analizi Başlat</button>
     </div>
 
-    <div id="archive" class="mt-6 space-y-4"></div>
+    <div id="archive" class="mt-8 space-y-4"></div>
 
     <script>
+        // Senin İstediğin Orijinal Barajlar (Tam 3 Gol Odaklı)
         const BARAJ = {
-            PL: [0.09, 16, 38, 80], LL: [0.08, 12, 30, 60],
-            SA: [0.08, 13, 31, 60], BL: [0.11, 18, 35, 75], L1: [0.09, 14, 32, 65]
+            PL: [0.11, 22, 48, 95],
+            LL: [0.09, 16, 38, 75],
+            SA: [0.09, 17, 38, 75],
+            BL: [0.13, 24, 50, 105],
+            L1: [0.10, 18, 42, 85]
         };
 
         let curL = 'PL';
         function setL(l) {
             curL = l;
-            document.querySelectorAll('.fm-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('l-'+l).classList.add('active');
         }
 
         function calculate() {
-            const hN = document.getElementById('hT').value || "Home";
-            const aN = document.getElementById('aT').value || "Away";
+            const hN = document.getElementById('hT').value || "EV";
+            const aN = document.getElementById('aT').value || "DEP";
             const hv = [document.getElementById('h_xg').value, document.getElementById('h_ppa').value, document.getElementById('h_sca').value, document.getElementById('h_pr').value].map(Number);
             const av = [document.getElementById('a_xg').value, document.getElementById('a_ppa').value, document.getElementById('a_sca').value, document.getElementById('a_pr').value].map(Number);
 
-            if(hv.includes(0) && hv[0] === 0) return; // Basit kontrol
+            if(hv[0] === 0 && av[0] === 0) return;
 
-            // HİBRİT MATEMATİK: npxG (ortalama), diğerleri (toplam)
+            // HİBRİT MOTOR: npxG (Ortalama), Diğerleri (Toplam)
             const matrix = [(hv[0]+av[0])/2, hv[1]+av[1], hv[2]+av[2], hv[3]+av[3]];
             const b = BARAJ[curL];
+            
             let score = 0;
-            matrix.forEach((val, i) => { if(val >= b[i]) score++; if(val >= b[i]*1.4) score++; });
+            matrix.forEach((val, i) => {
+                if(val >= b[i] * 0.7) score += 1; // 1-2 Gol Barajı
+                if(val >= b[i]) score += 1;       // Tam 3 Gol Barajı
+            });
 
-            let res = score <= 2 ? "1.5 UNDER" : (score <= 5 ? "OVER 2.0" : "OVER 3.0");
-            let color = score <= 2 ? "#ff4b4b" : (score <= 5 ? "#ffb800" : "#00ff85");
+            // Üçlü Bölge Değerlendirmesi
+            let prediction = "1.5 ALT";
+            let color = "#ff3e3e";
+            if(score >= 3) { prediction = "TAM 2.0"; color = "#ffb800"; }
+            if(score >= 5) { prediction = "TAM 3.0"; color = "#00ff85"; }
+            if(score >= 7) { prediction = "3.5 ÜST"; color = "#00ff85"; }
+
+            const conf = Math.round((score / 8) * 100);
 
             const card = `
-                <div class="fm-match-card">
-                    <div class="flex justify-between text-[10px] font-bold opacity-40 mb-2 uppercase">
-                        <span>${curL} Hybrid Analysis</span>
-                        <button onclick="this.closest('.fm-match-card').remove(); save();">DELETE</button>
+                <div class="result-card" style="border-left-color: ${color}">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[9px] font-bold opacity-30 uppercase">${curL} Hubrid v39</span>
+                        <button onclick="this.closest('.result-card').remove(); save();" class="opacity-20">×</button>
                     </div>
-                    <div class="text-sm font-extrabold mb-3">${hN} vs ${aN}</div>
-                    <div class="flex items-center justify-between bg-[#252528] p-4 rounded-xl">
+                    <div class="text-sm font-black mb-4 border-b border-white/5 pb-2">${hN} vs ${aN}</div>
+                    <div class="flex justify-between items-end">
                         <div>
-                            <span class="text-xs font-bold opacity-50 block uppercase">Prediction</span>
-                            <span class="text-lg font-black italic" style="color:${color}">${res}</span>
+                            <p class="text-[10px] font-bold opacity-40 uppercase">Tahmin</p>
+                            <h2 class="text-2xl font-black italic" style="color: ${color}">${prediction}</h2>
                         </div>
                         <div class="text-right">
-                            <span class="text-xs font-bold opacity-50 block uppercase">Confidence</span>
-                            <span class="text-lg font-black">${Math.min(score*12.5, 99)}%</span>
+                            <p class="text-[10px] font-bold opacity-40 uppercase">Güven Oranı</p>
+                            <h2 class="text-xl font-black text-white">${conf}%</h2>
                         </div>
                     </div>
-                    <div class="flex gap-2 mt-4">
-                        <button onclick="tgl(this,'w')" class="flex-1 py-3 bg-[#252528] rounded-lg font-bold text-xs uppercase">Win</button>
-                        <button onclick="tgl(this,'l')" class="flex-1 py-3 bg-[#252528] rounded-lg font-bold text-xs uppercase">Loss</button>
+                    <div class="grid grid-cols-2 gap-2 mt-4">
+                        <button onclick="tgl(this,'w')" class="py-3 bg-[#1f1f22] rounded-xl font-black text-[10px] uppercase">Kazandı</button>
+                        <button onclick="tgl(this,'l')" class="py-3 bg-[#1f1f22] rounded-xl font-black text-[10px] uppercase">Kaybetti</button>
                     </div>
                 </div>`;
             document.getElementById('archive').insertAdjacentHTML('afterbegin', card);
@@ -132,26 +135,26 @@
         }
 
         function tgl(btn, type) {
-            btn.parentElement.querySelectorAll('button').forEach(b => { b.style.background = '#252528'; b.style.color = 'white'; });
-            btn.style.background = type === 'w' ? '#00ff85' : '#ff4b4b';
+            btn.parentElement.querySelectorAll('button').forEach(b => { b.style.background = '#1f1f22'; b.style.color = '#fff'; });
+            btn.style.background = type === 'w' ? '#00ff85' : '#ff3e3e';
             btn.style.color = '#000';
             updateWR(); save();
         }
 
         function updateWR() {
-            const cards = document.querySelectorAll('.fm-match-card');
+            const cards = document.querySelectorAll('.result-card');
             let w = 0, t = 0;
             cards.forEach(c => {
-                const winBtn = c.querySelector('button[onclick*="\'w\'"]');
-                if(winBtn.style.background.includes('rgb(0, 255, 133)')) { w++; t++; }
-                else if(c.querySelector('button[onclick*="\'l\'"]').style.background.includes('rgb(255, 75, 75)')) { t++; }
+                const wb = c.querySelector('button[onclick*="\'w\'"]');
+                if(wb.style.background.includes('rgb(0, 255, 133)')) { w++; t++; }
+                else if(c.querySelector('button[onclick*="\'l\'"]').style.background.includes('rgb(255, 62, 62)')) { t++; }
             });
             document.getElementById('wr').innerText = t > 0 ? Math.round((w/t)*100) + "%" : "0%";
         }
 
-        function save() { localStorage.setItem('fm_v37', document.getElementById('archive').innerHTML); }
-        function resetStats() { if(confirm("Clear Data?")) { localStorage.clear(); location.reload(); } }
-        window.onload = () => { document.getElementById('archive').innerHTML = localStorage.getItem('fm_v37') || ''; updateWR(); };
+        function save() { localStorage.setItem('sm_v39_final', document.getElementById('archive').innerHTML); }
+        function resetStats() { if(confirm("Tüm Arşiv Silinsin mi?")) { localStorage.clear(); location.reload(); } }
+        window.onload = () => { document.getElementById('archive').innerHTML = localStorage.getItem('sm_v39_final') || ''; updateWR(); };
     </script>
 </body>
 </html>

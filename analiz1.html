@@ -3,104 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOALPATH PRO</title>
+    <title>GP ELITE V31</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #000000; --card: #111111; --border: #222222;
-            --accent: #00ff85; --text: #ffffff; --dim: #888888;
+            --bg: #000; --card: #111; --brd: #222;
+            --grn: #00ff85; --txt: #fff; --dim: #888;
         }
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
+        body { background: var(--bg); color: var(--txt); margin: 0; padding: 10px; }
 
-        /* Üst Bilgi Paneli */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; border-bottom: 1px solid var(--border); margin-bottom: 15px; }
-        .logo { font-size: 18px; font-weight: 900; color: var(--accent); }
-        .stat-group { display: flex; gap: 12px; font-size: 12px; font-weight: 700; }
+        /* Header & Stats */
+        .hdr { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--brd); }
+        .logo { font-weight: 900; color: var(--grn); font-size: 16px; }
+        .stat-wrap { display: flex; gap: 10px; font-size: 11px; font-weight: 700; }
+        .reset-link { color: #ff4d4d; text-decoration: none; font-size: 10px; cursor: pointer; }
 
-        /* Giriş Alanı */
-        .section-title { font-size: 11px; font-weight: 900; color: var(--dim); text-transform: uppercase; margin: 15px 0 8px 5px; letter-spacing: 1px; }
-        .input-card { background: var(--card); border-radius: 12px; border: 1px solid var(--border); padding: 15px; margin-bottom: 10px; }
+        /* Input Panel */
+        .panel { background: var(--card); border-radius: 12px; border: 1px solid var(--brd); padding: 12px; margin-top: 10px; }
+        .lg-sel { width: 100%; background: #000; border: 1px solid var(--brd); color: var(--grn); padding: 10px; border-radius: 8px; font-weight: 800; margin-bottom: 12px; }
+
+        /* Yatay Takım Kutuları */
+        .team-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .t-box { display: flex; flex-direction: column; gap: 8px; }
+        .t-box label { font-size: 10px; font-weight: 900; color: var(--dim); text-align: center; }
+        .t-box input[type="text"] { background: #000; border: 1px solid var(--brd); padding: 12px 8px; border-radius: 8px; font-size: 13px; text-align: center; font-weight: 700; }
+
+        /* Metriklerin Dikey Sıralanması */
+        .m-stack { display: flex; flex-direction: column; gap: 6px; }
+        .m-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: center; }
+        .m-row input { background: #1a1a1a; border: 1px solid var(--brd); padding: 10px; border-radius: 6px; color: var(--grn); text-align: center; font-weight: 700; font-size: 14px; }
+        .m-lbl { font-size: 9px; font-weight: 800; color: var(--dim); text-align: center; background: #000; padding: 4px; border-radius: 4px; }
+
+        .btn-start { width: 100%; background: var(--grn); color: #000; border: none; padding: 16px; border-radius: 10px; font-weight: 900; font-size: 14px; margin-top: 15px; }
+        .btn-start:disabled { opacity: 0.2; }
+
+        /* Compact Match Cards */
+        .m-card { background: var(--card); border: 1px solid var(--brd); border-radius: 10px; padding: 10px; margin-top: 10px; }
+        .m-title { font-size: 12px; font-weight: 800; text-align: center; margin-bottom: 8px; }
+        .prob-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+        .pb { background: #000; padding: 6px; border-radius: 6px; text-align: center; border: 1px solid #222; }
+        .pb b { font-size: 12px; display: block; }
+        .pb i { font-size: 7px; color: var(--dim); font-style: normal; font-weight: 800; }
+
+        .scout-mini { font-size: 10px; color: #bbb; padding: 8px; background: rgba(0,255,133,0.03); border-radius: 6px; margin-top: 8px; line-height: 1.3; }
         
-        select, input { 
-            width: 100%; background: #1a1a1a; border: 1px solid var(--border); 
-            color: #fff; padding: 12px; border-radius: 8px; font-size: 14px; 
-            margin-bottom: 10px; outline: none; display: block;
-        }
-        input:focus { border-color: var(--accent); }
-
-        /* Metrik Izgarası (Daha Büyük) */
-        .m-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .m-item { position: relative; }
-        .m-item label { position: absolute; top: 8px; left: 10px; font-size: 8px; font-weight: 900; color: var(--dim); text-transform: uppercase; }
-        .m-item input { padding: 18px 10px 6px 10px; font-weight: 700; font-size: 16px; color: var(--accent); text-align: center; margin-bottom: 0; }
-
-        /* Ana Buton */
-        .start-btn { 
-            width: 100%; background: var(--accent); color: #000; border: none; 
-            padding: 20px; border-radius: 12px; font-weight: 900; font-size: 16px; 
-            margin-top: 15px; cursor: pointer; transition: 0.2s;
-        }
-        .start-btn:disabled { background: #222; color: #444; }
-
-        /* Maç Kartı */
-        .match-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-top: 15px; }
-        .match-info { font-size: 10px; color: var(--dim); font-weight: 700; margin-bottom: 10px; display: flex; justify-content: space-between; }
-        .match-teams { font-size: 18px; font-weight: 900; text-align: center; margin: 15px 0; color: #fff; }
-        
-        .result-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .res-box { background: #000; border: 1px solid var(--border); border-radius: 8px; padding: 10px; text-align: center; }
-        .res-val { display: block; font-size: 16px; font-weight: 900; color: var(--accent); }
-        .res-lbl { font-size: 8px; color: var(--dim); font-weight: 800; text-transform: uppercase; }
-
-        /* Scout Yorumu */
-        .scout-report { background: rgba(0,255,133,0.03); border: 1px dashed var(--accent); padding: 12px; border-radius: 8px; font-size: 12px; line-height: 1.4; color: #ccc; }
-        .scout-title { font-size: 9px; font-weight: 900; color: var(--accent); margin-bottom: 5px; display: block; }
-
-        .action-btns { display: flex; gap: 8px; margin-top: 15px; }
-        .act-btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 800; font-size: 11px; }
-        .btn-win { background: #1a3a2a; color: #00ff85; }
-        .btn-lose { background: #3a1a1a; color: #ff4d4d; }
+        .card-ft { display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px; }
+        .ft-btn { padding: 6px 12px; border-radius: 6px; font-size: 9px; font-weight: 900; border: none; }
     </style>
 </head>
 <body>
 
-<div class="header">
+<div class="hdr">
     <div class="logo">GOALPATH</div>
-    <div class="stat-group">
+    <div class="stat-wrap">
         <span id="st-total">0M</span>
-        <span id="st-rate" style="color:var(--accent)">0%</span>
-        <span id="st-win">0W</span>
+        <span id="st-rate" style="color:var(--grn)">0%</span>
+        <span class="reset-link" onclick="resetStats()">SIFIRLA</span>
     </div>
 </div>
 
-<div class="section-title">Lig ve Takımlar</div>
-<div class="input-card">
-    <select id="l-sel" onchange="upTeams()"></select>
-    <input list="t-list" id="t1-n" placeholder="Ev Sahibi Takım" oninput="vld()">
-    <input list="t-list" id="t2-n" placeholder="Deplasman Takımı" oninput="vld()">
-</div>
+<div class="panel">
+    <select id="l-sel" class="lg-sel" onchange="upTeams()"></select>
+    
+    <div class="team-row">
+        <div class="t-box"><label>HOME</label><input type="text" list="t-list" id="t1-n" placeholder="Seç/Yaz" oninput="vld()"></div>
+        <div class="t-box"><label>AWAY</label><input type="text" list="t-list" id="t2-n" placeholder="Seç/Yaz" oninput="vld()"></div>
+    </div>
 
-<div class="section-title">Ev Sahibi Verileri</div>
-<div class="input-card m-grid">
-    <div class="m-item"><label>npxG</label><input type="number" id="t1-q" step="any" placeholder="0.00" oninput="vld()"></div>
-    <div class="m-item"><label>SCA</label><input type="number" id="t1-s" placeholder="0" oninput="vld()"></div>
-    <div class="m-item"><label>PRGR</label><input type="number" id="t1-p" placeholder="0" oninput="vld()"></div>
-    <div class="m-item"><label>PPA</label><input type="number" id="t1-x" placeholder="0" oninput="vld()"></div>
-</div>
+    <div class="m-stack">
+        <div class="m-lbl">npxG (Kalite)</div>
+        <div class="m-row">
+            <input type="number" id="t1-q" step="any" placeholder="0.00" oninput="vld()">
+            <input type="number" id="t2-q" step="any" placeholder="0.00" oninput="vld()">
+        </div>
+        <div class="m-lbl">SCA (Şut Üretimi)</div>
+        <div class="m-row">
+            <input type="number" id="t1-s" placeholder="0" oninput="vld()">
+            <input type="number" id="t2-s" placeholder="0" oninput="vld()">
+        </div>
+        <div class="m-lbl">PRGR (Geçişler)</div>
+        <div class="m-row">
+            <input type="number" id="t1-p" placeholder="0" oninput="vld()">
+            <input type="number" id="t2-p" placeholder="0" oninput="vld()">
+        </div>
+        <div class="m-lbl">PPA (Ceza Sahası)</div>
+        <div class="m-row">
+            <input type="number" id="t1-x" placeholder="0" oninput="vld()">
+            <input type="number" id="t2-x" placeholder="0" oninput="vld()">
+        </div>
+    </div>
 
-<div class="section-title">Deplasman Verileri</div>
-<div class="input-card m-grid">
-    <div class="m-item"><label>npxG</label><input type="number" id="t2-q" step="any" placeholder="0.00" oninput="vld()"></div>
-    <div class="m-item"><label>SCA</label><input type="number" id="t2-s" placeholder="0" oninput="vld()"></div>
-    <div class="m-item"><label>PRGR</label><input type="number" id="t2-p" placeholder="0" oninput="vld()"></div>
-    <div class="m-item"><label>PPA</label><input type="number" id="t2-x" placeholder="0" oninput="vld()"></div>
+    <button id="s-btn" class="btn-start" onclick="run()" disabled>START</button>
 </div>
-
-<button id="s-btn" class="start-btn" onclick="run()" disabled>ANALİZİ BAŞLAT (START)</button>
 
 <div id="active-list"></div>
-<div id="archive-list" style="opacity: 0.5; margin-top: 30px;"></div>
+<div style="font-size: 10px; font-weight: 900; color: var(--dim); margin: 20px 0 10px 5px">ARŞİV</div>
+<div id="archive-list" style="opacity: 0.6"></div>
 
 <datalist id="t-list"></datalist>
 
@@ -114,15 +113,15 @@
     };
 
     const tData = {
-        PL: ["Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Tottenham", "Newcastle", "Aston Villa"],
-        LL: ["Real Madrid", "Barcelona", "Atl. Madrid", "Girona", "Sociedad", "Villarreal"],
-        SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio", "Atalanta"],
-        BL: ["Bayern", "Leverkusen", "Dortmund", "Leipzig", "Stuttgart"],
-        L1: ["PSG", "Monaco", "Marseille", "Lille", "Lyon", "Nice"]
+        PL: ["Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Tottenham"],
+        LL: ["Real Madrid", "Barcelona", "Atl. Madrid", "Girona", "Sevilla"],
+        SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Atalanta"],
+        BL: ["Bayern", "Leverkusen", "Dortmund", "Leipzig"],
+        L1: ["PSG", "Monaco", "Marseille", "Lille", "Lyon"]
     };
 
-    let stats = JSON.parse(localStorage.getItem('gp_v30_stats')) || { total: 0, win: 0 };
-    let matches = JSON.parse(localStorage.getItem('gp_v30_matches')) || [];
+    let stats = JSON.parse(localStorage.getItem('gp31_stats')) || { total: 0, win: 0 };
+    let matches = JSON.parse(localStorage.getItem('gp31_matches')) || [];
 
     window.onload = () => {
         document.getElementById('l-sel').innerHTML = Object.keys(eData).map(k => `<option value="${k}">${eData[k].n}</option>`).join('');
@@ -135,36 +134,30 @@
     }
 
     function vld() {
-        const fields = ['t1-n', 't2-n', 't1-q', 't1-s', 't1-p', 't1-x', 't2-q', 't2-s', 't2-p', 't2-x'];
-        const allSet = fields.every(f => document.getElementById(f).value !== '');
-        document.getElementById('s-btn').disabled = !allSet;
-    }
-
-    function generateScout(h, a, p1, p3, xT, q1, q2) {
-        if(p1 > 60) return `Analiz: İki takımın toplam PPA (${xT.toFixed(1)}) değeri ceza sahası girişlerinin çok kısıtlı kalacağını gösteriyor. npxG üretimi (${q1}/${q2}) lig ortalamasının altında, 0-1 Gol ihtimali teknik olarak öncelikli.`;
-        if(p3 > 40) return `Analiz: Hücum parametreleri (SCA/npxG) oldukça verimli. Takımların son bölgedeki PRGR pas trafiği yüksek. Bitiricilik kalitesine bağlı olarak T3 barajı aşılmaya yakın görünüyor.`;
-        return `Analiz: Veriler dengeli bir oyuna işaret ediyor. Takımlar kontrolü elden bırakmayacak bir yapıda. T2 sonucu bu istatistiksel dağılımda en makul senaryodur.`;
+        const ids = ['t1-n','t2-n','t1-q','t2-q','t1-s','t2-s','t1-p','t2-p','t1-x','t2-x'];
+        document.getElementById('s-btn').disabled = !ids.every(id => document.getElementById(id).value !== '');
     }
 
     function run() {
         const h = document.getElementById('t1-n').value, a = document.getElementById('t2-n').value;
-        const l = document.getElementById('l-sel').value, cfg = eData[l];
         const q1 = parseFloat(document.getElementById('t1-q').value), q2 = parseFloat(document.getElementById('t2-q').value);
-        const s1 = parseFloat(document.getElementById('t1-s').value), s2 = parseFloat(document.getElementById('t2-s').value);
         const x1 = parseFloat(document.getElementById('t1-x').value), x2 = parseFloat(document.getElementById('t2-x').value);
-
+        const s1 = parseFloat(document.getElementById('t1-s').value), s2 = parseFloat(document.getElementById('t2-s').value);
+        
+        const cfg = eData[document.getElementById('l-sel').value];
         let sc = (x1+x2 <= cfg.x ? 45 : 15) + (q1 <= cfg.q && q2 <= cfg.q ? 25 : 5) + (s1+s2 <= cfg.s ? 20 : 5);
         let p1 = Math.min(Math.max(sc, 10), 90);
         let p3 = Math.max(100 - p1 - 18, 5); let p2 = 100 - (p1 + p3);
-        const scout = generateScout(h, a, p1, p3, x1+x2, q1, q2);
 
-        matches.unshift({ id: Date.now(), lg: l, h, a, p1, p2, p3, scout, score: '?', status: 'active' });
+        const scout = p1 > 60 ? `Düşük npxG (${q1}/${q2}) ve yetersiz PPA üretimi savunma ağırlıklı bir maç vaat ediyor.` : `SCA ve PRGR verileri yüksek tempoya işaret ediyor. T3 olasılığı veri setine göre makul.`;
+
+        matches.unshift({ id: Date.now(), h, a, p1, p2, p3, scout, score: 'VS', status: 'active' });
         save(); render();
         document.querySelectorAll('input').forEach(i => i.value = ''); vld();
     }
 
     function setRes(id, win) {
-        const s = prompt("Maç Skoru?"); if(s === null) return;
+        const s = prompt("Skor?"); if(s === null) return;
         matches = matches.map(m => {
             if(m.id === id) { m.status = 'archived'; m.res = win ? 'W' : 'L'; m.score = s; stats.total++; if(win) stats.win++; }
             return m;
@@ -172,36 +165,34 @@
         save(); upUI(); render();
     }
 
-    function del(id) { if(confirm("Sil?")) { matches = matches.filter(m => m.id !== id); save(); render(); } }
-
     function render() {
         const draw = (list) => list.map(m => `
-            <div class="match-card">
-                <div class="match-info"><span>${eData[m.lg].n}</span><span onclick="del(${m.id})">SİL ✕</span></div>
-                <div class="match-teams">${m.h} vs ${m.a}</div>
-                <div class="result-row">
-                    <div class="res-box"><span class="res-lbl">0-1 GOL</span><span class="res-val" style="color:#ff4d4d">%${m.p1}</span></div>
-                    <div class="res-box"><span class="res-lbl">T2</span><span class="res-val" style="color:orange">%${m.p2}</span></div>
-                    <div class="res-box"><span class="res-lbl">T3</span><span class="res-val">%${m.p3}</span></div>
+            <div class="m-card">
+                <div class="m-title">${m.h} - ${m.a} <span style="color:var(--grn)">(${m.score})</span></div>
+                <div class="prob-bar">
+                    <div class="pb"><i>0-1 GOL</i><b style="color:#ff4d4d">%${m.p1}</b></div>
+                    <div class="pb"><i>T2</i><b style="color:orange">%${m.p2}</b></div>
+                    <div class="pb"><i>T3</i><b style="color:var(--grn)">%${m.p3}</b></div>
                 </div>
-                <div class="scout-report"><span class="scout-title">SCOUT TEKNİK ANALİZ</span>${m.scout}</div>
-                ${m.status==='active' ? `
-                    <div class="action-btns">
-                        <button class="act-btn btn-win" onclick="setRes(${m.id}, true)">KAZANDI</button>
-                        <button class="act-btn btn-lose" onclick="setRes(${m.id}, false)">KAYBETTİ</button>
-                    </div>` : `<div style="text-align:center; padding:15px; font-weight:900; color:${m.res==='W'?'var(--accent)':'#ff4d4d'}">${m.res==='W'?'BAŞARILI':'BAŞARISIZ'} (${m.score})</div>`}
+                <div class="scout-mini"><b>Scout:</b> ${m.scout}</div>
+                ${m.status==='active' ? `<div class="card-ft">
+                    <button class="ft-btn" style="color:var(--dim)" onclick="del(${m.id})">SİL</button>
+                    <button class="ft-btn" style="background:#1a3a2a; color:var(--grn)" onclick="setRes(${m.id},true)">W</button>
+                    <button class="ft-btn" style="background:#3a1a1a; color:#ff4d4d" onclick="setRes(${m.id},false)">L</button>
+                </div>` : ''}
             </div>
         `).join('');
         document.getElementById('active-list').innerHTML = draw(matches.filter(m => m.status === 'active'));
         document.getElementById('archive-list').innerHTML = draw(matches.filter(m => m.status === 'archived'));
     }
 
-    function save() { localStorage.setItem('gp_v30_matches', JSON.stringify(matches)); localStorage.setItem('gp_v30_stats', JSON.stringify(stats)); }
+    function del(id) { matches = matches.filter(m => m.id !== id); save(); render(); }
+    function save() { localStorage.setItem('gp31_matches', JSON.stringify(matches)); localStorage.setItem('gp31_stats', JSON.stringify(stats)); }
     function upUI() { 
         document.getElementById('st-total').innerText = stats.total + 'M';
-        document.getElementById('st-win').innerText = stats.win + 'W';
         document.getElementById('st-rate').innerText = (stats.total ? Math.round(stats.win/stats.total*100) : 0) + '%';
     }
+    function resetStats() { if(confirm("Sıfırla?")) { stats={total:0,win:0}; save(); upUI(); } }
 </script>
 </body>
 </html>

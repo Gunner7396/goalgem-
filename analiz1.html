@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScoreMaster v25</title>
+    <title>ScoreMaster v27</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #060606; color: #eee; font-family: 'Inter', sans-serif; padding: 12px; }
-        .fotmob-dark { background: #121212; border: 1px solid #222; border-radius: 12px; }
+        body { background-color: #050505; color: #fff; font-family: 'Inter', sans-serif; padding: 12px; }
+        .fotmob-dark { background: #111; border: 1px solid #222; border-radius: 12px; }
         .accent-green { color: #00ff85; }
-        .league-btn { background: #1a1a1a; border: 1px solid #333; padding: 12px; border-radius: 8px; font-size: 11px; font-weight: 800; color: #555; transition: 0.2s; }
+        .league-btn { background: #181818; border: 1px solid #333; padding: 12px; border-radius: 8px; font-size: 11px; font-weight: 800; color: #444; }
         .league-btn.active { border-color: #00ff85; color: #00ff85; background: #00ff8510; }
-        .input-dark { background: #181818; border: 1px solid #282828; border-radius: 8px; padding: 12px; text-align: center; color: white; font-weight: 700; outline: none; font-size: 14px; width: 100%; }
-        .res-card { background: #141414; border: 1px solid #252525; border-radius: 10px; padding: 16px; margin-bottom: 12px; border-top: 3px solid #333; }
+        .input-dark { background: #1a1a1a; border: 1px solid #252525; border-radius: 8px; padding: 12px; text-align: center; color: white; font-weight: 700; outline: none; font-size: 14px; width: 100%; }
+        .res-card { background: #121212; border: 1px solid #252525; border-radius: 10px; padding: 16px; margin-bottom: 12px; border-top: 3px solid #333; }
         .status-dot { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; border: 1px solid #333; cursor: pointer; }
         .dot-w.active { background: #00ff85; color: #000; border-color: #00ff85; }
         .dot-l.active { background: #ff4b4b; color: #fff; border-color: #ff4b4b; }
-        .limit-tag { font-size: 8px; color: #ffaa00; font-weight: 800; background: #ffaa0010; padding: 2px 5px; border-radius: 3px; border: 1px solid #ffaa0020; }
+        .limit-alert { font-size: 7px; color: #ffaa00; font-weight: 900; text-transform: uppercase; background: #ffaa0010; padding: 2px 5px; border-radius: 3px; border: 1px solid #ffaa0020; }
     </style>
 </head>
 <body class="pb-36">
 
     <div class="flex justify-between items-center mb-5 px-1">
-        <h1 class="text-2xl font-black italic tracking-tighter uppercase">SCORE<span class="accent-green">MASTER</span> <small class="text-[9px] opacity-20 italic">V25</small></h1>
-        <div class="text-right"><span id="wr" class="text-2xl font-black accent-green leading-none">0%</span><p class="text-[8px] text-gray-600 font-bold uppercase">WIN RATE</p></div>
+        <h1 class="text-2xl font-black italic tracking-tighter uppercase">SCORE<span class="accent-green">MASTER</span> <small class="text-[9px] opacity-20">V27</small></h1>
+        <div class="text-right"><span id="wr" class="text-2xl font-black accent-green">0%</span><p class="text-[8px] text-gray-500 uppercase font-black">SUCCESS</p></div>
     </div>
 
     <div class="grid grid-cols-5 gap-2 mb-5">
@@ -36,113 +36,123 @@
 
     <div class="fotmob-dark p-5 mb-6">
         <div class="flex gap-4 mb-6">
-            <input id="hT" placeholder="HOME" class="w-1/2 bg-transparent border-b border-white/5 py-2 font-black uppercase outline-none text-sm italic">
-            <input id="aT" placeholder="AWAY" class="w-1/2 bg-transparent border-b border-white/5 py-2 font-black uppercase outline-none text-sm text-right italic">
+            <input id="hT" placeholder="HOME TEAM" class="w-1/2 bg-transparent border-b border-white/5 py-2 font-black uppercase outline-none text-sm italic">
+            <input id="aT" placeholder="AWAY TEAM" class="w-1/2 bg-transparent border-b border-white/5 py-2 font-black uppercase outline-none text-sm text-right italic">
         </div>
         <div class="grid grid-cols-3 gap-3 mb-6">
             <input type="number" step="0.01" id="h_xg" class="input-dark" placeholder="npxG">
-            <span class="text-[8px] text-gray-600 font-black text-center self-center uppercase">npxG/Sh</span>
+            <span class="text-[8px] text-gray-600 font-black text-center self-center uppercase italic">Metric Matrix</span>
             <input type="number" step="0.01" id="a_xg" class="input-dark" placeholder="npxG">
             <input type="number" id="h_ppa" class="input-dark" placeholder="PPA">
-            <span class="text-[8px] text-gray-600 font-black text-center self-center uppercase">PPA</span>
+            <span class="text-[8px] text-gray-400 font-bold text-center self-center uppercase opacity-30 italic">vs</span>
             <input type="number" id="a_ppa" class="input-dark" placeholder="PPA">
             <input type="number" id="h_sca" class="input-dark" placeholder="SCA">
-            <span class="text-[8px] text-gray-600 font-black text-center self-center uppercase">SCA</span>
+            <span class="text-[8px] text-gray-400 font-bold text-center self-center uppercase opacity-30 italic">vs</span>
             <input type="number" id="a_sca" class="input-dark" placeholder="SCA">
             <input type="number" id="h_pr" class="input-dark" placeholder="PrgR">
-            <span class="text-[8px] text-gray-600 font-black text-center self-center uppercase">PrgR</span>
+            <span class="text-[8px] text-gray-400 font-bold text-center self-center uppercase opacity-30 italic">vs</span>
             <input type="number" id="a_pr" class="input-dark" placeholder="PrgR">
         </div>
-        <button onclick="calculate()" class="w-full bg-[#00ff85] text-black py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.1em] active:scale-95 transition-all">LİSTEYE EKLE</button>
+        <button onclick="calculate()" class="w-full bg-[#00ff85] text-black py-4 rounded-xl font-black text-xs uppercase tracking-widest active:scale-95 transition-all">ANALİZ ET VE LİSTEYE EKLE</button>
     </div>
 
     <div id="stack" class="space-y-4"></div>
 
     <div class="fixed bottom-0 left-0 w-full p-4 bg-black/90 backdrop-blur-md border-t border-white/5 flex gap-3">
-        <button onclick="resetInp()" class="flex-1 py-3 text-[10px] font-black uppercase text-gray-500 border border-gray-800 rounded-xl">Inputları Sil</button>
+        <button onclick="resetInp()" class="flex-1 py-3 text-[10px] font-black uppercase text-gray-500 border border-gray-800 rounded-xl">Input Temizle</button>
         <button onclick="resetStack()" class="flex-1 py-3 text-[10px] font-black uppercase text-red-900 border border-red-950/20 rounded-xl">Listeyi Sil</button>
     </div>
 
     <script>
+        // LİG BAZLI GERÇEK EŞİKLER
         const BARAJ = {
-            PL: { alt: {xg:0.09, ppa:7.5, sca:18.5, pr:38}, t2: {xg:0.12, ppa:11, sca:25, pr:52} },
-            LL: { alt: {xg:0.08, ppa:6.0, sca:16.0, pr:32}, t2: {xg:0.11, ppa:9, sca:22, pr:46} },
-            SA: { alt: {xg:0.08, ppa:6.5, sca:15.5, pr:30}, t2: {xg:0.10, ppa:9.5, sca:21, pr:44} },
-            BL: { alt: {xg:0.11, ppa:9.0, sca:22.0, pr:45}, t2: {xg:0.14, ppa:13, sca:28, pr:58} },
-            L1: { alt: {xg:0.09, ppa:7.0, sca:17.5, pr:34}, t2: {xg:0.11, ppa:10, sca:23, pr:48} }
+            PL: { low: [0.09, 7.5, 18.5, 38], high: [0.12, 11, 25, 52] },
+            LL: { low: [0.08, 6.0, 16.0, 32], high: [0.11, 9, 22, 46] },
+            SA: { low: [0.08, 6.5, 15.5, 30], high: [0.10, 9.5, 21, 44] },
+            BL: { low: [0.11, 9.0, 22.0, 45], high: [0.14, 13, 28, 58] },
+            L1: { low: [0.09, 7.0, 17.5, 34], high: [0.11, 10, 23, 48] }
         };
 
-        let curL = localStorage.getItem('v25_l') || 'PL';
+        let curL = 'PL';
 
         function setL(c, b) {
-            curL = c; localStorage.setItem('v25_l', c);
+            curL = c;
             document.querySelectorAll('.league-btn').forEach(btn => btn.classList.remove('active'));
             b.classList.add('active');
         }
 
         function calculate() {
-            const getV = (h, a) => (parseFloat(document.getElementById(h).value) + parseFloat(document.getElementById(a).value)) / 2;
-            const avg = { xg: getV('h_xg','a_xg'), ppa: getV('h_ppa','a_ppa'), sca: getV('h_sca','a_sca'), pr: getV('h_pr','a_pr') };
-            if(isNaN(avg.xg)) return;
+            const hVal = [document.getElementById('h_xg').value, document.getElementById('h_ppa').value, document.getElementById('h_sca').value, document.getElementById('h_pr').value];
+            const aVal = [document.getElementById('a_xg').value, document.getElementById('a_ppa').value, document.getElementById('a_sca').value, document.getElementById('a_pr').value];
+            
+            if(hVal.some(v => v === "")) return;
 
+            const avg = hVal.map((v, i) => (parseFloat(v) + parseFloat(aVal[i])) / 2);
             const b = BARAJ[curL];
+            
+            // ANALİZ MOTORU: BARAJA GÖRE KONUMLANDIRMA
             let score = 0;
-            let warns = [];
+            let warnings = [];
 
-            // 1. ADIM: BARAJ KONTROLÜ (Senin orijinal sistemin)
-            if(avg.xg > b.alt.xg) score++; if(avg.xg > b.t2.xg) score++;
-            if(avg.ppa > b.alt.ppa) score++; if(avg.ppa > b.t2.ppa) score++;
-            if(avg.sca > b.alt.sca) score++; if(avg.sca > b.t2.sca) score++;
-            if(avg.pr > b.alt.pr) score++; if(avg.pr > b.t2.pr) score++;
+            avg.forEach((val, i) => {
+                if(val > b.low[i]) score += 1;
+                if(val > b.high[i]) score += 1;
+                // Uç değer uyarısı (Barajın %30 üzerindeyse)
+                if(val > b.high[i] * 1.3) warnings.push(["npxG","PPA","SCA","PrgR"][i] + " Sınırı Aşıyor");
+            });
 
-            // 2. ADIM: SONUÇ TAYİNİ
             let res, p1, p2, p3;
-            if(score <= 2) { res="1.5 ALT"; p1=75; p2=20; p3=5; }
-            else if(score <= 5) { res="TAM 2.0"; p1=15; p2=70; p3=15; }
-            else { res="TAM 3.0"; p1=5; p2=25; p3=70; }
+            // Dinamik Yüzdelik Dağılım
+            if(score <= 2) { res="1.5 ALT"; p1=78; p2=17; p3=5; }
+            else if(score <= 5) { res="TAM 2.0"; p1=18; p2=65; p3=17; }
+            else { res="TAM 3.0"; p1=5; p2=20; p3=75; }
 
-            // 3. ADIM: GERÇEKÇİLİK AYARI (Uç değerler)
-            if(avg.xg > b.t2.xg * 1.3) { p3 += 10; p2 -= 10; warns.push("Yüksek xG"); }
+            // LİG FARKINI BURADA YARATIYORUZ (Aynı puan bile olsa yüzdeler ligin zorluğuna göre oynar)
+            if(curL === 'SA' || curL === 'LL') { p3 += 3; p2 -= 3; }
+            if(curL === 'BL') { p1 += 2; p3 -= 2; }
 
             const html = `
-                <div class="res-card">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex items-center gap-2">
-                            <span class="text-[9px] font-black accent-green bg-green-500/10 px-2 py-1 rounded uppercase border border-green-500/20">${curL}</span>
-                            <span class="text-[10px] font-bold uppercase">${document.getElementById('hT').value || 'H'}-${document.getElementById('aT').value || 'A'}</span>
+                <div class="res-card" style="border-top-color: ${res==='TAM 3.0'?'#00ff85':'#333'}">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-[9px] font-black accent-green bg-green-500/10 px-2 py-0.5 rounded border border-green-500/20 mr-2 uppercase">${curL}</span>
+                            <span class="text-[11px] font-bold uppercase">${document.getElementById('hT').value || 'EV'}-${document.getElementById('aT').value || 'DEP'}</span>
+                            <div class="mt-2 flex flex-wrap gap-1">${warnings.map(w => `<span class="limit-alert">⚠️ ${w}</span>`).join('')}</div>
                         </div>
                         <div class="flex gap-2">
                             <div onclick="tgl(this,'w')" class="status-dot dot-w">W</div>
                             <div onclick="tgl(this,'l')" class="status-dot dot-l">L</div>
-                            <button onclick="this.closest('.res-card').remove(); svS();" class="status-dot border-none opacity-20 text-lg">×</button>
+                            <button onclick="this.closest('.res-card').remove(); updW();" class="status-dot border-none opacity-20 text-lg">×</button>
                         </div>
                     </div>
                     <div class="flex justify-between items-end">
-                        <div class="flex-1 pr-4">
+                        <div class="flex-1 pr-6">
                             <div class="flex justify-between text-[11px] font-black mb-1 italic">
                                 <span class="accent-green">${res}</span>
-                                <span class="opacity-50">${res==="1.5 ALT"?p1:(res==="TAM 2.0"?p2:p3)}%</span>
+                                <span class="opacity-50">${res==='1.5 ALT'?p1:(res==='TAM 2.0'?p2:p3)}%</span>
                             </div>
-                            <div style="height:4px; background:#222; border-radius:2px; overflow:hidden;"><div style="height:100%; background:#00ff85; width:${res==="1.5 ALT"?p1:(res==="TAM 2.0"?p2:p3)}%; transition:1s;"></div></div>
-                            <div class="mt-2 flex gap-1">${warns.map(w => `<span class="limit-tag">⚠️ ${w}</span>`).join('')}</div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-[#00ff85]" style="width:${res==='1.5 ALT'?p1:(res==='TAM 2.0'?p2:p3)}%; transition:1s;"></div>
+                            </div>
                         </div>
-                        <div class="text-[7px] text-gray-400 font-bold uppercase text-right leading-tight">1.5A: ${p1}%<br>T2.0: ${p2}%<br>T3.0: ${p3}%</div>
+                        <div class="text-[8px] text-gray-500 font-bold uppercase leading-tight text-right">
+                            1.5A: ${p1}%<br>T2.0: ${p2}%<br>T3.0: ${p3}%
+                        </div>
                     </div>
-                </div>`;
+                </div>
+            `;
             document.getElementById('stack').insertAdjacentHTML('afterbegin', html);
-            svS();
+            updW();
         }
 
-        function tgl(b, t) { b.parentElement.querySelectorAll('.status-dot').forEach(d => d.classList.remove('active')); b.classList.add('active'); svS(); updW(); }
-        function svS() { localStorage.setItem('v25_stack', document.getElementById('stack').innerHTML); }
+        function tgl(b, t) { b.parentElement.querySelectorAll('.status-dot').forEach(d => d.classList.remove('active')); b.classList.add('active'); updW(); }
         function updW() {
             const w = document.querySelectorAll('.dot-w.active').length;
             const t = document.querySelectorAll('.dot-w.active, .dot-l.active').length;
             document.getElementById('wr').innerText = t > 0 ? Math.round((w/t)*100) + "%" : "0%";
         }
-        function resetInp() { ["h_xg","a_xg","h_ppa","a_ppa","h_sca","a_sca","h_pr","a_pr"].forEach(id => document.getElementById(id).value = ""); }
-        function resetStack() { if(confirm("Silinsin mi?")) { document.getElementById('stack').innerHTML=""; svS(); updW(); } }
-        window.onload = () => { document.getElementById('stack').innerHTML = localStorage.getItem('v25_stack') || ""; updW(); };
+        function resetInp() { ["hT","aT","h_xg","a_xg","h_ppa","a_ppa","h_sca","a_sca","h_pr","a_pr"].forEach(id => document.getElementById(id).value = ""); }
+        function resetStack() { if(confirm("Analizler silinsin mi?")) { document.getElementById('stack').innerHTML=""; updW(); } }
     </script>
 </body>
 </html>

@@ -3,225 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO PREMIER ENGINE</title>
+    <title>P-PRO TERMINAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0b0e14;
-            --card: #161b22;
-            --accent: #00ff85;
-            --danger: #ff0055;
-            --warning: #ffcc00;
-            --text-main: #ffffff;
-            --text-dim: #8b949e;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
+            --bg: #030508;
+            --card-bg: #0d1117;
+            --accent: #00ffa3;
+            --border: rgba(255, 255, 255, 0.05);
+            --input-bg: #161b22;
         }
 
-        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             background: var(--bg); 
-            color: var(--text-main); 
-            font-family: 'Inter', -apple-system, sans-serif; 
-            margin: 0; padding: 15px; 
+            color: #fff; 
+            font-family: 'Outfit', sans-serif; 
+            margin: 0; padding: 10px; 
             display: flex; flex-direction: column; align-items: center;
         }
 
-        .container { width: 100%; max-width: 420px; }
+        .terminal-wrapper { width: 100%; max-width: 400px; padding-bottom: 50px; }
 
-        /* HEADER STATS */
-        .stats-grid { 
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;
+        /* HEADER & DASHBOARD */
+        .glass-header { 
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
+            border: 1px solid var(--border); border-radius: 24px; padding: 20px;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;
+            backdrop-filter: blur(10px);
         }
-        .stat-box { 
-            background: var(--card); border: 1px solid var(--border); 
-            padding: 12px; border-radius: 12px; text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .stat-box .val { display: block; font-size: 18px; font-weight: 800; color: var(--accent); }
-        .stat-box .lbl { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+        .stat { text-align: center; }
+        .stat-v { display: block; font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 800; color: var(--accent); }
+        .stat-l { font-size: 9px; color: #64748b; font-weight: 900; letter-spacing: 1px; }
 
-        /* ANALYZER CARD */
-        .analyzer-card { 
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 24px; padding: 20px; position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            background-image: radial-gradient(circle at top right, rgba(0,255,133,0.05), transparent);
+        /* TEAM IDENTITY */
+        .team-selector { 
+            display: flex; gap: 8px; margin-bottom: 12px;
         }
-
-        .engine-title { 
-            font-size: 12px; font-weight: 900; color: var(--accent); 
-            margin-bottom: 20px; text-align: center; letter-spacing: 2px;
+        .team-box { 
+            flex: 1; background: var(--card-bg); border: 1px solid var(--border); 
+            border-radius: 16px; padding: 12px;
         }
-
-        .team-inputs { display: flex; gap: 10px; margin-bottom: 25px; }
-        .t-input { 
-            flex: 1; background: var(--glass); border: 1px solid var(--border);
-            padding: 12px; border-radius: 12px; color: white; font-weight: 700;
-            text-align: center; border-bottom: 2px solid var(--accent);
+        .team-box input { 
+            width: 100%; background: transparent; border: none; color: white;
+            text-align: center; font-weight: 900; font-size: 14px; text-transform: uppercase;
         }
 
-        .data-section { margin-bottom: 20px; }
-        .section-tag { 
-            font-size: 9px; font-weight: 900; color: var(--text-dim); 
-            margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+        /* DATA INPUT GRID */
+        .engine-card { 
+            background: var(--card-bg); border-radius: 28px; padding: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5); border: 1px solid var(--border);
         }
-        .section-tag::after { content: ""; flex: 1; height: 1px; background: var(--border); }
 
-        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 10px; color: var(--text-dim); margin-bottom: 6px; font-weight: 600; }
-        .v-input { 
-            width: 100%; background: #0d1117; border: 1px solid var(--border);
-            padding: 12px; border-radius: 10px; color: white; font-size: 14px;
-            font-weight: 600; text-align: center; transition: 0.3s;
+        .section-header { 
+            font-size: 10px; font-weight: 900; color: #475569; letter-spacing: 2px;
+            margin: 15px 0 10px 5px; display: flex; align-items: center; gap: 10px;
         }
-        .v-input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(0,255,133,0.1); }
+        .section-header::after { content: ""; flex: 1; height: 1px; background: var(--border); }
 
-        /* ACTION BUTTONS */
-        .btn-prime { 
-            width: 100%; padding: 18px; border-radius: 14px; border: none;
-            background: var(--accent); color: #000; font-weight: 800;
-            font-size: 15px; cursor: pointer; transition: 0.2s;
-            box-shadow: 0 8px 20px rgba(0,255,133,0.2);
+        .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        
+        .metric-unit { 
+            background: var(--input-bg); border-radius: 18px; padding: 12px; 
+            border: 1px solid rgba(255,255,255,0.03); transition: 0.3s;
         }
-        .btn-prime:active { transform: scale(0.98); }
-
-        /* RESULT CARD */
-        .history-item { 
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 16px; padding: 15px; margin-top: 15px;
-            animation: slideUp 0.4s ease-out;
+        .metric-unit:focus-within { border-color: var(--accent); background: #1c2128; }
+        
+        .metric-unit label { display: block; font-size: 9px; font-weight: 800; color: #64748b; margin-bottom: 5px; }
+        .metric-unit input { 
+            width: 100%; background: transparent; border: none; color: white;
+            font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 600;
         }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .res-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .res-teams { font-weight: 800; font-size: 13px; }
-        .res-score { background: rgba(0,255,133,0.1); color: var(--accent); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; }
+        /* BUTTON DESIGN */
+        .fire-btn { 
+            width: 100%; height: 65px; margin-top: 20px; border-radius: 20px;
+            border: none; background: var(--accent); color: #000;
+            font-weight: 900; font-size: 16px; letter-spacing: 1px;
+            box-shadow: 0 10px 25px rgba(0,255,163,0.3); transition: 0.3s;
+            cursor: pointer;
+        }
+        .fire-btn:active { transform: scale(0.96); opacity: 0.8; }
 
-        .progress-bar { height: 6px; background: #21262d; border-radius: 10px; margin: 10px 0; overflow: hidden; }
-        .progress-fill { height: 100%; border-radius: 10px; transition: width 1s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+        /* ANALYSIS STREAM */
+        .history-card { 
+            background: #0d1117; border: 1px solid var(--border); border-radius: 20px;
+            padding: 16px; margin-top: 15px; position: relative; overflow: hidden;
+        }
+        .match-label { font-size: 12px; font-weight: 900; letter-spacing: 0.5px; margin-bottom: 12px; }
+        
+        .score-badge { 
+            position: absolute; top: 15px; right: 15px; font-family: 'JetBrains Mono';
+            font-weight: 800; font-size: 14px;
+        }
 
-        .mark-btns { display: flex; gap: 8px; margin-top: 15px; }
-        .m-btn { 
-            flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border);
-            background: var(--glass); color: white; font-size: 16px; cursor: pointer;
+        .bar-container { height: 6px; background: #1c2128; border-radius: 10px; margin-bottom: 15px; }
+        .bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease-in-out; }
+
+        .result-actions { display: flex; gap: 8px; }
+        .action-btn { 
+            flex: 1; background: #161b22; border: 1px solid var(--border);
+            border-radius: 12px; color: #fff; padding: 12px; font-size: 18px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="stats-grid">
-        <div class="stat-box"><span class="val" id="total-val">0</span><span class="lbl">Analiz</span></div>
-        <div class="stat-box"><span class="val" id="win-rate" style="color:var(--warning)">%0</span><span class="lbl">Success</span></div>
-        <div class="stat-box"><span class="val" id="win-val">0</span><span class="lbl">Hit</span></div>
+<div class="terminal-wrapper">
+    <div class="glass-header">
+        <div class="stat"><span class="stat-v" id="st-total">0</span><span class="stat-l">SCAN</span></div>
+        <div class="stat"><span class="stat-v" id="st-rate" style="color:#fbff00">%0</span><span class="stat-l">WIN RATE</span></div>
+        <div class="stat"><span class="stat-v" id="st-hit">0</span><span class="stat-l">HITS</span></div>
     </div>
 
-    <div class="analyzer-card">
-        <div class="engine-title">PREMIER LEAGUE ENGINE V26</div>
-        
-        <div class="team-inputs">
-            <input type="text" id="t1" class="t-input" placeholder="HEDEF (DEF)">
-            <input type="text" id="t2" class="t-input" placeholder="AVCI (OFF)">
+    <div class="engine-card">
+        <div class="team-selector">
+            <div class="team-box"><input type="text" id="t1" placeholder="HOME (DEF)"></div>
+            <div class="team-box"><input type="text" id="t2" placeholder="AWAY (OFF)"></div>
         </div>
 
-        <div class="data-section">
-            <div class="section-tag">SAVUNMA DNA (AGAINST)</div>
-            <div class="input-row">
-                <div class="input-group">
-                    <label>PPA AGAINST</label>
-                    <input type="number" id="v-ppa-a" class="v-input" placeholder="15.0" inputmode="decimal">
-                </div>
-                <div class="input-group">
-                    <label>SCA AGAINST</label>
-                    <input type="number" id="v-sca-a" class="v-input" placeholder="25.0" inputmode="decimal">
-                </div>
+        <div class="section-header">DEFENSIVE DNA (AGAINST)</div>
+        <div class="metric-grid">
+            <div class="metric-unit">
+                <label>PPA AGAINST</label>
+                <input type="number" id="ppa-a" placeholder="15.0" step="0.1" inputmode="decimal">
             </div>
-            <div class="input-group" style="margin-top:10px;">
-                <label>KALECİ SAVE %</label>
-                <input type="number" id="v-save" class="v-input" placeholder="60.0" inputmode="decimal">
+            <div class="metric-unit">
+                <label>SCA AGAINST</label>
+                <input type="number" id="sca-a" placeholder="25.0" step="0.1" inputmode="decimal">
+            </div>
+            <div class="metric-unit" style="grid-column: span 2;">
+                <label>SAVE PERCENTAGE (%)</label>
+                <input type="number" id="save" placeholder="60.0" step="0.1" inputmode="decimal">
             </div>
         </div>
 
-        <div class="data-section">
-            <div class="section-tag">HÜCUM DNA (FOR)</div>
-            <div class="input-row">
-                <div class="input-group">
-                    <label>PPA FOR</label>
-                    <input type="number" id="v-ppa-f" class="v-input" placeholder="12.0" inputmode="decimal">
-                </div>
-                <div class="input-group">
-                    <label>NPXG / SHOT</label>
-                    <input type="number" id="v-npxg" class="v-input" placeholder="0.12" inputmode="decimal">
-                </div>
+        <div class="section-header">OFFENSIVE DNA (FOR)</div>
+        <div class="metric-grid">
+            <div class="metric-unit">
+                <label>PPA FOR</label>
+                <input type="number" id="ppa-f" placeholder="12.0" step="0.1" inputmode="decimal">
+            </div>
+            <div class="metric-unit">
+                <label>NPXG / SHOT</label>
+                <input type="number" id="npx" placeholder="0.12" step="0.01" inputmode="decimal">
             </div>
         </div>
 
-        <button class="btn-prime" onclick="processAnalysis()">ANALİZİ ÇALIŞTIR</button>
+        <button class="fire-btn" onclick="execute()">RUN DNA ANALYSIS</button>
     </div>
 
-    <div id="results-stream"></div>
+    <div id="stream"></div>
 </div>
 
 <script>
-    let stats = JSON.parse(localStorage.getItem('ppro_v26_stats')) || { total: 0, wins: 0 };
+    let stats = JSON.parse(localStorage.getItem('ppro_t3_stats')) || { total: 0, wins: 0 };
 
-    function updateStatsUI() {
-        document.getElementById('total-val').innerText = stats.total;
-        document.getElementById('win-val').innerText = stats.wins;
-        const rate = stats.total === 0 ? 0 : Math.round((stats.wins / stats.total) * 100);
-        document.getElementById('win-rate').innerText = '%' + rate;
-    }
-
-    function processAnalysis() {
-        const teams = { t1: document.getElementById('t1').value || 'DEF', t2: document.getElementById('t2').value || 'OFF' };
-        const vals = {
-            ppaA: parseFloat(document.getElementById('v-ppa-a').value || 0),
-            scaA: parseFloat(document.getElementById('v-sca-a').value || 0),
-            save: parseFloat(document.getElementById('v-save').value || 0),
-            ppaF: parseFloat(document.getElementById('v-ppa-f').value || 0),
-            npxg: parseFloat(document.getElementById('v-npxg').value || 0)
+    function execute() {
+        const d = {
+            t1: document.getElementById('t1').value || 'DEF',
+            t2: document.getElementById('t2').value || 'OFF',
+            ppaA: parseFloat(document.getElementById('ppa-a').value || 0),
+            scaA: parseFloat(document.getElementById('sca-a').value || 0),
+            save: parseFloat(document.getElementById('save').value || 0),
+            ppaF: parseFloat(document.getElementById('ppa-f').value || 0),
+            npx: parseFloat(document.getElementById('npx').value || 0)
         };
 
         let score = 0;
-        if(vals.ppaA >= 15) score += 20;
-        if(vals.scaA >= 25) score += 20;
-        if(vals.save > 0 && vals.save <= 60) score += 20;
-        if(vals.ppaF >= 12) score += 20;
-        if(vals.npxg >= 0.12) score += 20;
+        if(d.ppaA >= 15) score += 20;
+        if(d.scaA >= 25) score += 20;
+        if(d.save > 0 && d.save <= 60) score += 20;
+        if(d.ppaF >= 12) score += 20;
+        if(d.npx >= 0.12) score += 20;
 
-        createResultCard(teams, score);
+        renderResult(d, score);
     }
 
-    function createResultCard(teams, score) {
-        const stream = document.getElementById('results-stream');
-        const color = score >= 80 ? '#00ff85' : (score >= 60 ? '#ffcc00' : '#ff0055');
-        const status = score >= 80 ? 'HEDEF KİLİTLENDİ' : (score >= 60 ? 'POTANSİYEL' : 'GÜVEN DÜŞÜK');
-
+    function renderResult(d, score) {
+        const color = score >= 80 ? '#00ffa3' : (score >= 60 ? '#fbff00' : '#ff3b3b');
         const card = document.createElement('div');
-        card.className = 'history-item';
+        card.className = 'history-card';
         card.innerHTML = `
-            <div class="res-head">
-                <span class="res-teams">${teams.t1.toUpperCase()} vs ${teams.t2.toUpperCase()}</span>
-                <span class="res-score">%${score} GÜVEN</span>
-            </div>
-            <div style="font-size:10px; font-weight:800; color:${color}; margin-bottom:5px;">${status}</div>
-            <div class="progress-bar"><div class="progress-fill" style="width:${score}%; background:${color}"></div></div>
-            <div class="mark-btns">
-                <button class="m-btn" onclick="markResult(true, this)">✅</button>
-                <button class="m-btn" onclick="markResult(false, this)">❌</button>
+            <div class="match-label">${d.t1.toUpperCase()} v ${d.t2.toUpperCase()}</div>
+            <div class="score-badge" style="color:${color}">%${score}</div>
+            <div class="bar-container"><div class="bar-fill" style="width:${score}%; background:${color}"></div></div>
+            <div class="result-actions">
+                <button class="action-btn" onclick="mark(true, this)">✅</button>
+                <button class="action-btn" onclick="mark(false, this)">❌</button>
             </div>
         `;
-        stream.prepend(card);
+        document.getElementById('stream').prepend(card);
     }
 
-    function markResult(isWin, btn) {
-        stats.total++; if(isWin) stats.wins++;
-        localStorage.setItem('ppro_v26_stats', JSON.stringify(stats));
-        updateStatsUI();
-        btn.closest('.mark-btns').innerHTML = `<div style="width:100%; text-align:center; padding:10px; font-size:20px;">${isWin ? '✅ SUCCESS' : '❌ FAILED'}</div>`;
+    function mark(win, btn) {
+        stats.total++; if(win) stats.wins++;
+        localStorage.setItem('ppro_t3_stats', JSON.stringify(stats));
+        updateStats();
+        btn.closest('.result-actions').innerHTML = `<div style="width:100%; text-align:center; font-weight:900; color:${win?'#00ffa3':'#ff3b3b'}">${win?'HİT':'MISS'}</div>`;
     }
 
-    updateStatsUI();
+    function updateStats() {
+        document.getElementById('st-total').innerText = stats.total;
+        document.getElementById('st-hit').innerText = stats.wins;
+        const rate = stats.total === 0 ? 0 : Math.round((stats.wins / stats.total) * 100);
+        document.getElementById('st-rate').innerText = '%' + rate;
+    }
+    updateStats();
 </script>
 
 </body>

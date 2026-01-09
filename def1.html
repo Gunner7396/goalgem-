@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VELOCITY DNA v7</title>
+    <title>VELOCITY DNA v9</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #040609; --card: #0d1117; --accent: #00ffa3; --border: #1e2530; --text: #f0f3f5; --dim: #64748b; --danger: #ff4d4d; }
@@ -14,12 +14,14 @@
         .brand { text-align: center; margin: 10px 0; }
         .brand h1 { margin: 0; font-size: 24px; font-weight: 900; color: var(--accent); letter-spacing: -1px; }
 
-        .dash { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; position: relative; }
+        .dash { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }
         .st-v { display: block; font-family: 'JetBrains Mono'; font-size: 18px; font-weight: 800; color: var(--accent); text-align: center; }
         .st-l { font-size: 7px; color: var(--dim); text-transform: uppercase; font-weight: 800; text-align: center; display: block; }
 
-        /* League Select (Future-Ready) */
-        .league-box { width: 100%; background: #161b22; border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; margin-bottom: 10px; font-size: 10px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; border-left: 3px solid var(--accent); }
+        /* League Selector */
+        .league-selector { display: flex; gap: 5px; margin-bottom: 12px; }
+        .l-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: #161b22; color: var(--dim); font-size: 11px; font-weight: 900; cursor: pointer; transition: 0.2s; }
+        .l-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
 
         .engine { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 15px; }
         .row-label { font-size: 9px; font-weight: 900; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
@@ -30,19 +32,15 @@
         .u-label { font-size: 7px; color: var(--dim); font-weight: 800; display: block; margin-bottom: 4px; }
         .u-input { width: 100%; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 14px; font-weight: 700; }
 
-        .start-btn { width: 100%; background: var(--accent); color: #000; border: none; padding: 18px; border-radius: 14px; font-weight: 900; font-size: 15px; cursor: pointer; transition: 0.2s; }
-        .start-btn:active { transform: scale(0.96); opacity: 0.9; }
+        .start-btn { width: 100%; background: var(--accent); color: #000; border: none; padding: 18px; border-radius: 14px; font-weight: 900; font-size: 15px; cursor: pointer; }
 
-        .res-card { background: #12151c; border: 1px solid var(--border); border-radius: 14px; padding: 12px; margin-top: 10px; position: relative; animation: pop 0.2s ease-out; border-left: 3px solid var(--accent); }
-        @keyframes pop { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        
+        .res-card { background: #12151c; border: 1px solid var(--border); border-radius: 14px; padding: 12px; margin-top: 10px; position: relative; border-left: 3px solid var(--accent); }
         .res-del { position: absolute; top: 10px; right: 10px; color: var(--dim); font-size: 14px; cursor: pointer; }
         .res-header { font-size: 10px; font-weight: 800; margin-bottom: 8px; color: var(--dim); border-bottom: 1px solid #1e2530; padding-bottom: 4px; }
         .res-body { display: flex; justify-content: space-between; align-items: center; }
         .res-main-val { font-family: 'JetBrains Mono'; font-size: 20px; font-weight: 800; color: var(--accent); }
         .res-sub-val { font-size: 9px; font-weight: 700; color: #fff; text-align: right; }
-        .res-desc { font-size: 10px; color: #cbd5e1; margin-top: 8px; line-height: 1.3; }
-        .hit-btn { background: #1a1f29; border: 1px solid var(--border); color: var(--accent); font-size: 9px; font-weight: 800; padding: 6px 10px; border-radius: 6px; margin-top: 10px; cursor: pointer; display: inline-block; }
+        .hit-btn { background: #1a1f29; border: 1px solid var(--border); color: var(--accent); font-size: 9px; font-weight: 800; padding: 6px 10px; border-radius: 6px; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -56,24 +54,22 @@
         <div><span class="st-v" id="st-hit">0</span><span class="st-l">Hits</span></div>
     </div>
 
-    <div class="league-box" onclick="alert('Diğer ligler analiz aşamasında. Şimdilik Premier League aktif.')">
-        <span>PREMIER LEAGUE (ENG)</span>
-        <span style="color: var(--accent)">● ACTIVE</span>
+    <div class="league-selector">
+        <button class="l-btn active" id="btn-eng" onclick="setLeague('ENG')">PREMIER LEAGUE (ENG)</button>
+        <button class="l-btn" id="btn-esp" onclick="setLeague('ESP')">LA LIGA (ESP)</button>
     </div>
 
     <div class="engine">
         <div class="row-label">HEDEF (DEFENSE)</div>
         <div class="input-grid">
-            <div class="unit"><span class="u-label">TEAM NAME</span><input type="text" id="t-def" class="u-input"></div>
-            <div class="unit"><span class="u-label">SAVE %</span><input type="number" id="v-save" class="u-input"></div>
-            <div class="unit"><span class="u-label">PPA AGAINST</span><input type="number" id="v-ppa-a" class="u-input"></div>
-            <div class="unit"><span class="u-label">SCA AGAINST</span><input type="number" id="v-sca-a" class="u-input"></div>
+            <div class="unit"><span class="u-label">SAVE %</span><input type="number" id="v-save" class="u-input" placeholder="60.0"></div>
+            <div class="unit"><span class="u-label">PPA AGAINST</span><input type="number" id="v-ppa-a" class="u-input" placeholder="15.0"></div>
+            <div class="unit" style="grid-column: span 2;"><span class="u-label">SCA AGAINST</span><input type="number" id="v-sca-a" class="u-input" placeholder="26.0"></div>
         </div>
         <div class="row-label">AVCI (OFFENSE)</div>
         <div class="input-grid">
-            <div class="unit"><span class="u-label">TEAM NAME</span><input type="text" id="t-off" class="u-input"></div>
-            <div class="unit"><span class="u-label">PPA FOR</span><input type="number" id="v-ppa-f" class="u-input"></div>
-            <div class="unit" style="grid-column: span 2;"><span class="u-label">NPXG / SHOT (QUALITY)</span><input type="number" id="v-npx" class="u-input" step="0.01"></div>
+            <div class="unit"><span class="u-label">PPA FOR</span><input type="number" id="v-ppa-f" class="u-input" placeholder="12.0"></div>
+            <div class="unit"><span class="u-label">NPXG / SHOT</span><input type="number" id="v-npx" class="u-input" step="0.01" placeholder="0.12"></div>
         </div>
         <button class="start-btn" onclick="analyze()">START DNA SCAN</button>
     </div>
@@ -82,12 +78,27 @@
 </div>
 
 <script>
-    let stats = JSON.parse(localStorage.getItem('vdna_v7_stats')) || { total: 0, wins: 0 };
+    let currentLeague = 'ENG';
+    let stats = JSON.parse(localStorage.getItem('vdna_v9_stats')) || { total: 0, wins: 0 };
+
+    // Lig bazlı eşikler (Son 3 sezonun kriz verileri)
+    const thresholds = {
+        ENG: { ppaA: 15.0, scaA: 26.0, save: 62.0, ppaF: 12.0, npx: 0.12 },
+        ESP: { ppaA: 11.5, scaA: 21.0, save: 64.0, ppaF: 10.0, npx: 0.11 }
+    };
+
+    function setLeague(l) {
+        currentLeague = l;
+        document.querySelectorAll('.l-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-' + l.toLowerCase()).classList.add('active');
+        // Placeholder güncelleme
+        document.getElementById('v-ppa-a').placeholder = thresholds[l].ppaA;
+        document.getElementById('v-sca-a').placeholder = thresholds[l].scaA;
+        document.getElementById('v-save').placeholder = thresholds[l].save;
+    }
 
     function analyze() {
         const d = {
-            t1: document.getElementById('t-def').value || 'HEDEF',
-            t2: document.getElementById('t-off').value || 'AVCI',
             save: parseFloat(document.getElementById('v-save').value || 0),
             ppaA: parseFloat(document.getElementById('v-ppa-a').value || 0),
             scaA: parseFloat(document.getElementById('v-sca-a').value || 0),
@@ -95,15 +106,16 @@
             npx: parseFloat(document.getElementById('v-npx').value || 0)
         };
 
-        if(d.save === 0 || d.ppaA === 0 || d.npx === 0) { alert("Lütfen tüm metrikleri girin!"); return; }
+        if(!d.save || !d.ppaA) { alert("Metrikleri girin!"); return; }
 
-        // DINAMIK ÇARPIŞTIRMA ALGORITMASI (Ağırlıklandırılmış)
-        let leakScore = (d.ppaA / 15 * 30) + (d.scaA / 26 * 30) + ((100 - d.save) / 40 * 40);
-        let powerScore = (d.ppaF / 12 * 40) + (d.npx / 0.12 * 60);
+        const thr = thresholds[currentLeague];
+
+        // --- DINAMIK ALGORITMA ---
+        let leakScore = (d.ppaA / thr.ppaA * 35) + (d.scaA / thr.scaA * 35) + ((100 - d.save) / (100 - thr.save) * 30);
+        let powerScore = (d.ppaF / thr.ppaF * 45) + (d.npx / thr.npx * 55);
         let finalScore = Math.min(100, Math.round((leakScore * 0.55) + (powerScore * 0.45)));
         
-        // Dinamik Olasılık (npxG çarpanı daha etkin)
-        let prob15 = Math.min(95, Math.round(finalScore * (d.npx >= 0.15 ? 1.15 : (d.npx <= 0.08 ? 0.8 : 1.0))));
+        let prob15 = Math.min(95, Math.round(finalScore * (d.npx >= thr.npx ? 1.1 : 0.9)));
 
         const cardId = Date.now();
         const card = document.createElement('div');
@@ -111,40 +123,23 @@
         card.id = `card-${cardId}`;
         card.innerHTML = `
             <span class="res-del" onclick="deleteCard('${cardId}')">✕</span>
-            <div class="res-header">${d.t1.toUpperCase()} vs ${d.t2.toUpperCase()}</div>
+            <div class="res-header">${currentLeague} MATCH ANALYSIS</div>
             <div class="res-body">
                 <div><span class="res-main-val">%${finalScore}</span><br><span class="st-l" style="text-align:left">DNA MATCH</span></div>
                 <div class="res-sub-val">DEP 1.5 ÜST<br><span style="font-size:18px; color:var(--accent)">%${prob15}</span></div>
             </div>
-            <div class="res-desc">${finalScore >= 80 ? 'Kritik sızıntı. Savunma çöktü, avcı kaliteli bitirici.' : 'Zayıf sinyal. Veriler hedeflenen eşleşme kalitesinde değil.'}</div>
             <button class="hit-btn" onclick="markHit(this)">✅ SUCCESS</button>
         `;
         
         document.getElementById('results-container').prepend(card);
         saveHistory();
-        
-        // Kutuları ve isimleri temizle
         document.querySelectorAll('.u-input').forEach(i => i.value = "");
         updateUI();
     }
 
-    function deleteCard(id) {
-        document.getElementById(`card-${id}`).remove();
-        saveHistory();
-    }
-
-    function markHit(btn) {
-        stats.total++; stats.wins++;
-        localStorage.setItem('vdna_v7_stats', JSON.stringify(stats));
-        btn.remove();
-        saveHistory();
-        updateUI();
-    }
-
-    function saveHistory() {
-        localStorage.setItem('vdna_v7_hist', document.getElementById('results-container').innerHTML);
-    }
-
+    function deleteCard(id) { document.getElementById(`card-${id}`).remove(); saveHistory(); }
+    function markHit(btn) { stats.total++; stats.wins++; localStorage.setItem('vdna_v9_stats', JSON.stringify(stats)); btn.remove(); saveHistory(); updateUI(); }
+    function saveHistory() { localStorage.setItem('vdna_v9_hist', document.getElementById('results-container').innerHTML); }
     function updateUI() {
         document.getElementById('st-total').innerText = stats.total;
         document.getElementById('st-hit').innerText = stats.wins;
@@ -153,7 +148,7 @@
     }
 
     window.onload = () => {
-        document.getElementById('results-container').innerHTML = localStorage.getItem('vdna_v7_hist') || '';
+        document.getElementById('results-container').innerHTML = localStorage.getItem('vdna_v9_hist') || '';
         updateUI();
     };
 </script>

@@ -3,169 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScoreMaster AI v20</title>
+    <title>ScoreMaster v21</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #050505; color: #eee; font-family: 'Inter', sans-serif; }
-        .fotmob-dark { background: #111; border: 1px solid #222; border-radius: 8px; }
+        body { background-color: #080808; color: #fff; font-family: 'Inter', sans-serif; padding: 12px; }
+        .fotmob-dark { background: #121212; border: 1px solid #222; border-radius: 12px; }
         .accent-green { color: #00ff85; }
-        .league-btn { background: #181818; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 9px; font-weight: 800; color: #555; transition: 0.2s; }
+        .league-btn { background: #1a1a1a; border: 1px solid #333; padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 800; color: #555; }
         .league-btn.active { border-color: #00ff85; color: #00ff85; background: #00ff8510; }
-        .input-dark { background: #1a1a1a; border: 1px solid #282828; border-radius: 4px; padding: 8px; text-align: center; color: white; font-weight: 700; outline: none; font-size: 12px; width: 100%; }
+        .input-dark { background: #181818; border: 1px solid #252525; border-radius: 8px; padding: 12px; text-align: center; color: white; font-weight: 700; outline: none; font-size: 14px; width: 100%; }
+        .input-dark:focus { border-color: #00ff85; }
         
-        /* Nano Kart Tasarımı */
-        .nano-card { background: #141414; border: 1px solid #222; border-radius: 6px; padding: 8px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; animation: slideIn 0.2s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        
-        .status-btn { width: 22px; height: 22px; border-radius: 4px; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid #333; }
-        .btn-w { color: #00ff85; border-color: #00ff8530; }
-        .btn-w.active { background: #00ff85; color: #000; }
-        .btn-l { color: #ff4b4b; border-color: #ff4b4b30; }
-        .btn-l.active { background: #ff4b4b; color: #fff; }
+        /* Analiz Kartı */
+        .res-card { background: #151515; border: 1px solid #222; border-radius: 10px; padding: 12px; margin-bottom: 8px; position: relative; }
+        .status-dot { width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; border: 1px solid #333; cursor: pointer; }
+        .dot-w { color: #00ff85; } .dot-w.active { background: #00ff85; color: #000; }
+        .dot-l { color: #ff4b4b; } .dot-l.active { background: #ff4b4b; color: #fff; }
+        .prob-line { height: 4px; background: #222; border-radius: 2px; margin-top: 4px; overflow: hidden; }
+        .prob-fill { height: 100%; background: #00ff85; }
     </style>
 </head>
-<body class="p-3 pb-32 text-[11px]">
+<body class="pb-32">
 
-    <div class="flex justify-between items-center mb-3">
-        <h1 class="font-black italic uppercase">SCORE<span class="accent-green">MASTER</span> <small class="opacity-30">v20</small></h1>
-        <div class="text-right">
-            <span id="winRate" class="font-black accent-green">0%</span> <span class="text-[8px] text-gray-500 uppercase">W/R</span>
-        </div>
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-xl font-black italic uppercase italic tracking-tighter">SCORE<span class="accent-green">MASTER</span> v21</h1>
+        <div class="text-right"><span id="wr" class="text-xl font-black accent-green">0%</span><p class="text-[7px] text-gray-500 uppercase font-bold">W/R</p></div>
     </div>
 
-    <div class="grid grid-cols-5 gap-1 mb-3">
-        <button onclick="changeLeague('PL', this)" class="league-btn active">PL</button>
-        <button onclick="changeLeague('LL', this)" class="league-btn">LL</button>
-        <button onclick="changeLeague('SA', this)" class="league-btn">SA</button>
-        <button onclick="changeLeague('BL', this)" class="league-btn">BL</button>
-        <button onclick="changeLeague('L1', this)" class="league-btn">L1</button>
+    <div class="grid grid-cols-5 gap-2 mb-4">
+        <button onclick="setL('PL', this)" class="league-btn active">PL</button>
+        <button onclick="setL('LL', this)" class="league-btn">LL</button>
+        <button onclick="setL('SA', this)" class="league-btn">SA</button>
+        <button onclick="setL('BL', this)" class="league-btn">BL</button>
+        <button onclick="setL('L1', this)" class="league-btn">L1</button>
     </div>
 
-    <div class="fotmob-dark p-3 mb-3">
-        <div class="flex gap-2 mb-3">
-            <input id="hTeam" oninput="liveSave()" placeholder="HOME" class="w-1/2 bg-transparent border-b border-white/5 py-1 font-black uppercase outline-none placeholder:text-gray-800">
-            <input id="aTeam" oninput="liveSave()" placeholder="AWAY" class="w-1/2 bg-transparent border-b border-white/5 py-1 font-black uppercase outline-none text-right placeholder:text-gray-800">
+    <div class="fotmob-dark p-4 mb-4">
+        <div class="flex gap-4 mb-5">
+            <input id="hT" oninput="save()" placeholder="HOME" class="w-1/2 bg-transparent border-b border-white/10 py-2 font-black uppercase outline-none text-sm">
+            <input id="aT" oninput="save()" placeholder="AWAY" class="w-1/2 bg-transparent border-b border-white/10 py-2 font-black uppercase outline-none text-sm text-right">
         </div>
-
-        <div class="grid grid-cols-3 gap-2 items-center mb-3">
-            <input type="number" step="0.01" id="h_npxg" oninput="liveSave()" class="input-dark" placeholder="npxG">
-            <span class="text-[7px] text-gray-600 font-bold text-center">npxG/Sh</span>
-            <input type="number" step="0.01" id="a_npxg" oninput="liveSave()" class="input-dark" placeholder="npxG">
-
-            <input type="number" id="h_ppa" oninput="liveSave()" class="input-dark" placeholder="PPA">
-            <span class="text-[7px] text-gray-600 font-bold text-center">PPA</span>
-            <input type="number" id="a_ppa" oninput="liveSave()" class="input-dark" placeholder="PPA">
-
-            <input type="number" id="h_sca" oninput="liveSave()" class="input-dark" placeholder="SCA">
-            <span class="text-[7px] text-gray-600 font-bold text-center">SCA</span>
-            <input type="number" id="a_sca" oninput="liveSave()" class="input-dark" placeholder="SCA">
-
-            <input type="number" id="h_prgr" oninput="liveSave()" class="input-dark" placeholder="PrgR">
-            <span class="text-[7px] text-gray-600 font-bold text-center">PrgR</span>
-            <input type="number" id="a_prgr" oninput="liveSave()" class="input-dark" placeholder="PrgR">
+        <div class="grid grid-cols-3 gap-3 mb-5">
+            <input type="number" step="0.01" id="h_xg" oninput="save()" class="input-dark" placeholder="—">
+            <span class="text-[8px] text-gray-600 font-bold text-center self-center uppercase">npxG/Sh</span>
+            <input type="number" step="0.01" id="a_xg" oninput="save()" class="input-dark" placeholder="—">
+            <input type="number" id="h_ppa" oninput="save()" class="input-dark" placeholder="—">
+            <span class="text-[8px] text-gray-600 font-bold text-center self-center uppercase">PPA</span>
+            <input type="number" id="a_ppa" oninput="save()" class="input-dark" placeholder="—">
+            <input type="number" id="h_sca" oninput="save()" class="input-dark" placeholder="—">
+            <span class="text-[8px] text-gray-600 font-bold text-center self-center uppercase">SCA</span>
+            <input type="number" id="a_sca" oninput="save()" class="input-dark" placeholder="—">
+            <input type="number" id="h_pr" oninput="save()" class="input-dark" placeholder="—">
+            <span class="text-[8px] text-gray-600 font-bold text-center self-center uppercase">PrgR</span>
+            <input type="number" id="a_pr" oninput="save()" class="input-dark" placeholder="—">
         </div>
-
-        <button onclick="analyzeAndStack()" class="w-full bg-[#00ff85] text-black py-2.5 rounded font-black text-[10px] uppercase italic active:scale-95 transition-all">
-            ANALİZ ET & EKLE
-        </button>
+        <button onclick="calculate()" class="w-full bg-[#00ff85] text-black py-4 rounded-xl font-black text-xs uppercase italic tracking-widest active:scale-95 transition-all">ANALİZ ET & EKLE</button>
     </div>
 
-    <div id="stackContainer" class="space-y-1"></div>
+    <div id="stack" class="space-y-2"></div>
 
-    <div class="fixed bottom-0 left-0 w-full p-2 bg-black/95 border-t border-white/5 flex gap-2">
-        <button onclick="clearInputs()" class="flex-1 py-2 text-[8px] font-black uppercase text-gray-600 border border-gray-900 rounded">Temizle</button>
-        <button onclick="clearStack()" class="flex-1 py-2 text-[8px] font-black uppercase text-red-900 border border-red-950/20 rounded">Listeyi Sil</button>
+    <div class="fixed bottom-0 left-0 w-full p-4 bg-black/90 border-t border-white/5 flex gap-2">
+        <button onclick="resetInp()" class="flex-1 py-3 text-[10px] font-black uppercase text-gray-500 border border-gray-800 rounded-lg">Temizle</button>
+        <button onclick="resetStack()" class="flex-1 py-3 text-[10px] font-black uppercase text-red-900 border border-red-950/20 rounded-lg">Listeyi Sil</button>
     </div>
 
     <script>
-        const BARAJLAR = {
-            PL: { alt: {xg: 0.09, ppa: 7.5, sca: 18.5, pr: 38}, tam2: {xg: 0.12, ppa: 11, sca: 25, pr: 52} },
-            LL: { alt: {xg: 0.08, ppa: 6.0, sca: 16.0, pr: 32}, tam2: {xg: 0.11, ppa: 9, sca: 22, pr: 46} },
-            SA: { alt: {xg: 0.08, ppa: 6.5, sca: 15.5, pr: 30}, tam2: {xg: 0.10, ppa: 9.5, sca: 21, pr: 44} },
-            BL: { alt: {xg: 0.11, ppa: 9.0, sca: 22.0, pr: 45}, tam2: {xg: 0.14, ppa: 13, sca: 28, pr: 58} },
-            L1: { alt: {xg: 0.09, ppa: 7.0, sca: 17.5, pr: 34}, tam2: {xg: 0.11, ppa: 10, sca: 23, pr: 48} }
+        const BARAJ = {
+            PL: { alt: {xg:0.09, ppa:7.5, sca:18.5, pr:38}, t2: {xg:0.12, ppa:11, sca:25, pr:52} },
+            LL: { alt: {xg:0.08, ppa:6.0, sca:16.0, pr:32}, t2: {xg:0.11, ppa:9, sca:22, pr:46} },
+            SA: { alt: {xg:0.08, ppa:6.5, sca:15.5, pr:30}, t2: {xg:0.10, ppa:9.5, sca:21, pr:44} },
+            BL: { alt: {xg:0.11, ppa:9.0, sca:22.0, pr:45}, t2: {xg:0.14, ppa:13, sca:28, pr:58} },
+            L1: { alt: {xg:0.09, ppa:7.0, sca:17.5, pr:34}, t2: {xg:0.11, ppa:10, sca:23, pr:48} }
         };
 
-        let currentLeague = localStorage.getItem('sm_v20_league') || 'PL';
-        const fields = ["hTeam", "aTeam", "h_npxg", "a_npxg", "h_ppa", "a_ppa", "h_sca", "a_sca", "h_prgr", "a_prgr"];
+        let curL = localStorage.getItem('v21_l') || 'PL';
 
-        function liveSave() { fields.forEach(id => localStorage.setItem('v20_'+id, document.getElementById(id).value)); }
-
-        function load() {
-            fields.forEach(id => {
-                const val = localStorage.getItem('v20_'+id);
-                if(val) document.getElementById(id).value = val;
+        function save() {
+            ["hT","aT","h_xg","a_xg","h_ppa","a_ppa","h_sca","a_sca","h_pr","a_pr"].forEach(id => {
+                localStorage.setItem('v21_'+id, document.getElementById(id).value);
             });
-            changeLeague(currentLeague, document.querySelector(`button[onclick*="'${currentLeague}'"]`));
-            document.getElementById('stackContainer').innerHTML = localStorage.getItem('sm_v20_stack') || "";
-            updateWinRate();
         }
 
-        function changeLeague(code, btn) {
-            currentLeague = code;
-            localStorage.setItem('sm_v20_league', code);
-            document.querySelectorAll('.league-btn').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-            
-            // LİG DEĞİŞİNCE PARAMETRELERİN (BARAJLARIN) DEĞİŞMESİ:
-            // Eğer formda veri varsa, lig butonuna basar basmaz motoru tazeleyip en son analizi o lige göre güncellemek istersen:
-            // if(document.getElementById('h_npxg').value !== "") analyzeAndStack(true);
+        function setL(c, b) {
+            curL = c; localStorage.setItem('v21_l', c);
+            document.querySelectorAll('.league-btn').forEach(btn => btn.classList.remove('active'));
+            b.classList.add('active');
         }
 
-        function analyzeAndStack(isUpdate = false) {
-            const getAvg = (h, a) => (parseFloat(document.getElementById(h).value) + parseFloat(document.getElementById(a).value)) / 2;
-            const avg = { xg: getAvg('h_npxg','a_npxg'), ppa: getAvg('h_ppa','a_ppa'), sca: getAvg('h_sca','a_sca'), pr: getAvg('h_prgr','a_prgr') };
+        function calculate() {
+            const getV = (h, a) => (parseFloat(document.getElementById(h).value) + parseFloat(document.getElementById(a).value)) / 2;
+            const avg = { xg: getV('h_xg','a_xg'), ppa: getV('h_ppa','a_ppa'), sca: getV('h_sca','a_sca'), pr: getV('h_pr','a_pr') };
             
-            if(isNaN(avg.xg)) return;
+            if(isNaN(avg.xg)) { alert("Veri girin!"); return; }
 
-            const baraj = BARAJLAR[currentLeague];
-            let res = "";
-            if (avg.xg <= baraj.alt.xg && avg.ppa <= baraj.alt.ppa && avg.sca <= baraj.alt.sca && avg.pr <= baraj.alt.pr) res = "1.5 ALT";
-            else if (avg.xg <= baraj.tam2.xg && avg.ppa <= baraj.tam2.ppa && avg.sca <= baraj.tam2.sca && avg.pr <= baraj.tam2.pr) res = "TAM 2.0";
-            else res = "TAM 3.0";
+            const b = BARAJ[curL];
+            let p1, p2, p3, res;
 
-            const hN = (document.getElementById('hTeam').value || 'H').slice(0,3);
-            const aN = (document.getElementById('aTeam').value || 'A').slice(0,3);
+            // LİG BAZLI GERÇEK MOTOR (Sadece o ligin barajına bakar)
+            if (avg.xg <= b.alt.xg && avg.ppa <= b.alt.ppa && avg.sca <= b.alt.sca && avg.pr <= b.alt.pr) {
+                res="1.5 ALT"; p1=75; p2=20; p3=5;
+            } else if (avg.xg <= b.t2.xg && avg.ppa <= b.t2.ppa && avg.sca <= b.t2.sca && avg.pr <= b.t2.pr) {
+                res="TAM 2.0"; p1=15; p2=70; p3=15;
+            } else {
+                res="TAM 3.0"; p1=5; p2=25; p3=70;
+            }
 
-            const html = `
-                <div class="nano-card">
-                    <div class="flex items-center gap-2">
-                        <span class="text-[7px] font-black bg-white/5 px-1 py-0.5 rounded text-gray-500">${currentLeague}</span>
-                        <span class="font-bold uppercase text-[9px]">${hN}-${aN}</span>
+            const card = `
+                <div class="res-card">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="text-[9px] font-black accent-green bg-green-500/10 px-2 py-0.5 rounded mr-2 uppercase">${curL}</span>
+                            <span class="text-[11px] font-bold uppercase">${document.getElementById('hT').value.slice(0,3)}-${document.getElementById('aT').value.slice(0,3)}</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <div onclick="tgl(this,'w')" class="status-dot dot-w">W</div>
+                            <div onclick="tgl(this,'l')" class="status-dot dot-l">L</div>
+                            <div onclick="this.closest('.res-card').remove(); svS();" class="status-dot text-gray-700 border-none">×</div>
+                        </div>
                     </div>
-                    <div class="font-black accent-green text-[10px] tracking-tighter">${res}</div>
-                    <div class="flex gap-1">
-                        <div onclick="toggleStatus(this, 'W')" class="status-btn btn-w">W</div>
-                        <div onclick="toggleStatus(this, 'L')" class="status-btn btn-l">L</div>
-                        <div onclick="this.closest('.nano-card').remove(); saveStack();" class="status-btn text-gray-700">×</div>
+                    <div class="flex justify-between items-end">
+                        <div class="flex-1 pr-4">
+                            <div class="flex justify-between text-[10px] font-black mb-1">
+                                <span class="accent-green">${res}</span>
+                                <span class="text-gray-500">${res == "1.5 ALT" ? p1 : (res == "TAM 2.0" ? p2 : p3)}%</span>
+                            </div>
+                            <div class="prob-line"><div class="prob-fill" style="width:${res == "1.5 ALT" ? p1 : (res == "TAM 2.0" ? p2 : p3)}%"></div></div>
+                        </div>
+                        <div class="text-[8px] text-gray-600 font-bold uppercase leading-tight text-right">
+                            1.5A: ${p1}%<br>T2.0: ${p2}%<br>T3.0: ${p3}%
+                        </div>
                     </div>
                 </div>
             `;
-            
-            const container = document.getElementById('stackContainer');
-            container.insertAdjacentHTML('afterbegin', html);
-            saveStack();
+            document.getElementById('stack').insertAdjacentHTML('afterbegin', card);
+            svS();
         }
 
-        function toggleStatus(btn, type) {
-            const parent = btn.parentElement;
-            parent.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            saveStack();
-            updateWinRate();
+        function tgl(b, t) {
+            b.parentElement.querySelectorAll('.status-dot').forEach(d => d.classList.remove('active'));
+            b.classList.add('active'); svS(); updW();
         }
 
-        function updateWinRate() {
-            const wins = document.querySelectorAll('.btn-w.active').length;
-            const total = document.querySelectorAll('.btn-w.active, .btn-l.active').length;
-            document.getElementById('winRate').innerText = total > 0 ? Math.round((wins/total)*100) + "%" : "0%";
+        function svS() { localStorage.setItem('v21_stack', document.getElementById('stack').innerHTML); }
+        function updW() {
+            const w = document.querySelectorAll('.dot-w.active').length;
+            const t = document.querySelectorAll('.dot-w.active, .dot-l.active').length;
+            document.getElementById('wr').innerText = t > 0 ? Math.round((w/t)*100) + "%" : "0%";
         }
+        function resetInp() { ["hT","aT","h_xg","a_xg","h_ppa","a_ppa","h_sca","a_sca","h_pr","a_pr"].forEach(id => { document.getElementById(id).value = ""; localStorage.removeItem('v21_'+id); }); }
+        function resetStack() { if(confirm("Sil?")) { document.getElementById('stack').innerHTML=""; svS(); updW(); } }
 
-        function saveStack() { localStorage.setItem('sm_v20_stack', document.getElementById('stackContainer').innerHTML); }
-        function clearInputs() { fields.forEach(id => { document.getElementById(id).value = ""; localStorage.removeItem('v20_'+id); }); }
-        function clearStack() { if(confirm("Silinsin mi?")) { document.getElementById('stackContainer').innerHTML = ""; saveStack(); updateWinRate(); } }
-
-        window.onload = load;
+        window.onload = () => {
+            ["hT","aT","h_xg","a_xg","h_ppa","a_ppa","h_sca","a_sca","h_pr","a_pr"].forEach(id => {
+                const v = localStorage.getItem('v21_'+id); if(v) document.getElementById(id).value = v;
+            });
+            document.getElementById('stack').innerHTML = localStorage.getItem('v21_stack') || "";
+            updW();
+        };
     </script>
 </body>
 </html>

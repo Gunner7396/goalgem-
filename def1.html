@@ -3,158 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO PL - SAVUNMA DNA</title>
+    <title>P-PRO PREMIER ENGINE</title>
     <style>
         :root {
-            --bg: #05070a; --panel: #0f1217; --accent: #37003c; --border: #1e2530;
-            --text: #f0f3f5; --dim: #64748b; --pl-green: #00ffa3; --pl-pink: #e90052;
+            --bg: #0b0e14;
+            --card: #161b22;
+            --accent: #00ff85;
+            --danger: #ff0055;
+            --warning: #ffcc00;
+            --text-main: #ffffff;
+            --text-dim: #8b949e;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
-        .wrapper { width: 100%; max-width: 400px; }
-        
-        .dash-card { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-around; text-align: center; position: relative; border-bottom: 3px solid var(--pl-green); }
-        .stat-val { font-size: 18px; font-weight: 900; color: var(--pl-green); display: block; }
-        .stat-lbl { font-size: 9px; color: var(--dim); text-transform: uppercase; }
-        .reset-stats { position: absolute; top: 5px; right: 10px; font-size: 8px; color: #ff4d4d; cursor: pointer; border: 1px solid #ff4d4d33; padding: 2px 5px; border-radius: 4px; font-weight: bold; }
 
-        .main-card { background: rgba(15, 18, 23, 0.95); border: 1px solid var(--border); padding: 15px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin-bottom: 10px; }
-        
-        .league-header { padding: 12px; font-weight: 800; text-align: center; font-size: 13px; color: #fff; background: var(--accent); border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--pl-green); letter-spacing: 1px; }
-        
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .section-label { grid-column: span 2; font-size: 10px; color: var(--pl-green); text-align: center; font-weight: 800; margin-top: 10px; text-transform: uppercase; background: rgba(0,255,163,0.05); padding: 5px; border-radius: 5px; }
-        
-        input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 12px; border-radius: 8px; color: #fff; text-align: center; font-weight: 600; font-size: 14px; }
-        input:focus { border-color: var(--pl-green); }
-        input::placeholder { color: #334155; font-size: 11px; }
-        
-        .action-row { display: flex; gap: 10px; margin-top: 15px; }
-        #btn { flex: 4; padding: 16px; border-radius: 12px; border: none; background: var(--pl-green); color: #000; font-weight: 900; cursor: pointer; font-size: 14px; text-transform: uppercase; }
-        #clear-inputs { flex: 1; padding: 16px; border-radius: 12px; border: 1px solid #ff4d4d55; background: #ff4d4d11; color: #ff4d4d; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        
-        .hist-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; border-top: 3px solid var(--pl-pink); }
-        .res-btns { display: flex; gap: 8px; margin-top: 12px; }
-        .res-btn { flex: 1; padding: 10px; border-radius: 8px; border: none; font-size: 20px; cursor: pointer; background: #1e2530; color: #fff; }
-        .bar-bg { width: 100%; height: 8px; background: #1e2530; border-radius: 4px; overflow: hidden; margin-top: 4px; }
-        .bar-fill { height: 100%; transition: width 0.8s; }
-        .match-title { display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; margin-bottom: 8px; color: var(--pl-green); }
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { 
+            background: var(--bg); 
+            color: var(--text-main); 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            margin: 0; padding: 15px; 
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .container { width: 100%; max-width: 420px; }
+
+        /* HEADER STATS */
+        .stats-grid { 
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;
+        }
+        .stat-box { 
+            background: var(--card); border: 1px solid var(--border); 
+            padding: 12px; border-radius: 12px; text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .stat-box .val { display: block; font-size: 18px; font-weight: 800; color: var(--accent); }
+        .stat-box .lbl { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ANALYZER CARD */
+        .analyzer-card { 
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 24px; padding: 20px; position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            background-image: radial-gradient(circle at top right, rgba(0,255,133,0.05), transparent);
+        }
+
+        .engine-title { 
+            font-size: 12px; font-weight: 900; color: var(--accent); 
+            margin-bottom: 20px; text-align: center; letter-spacing: 2px;
+        }
+
+        .team-inputs { display: flex; gap: 10px; margin-bottom: 25px; }
+        .t-input { 
+            flex: 1; background: var(--glass); border: 1px solid var(--border);
+            padding: 12px; border-radius: 12px; color: white; font-weight: 700;
+            text-align: center; border-bottom: 2px solid var(--accent);
+        }
+
+        .data-section { margin-bottom: 20px; }
+        .section-tag { 
+            font-size: 9px; font-weight: 900; color: var(--text-dim); 
+            margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+        }
+        .section-tag::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 10px; color: var(--text-dim); margin-bottom: 6px; font-weight: 600; }
+        .v-input { 
+            width: 100%; background: #0d1117; border: 1px solid var(--border);
+            padding: 12px; border-radius: 10px; color: white; font-size: 14px;
+            font-weight: 600; text-align: center; transition: 0.3s;
+        }
+        .v-input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(0,255,133,0.1); }
+
+        /* ACTION BUTTONS */
+        .btn-prime { 
+            width: 100%; padding: 18px; border-radius: 14px; border: none;
+            background: var(--accent); color: #000; font-weight: 800;
+            font-size: 15px; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 8px 20px rgba(0,255,133,0.2);
+        }
+        .btn-prime:active { transform: scale(0.98); }
+
+        /* RESULT CARD */
+        .history-item { 
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 15px; margin-top: 15px;
+            animation: slideUp 0.4s ease-out;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .res-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .res-teams { font-weight: 800; font-size: 13px; }
+        .res-score { background: rgba(0,255,133,0.1); color: var(--accent); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; }
+
+        .progress-bar { height: 6px; background: #21262d; border-radius: 10px; margin: 10px 0; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 10px; transition: width 1s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+
+        .mark-btns { display: flex; gap: 8px; margin-top: 15px; }
+        .m-btn { 
+            flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--glass); color: white; font-size: 16px; cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <div class="dash-card">
-        <span class="reset-stats" onclick="clearStats()">SIFIRLA</span>
-        <div><span id="st-total" class="stat-val">0</span><span class="stat-lbl">Analiz</span></div>
-        <div><span id="st-rate" class="stat-val" style="color:#fbff00">%0</span><span class="stat-lbl">Başarı</span></div>
-        <div><span id="st-win" class="stat-val" style="color:var(--pl-green)">0</span><span class="stat-lbl">Doğru</span></div>
+<div class="container">
+    <div class="stats-grid">
+        <div class="stat-box"><span class="val" id="total-val">0</span><span class="lbl">Analiz</span></div>
+        <div class="stat-box"><span class="val" id="win-rate" style="color:var(--warning)">%0</span><span class="lbl">Success</span></div>
+        <div class="stat-box"><span class="val" id="win-val">0</span><span class="lbl">Hit</span></div>
     </div>
 
-    <div class="main-card">
-        <div class="league-header">PREMIER LEAGUE DNA MOTOR</div>
-
-        <div class="input-grid">
-            <input type="text" id="t-def" placeholder="SAVUNMA (A)">
-            <input type="text" id="t-off" placeholder="HÜCUM (B)">
-            
-            <div class="section-label">HEDEF SAVUNMA (AGAINST)</div>
-            <input type="number" id="ppa-a" inputmode="decimal" placeholder="PPA (15+)">
-            <input type="number" id="sca-a" inputmode="decimal" placeholder="SCA (25+)">
-            <input type="number" id="save-p" inputmode="decimal" placeholder="SAVE % (<60)" style="grid-column: span 2;">
-
-            <div class="section-label">AVCI HÜCUM (FOR)</div>
-            <input type="number" id="ppa-f" inputmode="decimal" placeholder="PPA (12+)">
-            <input type="number" id="npxg-s" inputmode="decimal" placeholder="npxG/Sh (0.12+)">
-        </div>
+    <div class="analyzer-card">
+        <div class="engine-title">PREMIER LEAGUE ENGINE V26</div>
         
-        <div class="action-row">
-            <button id="btn" onclick="analyze()">ANALİZİ BAŞLAT</button>
-            <button id="clear-inputs" onclick="resetInputs()">🧹</button>
+        <div class="team-inputs">
+            <input type="text" id="t1" class="t-input" placeholder="HEDEF (DEF)">
+            <input type="text" id="t2" class="t-input" placeholder="AVCI (OFF)">
         </div>
+
+        <div class="data-section">
+            <div class="section-tag">SAVUNMA DNA (AGAINST)</div>
+            <div class="input-row">
+                <div class="input-group">
+                    <label>PPA AGAINST</label>
+                    <input type="number" id="v-ppa-a" class="v-input" placeholder="15.0" inputmode="decimal">
+                </div>
+                <div class="input-group">
+                    <label>SCA AGAINST</label>
+                    <input type="number" id="v-sca-a" class="v-input" placeholder="25.0" inputmode="decimal">
+                </div>
+            </div>
+            <div class="input-group" style="margin-top:10px;">
+                <label>KALECİ SAVE %</label>
+                <input type="number" id="v-save" class="v-input" placeholder="60.0" inputmode="decimal">
+            </div>
+        </div>
+
+        <div class="data-section">
+            <div class="section-tag">HÜCUM DNA (FOR)</div>
+            <div class="input-row">
+                <div class="input-group">
+                    <label>PPA FOR</label>
+                    <input type="number" id="v-ppa-f" class="v-input" placeholder="12.0" inputmode="decimal">
+                </div>
+                <div class="input-group">
+                    <label>NPXG / SHOT</label>
+                    <input type="number" id="v-npxg" class="v-input" placeholder="0.12" inputmode="decimal">
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-prime" onclick="processAnalysis()">ANALİZİ ÇALIŞTIR</button>
     </div>
 
-    <div id="history-list"></div>
+    <div id="results-stream"></div>
 </div>
 
 <script>
-    let stats = JSON.parse(localStorage.getItem('pl_dna_stats')) || { total: 0, wins: 0 };
-    
-    window.onload = () => {
-        document.getElementById('history-list').innerHTML = localStorage.getItem('pl_dna_history') || '';
-        updateUI();
-    };
+    let stats = JSON.parse(localStorage.getItem('ppro_v26_stats')) || { total: 0, wins: 0 };
 
-    function updateUI() {
-        document.getElementById('st-total').innerText = stats.total;
-        document.getElementById('st-win').innerText = stats.wins;
-        const r = stats.total === 0 ? 0 : Math.round((stats.wins / stats.total) * 100);
-        document.getElementById('st-rate').innerText = '%' + r;
+    function updateStatsUI() {
+        document.getElementById('total-val').innerText = stats.total;
+        document.getElementById('win-val').innerText = stats.wins;
+        const rate = stats.total === 0 ? 0 : Math.round((stats.wins / stats.total) * 100);
+        document.getElementById('win-rate').innerText = '%' + rate;
     }
 
-    function resetInputs() {
-        document.querySelectorAll('.input-grid input').forEach(i => i.value = '');
-    }
+    function processAnalysis() {
+        const teams = { t1: document.getElementById('t1').value || 'DEF', t2: document.getElementById('t2').value || 'OFF' };
+        const vals = {
+            ppaA: parseFloat(document.getElementById('v-ppa-a').value || 0),
+            scaA: parseFloat(document.getElementById('v-sca-a').value || 0),
+            save: parseFloat(document.getElementById('v-save').value || 0),
+            ppaF: parseFloat(document.getElementById('v-ppa-f').value || 0),
+            npxg: parseFloat(document.getElementById('v-npxg').value || 0)
+        };
 
-    function analyze() {
-        const defT = (document.getElementById('t-def').value || 'DEF').toUpperCase();
-        const offT = (document.getElementById('t-off').value || 'OFF').toUpperCase();
-        
-        // Değerleri Al
-        const ppaA = parseFloat(document.getElementById('ppa-a').value || 0);
-        const scaA = parseFloat(document.getElementById('sca-a').value || 0);
-        const saveP = parseFloat(document.getElementById('save-p').value || 0);
-        const ppaF = parseFloat(document.getElementById('ppa-f').value || 0);
-        const npx = parseFloat(document.getElementById('npxg-s').value || 0);
-
-        if(ppaA === 0 && ppaF === 0) { alert("Lütfen verileri girin!"); return; }
-
-        // Analiz Motoru (%80 Bazlı 5 Metrik)
         let score = 0;
-        if(ppaA >= 15) score += 20;
-        if(scaA >= 25) score += 20;
-        if(saveP > 0 && saveP <= 60) score += 20;
-        if(ppaF >= 12) score += 20;
-        if(npx >= 0.12) score += 20;
+        if(vals.ppaA >= 15) score += 20;
+        if(vals.scaA >= 25) score += 20;
+        if(vals.save > 0 && vals.save <= 60) score += 20;
+        if(vals.ppaF >= 12) score += 20;
+        if(vals.npxg >= 0.12) score += 20;
 
-        // Sonuç Kartı Oluşturma
+        createResultCard(teams, score);
+    }
+
+    function createResultCard(teams, score) {
+        const stream = document.getElementById('results-stream');
+        const color = score >= 80 ? '#00ff85' : (score >= 60 ? '#ffcc00' : '#ff0055');
+        const status = score >= 80 ? 'HEDEF KİLİTLENDİ' : (score >= 60 ? 'POTANSİYEL' : 'GÜVEN DÜŞÜK');
+
         const card = document.createElement('div');
-        card.className = 'hist-card';
-        
-        let color = score >= 80 ? "#00ffa3" : (score >= 60 ? "#fbff00" : "#ff4d4d");
-        let desc = score >= 80 ? "KRİTİK DNA ÇÖKÜŞÜ" : (score >= 60 ? "POTANSİYEL VAR" : "SAVUNMA DİRENÇLİ");
-
+        card.className = 'history-item';
         card.innerHTML = `
-            <div class="match-title">
-                <span>${offT} → ${defT}</span>
-                <span style="color:${color}">%${score} GÜVEN</span>
+            <div class="res-head">
+                <span class="res-teams">${teams.t1.toUpperCase()} vs ${teams.t2.toUpperCase()}</span>
+                <span class="res-score">%${score} GÜVEN</span>
             </div>
-            <div style="font-size:10px; color:var(--dim); margin-bottom:10px; font-weight:bold; text-align:center;">${desc}</div>
-            ${bar("GOL İHTİMALİ", score, color)}
-            <div class="res-btns">
-                <button class="res-btn" onclick="mark(true, this)">✅</button>
-                <button class="res-btn" onclick="mark(false, this)">❌</button>
+            <div style="font-size:10px; font-weight:800; color:${color}; margin-bottom:5px;">${status}</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:${score}%; background:${color}"></div></div>
+            <div class="mark-btns">
+                <button class="m-btn" onclick="markResult(true, this)">✅</button>
+                <button class="m-btn" onclick="markResult(false, this)">❌</button>
             </div>
         `;
-        const list = document.getElementById('history-list');
-        list.prepend(card);
-        localStorage.setItem('pl_dna_history', list.innerHTML);
-        resetInputs();
+        stream.prepend(card);
     }
 
-    function bar(l, v, c) { 
-        return `<div style="margin-bottom:5px;"><div style="display:flex; justify-content:space-between; font-size:9px; font-weight:700;"><span>${l}</span><span>%${v}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${v}%; background:${c}"></div></div></div>`; 
+    function markResult(isWin, btn) {
+        stats.total++; if(isWin) stats.wins++;
+        localStorage.setItem('ppro_v26_stats', JSON.stringify(stats));
+        updateStatsUI();
+        btn.closest('.mark-btns').innerHTML = `<div style="width:100%; text-align:center; padding:10px; font-size:20px;">${isWin ? '✅ SUCCESS' : '❌ FAILED'}</div>`;
     }
 
-    function mark(win, btn) {
-        stats.total++; if(win) stats.wins++;
-        localStorage.setItem('pl_dna_stats', JSON.stringify(stats));
-        updateUI();
-        btn.parentElement.innerHTML = `<div style="text-align:center; width:100%; font-size:20px; padding:5px;">${win?'✅ DOĞRU':'❌ HATALI'}</div>`;
-        localStorage.setItem('pl_dna_history', document.getElementById('history-list').innerHTML);
-    }
-
-    function clearStats() { if(confirm("Sıfırlansın mı?")){ stats = { total: 0, wins: 0 }; localStorage.setItem('pl_dna_stats', JSON.stringify(stats)); updateUI(); } }
+    updateStatsUI();
 </script>
+
 </body>
 </html>

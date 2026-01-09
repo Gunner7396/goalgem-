@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Premier League - Savunma DNA Analiz</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #3d195d; color: white; display: flex; justify-content: center; padding: 20px; }
+        .container { background: #ffffff; color: #3d195d; padding: 30px; border-radius: 15px; width: 650px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .header { text-align: center; border-bottom: 3px solid #37003c; margin-bottom: 20px; padding-bottom: 10px; }
+        .header h2 { margin: 0; color: #37003c; text-transform: uppercase; letter-spacing: 2px; }
+        .row { display: flex; justify-content: space-between; gap: 20px; }
+        .col { width: 48%; background: #f4f4f4; padding: 15px; border-radius: 10px; }
+        h3 { border-bottom: 2px solid #3d195d; padding-bottom: 5px; font-size: 15px; margin-top: 0; }
+        label { display: block; font-size: 12px; margin-top: 15px; font-weight: bold; }
+        input { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; padding: 15px; background: #00ff85; border: none; color: #37003c; font-weight: bold; font-size: 16px; cursor: pointer; border-radius: 8px; margin-top: 25px; transition: 0.3s; }
+        button:hover { background: #02e077; transform: translateY(-2px); }
+        #result { margin-top: 25px; padding: 20px; text-align: center; border-radius: 10px; display: none; font-weight: bold; font-size: 18px; border: 2px solid transparent; }
+        .source-hint { font-size: 11px; color: #666; font-style: italic; margin-top: 2px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>Premier League 🏴󠁧󠁢󠁥󠁮󠁧󠁿</h2>
+        <p style="font-size: 12px; margin: 5px 0 0;">Savunma Sızıntı Tespit Sistemi</p>
+    </div>
+    
+    <div class="row">
+        <div class="col">
+            <h3 style="color: #e90052;">HEDEF SAVUNMA</h3>
+            
+            <label>PPA (Against)</label>
+            <input type="number" id="ppaAgainst" step="0.1" placeholder="FBref Squad Against">
+            <div class="source-hint">Eşik: 15.0+</div>
+            
+            <label>SCA (Against)</label>
+            <input type="number" id="scaAgainst" step="0.1" placeholder="FBref Squad Against">
+            <div class="source-hint">Eşik: 25.0+</div>
+            
+            <label>Save %</label>
+            <input type="number" id="savePercent" step="0.1" placeholder="Kaleci Kurtarış %">
+            <div class="source-hint">Eşik: < 60.0</div>
+        </div>
+
+        <div class="col">
+            <h3 style="color: #00ff85;">AVCI HÜCUM</h3>
+            
+            <label>PPA (For)</label>
+            <input type="number" id="ppaFor" step="0.1" placeholder="FBref Squad For">
+            <div class="source-hint">Eşik: 12.0+</div>
+            
+            <label>npxG/Sh</label>
+            <input type="number" id="npxgSh" step="0.01" placeholder="Şut Kalitesi (xG)">
+            <div class="source-hint">Eşik: 0.12+</div>
+        </div>
+    </div>
+
+    <button onclick="analizEt()">DNA ANALİZİNİ BAŞLAT</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+function analizEt() {
+    let score = 0;
+    const ppaA = parseFloat(document.getElementById('ppaAgainst').value) || 0;
+    const scaA = parseFloat(document.getElementById('scaAgainst').value) || 0;
+    const svP = parseFloat(document.getElementById('savePercent').value) || 0;
+    const ppaF = parseFloat(document.getElementById('ppaFor').value) || 0;
+    const npx = parseFloat(document.getElementById('npxgSh').value) || 0;
+
+    // Premier Lig Ağırlıklı Hesaplama
+    if(ppaA >= 15) score += 20;
+    if(scaA >= 25) score += 20;
+    if(svP <= 60 && svP > 0) score += 20;
+    if(ppaF >= 12) score += 20;
+    if(npx >= 0.12) score += 20;
+
+    const resDiv = document.getElementById('result');
+    resDiv.style.display = 'block';
+    
+    if(score >= 80) {
+        resDiv.style.background = '#00ff85';
+        resDiv.style.color = '#37003c';
+        resDiv.style.borderColor = '#37003c';
+        resDiv.innerHTML = "GÜVEN SKORU: %" + score + "<br>PREMIER LIG DNA EŞLEŞMESİ TAMAM!<br>Hedef takımın savunması dağılmaya hazır.";
+    } else if(score >= 60) {
+        resDiv.style.background = '#f1c40f';
+        resDiv.style.color = '#37003c';
+        resDiv.innerHTML = "GÜVEN SKORU: %" + score + "<br>POTANSİYEL VAR<br>Fiziksel direnç maçın kaderini belirler.";
+    } else {
+        resDiv.style.background = '#e90052';
+        resDiv.style.color = 'white';
+        resDiv.innerHTML = "GÜVEN SKORU: %" + score + "<br>ZAYIF EŞLEŞME<br>Savunma verileri PL standartlarında güvenli.";
+    }
+}
+</script>
+
+</body>
+</html>

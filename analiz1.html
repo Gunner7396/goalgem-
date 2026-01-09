@@ -3,74 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScoreMaster AI v18</title>
+    <title>ScoreMaster AI v19</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; }
-        .fotmob-card { background: #161616; border-radius: 12px; border: 1px solid #252525; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        body { background-color: #050505; color: #eee; font-family: 'Inter', sans-serif; }
+        .fotmob-dark { background: #111; border: 1px solid #222; border-radius: 10px; }
         .accent-green { color: #00ff85; }
-        .league-btn { background: #1f1f1f; border: 1px solid #333; padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 800; color: #666; transition: 0.2s; }
+        .league-btn { background: #181818; border: 1px solid #333; padding: 8px; border-radius: 6px; font-size: 10px; font-weight: 800; color: #555; transition: 0.2s; }
         .league-btn.active { border-color: #00ff85; color: #00ff85; background: #00ff8510; }
-        .input-box { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 12px; text-align: center; color: white; font-weight: 700; width: 100%; outline: none; font-size: 14px; }
-        .input-box:focus { border-color: #00ff85; }
-        .prob-bar { height: 4px; border-radius: 2px; background: #222; margin-top: 6px; overflow: hidden; }
-        .prob-fill { height: 100%; background: #00ff85; transition: width 0.8s ease-in-out; }
-        .analysis-entry { animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .input-dark { background: #1a1a1a; border: 1px solid #282828; border-radius: 6px; padding: 10px; text-align: center; color: white; font-weight: 700; outline: none; font-size: 13px; width: 100%; }
+        .input-dark:focus { border-color: #00ff85; }
+        /* Kompakt Analiz Satırı */
+        .analysis-row { background: #151515; border-left: 3px solid #00ff85; margin-bottom: 8px; border-radius: 4px; padding: 10px; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .mini-bar { height: 3px; background: #222; border-radius: 2px; overflow: hidden; margin-top: 2px; }
+        .mini-fill { height: 100%; background: #00ff85; transition: width 0.5s ease; }
     </style>
 </head>
-<body class="p-4 pb-32">
+<body class="p-3 pb-32">
 
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-xl font-black italic tracking-tighter uppercase">SCORE<span class="accent-green">MASTER</span> <span class="text-[10px] opacity-40">v18</span></h1>
+    <div class="flex justify-between items-center mb-4 px-1">
+        <h1 class="text-xl font-black italic tracking-tighter uppercase leading-none">SCORE<span class="accent-green">MASTER</span></h1>
         <div class="text-right">
-            <div id="globalSuccess" class="text-2xl font-black accent-green leading-none">88%</div>
-            <p class="text-[7px] text-gray-500 font-bold uppercase tracking-widest">Başarı Oranı</p>
+            <span id="globalSuccess" class="text-xl font-black accent-green leading-none">85%</span>
+            <p class="text-[7px] text-gray-500 font-bold uppercase tracking-widest leading-none">Success Rate</p>
         </div>
     </div>
 
-    <div class="grid grid-cols-5 gap-2 mb-6" id="leagueGroup">
-        <button onclick="changeLeague('PL', this)" class="league-btn active">PL</button>
-        <button onclick="changeLeague('LL', this)" class="league-btn">LL</button>
-        <button onclick="changeLeague('SA', this)" class="league-btn">SA</button>
-        <button onclick="changeLeague('BL', this)" class="league-btn">BL</button>
-        <button onclick="changeLeague('L1', this)" class="league-btn">L1</button>
+    <div class="grid grid-cols-5 gap-1.5 mb-4">
+        <button onclick="setLeague('PL', this)" class="league-btn active">PL</button>
+        <button onclick="setLeague('LL', this)" class="league-btn">LL</button>
+        <button onclick="setLeague('SA', this)" class="league-btn">SA</button>
+        <button onclick="setLeague('BL', this)" class="league-btn">BL</button>
+        <button onclick="setLeague('L1', this)" class="league-btn">L1</button>
     </div>
 
-    <div class="fotmob-card p-5 mb-6">
-        <div class="flex gap-4 mb-6">
-            <input id="hTeam" oninput="autoSave()" placeholder="EV SAHİBİ" class="w-1/2 bg-transparent border-b border-gray-800 py-2 text-sm font-bold uppercase outline-none">
-            <input id="aTeam" oninput="autoSave()" placeholder="DEPLASMAN" class="w-1/2 bg-transparent border-b border-gray-800 py-2 text-sm font-bold uppercase outline-none text-right">
+    <div class="fotmob-dark p-4 mb-4 shadow-2xl">
+        <div class="flex gap-4 mb-5 border-b border-white/5 pb-2">
+            <input id="hTeam" oninput="saveInputs()" placeholder="HOME" class="w-1/2 bg-transparent text-xs font-black uppercase outline-none placeholder:text-gray-700">
+            <input id="aTeam" oninput="saveInputs()" placeholder="AWAY" class="w-1/2 bg-transparent text-xs font-black uppercase outline-none text-right placeholder:text-gray-700">
         </div>
 
-        <div class="grid grid-cols-3 gap-3 items-center">
-            <input type="number" step="0.01" id="h_npxg" oninput="autoSave()" class="input-box" placeholder="—">
-            <span class="text-[8px] text-gray-500 font-black text-center uppercase leading-none">npxG<br>Sh</span>
-            <input type="number" step="0.01" id="a_npxg" oninput="autoSave()" class="input-box" placeholder="—">
+        <div class="grid grid-cols-3 gap-2 items-center mb-4">
+            <input type="number" step="0.01" id="h_npxg" oninput="saveInputs()" class="input-dark" placeholder="—">
+            <span class="text-[7px] text-gray-600 font-black text-center uppercase leading-none">npxG/Sh</span>
+            <input type="number" step="0.01" id="a_npxg" oninput="saveInputs()" class="input-dark" placeholder="—">
 
-            <input type="number" id="h_ppa" oninput="autoSave()" class="input-box" placeholder="—">
-            <span class="text-[8px] text-gray-500 font-black text-center uppercase">PPA</span>
-            <input type="number" id="a_ppa" oninput="autoSave()" class="input-box" placeholder="—">
+            <input type="number" id="h_ppa" oninput="saveInputs()" class="input-dark" placeholder="—">
+            <span class="text-[7px] text-gray-600 font-black text-center uppercase leading-none">PPA</span>
+            <input type="number" id="a_ppa" oninput="saveInputs()" class="input-dark" placeholder="—">
 
-            <input type="number" id="h_sca" oninput="autoSave()" class="input-box" placeholder="—">
-            <span class="text-[8px] text-gray-500 font-black text-center uppercase">SCA</span>
-            <input type="number" id="a_sca" oninput="autoSave()" class="input-box" placeholder="—">
+            <input type="number" id="h_sca" oninput="saveInputs()" class="input-dark" placeholder="—">
+            <span class="text-[7px] text-gray-600 font-black text-center uppercase leading-none">SCA</span>
+            <input type="number" id="a_sca" oninput="saveInputs()" class="input-dark" placeholder="—">
 
-            <input type="number" id="h_prgr" oninput="autoSave()" class="input-box" placeholder="—">
-            <span class="text-[8px] text-gray-500 font-black text-center uppercase">PrgR</span>
-            <input type="number" id="a_prgr" oninput="autoSave()" class="input-box" placeholder="—">
+            <input type="number" id="h_prgr" oninput="saveInputs()" class="input-dark" placeholder="—">
+            <span class="text-[7px] text-gray-600 font-black text-center uppercase leading-none">PrgR</span>
+            <input type="number" id="a_prgr" oninput="saveInputs()" class="input-dark" placeholder="—">
         </div>
 
-        <button onclick="addAnalysis()" class="w-full bg-[#00ff85] text-black py-4 rounded-xl mt-6 font-black text-xs uppercase italic tracking-widest active:scale-95 transition-all">
-            ANALİZ ET & LİSTEYE EKLE
+        <button onclick="addAnalysisToList()" class="w-full bg-[#00ff85] text-black py-3.5 rounded-lg font-black text-[10px] uppercase italic tracking-[0.1em] active:scale-95 transition-all">
+            ANALİZ ET VE LİSTEYE EKLE
         </button>
     </div>
 
-    <div id="analysisList" class="space-y-4 mb-8"></div>
+    <div id="stackContainer" class="space-y-2"></div>
 
-    <div class="fixed bottom-0 left-0 w-full p-4 bg-black/80 backdrop-blur-md border-t border-white/5 flex gap-2">
-        <button onclick="clearInputs()" class="flex-1 py-3 text-[10px] font-black uppercase text-gray-500 border border-gray-800 rounded-lg italic">Girişleri Temizle</button>
-        <button onclick="clearList()" class="flex-1 py-3 text-[10px] font-black uppercase text-red-900 border border-red-950/30 rounded-lg italic">Analizleri Sil</button>
+    <div class="fixed bottom-0 left-0 w-full p-3 bg-black/90 backdrop-blur-md border-t border-white/5 flex gap-2">
+        <button onclick="clearInputs()" class="flex-1 py-3 text-[9px] font-black uppercase text-gray-500 border border-gray-800 rounded-lg">Inputları Temizle</button>
+        <button onclick="clearList()" class="flex-1 py-3 text-[9px] font-black uppercase text-red-900 border border-red-950/20 rounded-lg">Listeyi Sıfırla</button>
     </div>
 
     <script>
@@ -82,35 +83,30 @@
             L1: { alt: {xg: 0.09, ppa: 7.0, sca: 17.5, pr: 34}, tam2: {xg: 0.11, ppa: 10, sca: 23, pr: 48} }
         };
 
-        let currentLeague = localStorage.getItem('sm_league') || 'PL';
+        let currentLeague = localStorage.getItem('sm_v19_league') || 'PL';
         const fields = ["hTeam", "aTeam", "h_npxg", "a_npxg", "h_ppa", "a_ppa", "h_sca", "a_sca", "h_prgr", "a_prgr"];
 
-        function autoSave() { fields.forEach(id => localStorage.setItem('v_'+id, document.getElementById(id).value)); }
+        function saveInputs() { fields.forEach(id => localStorage.setItem('v19_'+id, document.getElementById(id).value)); }
 
-        function loadData() {
+        function loadAll() {
             fields.forEach(id => {
-                const val = localStorage.getItem('v_'+id);
+                const val = localStorage.getItem('v19_'+id);
                 if(val) document.getElementById(id).value = val;
             });
-            document.querySelectorAll('.league-btn').forEach(b => {
-                if(b.innerText === currentLeague) b.classList.add('active');
-                else b.classList.remove('active');
-            });
-            const savedList = localStorage.getItem('sm_list_html');
-            if(savedList) document.getElementById('analysisList').innerHTML = savedList;
+            const savedList = localStorage.getItem('sm_v19_list');
+            if(savedList) document.getElementById('stackContainer').innerHTML = savedList;
         }
 
-        function changeLeague(code, btn) {
+        function setLeague(code, btn) {
             currentLeague = code;
-            localStorage.setItem('sm_league', code);
+            localStorage.setItem('sm_v19_league', code);
             document.querySelectorAll('.league-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
 
-        function addAnalysis() {
-            const inputs = ["h_npxg", "a_npxg", "h_ppa", "a_ppa", "h_sca", "a_sca", "h_prgr", "a_prgr"];
-            if(inputs.some(id => document.getElementById(id).value === "")) {
-                alert("Tüm metrikleri doldurun!"); return;
+        function addAnalysisToList() {
+            if(fields.slice(2).some(id => document.getElementById(id).value === "")) {
+                alert("Metrikleri eksiksiz girin!"); return;
             }
 
             const getAvg = (h, a) => (parseFloat(document.getElementById(h).value) + parseFloat(document.getElementById(a).value)) / 2;
@@ -122,46 +118,48 @@
             else if (avg.xg <= baraj.tam2.xg && avg.ppa <= baraj.tam2.ppa && avg.sca <= baraj.tam2.sca && avg.pr <= baraj.tam2.pr) { p1=15; p2=70; p3=15; }
             else { p1=5; p2=25; p3=70; }
 
-            const id = Date.now();
-            const html = `
-                <div class="fotmob-card p-5 analysis-entry border-l-4 border-green-500 bg-gradient-to-r from-green-500/5 to-transparent">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-[10px] font-black accent-green uppercase tracking-[0.2em]">${currentLeague} ANALİZİ</span>
-                        <span class="text-[9px] text-gray-600 font-bold">${document.getElementById('hTeam').value} vs ${document.getElementById('aTeam').value}</span>
+            const hName = document.getElementById('hTeam').value || 'HOME';
+            const aName = document.getElementById('aTeam').value || 'AWAY';
+
+            const newRow = `
+                <div class="analysis-row shadow-lg">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[8px] font-black accent-green uppercase tracking-tighter bg-green-500/10 px-1.5 py-0.5 rounded">${currentLeague}</span>
+                        <span class="text-[9px] font-black uppercase text-gray-400 italic">${hName} vs ${aName}</span>
                     </div>
-                    <div class="grid grid-cols-3 gap-4 mb-5">
+                    <div class="grid grid-cols-3 gap-3">
                         <div class="text-center">
-                            <div class="text-[8px] text-gray-500 font-black mb-1 uppercase">1.5 ALT</div>
-                            <div class="text-lg font-black">${p1}%</div>
-                            <div class="prob-bar"><div class="prob-fill" style="width:${p1}%"></div></div>
+                            <div class="text-[7px] text-gray-600 font-bold leading-none mb-0.5 uppercase">1.5 ALT</div>
+                            <div class="text-xs font-black">${p1}%</div>
+                            <div class="mini-bar"><div class="mini-fill" style="width:${p1}%"></div></div>
                         </div>
-                        <div class="text-center border-x border-gray-800 px-2">
-                            <div class="text-[8px] text-gray-400 font-black mb-1 uppercase italic">TAM 2.0</div>
-                            <div class="text-lg font-black accent-green">${p2}%</div>
-                            <div class="prob-bar"><div class="prob-fill" style="width:${p2}%"></div></div>
+                        <div class="text-center border-x border-white/5">
+                            <div class="text-[7px] text-gray-400 font-bold leading-none mb-0.5 uppercase">TAM 2.0</div>
+                            <div class="text-xs font-black accent-green">${p2}%</div>
+                            <div class="mini-bar"><div class="mini-fill" style="width:${p2}%"></div></div>
                         </div>
                         <div class="text-center">
-                            <div class="text-[8px] text-gray-500 font-black mb-1 uppercase">TAM 3.0</div>
-                            <div class="text-lg font-black">${p3}%</div>
-                            <div class="prob-bar"><div class="prob-fill" style="width:${p3}%"></div></div>
+                            <div class="text-[7px] text-gray-600 font-bold leading-none mb-0.5 uppercase">TAM 3.0</div>
+                            <div class="text-xs font-black">${p3}%</div>
+                            <div class="mini-bar"><div class="mini-fill" style="width:${p3}%"></div></div>
                         </div>
                     </div>
-                    <div class="flex gap-2 items-center bg-black/40 p-2 rounded-lg">
-                        <input type="text" placeholder="SKOR" class="w-20 bg-gray-900 border border-gray-800 rounded p-1 text-center text-xs font-bold text-white">
-                        <button onclick="this.parentElement.parentElement.remove(); saveList();" class="flex-1 text-[8px] font-black uppercase text-gray-600">ARŞİVDEN SİL</button>
+                    <div class="mt-2 flex justify-end">
+                         <button onclick="this.closest('.analysis-row').remove(); saveList();" class="text-[6px] text-gray-700 font-black uppercase tracking-widest">SİL</button>
                     </div>
                 </div>
             `;
-            const list = document.getElementById('analysisList');
-            list.insertAdjacentHTML('afterbegin', html);
+            
+            const container = document.getElementById('stackContainer');
+            container.insertAdjacentHTML('afterbegin', newRow);
             saveList();
         }
 
-        function saveList() { localStorage.setItem('sm_list_html', document.getElementById('analysisList').innerHTML); }
-        function clearList() { if(confirm("Analiz listesi temizlensin mi?")) { document.getElementById('analysisList').innerHTML = ""; saveList(); } }
-        function clearInputs() { fields.forEach(id => { document.getElementById(id).value = ""; localStorage.removeItem('v_'+id); }); }
+        function saveList() { localStorage.setItem('sm_v19_list', document.getElementById('stackContainer').innerHTML); }
+        function clearInputs() { fields.forEach(id => { document.getElementById(id).value = ""; localStorage.removeItem('v19_'+id); }); }
+        function clearList() { if(confirm("Tüm liste silinsin mi?")) { document.getElementById('stackContainer').innerHTML = ""; saveList(); } }
 
-        window.onload = loadData;
+        window.onload = loadAll;
     </script>
 </body>
 </html>

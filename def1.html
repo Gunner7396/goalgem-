@@ -3,36 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VELOCITY SCOUT v14.5</title>
+    <title>VELOCITY SCOUT v15.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --bg: #05070a; --card: #0f1216; --accent: #ff00ff; --border: #1e2530; 
+            --bg: #05070a; --card: #0f1216; --border: #1e2530; 
             --text: #f0f3f5; --dim: #8a99af; --l-color: #ff00ff; --success: #00ffa3; --danger: #ff4d4d;
         }
-        *:focus { outline: none !important; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Outfit', sans-serif; }
-        
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Outfit', sans-serif; outline: none !important; }
         body { background: var(--bg); color: var(--text); margin: 0; padding: 10px; min-height: 100vh; }
         .wrapper { width: 100%; max-width: 380px; margin: 0 auto; }
         
+        /* Header & Stats */
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .header h1 { font-size: 18px; font-weight: 900; color: var(--l-color); margin: 0; }
-        
         .dash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
         .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 6px; text-align: center; }
         .st-v { font-family: 'JetBrains Mono'; font-size: 14px; font-weight: 700; color: #fff; }
         .st-l { font-size: 7px; color: var(--dim); text-transform: uppercase; display: block; }
 
+        /* Engine */
         .engine { background: var(--card); border-radius: 15px; padding: 12px; border: 1px solid var(--border); margin-bottom: 15px; }
         .row-label { font-size: 10px; font-weight: 900; color: var(--l-color); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .row-label::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
         
-        /* Dual Team Selection */
         .dual-id { display: grid; grid-template-columns: 1fr 20px 1fr; align-items: center; gap: 5px; margin-bottom: 12px; }
         .id-unit { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 8px; border-bottom: 2px solid var(--l-color); }
         .id-input { width: 100%; background: transparent; border: none; color: #fff; font-weight: 800; font-size: 12px; text-transform: uppercase; text-align: center; }
-        .vs-label { font-size: 9px; font-weight: 900; color: var(--dim); text-align: center; }
 
         .input-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
         .unit { background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; }
@@ -41,26 +38,26 @@
         
         .scan-btn { width: 100%; background: var(--l-color); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 900; font-size: 14px; cursor: pointer; }
 
+        /* Result Card */
         .report-card { 
             background: #111418; border: 1px solid var(--border); border-radius: 12px; 
             padding: 10px; margin-top: 10px; display: grid; grid-template-columns: 45px 1fr 80px; align-items: center; gap: 10px;
             border-left: 3px solid var(--l-color);
         }
         .rep-score { height: 40px; width: 40px; border-radius: 8px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono'; font-size: 13px; font-weight: 700; color: var(--l-color); }
-        .team-display { font-size: 11px; font-weight: 900; color: #fff; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .team-display { font-size: 11px; font-weight: 900; color: #fff; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin:0; }
         .mini-btn { flex: 1; background: #1a1f26; border: 1px solid var(--border); font-size: 14px; padding: 8px 0; border-radius: 6px; cursor: pointer; }
 
+        /* Archive */
         .archive-item { 
             background: #0d1117; border: 1px solid var(--border); padding: 8px 12px; 
             border-radius: 10px; margin-bottom: 6px; display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 10px;
         }
-        .arch-score-box { background: var(--border); color: var(--success); font-family: 'JetBrains Mono'; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 800; }
-        .delete-icon { color: var(--danger); font-size: 14px; cursor: pointer; padding: 5px; opacity: 0.6; }
+        .arch-score-box { background: var(--border); color: var(--success); font-family: 'JetBrains Mono'; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 800; cursor: pointer; }
 
-        .theme-eng { --l-color: #ff00ff; }
-        .theme-esp { --l-color: #ff4b4b; }
-        .theme-ita { --l-color: #0066ff; }
-        .theme-ger { --l-color: #d3010c; }
+        /* Theme Colors */
+        .theme-eng { --l-color: #ff00ff; } .theme-esp { --l-color: #ff4b4b; }
+        .theme-ita { --l-color: #0066ff; } .theme-ger { --l-color: #d3010c; }
         .theme-fra { --l-color: #daff00; }
     </style>
 </head>
@@ -69,7 +66,7 @@
 <div class="wrapper">
     <div class="header">
         <h1>VELOCITY SCOUT</h1>
-        <div style="font-size: 7px; color: var(--dim); cursor:pointer;" onclick="clearAll()">DATABASE RESET</div>
+        <div style="font-size: 7px; color: var(--dim); cursor:pointer;" onclick="clearAll()">DB RESET</div>
     </div>
 
     <div class="dash">
@@ -88,33 +85,30 @@
         </select>
 
         <div class="dual-id">
-            <div class="id-unit">
-                <input list="team-list" id="v-team-h" class="id-input" placeholder="HOME">
-            </div>
-            <div class="vs-label">VS</div>
-            <div class="id-unit">
-                <input list="team-list" id="v-team-a" class="id-input" placeholder="AWAY">
-            </div>
+            <div class="id-unit"><input list="team-list" id="v-team-h" class="id-input" placeholder="EV"></div>
+            <div style="font-size: 9px; color: var(--dim); text-align:center;">VS</div>
+            <div class="id-unit"><input list="team-list" id="v-team-a" class="id-input" placeholder="DEP"></div>
             <datalist id="team-list"></datalist>
         </div>
 
         <div class="row-label">DEF (A)</div>
         <div class="input-grid">
-            <div class="unit"><span class="u-label">Save%</span><input type="number" id="v-save" class="u-input"></div>
-            <div class="unit"><span class="u-label">PPA</span><input type="number" id="v-ppa-a" class="u-input"></div>
+            <div class="unit"><span class="u-label">Save%</span><input type="number" id="v-save" class="u-input" placeholder="0"></div>
+            <div class="unit"><span class="u-label">PPA (A)</span><input type="number" id="v-ppa-a" class="u-input" placeholder="0"></div>
+            <div class="unit" style="grid-column: span 2;"><span class="u-label">SCA (A)</span><input type="number" id="v-sca-a" class="u-input" placeholder="0"></div>
         </div>
-        <div class="row-label">OFF</div>
+
+        <div class="row-label">OFF (F)</div>
         <div class="input-grid">
-            <div class="unit"><span class="u-label">PPA</span><input type="number" id="v-ppa-f" class="u-input"></div>
-            <div class="unit"><span class="u-label">npxG/Sh</span><input type="number" id="v-npx" class="u-input" step="0.01"></div>
+            <div class="unit"><span class="u-label">PPA (F)</span><input type="number" id="v-ppa-f" class="u-input" placeholder="0"></div>
+            <div class="unit"><span class="u-label">npxG/Sh</span><input type="number" id="v-npx" class="u-input" step="0.01" placeholder="0.00"></div>
         </div>
-        <button class="scan-btn" onclick="analyze()">BAŞLAT</button>
+        <button class="scan-btn" onclick="analyze()">ANALİZİ BAŞLAT</button>
     </div>
 
     <div id="feed"></div>
-
     <div class="archive-section">
-        <h2 style="font-size: 10px; color: var(--success); margin:0 0 10px 0;">✅ BAŞARILI ARŞİV</h2>
+        <h2 style="font-size: 10px; color: var(--success); margin: 15px 0 10px 0;">✅ BAŞARILI ANALİZLER</h2>
         <div id="archive-list"></div>
     </div>
 </div>
@@ -124,12 +118,12 @@
         ENG: ["Arsenal", "Aston Villa", "Bournemouth", "Brentford", "Brighton", "Chelsea", "Crystal Palace", "Everton", "Fullham", "Ipswich Town", "Leicester City", "Liverpool", "Man City", "Man Utd", "Newcastle", "Nottm Forest", "Southampton", "Tottenham", "West Ham", "Wolves"],
         ESP: ["Alaves", "Athletic Bilbao", "Atletico Madrid", "Barcelona", "Celta Vigo", "Espanyol", "Getafe", "Girona", "Las Palmas", "Leganes", "Mallorca", "Osasuna", "Rayo Vallecano", "Real Betis", "Real Madrid", "Real Sociedad", "Sevilla", "Valencia", "Valladolid", "Villarreal"],
         ITA: ["Atalanta", "Bologna", "Cagliari", "Como", "Empoli", "Fiorentina", "Genoa", "Inter", "Juventus", "Lazio", "Lecce", "Milan", "Monza", "Napoli", "Parma", "Roma", "Torino", "Udinese", "Venezia", "Verona"],
-        GER: ["Augsburg", "Bayer Leverkusen", "Bayern Munich", "Bochum", "Dortmund", "E. Frankfurt", "FC Heidenheim", "FC St. Pauli", "Freiburg", "Holstein Kiel", "Mainz 05", "M'gladbach", "RB Leipzig", "Stuttgart", "Union Berlin", "Werder Bremen", "Wolfsburg"],
+        GER: ["Augsburg", "Bayer Leverkusen", "Bayern Munich", "Bochum", "Dortmund", "E. Frankfurt", "Heidenheim", "St. Pauli", "Freiburg", "Holstein Kiel", "Mainz 05", "M'gladbach", "RB Leipzig", "Stuttgart", "Union Berlin", "Werder Bremen", "Wolfsburg"],
         FRA: ["Angers", "Auxerre", "Brest", "Le Havre", "Lens", "Lille", "Lyon", "Marseille", "Monaco", "Montpellier", "Nantes", "Nice", "PSG", "Reims", "Rennes", "St-Etienne", "Strasbourg", "Toulouse"]
     };
 
-    let stats = JSON.parse(localStorage.getItem('v145_stats')) || { total: 0, wins: 0 };
-    let archive = JSON.parse(localStorage.getItem('v145_archive')) || [];
+    let stats = JSON.parse(localStorage.getItem('v15_stats')) || { total: 0, wins: 0 };
+    let archive = JSON.parse(localStorage.getItem('v15_archive')) || [];
 
     function updateTeams() {
         const l = document.getElementById('league-select').value;
@@ -138,74 +132,63 @@
     }
 
     function analyze() {
-        const home = document.getElementById('v-team-h').value || 'HOME';
-        const away = document.getElementById('v-team-a').value || 'AWAY';
-        const l = document.getElementById('league-select').value;
-        const d = {
+        const h = document.getElementById('v-team-h').value || 'EV';
+        const a = document.getElementById('v-team-a').value || 'DEP';
+        const data = {
             save: parseFloat(document.getElementById('v-save').value || 0),
             ppaA: parseFloat(document.getElementById('v-ppa-a').value || 0),
+            scaA: parseFloat(document.getElementById('v-sca-a').value || 0),
+            ppaF: parseFloat(document.getElementById('v-ppa-f').value || 0),
             npx: parseFloat(document.getElementById('v-npx').value || 0)
         };
-        if(!d.save || !d.ppaA) return;
+        if(!data.save || !data.ppaA) { alert("Metrikleri doldurun!"); return; }
 
-        const match = Math.floor(Math.random() * 20) + 75; 
-        const signal = Math.floor(match * (d.npx > 0.12 ? 1.1 : 0.9));
+        const matchPct = Math.min(100, Math.round((data.ppaF * 2) + (data.npx * 400) - (data.ppaA * 1.5)));
         const id = Date.now();
 
         const card = document.createElement('div');
-        card.className = `report-card`;
-        card.id = `rep-${id}`;
+        card.className = `report-card`; card.id = `rep-${id}`;
         card.innerHTML = `
-            <div class="rep-score">${match}%</div>
+            <div class="rep-score">${matchPct}%</div>
             <div class="rep-info">
-                <p class="team-display">${home} - ${away}</p>
-                <p style="font-size:9px; color:var(--dim); margin:0;">%${signal} UYUM</p>
+                <p class="team-display">${h} - ${a}</p>
+                <p style="font-size:8px; color:var(--dim); margin:0;">npxG/Sh: ${data.npx} • Save: %${data.save}</p>
             </div>
             <div class="rep-actions">
-                <button class="mini-btn" onclick="moveToArchive('${id}', '${home}', '${away}', '${l}', ${match}, ${signal})">✅</button>
-                <button class="mini-btn" onclick="removeCard('${id}')">❌</button>
-            </div>
-        `;
+                <button class="mini-btn" onclick="moveToArchive('${id}', '${h}', '${a}', ${matchPct})">✅</button>
+                <button class="mini-btn" onclick="this.parentElement.parentElement.remove()">❌</button>
+            </div>`;
         document.getElementById('feed').prepend(card);
     }
 
-    function moveToArchive(id, home, away, league, match, signal) {
-        archive.unshift({ id, home, away, league, match, signal, date: new Date().toLocaleDateString('tr-TR'), result: "MS?" });
-        stats.total++; stats.wins++;
-        saveAndRefresh(); removeCard(id);
+    function moveToArchive(id, h, a, pct) {
+        archive.unshift({ id, teams: `${h} - ${a}`, pct, date: new Date().toLocaleDateString('tr-TR'), res: "MS?" });
+        stats.total++; stats.wins++; saveAndRefresh();
+        document.getElementById(`rep-${id}`).remove();
     }
 
     function updateScore(id) {
-        const newScore = prompt("Maç sonucunu girin:");
-        if(newScore !== null) {
-            const index = archive.findIndex(i => i.id == id);
-            archive[index].result = newScore;
-            saveAndRefresh();
-        }
+        const s = prompt("Skor girin:");
+        if(s) { archive[archive.findIndex(i => i.id == id)].res = s; saveAndRefresh(); }
     }
 
-    function deleteItem(id) {
-        if(confirm("Silinsin mi?")) { archive = archive.filter(i => i.id != id); saveAndRefresh(); }
-    }
-
-    function removeCard(id) { document.getElementById(`rep-${id}`).remove(); }
+    function deleteItem(id) { if(confirm("Silinsin mi?")) { archive = archive.filter(i => i.id != id); saveAndRefresh(); } }
     function saveAndRefresh() {
-        localStorage.setItem('v145_stats', JSON.stringify(stats));
-        localStorage.setItem('v145_archive', JSON.stringify(archive));
+        localStorage.setItem('v15_stats', JSON.stringify(stats));
+        localStorage.setItem('v15_archive', JSON.stringify(archive));
         renderArchive(); updateUI();
     }
 
     function renderArchive() {
-        document.getElementById('archive-list').innerHTML = archive.map(item => `
+        document.getElementById('archive-list').innerHTML = archive.map(i => `
             <div class="archive-item">
-                <div onclick="updateScore(${item.id})">
-                    <span style="font-size:10px; font-weight:900; color:var(--success); text-transform:uppercase;">${item.home} - ${item.away}</span><br>
-                    <span style="font-size:8px; color:var(--dim);">${item.league} • %${item.signal} • ${item.date}</span>
+                <div onclick="updateScore(${i.id})">
+                    <span style="font-size:10px; font-weight:900; color:var(--success);">${i.teams}</span><br>
+                    <span style="font-size:8px; color:var(--dim);">%${i.pct} Uyum • ${i.date}</span>
                 </div>
-                <div class="arch-score-box" onclick="updateScore(${item.id})">${item.result}</div>
-                <div class="delete-icon" onclick="deleteItem(${item.id})">🗑️</div>
-            </div>
-        `).join('');
+                <div class="arch-score-box" onclick="updateScore(${i.id})">${i.res}</div>
+                <div style="color:var(--danger); cursor:pointer;" onclick="deleteItem(${i.id})">🗑️</div>
+            </div>`).join('');
     }
 
     function updateUI() {
@@ -215,8 +198,7 @@
         document.getElementById('st-rate').innerText = '%' + rate;
     }
 
-    function clearAll() { if(confirm("TÜM VERİLER SİLİNSİN Mİ?")) { localStorage.clear(); location.reload(); } }
-
+    function clearAll() { if(confirm("DATABASE SIFIRLANSIN MI?")) { localStorage.clear(); location.reload(); } }
     window.onload = () => { updateTeams(); renderArchive(); updateUI(); };
 </script>
 </body>

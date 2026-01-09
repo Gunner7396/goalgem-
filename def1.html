@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VELOCITY DNA ELITE v11.1</title>
+    <title>VELOCITY DNA ELITE v11.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -11,53 +11,73 @@
             --text: #f0f3f5; --dim: #64748b; --danger: #ff4d4d;
             --l-color: #00ffa3; 
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: all 0.2s ease; }
-        body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; margin: 0; padding: 10px; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 5px 10px; flex-shrink: 0; }
-        .header h1 { font-size: 18px; font-weight: 900; letter-spacing: -0.5px; color: var(--l-color); margin: 0; }
-        .reset-btn { font-size: 8px; font-weight: 800; border: 1px solid var(--dim); padding: 4px 10px; border-radius: 20px; color: var(--dim); cursor: pointer; text-transform: uppercase; }
+        /* Mobil Fix: vh yerine min-height ve esnek yapı */
+        html, body { 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'Outfit', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            min-height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto; /* Tüm sayfanın kaymasına izin ver */
+        }
+        
+        .wrapper { 
+            width: 100%; 
+            max-width: 420px; 
+            margin: 0 auto;
+            padding: 15px;
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; margin-bottom: 10px; }
+        .header h1 { font-size: 18px; font-weight: 900; color: var(--l-color); margin: 0; }
+        .reset-btn { font-size: 8px; font-weight: 800; border: 1px solid var(--dim); padding: 5px 12px; border-radius: 20px; color: var(--dim); cursor: pointer; }
 
-        .dash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0; flex-shrink: 0; }
-        .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px; text-align: center; }
+        .dash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
         .st-v { font-family: 'JetBrains Mono'; font-size: 18px; font-weight: 800; color: #fff; display: block; }
         .st-l { font-size: 7px; color: var(--dim); text-transform: uppercase; font-weight: 800; }
 
-        .league-box { width: 100%; background: #161b22; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; position: relative; border-left: 4px solid var(--l-color); flex-shrink: 0; }
-        #league-select { width: 100%; padding: 14px; background: transparent; border: none; color: #fff; font-weight: 800; font-size: 13px; cursor: pointer; appearance: none; -webkit-appearance: none; }
-        .league-box::after { content: '▼'; position: absolute; right: 15px; top: 15px; font-size: 10px; color: var(--dim); }
+        .league-box { width: 100%; background: #161b22; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; position: relative; border-left: 4px solid var(--l-color); }
+        #league-select { width: 100%; padding: 15px; background: transparent; border: none; color: #fff; font-weight: 800; font-size: 14px; cursor: pointer; appearance: none; -webkit-appearance: none; }
 
-        .engine { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 15px; flex-shrink: 0; }
-        .row-label { font-size: 10px; font-weight: 900; color: var(--l-color); margin-bottom: 10px; letter-spacing: 1px; display: flex; align-items: center; gap: 5px; }
+        .engine { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 15px; margin-bottom: 20px; }
+        .row-label { font-size: 10px; font-weight: 900; color: var(--l-color); margin-bottom: 12px; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
         .row-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
         
-        .input-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
-        .unit { background: #080a0f; border-bottom: 2px solid var(--border); padding: 8px; }
-        .u-label { font-size: 7px; color: var(--dim); font-weight: 800; display: block; margin-bottom: 3px; }
+        .input-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 15px; }
+        .unit { background: #080a0f; border-bottom: 2px solid var(--border); padding: 10px; border-radius: 4px; }
+        .u-label { font-size: 8px; color: var(--dim); font-weight: 800; display: block; margin-bottom: 4px; }
         .u-input { width: 100%; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 16px; font-weight: 700; }
 
-        .scan-btn { width: 100%; background: var(--l-color); color: #000; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-size: 13px; cursor: pointer; letter-spacing: 1px; }
+        .scan-btn { width: 100%; background: var(--l-color); color: #000; border: none; padding: 18px; border-radius: 14px; font-weight: 900; font-size: 14px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
 
-        #feed { flex-grow: 1; overflow-y: auto; margin-top: 15px; padding-bottom: 20px; scrollbar-width: none; }
-        #feed::-webkit-scrollbar { display: none; }
+        /* Raporlar Alanı - Artık sayfa ile beraber kayar */
+        #feed { margin-top: 10px; padding-bottom: 50px; } /* Alt kısımda boşluk bırakıldı */
         
-        .report-card { background: #0d1117; border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 12px; border-top: 4px solid var(--l-color); animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .report-card { background: #0d1117; border: 1px solid var(--border); border-radius: 15px; padding: 18px; margin-bottom: 15px; border-top: 4px solid var(--l-color); animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        .rep-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-        .rep-league { background: #161b22; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; }
+        .rep-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .rep-league { background: #161b22; color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 800; }
         
-        .rep-main { display: flex; align-items: center; gap: 15px; }
-        .rep-gauge { width: 50px; height: 50px; border-radius: 50%; border: 4px solid var(--border); border-top-color: var(--l-color); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; font-family: 'JetBrains Mono'; }
+        .rep-main { display: flex; align-items: center; gap: 20px; }
+        .rep-gauge { width: 55px; height: 55px; border-radius: 50%; border: 4px solid var(--border); border-top-color: var(--l-color); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; font-family: 'JetBrains Mono'; }
         
         .rep-details { flex-grow: 1; }
-        .rep-val { font-size: 20px; font-weight: 900; color: #fff; margin: 0; }
-        .rep-tag { font-size: 8px; color: var(--l-color); font-weight: 800; text-transform: uppercase; }
+        .rep-val { font-size: 22px; font-weight: 900; color: #fff; margin: 0; }
+        .rep-tag { font-size: 9px; color: var(--l-color); font-weight: 800; text-transform: uppercase; }
 
-        .hit-zone { display: flex; gap: 8px; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
-        .hit-btn { flex: 1; background: #161b22; border: 1px solid var(--border); color: #fff; font-size: 9px; font-weight: 800; padding: 8px; border-radius: 8px; cursor: pointer; }
-        .del-btn { color: var(--dim); background: none; border: none; cursor: pointer; font-size: 14px; }
+        .hit-zone { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
+        .hit-btn { flex: 1; background: #161b22; border: 1px solid var(--border); color: #fff; font-size: 10px; font-weight: 800; padding: 12px; border-radius: 10px; cursor: pointer; }
+        .del-btn { color: var(--dim); background: none; border: none; cursor: pointer; font-size: 18px; padding: 5px; }
 
+        /* Temalar */
         .theme-eng { --l-color: #3d195b; }
         .theme-esp { --l-color: #ff4b4b; }
         .theme-ita { --l-color: #0066ff; }
@@ -69,14 +89,14 @@
 
 <div class="wrapper">
     <div class="header">
-        <h1>DNA TERMINAL v11.1</h1>
-        <div class="reset-btn" onclick="resetStats()">Reset Data</div>
+        <h1>DNA TERMINAL v11.2</h1>
+        <div class="reset-btn" onclick="resetStats()">Sıfırla</div>
     </div>
 
     <div class="dash">
-        <div class="stat-box"><span class="st-v" id="st-total">0</span><span class="st-l">Analyses</span></div>
-        <div class="stat-box"><span class="st-v" id="st-rate">%0</span><span class="st-l">Success</span></div>
-        <div class="stat-box"><span class="st-v" id="st-hit">0</span><span class="st-l">Signals</span></div>
+        <div class="stat-box"><span class="st-v" id="st-total">0</span><span class="st-l">Analiz</span></div>
+        <div class="stat-box"><span class="st-v" id="st-rate">%0</span><span class="st-l">Başarı</span></div>
+        <div class="stat-box"><span class="st-v" id="st-hit">0</span><span class="st-l">Sinyal</span></div>
     </div>
 
     <div class="league-box">
@@ -101,14 +121,14 @@
             <div class="unit"><span class="u-label">PPA FOR</span><input type="number" inputmode="decimal" id="v-ppa-f" class="u-input"></div>
             <div class="unit"><span class="u-label">NPXG / SHOT</span><input type="number" inputmode="decimal" id="v-npx" class="u-input" step="0.01"></div>
         </div>
-        <button class="scan-btn" onclick="analyze()">RUN DATA SCAN</button>
+        <button class="scan-btn" onclick="analyze()">VERİYİ TARA</button>
     </div>
 
     <div id="feed"></div>
 </div>
 
 <script>
-    let stats = JSON.parse(localStorage.getItem('vdna_v111_stats')) || { total: 0, wins: 0 };
+    let stats = JSON.parse(localStorage.getItem('vdna_v112_stats')) || { total: 0, wins: 0 };
     const dnaConfig = {
         ENG: { ppaA: 15.5, scaA: 27.0, save: 61.0, ppaF: 12.5, npx: 0.12, theme: 'theme-eng' },
         ESP: { ppaA: 11.5, scaA: 21.0, save: 64.0, ppaF: 10.0, npx: 0.11, theme: 'theme-esp' },
@@ -146,30 +166,39 @@
         card.id = `rep-${id}`;
         card.innerHTML = `
             <div class="rep-top">
-                <span class="rep-league">${l} REPORT</span>
+                <span class="rep-league">${l} RAPORU</span>
                 <button class="del-btn" onclick="deleteRep('${id}')">✕</button>
             </div>
             <div class="rep-main">
                 <div class="rep-gauge">${match}%</div>
                 <div class="rep-details">
-                    <p class="rep-tag">SIGNAL CONFIDENCE</p>
-                    <p class="rep-val">%${signal} TARGETING</p>
+                    <p class="rep-tag">SİNYAL GÜVENİ</p>
+                    <p class="rep-val">%${signal} HEDEFLEME</p>
                 </div>
             </div>
             <div class="hit-zone">
-                <button class="hit-btn" onclick="markHit(this)">MARK AS SUCCESS</button>
+                <button class="hit-btn" onclick="markHit(this)">BAŞARILI İŞARETLE</button>
             </div>
         `;
         document.getElementById('feed').prepend(card);
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         saveFeed();
         document.querySelectorAll('.u-input').forEach(i => i.value = "");
         updateUI();
     }
 
-    function deleteRep(id) { document.getElementById(`rep-${id}`).remove(); saveFeed(); }
-    function markHit(btn) { stats.total++; stats.wins++; localStorage.setItem('vdna_v101_stats', JSON.stringify(stats)); btn.innerText = "HIT CONFIRMED ✓"; btn.style.background = "var(--l-color)"; btn.style.color = "#000"; saveFeed(); updateUI(); }
-    function resetStats() { if(confirm("Clear database?")) { stats = {total:0, wins:0}; localStorage.setItem('vdna_v101_stats', JSON.stringify(stats)); updateUI(); } }
-    function saveFeed() { localStorage.setItem('vdna_v101_feed', document.getElementById('feed').innerHTML); }
+    function deleteRep(id) { document.getElementById(`rep-${id}`).remove(); saveFeed(); updateUI(); }
+    function markHit(btn) { 
+        stats.total++; stats.wins++; 
+        localStorage.setItem('vdna_v112_stats', JSON.stringify(stats)); 
+        btn.innerText = "BAŞARI KAYDEDİLDİ ✓"; 
+        btn.style.background = "var(--l-color)"; 
+        btn.style.color = "#000"; 
+        saveFeed(); 
+        updateUI(); 
+    }
+    function resetStats() { if(confirm("Tüm istatistikler silinsin mi?")) { stats = {total:0, wins:0}; localStorage.setItem('vdna_v112_stats', JSON.stringify(stats)); updateUI(); } }
+    function saveFeed() { localStorage.setItem('vdna_v112_feed', document.getElementById('feed').innerHTML); }
     function updateUI() {
         document.getElementById('st-total').innerText = stats.total;
         document.getElementById('st-hit').innerText = stats.wins;
@@ -178,7 +207,7 @@
     }
 
     window.onload = () => {
-        document.getElementById('feed').innerHTML = localStorage.getItem('vdna_v101_feed') || '';
+        document.getElementById('feed').innerHTML = localStorage.getItem('vdna_v112_feed') || '';
         updateUI();
         applyTheme();
     };

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO V18.6 - ORIGINAL ENGINE + DELETE</title>
+    <title>GOAL-SYNC V19</title>
     <style>
         :root {
             --bg: #05070a; --panel: #0f1217; --accent: #00ffa3; --border: #1e2530;
@@ -15,6 +15,10 @@
         
         .sticky-top { flex-shrink: 0; padding: 10px; border-bottom: 1px solid var(--border); background: var(--bg); z-index: 100; }
         .dash-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-around; text-align: center; position: relative; }
+        
+        /* Marka İsmi Alanı */
+        .brand { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; padding: 2px 10px; border-radius: 20px; font-size: 9px; font-weight: 900; letter-spacing: 1px; }
+
         .stat-val { font-size: 16px; font-weight: 900; color: var(--accent); display: block; }
         .stat-lbl { font-size: 8px; color: var(--dim); text-transform: uppercase; }
         .reset-stats { position: absolute; top: 4px; right: 8px; font-size: 8px; color: var(--red); cursor: pointer; border: 1px solid #ff4d4d33; padding: 2px 6px; border-radius: 4px; font-weight: bold; background: #ff4d4d11; }
@@ -22,7 +26,10 @@
         .main-card { background: var(--panel); border: 1px solid var(--border); padding: 10px; border-radius: 15px; }
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
         .metric-label { grid-column: span 2; font-size: 8px; color: var(--dim); text-align: center; font-weight: 600; margin-top: 4px; text-transform: uppercase; }
+        
+        /* Home & Away Inputları */
         input { width: 100%; background: #080a0c; border: 1px solid var(--border); padding: 8px; border-radius: 8px; color: #fff; text-align: center; font-weight: 700; font-size: 13px; }
+        input::placeholder { color: #334155; font-weight: 400; }
         
         .action-row { display: flex; gap: 8px; margin-top: 10px; }
         #btn { flex: 4; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-weight: 900; cursor: pointer; }
@@ -57,6 +64,7 @@
 <div class="wrapper">
     <div class="sticky-top">
         <div class="dash-card">
+            <div class="brand">GOAL-SYNC</div>
             <span class="reset-stats" onclick="clearAllData()">SİL</span>
             <div><span id="st-total" class="stat-val">0</span><span class="stat-lbl">Analiz</span></div>
             <div><span id="st-rate" class="stat-val" style="color:var(--gold)">%0</span><span class="stat-lbl">Başarı</span></div>
@@ -76,9 +84,11 @@
             </div>
 
             <div class="input-grid">
-                <input type="text" id="t1" placeholder="EV TAKIMI">
-                <input type="text" id="t2" placeholder="DEP TAKIMI">
+                <input type="text" id="t1" placeholder="HOME">
+                <input type="text" id="t2" placeholder="AWAY">
+                
                 <div class="metric-label">KALİTE | ÜRETİM | İLERLEME | GİRİŞ</div>
+                
                 <input type="number" id="t1-q" step="any" inputmode="decimal" placeholder="0.10">
                 <input type="number" id="t2-q" step="any" inputmode="decimal" placeholder="0.10">
                 <input type="number" id="t1-s" inputmode="numeric" placeholder="SCA">
@@ -141,7 +151,6 @@
         const lg = document.getElementById('lg-text').getAttribute('data-league');
         const config = engineData[lg];
         
-        // ORIJINAL MOTOR HESAPLAMASI
         const x1 = parseFloat(document.getElementById('t1-x').value || 0);
         const x2 = parseFloat(document.getElementById('t2-x').value || 0);
         const q1 = parseFloat(document.getElementById('t1-q').value || 0);
@@ -167,8 +176,8 @@
     }
 
     function renderCard(p1, p2, p3, lg, insight, risk) {
-        const t1 = (document.getElementById('t1').value || 'EV').toUpperCase().substring(0,8);
-        const t2 = (document.getElementById('t2').value || 'DEP').toUpperCase().substring(0,8);
+        const t1 = (document.getElementById('t1').value || 'HOME').toUpperCase().substring(0,8);
+        const t2 = (document.getElementById('t2').value || 'AWAY').toUpperCase().substring(0,8);
         const card = document.createElement('div');
         const cardId = "c" + Date.now();
         card.className = `hist-card`;
@@ -198,7 +207,7 @@
     }
 
     function deleteCard(id) {
-        if(confirm("Bu analizi silmek istediğine emin misin?")) {
+        if(confirm("Silmek istediğine emin misin?")) {
             document.getElementById(id).remove();
             saveHistory();
         }

@@ -3,181 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScoreMaster v28</title>
+    <title>ScoreMaster v29</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #050505; color: #fff; font-family: 'Inter', sans-serif; padding: 12px; }
-        .fotmob-dark { background: #111; border: 1px solid #222; border-radius: 12px; }
-        .accent-green { color: #00ff85; }
-        .league-btn { background: #181818; border: 1px solid #333; padding: 12px; border-radius: 8px; font-size: 11px; font-weight: 800; color: #444; }
-        .league-btn.active { border-color: #00ff85; color: #00ff85; background: #00ff8510; }
-        .input-dark { background: #1a1a1a; border: 1px solid #252525; border-radius: 8px; padding: 12px; text-align: center; color: white; font-weight: 700; outline: none; font-size: 14px; width: 100%; }
-        .res-card { background: #121212; border: 1px solid #252525; border-radius: 10px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #333; }
-        .status-dot { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; border: 1px solid #333; cursor: pointer; }
-        .dot-w.active { background: #00ff85; color: #000; border-color: #00ff85; }
-        .dot-l.active { background: #ff4b4b; color: #fff; border-color: #ff4b4b; }
-        .limit-alert { font-size: 7px; color: #ffaa00; font-weight: 900; background: #ffaa0010; padding: 2px 5px; border-radius: 3px; border: 1px solid #ffaa0020; }
+        :root { --accent: #00ff85; --bg: #050505; }
+        body { background-color: var(--bg); color: #fff; font-family: 'Inter', sans-serif; padding: 12px; transition: 0.5s; }
+        
+        /* Lig Temaları */
+        body.theme-PL { --accent: #3d195d; } /* Premier League Purple */
+        body.theme-LL { --accent: #efb810; } /* La Liga Gold */
+        body.theme-SA { --accent: #008fd7; } /* Serie A Blue */
+        body.theme-BL { --accent: #d20515; } /* Bundesliga Red */
+        body.theme-L1 { --accent: #dae025; } /* Ligue 1 Lime */
+
+        .fotmob-dark { background: #111; border: 1px solid #222; border-radius: 16px; position: relative; overflow: hidden; }
+        .fotmob-dark::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent); }
+        
+        .league-box { background: #181818; border: 1px solid #333; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-weight: 900; color: #444; transition: 0.3s; cursor: pointer; }
+        .league-box.active { border-color: var(--accent); color: var(--accent); background: #ffffff05; box-shadow: inset 0 0 15px var(--accent); }
+        
+        .input-dark { background: #1a1a1a; border: 1px solid #252525; border-radius: 8px; padding: 10px; text-align: center; color: white; font-weight: 700; outline: none; width: 100%; font-size: 14px; }
+        .input-dark:focus { border-color: var(--accent); }
+
+        .archive-scroll { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 12px; scroll-snap-type: x mandatory; }
+        .archive-card { min-width: 280px; background: #121212; border: 1px solid #222; border-radius: 12px; padding: 12px; scroll-snap-align: start; }
+        
+        .btn-main { background: var(--accent); color: #000; padding: 14px; border-radius: 12px; font-weight: 900; width: 100%; text-transform: uppercase; letter-spacing: 1px; }
+        ::-webkit-scrollbar { height: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
     </style>
 </head>
-<body class="pb-36">
+<body class="theme-PL pb-40">
 
-    <div class="flex justify-between items-center mb-5 px-1">
-        <h1 class="text-2xl font-black italic tracking-tighter uppercase">SCORE<span class="accent-green">MASTER</span> <small class="text-[9px] opacity-20">V28</small></h1>
-        <div class="text-right"><span id="wr" class="text-2xl font-black accent-green">0%</span><p class="text-[8px] text-gray-500 uppercase font-black tracking-widest">SUCCESS</p></div>
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-black italic leading-none">SCORE<span style="color: var(--accent)">MASTER</span></h1>
+            <p id="league-name" class="text-[10px] font-bold opacity-40 uppercase tracking-widest">Premier League</p>
+        </div>
+        <div onclick="resetStats()" class="text-right cursor-pointer group">
+            <span id="wr" class="text-2xl font-black" style="color: var(--accent)">0%</span>
+            <p class="text-[8px] text-gray-600 font-black group-hover:text-red-500 transition">SIFIRLA (W/R)</p>
+        </div>
     </div>
 
-    <div class="grid grid-cols-5 gap-2 mb-5">
-        <button onclick="setL('PL', this)" id="btn-PL" class="league-btn active">PL</button>
-        <button onclick="setL('LL', this)" id="btn-LL" class="league-btn">LL</button>
-        <button onclick="setL('SA', this)" id="btn-SA" class="league-btn">SA</button>
-        <button onclick="setL('BL', this)" id="btn-BL" class="league-btn">BL</button>
-        <button onclick="setL('L1', this)" id="btn-L1" class="league-btn">L1</button>
+    <div class="grid grid-cols-5 gap-2 mb-6">
+        <div onclick="setL('PL')" id="box-PL" class="league-box active">PL</div>
+        <div onclick="setL('LL')" id="box-LL" class="league-box">LL</div>
+        <div onclick="setL('SA')" id="box-SA" class="league-box">SA</div>
+        <div onclick="setL('BL')" id="box-BL" class="league-box">BL</div>
+        <div onclick="setL('L1')" id="box-L1" class="league-box">L1</div>
     </div>
 
-    <div class="fotmob-dark p-5 mb-6 shadow-2xl">
+    <div class="fotmob-dark p-5 mb-8 shadow-2xl">
         <div class="flex gap-4 mb-6">
-            <input id="hT" oninput="saveInputs()" placeholder="HOME TEAM" class="w-1/2 bg-transparent border-b border-white/5 py-2 font-black uppercase outline-none text-sm italic">
-            <input id="aT" oninput="saveInputs()" placeholder="AWAY TEAM" class="w-1/2 bg-transparent border-b border-white/5 py-2 font-black uppercase outline-none text-sm text-right italic">
+            <input id="hT" placeholder="EV SAHİBİ" class="w-1/2 bg-transparent border-b border-white/5 py-2 font-black uppercase outline-none text-xs italic">
+            <input id="aT" placeholder="DEPLASMAN" class="w-1/2 bg-transparent border-b border-white/5 py-2 font-black uppercase outline-none text-xs text-right italic">
         </div>
         <div class="grid grid-cols-3 gap-3 mb-6">
-            <input type="number" step="0.01" id="h_xg" oninput="saveInputs()" class="input-dark" placeholder="npxG">
-            <span class="text-[8px] text-gray-600 font-black text-center self-center uppercase italic">Stats Matrix</span>
-            <input type="number" step="0.01" id="a_xg" oninput="saveInputs()" class="input-dark" placeholder="npxG">
-            <input type="number" id="h_ppa" oninput="saveInputs()" class="input-dark" placeholder="PPA">
-            <span class="text-[8px] text-gray-400 font-bold text-center self-center uppercase opacity-20 italic">vs</span>
-            <input type="number" id="a_ppa" oninput="saveInputs()" class="input-dark" placeholder="PPA">
-            <input type="number" id="h_sca" oninput="saveInputs()" class="input-dark" placeholder="SCA">
-            <span class="text-[8px] text-gray-400 font-bold text-center self-center uppercase opacity-20 italic">vs</span>
-            <input type="number" id="a_sca" oninput="saveInputs()" class="input-dark" placeholder="SCA">
-            <input type="number" id="h_pr" oninput="saveInputs()" class="input-dark" placeholder="PrgR">
-            <span class="text-[8px] text-gray-400 font-bold text-center self-center uppercase opacity-20 italic">vs</span>
-            <input type="number" id="a_pr" oninput="saveInputs()" class="input-dark" placeholder="PrgR">
+            <input type="number" step="0.01" id="h_xg" class="input-dark" placeholder="npxG">
+            <span class="text-[7px] text-gray-600 font-black text-center self-center uppercase">npxG/Sh</span>
+            <input type="number" step="0.01" id="a_xg" class="input-dark" placeholder="npxG">
+            <input type="number" id="h_ppa" class="input-dark" placeholder="PPA">
+            <span class="text-[7px] text-gray-400 font-bold text-center self-center opacity-20">PPA</span>
+            <input type="number" id="a_ppa" class="input-dark" placeholder="PPA">
+            <input type="number" id="h_sca" class="input-dark" placeholder="SCA">
+            <span class="text-[7px] text-gray-400 font-bold text-center self-center opacity-20">SCA</span>
+            <input type="number" id="a_sca" class="input-dark" placeholder="SCA">
+            <input type="number" id="h_pr" class="input-dark" placeholder="PrgR">
+            <span class="text-[7px] text-gray-400 font-bold text-center self-center opacity-20">PrgR</span>
+            <input type="number" id="a_pr" class="input-dark" placeholder="PrgR">
         </div>
-        <button onclick="calculate()" class="w-full bg-[#00ff85] text-black py-4 rounded-xl font-black text-xs uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-green-500/20">ANALİZİ KAYDET</button>
+        <button onclick="calculate()" class="btn-main">Analizi Kaydet</button>
     </div>
 
-    <div id="stack" class="space-y-4"></div>
+    <h2 class="text-[10px] font-black uppercase mb-3 opacity-30 tracking-widest pl-1">Maç Arşivi</h2>
+    <div id="archive" class="archive-scroll"></div>
 
-    <div class="fixed bottom-0 left-0 w-full p-4 bg-black/90 backdrop-blur-md border-t border-white/5 flex gap-3">
-        <button onclick="clearInputs()" class="flex-1 py-4 text-[10px] font-black uppercase text-gray-500 border border-gray-800 rounded-xl">Inputları Sil</button>
-        <button onclick="clearStack()" class="flex-1 py-4 text-[10px] font-black uppercase text-red-900 border border-red-950/20 rounded-xl">Analizleri Sil</button>
+    <div class="fixed bottom-0 left-0 w-full p-4 bg-black/90 backdrop-blur-md border-t border-white/5 flex gap-2">
+        <button onclick="clearInputs()" class="flex-1 py-3 text-[9px] font-black uppercase text-gray-500 border border-white/5 rounded-lg">Temizle</button>
+        <button onclick="clearArchive()" class="flex-1 py-3 text-[9px] font-black uppercase text-red-900 border border-red-950/20 rounded-lg">Arşivi Sil</button>
     </div>
 
     <script>
         const BARAJ = {
-            PL: { low: [0.09, 7.5, 18.5, 38], high: [0.12, 11, 25, 52] },
-            LL: { low: [0.08, 6.0, 16.0, 32], high: [0.11, 9, 22, 46] },
-            SA: { low: [0.08, 6.5, 15.5, 30], high: [0.10, 9.5, 21, 44] },
-            BL: { low: [0.11, 9.0, 22.0, 45], high: [0.14, 13, 28, 58] },
-            L1: { low: [0.09, 7.0, 17.5, 34], high: [0.11, 10, 23, 48] }
+            PL: { name: 'Premier League', low: [0.09, 7.5, 18.5, 38], high: [0.12, 11, 25, 52] },
+            LL: { name: 'La Liga', low: [0.08, 6.0, 16.0, 32], high: [0.11, 9, 22, 46] },
+            SA: { name: 'Serie A', low: [0.08, 6.5, 15.5, 30], high: [0.10, 9.5, 21, 44] },
+            BL: { name: 'Bundesliga', low: [0.11, 9.0, 22.0, 45], high: [0.14, 13, 28, 58] },
+            L1: { name: 'Ligue 1', low: [0.09, 7.0, 17.5, 34], high: [0.11, 10, 23, 48] }
         };
 
-        let curL = localStorage.getItem('sm_curL') || 'PL';
+        let curL = 'PL';
 
-        function setL(c, b) {
-            curL = c;
-            localStorage.setItem('sm_curL', c);
-            document.querySelectorAll('.league-btn').forEach(btn => btn.classList.remove('active'));
-            b.classList.add('active');
-        }
-
-        function saveInputs() {
-            const ids = ['hT','aT','h_xg','a_xg','h_ppa','a_ppa','h_sca','a_sca','h_pr','a_pr'];
-            ids.forEach(id => localStorage.setItem('sm_'+id, document.getElementById(id).value));
-        }
-
-        function loadInputs() {
-            const ids = ['hT','aT','h_xg','a_xg','h_ppa','a_ppa','h_sca','a_sca','h_pr','a_pr'];
-            ids.forEach(id => document.getElementById(id).value = localStorage.getItem('sm_'+id) || '');
-            document.getElementById('btn-'+curL).classList.add('active');
+        function setL(l) {
+            curL = l;
+            document.body.className = 'theme-' + l;
+            document.querySelectorAll('.league-box').forEach(b => b.classList.remove('active'));
+            document.getElementById('box-' + l).classList.add('active');
+            document.getElementById('league-name').innerText = BARAJ[l].name;
         }
 
         function calculate() {
+            const hN = document.getElementById('hT').value || 'EV';
+            const aN = document.getElementById('aT').value || 'DEP';
             const hVal = [document.getElementById('h_xg').value, document.getElementById('h_ppa').value, document.getElementById('h_sca').value, document.getElementById('h_pr').value];
             const aVal = [document.getElementById('a_xg').value, document.getElementById('a_ppa').value, document.getElementById('a_sca').value, document.getElementById('a_pr').value];
-            if(hVal.some(v => v === "")) return;
             
+            if(hVal.some(v => v === "")) return;
             const avg = hVal.map((v, i) => (parseFloat(v) + parseFloat(aVal[i])) / 2);
-            const b = BARAJ[curL];
+            
             let score = 0; let warns = [];
-
             avg.forEach((val, i) => {
-                if(val > b.low[i]) score += 1;
-                if(val > b.high[i]) score += 1;
-                if(val > b.high[i] * 1.3) warns.push(["xG","PPA","SCA","PrgR"][i] + "↑");
+                if(val > BARAJ[curL].low[i]) score++;
+                if(val > BARAJ[curL].high[i]) score++;
+                if(val > BARAJ[curL].high[i] * 1.3) warns.push(["xG","PPA","SCA","PR"][i]+"↑");
             });
 
             let res, p1, p2, p3;
-            if(score <= 2) { res="1.5 ALT"; p1=80; p2=15; p3=5; }
+            if(score <= 2) { res="1.5 ALT"; p1=85; p2=10; p3=5; }
             else if(score <= 5) { res="TAM 2.0"; p1=15; p2=70; p3=15; }
             else { res="TAM 3.0"; p1=5; p2=20; p3=75; }
 
-            // Lig Karakteri Etkisi
-            if(curL === 'SA' || curL === 'LL') { p3 += 4; p2 -= 4; }
-
             const html = `
-                <div class="res-card" style="border-left-color: ${res==='TAM 3.0'?'#00ff85':'#333'}">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <span class="text-[9px] font-black accent-green bg-green-500/10 px-2 py-0.5 rounded border border-green-500/20 mr-2 uppercase">${curL}</span>
-                            <span class="text-[11px] font-bold uppercase italic">${document.getElementById('hT').value || 'H'}-${document.getElementById('aT').value || 'A'}</span>
-                            <div class="mt-2 flex flex-wrap gap-1">${warns.map(w => `<span class="limit-alert">⚠️ ${w}</span>`).join('')}</div>
-                        </div>
-                        <div class="flex gap-2">
-                            <div onclick="tgl(this,'w')" class="status-dot dot-w">W</div>
-                            <div onclick="tgl(this,'l')" class="status-dot dot-l">L</div>
-                            <button onclick="this.closest('.res-card').remove(); saveStack();" class="status-dot border-none opacity-20 text-lg">×</button>
-                        </div>
+                <div class="archive-card border-t-2" style="border-top-color: var(--accent)">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-[8px] font-black uppercase opacity-40">${curL} Analiz</span>
+                        <button onclick="this.closest('.archive-card').remove(); save();" class="text-red-500 opacity-30">×</button>
                     </div>
-                    <div class="flex justify-between items-end">
-                        <div class="flex-1 pr-6">
-                            <div class="flex justify-between text-[11px] font-black mb-1">
-                                <span class="accent-green italic uppercase tracking-tighter">${res}</span>
-                                <span class="opacity-40 text-[9px]">Skor: ${score}/8</span>
-                            </div>
-                            <div class="h-1 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-[#00ff85]" style="width:${res==='1.5 ALT'?p1:(res==='TAM 2.0'?p2:p3)}%; transition:1s;"></div></div>
-                        </div>
-                        <div class="text-[8px] text-gray-500 font-bold uppercase leading-tight text-right">1.5A: ${p1}%<br>T2.0: ${p2}%<br>T3.0: ${p3}%</div>
+                    <div class="text-[10px] font-black uppercase mb-3 truncate">${hN} vs ${aN}</div>
+                    <div class="flex justify-between items-center bg-white/5 p-2 rounded mb-3">
+                        <span class="text-xs font-black italic" style="color: var(--accent)">${res}</span>
+                        <span class="text-[9px] font-bold opacity-30">Skor: ${score}/8</span>
+                    </div>
+                    <input placeholder="Maç Sonucu (Örn: 2-1)" class="w-full bg-black/50 border border-white/5 rounded p-2 text-[9px] text-center mb-3 outline-none focus:border-white/20">
+                    <div class="flex gap-1 justify-center">
+                        <button onclick="tgl(this,'w')" class="w-full py-2 bg-white/5 rounded text-[8px] font-black uppercase hover:bg-green-500/20">Win</button>
+                        <button onclick="tgl(this,'l')" class="w-full py-2 bg-white/5 rounded text-[8px] font-black uppercase hover:bg-red-500/20">Loss</button>
                     </div>
                 </div>`;
-            document.getElementById('stack').insertAdjacentHTML('afterbegin', html);
-            saveStack();
+            document.getElementById('archive').insertAdjacentHTML('afterbegin', html);
+            save();
         }
 
-        function tgl(b, t) {
-            b.parentElement.querySelectorAll('.status-dot').forEach(d => d.classList.remove('active'));
-            b.classList.add('active'); saveStack(); updateWR();
-        }
-
-        function saveStack() {
-            localStorage.setItem('sm_stack', document.getElementById('stack').innerHTML);
-            updateWR();
+        function tgl(btn, type) {
+            btn.parentElement.querySelectorAll('button').forEach(b => { b.style.background = ''; b.style.color = ''; });
+            btn.style.background = type === 'w' ? '#00ff85' : '#ff4b4b';
+            btn.style.color = '#000';
+            save(); updateWR();
         }
 
         function updateWR() {
-            const w = document.querySelectorAll('.dot-w.active').length;
-            const total = document.querySelectorAll('.dot-w.active, .dot-l.active').length;
+            const cards = document.querySelectorAll('.archive-card');
+            let w = 0, total = 0;
+            cards.forEach(c => {
+                const winBtn = c.querySelector('button[onclick*="\'w\'"]');
+                if(winBtn.style.background === 'rgb(0, 255, 133)') { w++; total++; }
+                else if(c.querySelector('button[onclick*="\'l\'"]').style.background === 'rgb(255, 75, 75)') { total++; }
+            });
             document.getElementById('wr').innerText = total > 0 ? Math.round((w/total)*100) + "%" : "0%";
         }
 
-        function clearInputs() {
-            const ids = ['hT','aT','h_xg','a_xg','h_ppa','a_ppa','h_sca','a_sca','h_pr','a_pr'];
-            ids.forEach(id => { document.getElementById(id).value = ''; localStorage.removeItem('sm_'+id); });
-        }
-
-        function clearStack() {
-            if(confirm("Tüm analizler silinsin mi?")) {
-                document.getElementById('stack').innerHTML = '';
-                localStorage.removeItem('sm_stack');
-                updateWR();
-            }
-        }
-
-        window.onload = () => {
-            loadInputs();
-            document.getElementById('stack').innerHTML = localStorage.getItem('sm_stack') || '';
-            updateWR();
-        };
+        function resetStats() { if(confirm("Tüm başarı istatistikleri sıfırlansın mı?")) { localStorage.clear(); location.reload(); } }
+        function save() { localStorage.setItem('sm_archive', document.getElementById('archive').innerHTML); }
+        function clearInputs() { document.querySelectorAll('.input-dark, #hT, #aT').forEach(i => i.value = ''); }
+        function clearArchive() { if(confirm("Arşiv silinsin mi?")) { document.getElementById('archive').innerHTML = ''; save(); updateWR(); } }
+        window.onload = () => { document.getElementById('archive').innerHTML = localStorage.getItem('sm_archive') || ''; updateWR(); };
     </script>
 </body>
 </html>

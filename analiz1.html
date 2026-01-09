@@ -3,109 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Precision v41</title>
+    <title>v41.1 Precision</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; overflow-x: hidden; }
-        .glass { background: rgba(28, 28, 30, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); }
-        .input-box { background: #1c1c1e; border: none; border-radius: 12px; padding: 12px; color: #fff; font-weight: 600; text-align: center; width: 100%; font-size: 15px; transition: 0.3s; }
-        .input-box:focus { background: #2c2c2e; outline: 2px solid #30d158; }
-        .btn-lig { padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #1c1c1e; color: #8e8e93; transition: 0.3s; white-space: nowrap; }
-        .btn-lig.active { background: #fff; color: #000; }
-        .analyze-btn { background: #30d158; color: #000; font-weight: 800; border-radius: 16px; padding: 18px; width: 100%; transition: 0.2s; box-shadow: 0 10px 20px rgba(48, 209, 88, 0.2); }
-        .analyze-btn:active { transform: scale(0.96); opacity: 0.8; }
-        .result-card { border-radius: 24px; padding: 20px; margin-top: 15px; position: relative; overflow: hidden; }
-        .energy-bar-bg { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
-        .energy-bar-fill { height: 100%; border-radius: 3px; transition: 1s ease-out; }
+        body { background-color: #000; color: #fff; font-family: -apple-system, system-ui, sans-serif; }
+        .glass { background: #1c1c1e; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; }
+        .input-box { background: #2c2c2e; border: none; border-radius: 10px; padding: 10px; color: #fff; font-weight: 700; text-align: center; width: 100%; font-size: 14px; }
+        .btn-lig { padding: 6px 12px; border-radius: 15px; font-size: 10px; font-weight: 800; background: #1c1c1e; color: #666; transition: 0.2s; white-space: nowrap; border: 1px solid #2c2c2e; }
+        .btn-lig.active { background: #30d158; color: #000; border-color: #30d158; }
+        .analyze-btn { background: #30d158; color: #000; font-weight: 900; border-radius: 14px; padding: 14px; width: 100%; transition: 0.2s; }
+        .mini-card { background: #1c1c1e; border-radius: 18px; padding: 15px; margin-top: 12px; border: 1px solid rgba(255,255,255,0.1); }
+        .stat-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .pct-bar { height: 4px; background: #333; border-radius: 2px; overflow: hidden; width: 60px; }
+        .pct-fill { height: 100%; border-radius: 2px; }
     </style>
 </head>
-<body class="p-4">
+<body class="p-3">
 
-    <div class="flex justify-between items-center mb-6 mt-2">
-        <h1 class="text-xl font-bold tracking-tight">V41<span class="text-green-500">.PRECISION</span></h1>
-        <div onclick="location.reload()" class="bg-[#1c1c1e] px-4 py-2 rounded-full text-[10px] font-bold text-gray-400">SIFIRLA</div>
+    <div class="flex justify-between items-center mb-4 px-1">
+        <h1 class="text-lg font-black tracking-tighter text-white">V41.1<span class="text-green-500">.PRC</span></h1>
+        <button onclick="location.reload()" class="text-[10px] font-bold text-gray-500 bg-[#1c1c1e] px-3 py-1 rounded-full">TEMİZLE</button>
     </div>
 
-    <div class="flex gap-2 overflow-x-auto no-scrollbar mb-6 pb-2">
-        <button onclick="setL('PL')" id="l-PL" class="btn-lig active">PREMIER LEAGUE</button>
-        <button onclick="setL('LL')" id="l-LL" class="btn-lig">LA LIGA</button>
-        <button onclick="setL('SA')" id="l-SA" class="btn-lig">SERIE A</button>
-        <button onclick="setL('BL')" id="l-BL" class="btn-lig">BUNDESLIGA</button>
-        <button onclick="setL('L1')" id="l-L1" class="btn-lig">LIGUE 1</button>
+    <div class="flex gap-1 overflow-x-auto no-scrollbar mb-4">
+        <button onclick="setL('PL')" id="l-PL" class="btn-lig active">PL</button>
+        <button onclick="setL('LL')" id="l-LL" class="btn-lig">LL</button>
+        <button onclick="setL('SA')" id="l-SA" class="btn-lig">SA</button>
+        <button onclick="setL('BL')" id="l-BL" class="btn-lig">BL</button>
+        <button onclick="setL('L1')" id="l-L1" class="btn-lig">L1</button>
     </div>
 
-    <div class="glass p-5 rounded-[28px] mb-4">
-        <div class="grid grid-cols-2 gap-4 mb-6">
-            <input id="hN" placeholder="EV SAHİBİ" class="bg-transparent border-b border-gray-800 p-2 text-sm font-bold uppercase outline-none">
-            <input id="aN" placeholder="DEPLASMAN" class="bg-transparent border-b border-gray-800 p-2 text-sm font-bold uppercase text-right outline-none">
+    <div class="glass p-4 mb-2">
+        <div class="grid grid-cols-2 gap-8 mb-4 px-2">
+            <input id="hN" placeholder="EV" class="bg-transparent border-b border-gray-800 pb-1 text-sm font-black uppercase outline-none">
+            <input id="aN" placeholder="DEP" class="bg-transparent border-b border-gray-800 pb-1 text-sm font-black uppercase text-right outline-none">
         </div>
 
-        <div class="space-y-4">
-            <div class="grid grid-cols-2 gap-3">
-                <input type="number" step="0.01" id="h_xg" class="input-box" placeholder="EV npxG">
-                <input type="number" step="0.01" id="a_xg" class="input-box" placeholder="DEP npxG">
+        <div class="space-y-2">
+            <div class="grid grid-cols-2 gap-2">
+                <input type="number" step="0.01" id="h_xg" class="input-box" placeholder="npxG">
+                <input type="number" step="0.01" id="a_xg" class="input-box" placeholder="npxG">
             </div>
-            <div class="grid grid-cols-2 gap-3">
-                <input type="number" id="h_ppa" class="input-box" placeholder="EV PPA">
-                <input type="number" id="a_ppa" class="input-box" placeholder="DEP PPA">
+            <div class="grid grid-cols-2 gap-2">
+                <input type="number" id="h_ppa" class="input-box" placeholder="PPA">
+                <input type="number" id="a_ppa" class="input-box" placeholder="PPA">
             </div>
-            <div class="grid grid-cols-2 gap-3">
-                <input type="number" id="h_sca" class="input-box" placeholder="EV SCA">
-                <input type="number" id="a_sca" class="input-box" placeholder="DEP SCA">
+            <div class="grid grid-cols-2 gap-2">
+                <input type="number" id="h_sca" class="input-box" placeholder="SCA">
+                <input type="number" id="a_sca" class="input-box" placeholder="SCA">
             </div>
-            <div class="grid grid-cols-2 gap-3">
-                <input type="number" id="h_pr" class="input-box" placeholder="EV PrgR">
-                <input type="number" id="a_pr" class="input-box" placeholder="DEP PrgR">
+            <div class="grid grid-cols-2 gap-2">
+                <input type="number" id="h_pr" class="input-box" placeholder="PrgR">
+                <input type="number" id="a_pr" class="input-box" placeholder="PrgR">
             </div>
         </div>
 
-        <button onclick="calculate()" class="analyze-btn mt-8">ANALİZ ET</button>
+        <button onclick="calc()" class="analyze-btn mt-5 uppercase text-xs tracking-tighter">ANALİZ ET</button>
     </div>
 
     <div id="res"></div>
 
     <script>
-        const BARAJ = { PL: [0.11, 22, 48, 95], LL: [0.09, 16, 38, 75], SA: [0.09, 17, 38, 75], BL: [0.13, 24, 50, 105], L1: [0.10, 18, 42, 85] };
-        let curL = 'PL';
-        function setL(l){ curL=l; document.querySelectorAll('.btn-lig').forEach(b=>b.classList.remove('active')); document.getElementById('l-'+l).classList.add('active'); }
+        const B = { PL:[.11,22,48,95], LL:[.09,16,38,75], SA:[.09,17,38,75], BL:[.13,24,50,105], L1:[.1,18,42,85] };
+        let cur='PL';
+        function setL(l){cur=l; document.querySelectorAll('.btn-lig').forEach(b=>b.classList.remove('active')); document.getElementById('l-'+l).classList.add('active');}
 
-        function calculate() {
-            const h = [document.getElementById('h_xg').value, document.getElementById('h_ppa').value, document.getElementById('h_sca').value, document.getElementById('h_pr').value].map(Number);
-            const a = [document.getElementById('a_xg').value, document.getElementById('a_ppa').value, document.getElementById('a_sca').value, document.getElementById('a_pr').value].map(Number);
-            const b = BARAJ[curL];
+        function calc() {
+            const h=[+document.getElementById('h_xg').value, +document.getElementById('h_ppa').value, +document.getElementById('h_sca').value, +document.getElementById('h_pr').value];
+            const a=[+document.getElementById('a_xg').value, +document.getElementById('a_ppa').value, +document.getElementById('a_sca').value, +document.getElementById('a_pr').value];
+            const b=B[cur];
             
-            // Hassas Ağırlıklı Hesaplama
             const score = Math.round(((h[0]+a[0])/2/b[0])*40 + ((h[1]+a[1])/b[1])*30 + ((h[2]+a[2])/b[2])*20 + ((h[3]+a[3])/b[3])*10);
 
-            let p="1.5 ALT", c="#8e8e93", s="DÜŞÜK";
-            if(score > 45){ p="1.5 ÜST"; c="#32ade6"; s="ORTA"; }
-            if(score > 75){ p="TAM 2.0"; c="#ff9f0a"; s="YÜKSEK"; }
-            if(score > 95){ p="TAM 3.0"; c="#30d158"; s="KRİTİK"; }
-            if(score >= 110){ p="3.5 ÜST"; c="#ff453a"; s="TEHLİKE"; }
+            // Olasılık Hesaplama Mantığı
+            let p1 = Math.max(0, 100 - score); // 1.5 Alt ihtimali
+            let p2 = Math.min(score, 110 - Math.abs(score-85)); // 2.5 Alt ihtimali
+            let p3 = Math.max(0, score - 85); // 3.5 Üst ihtimali
+            
+            // Normalize ve % Dağılım
+            const total = p1 + p2 + p3;
+            const pct1 = Math.round((p1/total)*100);
+            const pct2 = Math.round((p2/total)*100);
+            const pct3 = Math.round((p3/total)*100);
 
-            const html = `
-                <div class="glass result-card border-l-4" style="border-left-color: ${c}">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-[10px] font-black text-gray-500 uppercase">${document.getElementById('hN').value||'MAÇ'} ANALİZİ</span>
-                        <span class="text-[10px] font-black px-2 py-1 rounded bg-white/5" style="color: ${c}">${s}</span>
+            let main = "1.5 ÜST", clr = "#30d158";
+            if(score < 50) { main="1.5 ALT"; clr="#8e8e93"; }
+            else if(score > 110) { main="3.5 ÜST"; clr="#ff453a"; }
+
+            document.getElementById('res').innerHTML = `
+                <div class="mini-card">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-[14px] font-black italic" style="color:${clr}">${main}</span>
+                        <span class="text-[14px] font-black text-white">%${score} ENERJİ</span>
                     </div>
-                    <div class="flex justify-between items-end mb-4">
-                        <div>
-                            <p class="text-[11px] text-gray-500 font-bold uppercase">Tahmin</p>
-                            <h2 class="text-3xl font-black italic" style="color: ${c}">${p}</h2>
+                    <div class="space-y-1">
+                        <div class="stat-line text-[10px] font-bold text-gray-400">
+                            <span>0-1 GOL</span>
+                            <div class="flex items-center gap-2"><span>%${pct1}</span><div class="pct-bar"><div class="pct-fill bg-gray-600" style="width:${pct1}%"></div></div></div>
                         </div>
-                        <div class="text-right">
-                            <p class="text-[11px] text-gray-500 font-bold uppercase">Enerji</p>
-                            <h2 class="text-2xl font-black text-white">%${score}</h2>
+                        <div class="stat-line text-[10px] font-bold text-gray-100">
+                            <span>2-3 GOL</span>
+                            <div class="flex items-center gap-2"><span>%${pct2}</span><div class="pct-bar"><div class="pct-fill bg-green-500" style="width:${pct2}%"></div></div></div>
+                        </div>
+                        <div class="stat-line text-[10px] font-bold text-red-500">
+                            <span>4+ GOL</span>
+                            <div class="flex items-center gap-2"><span>%${pct3}</span><div class="pct-bar"><div class="pct-fill bg-red-600" style="width:${pct3}%"></div></div></div>
                         </div>
                     </div>
-                    <div class="energy-bar-bg mb-2">
-                        <div class="energy-bar-fill" style="width: ${Math.min(score,100)}%; background: ${c}"></div>
-                    </div>
-                    <p class="text-[9px] text-gray-600 font-medium">* %110 üstü 3.5 ÜST riskidir. Şu an güvenli bölgedesiniz.</p>
                 </div>`;
-            document.getElementById('res').innerHTML = html;
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
     </script>
 </body>

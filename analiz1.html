@@ -3,94 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScoreMaster v29</title>
+    <title>ScoreMaster v32</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --accent: #00ff85; --bg: #050505; }
-        body { background-color: var(--bg); color: #fff; font-family: 'Inter', sans-serif; padding: 12px; transition: 0.5s; }
+        body { background-color: var(--bg); color: #fff; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         
-        /* Lig Temaları */
-        body.theme-PL { --accent: #3d195d; } /* Premier League Purple */
-        body.theme-LL { --accent: #efb810; } /* La Liga Gold */
-        body.theme-SA { --accent: #008fd7; } /* Serie A Blue */
-        body.theme-BL { --accent: #d20515; } /* Bundesliga Red */
-        body.theme-L1 { --accent: #dae025; } /* Ligue 1 Lime */
+        .theme-PL { --accent: #3d195d; } .theme-LL { --accent: #efb810; }
+        .theme-SA { --accent: #008fd7; } .theme-BL { --accent: #d20515; }
+        .theme-L1 { --accent: #dae025; }
 
-        .fotmob-dark { background: #111; border: 1px solid #222; border-radius: 16px; position: relative; overflow: hidden; }
-        .fotmob-dark::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent); }
-        
-        .league-box { background: #181818; border: 1px solid #333; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-weight: 900; color: #444; transition: 0.3s; cursor: pointer; }
-        .league-box.active { border-color: var(--accent); color: var(--accent); background: #ffffff05; box-shadow: inset 0 0 15px var(--accent); }
-        
-        .input-dark { background: #1a1a1a; border: 1px solid #252525; border-radius: 8px; padding: 10px; text-align: center; color: white; font-weight: 700; outline: none; width: 100%; font-size: 14px; }
-        .input-dark:focus { border-color: var(--accent); }
+        .league-box { background: #111; border: 1px solid #222; border-radius: 12px; height: 50px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #333; transition: 0.3s; cursor: pointer; }
+        .league-box.active { border-color: var(--accent); color: var(--accent); background: rgba(255,255,255,0.03); box-shadow: 0 0 15px rgba(0,0,0,0.4); }
 
-        .archive-scroll { display: flex; overflow-x: auto; gap: 12px; padding-bottom: 12px; scroll-snap-type: x mandatory; }
-        .archive-card { min-width: 280px; background: #121212; border: 1px solid #222; border-radius: 12px; padding: 12px; scroll-snap-align: start; }
+        .input-card { background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .num-input { background: #151515; border: 1px solid #222; border-radius: 12px; padding: 14px; text-align: center; color: white; font-weight: 800; width: 100%; outline: none; font-size: 16px; transition: 0.2s; }
+        .num-input:focus { border-color: var(--accent); background: #1a1a1a; }
+
+        .match-card { background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 20px; padding: 20px; margin-bottom: 16px; border-left: 4px solid var(--accent); }
+        .btn-calc { background: var(--accent); color: #000; padding: 18px; border-radius: 15px; font-weight: 900; width: 100%; text-transform: uppercase; font-size: 14px; margin-top: 15px; box-shadow: 0 8px 20px -8px var(--accent); }
         
-        .btn-main { background: var(--accent); color: #000; padding: 14px; border-radius: 12px; font-weight: 900; width: 100%; text-transform: uppercase; letter-spacing: 1px; }
-        ::-webkit-scrollbar { height: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+        /* Mobile Touch Optimizations */
+        input[type="number"] { -moz-appearance: textfield; }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
-<body class="theme-PL pb-40">
+<body class="theme-PL p-4 pb-40">
 
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex justify-between items-center mb-8 px-1">
         <div>
-            <h1 class="text-2xl font-black italic leading-none">SCORE<span style="color: var(--accent)">MASTER</span></h1>
-            <p id="league-name" class="text-[10px] font-bold opacity-40 uppercase tracking-widest">Premier League</p>
+            <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Score<span style="color: var(--accent)">Master</span></h1>
+            <p id="l-name" class="text-[9px] font-bold opacity-30 tracking-[3px] uppercase mt-1">Premier League</p>
         </div>
-        <div onclick="resetStats()" class="text-right cursor-pointer group">
+        <div onclick="resetAll()" class="text-right cursor-pointer">
             <span id="wr" class="text-2xl font-black" style="color: var(--accent)">0%</span>
-            <p class="text-[8px] text-gray-600 font-black group-hover:text-red-500 transition">SIFIRLA (W/R)</p>
+            <div class="text-[7px] font-black opacity-40 uppercase tracking-tighter">Win Rate (Sıfırla)</div>
         </div>
     </div>
 
-    <div class="grid grid-cols-5 gap-2 mb-6">
-        <div onclick="setL('PL')" id="box-PL" class="league-box active">PL</div>
-        <div onclick="setL('LL')" id="box-LL" class="league-box">LL</div>
-        <div onclick="setL('SA')" id="box-SA" class="league-box">SA</div>
-        <div onclick="setL('BL')" id="box-BL" class="league-box">BL</div>
-        <div onclick="setL('L1')" id="box-L1" class="league-box">L1</div>
+    <div class="grid grid-cols-5 gap-2 mb-8">
+        <div onclick="setL('PL')" id="l-PL" class="league-box active text-xs">PL</div>
+        <div onclick="setL('LL')" id="l-LL" class="league-box text-xs">LL</div>
+        <div onclick="setL('SA')" id="l-SA" class="league-box text-xs">SA</div>
+        <div onclick="setL('BL')" id="l-BL" class="league-box text-xs">BL</div>
+        <div onclick="setL('L1')" id="l-L1" class="league-box text-xs">L1</div>
     </div>
 
-    <div class="fotmob-dark p-5 mb-8 shadow-2xl">
+    <div class="input-card mb-10">
         <div class="flex gap-4 mb-6">
-            <input id="hT" placeholder="EV SAHİBİ" class="w-1/2 bg-transparent border-b border-white/5 py-2 font-black uppercase outline-none text-xs italic">
-            <input id="aT" placeholder="DEPLASMAN" class="w-1/2 bg-transparent border-b border-white/5 py-2 font-black uppercase outline-none text-xs text-right italic">
+            <input id="hT" placeholder="EV SAHİBİ" class="w-1/2 bg-transparent border-b border-white/5 py-2 font-black uppercase outline-none text-[11px] italic">
+            <input id="aT" placeholder="DEPLASMAN" class="w-1/2 bg-transparent border-b border-white/5 py-2 font-black uppercase outline-none text-[11px] text-right italic">
         </div>
-        <div class="grid grid-cols-3 gap-3 mb-6">
-            <input type="number" step="0.01" id="h_xg" class="input-dark" placeholder="npxG">
-            <span class="text-[7px] text-gray-600 font-black text-center self-center uppercase">npxG/Sh</span>
-            <input type="number" step="0.01" id="a_xg" class="input-dark" placeholder="npxG">
-            <input type="number" id="h_ppa" class="input-dark" placeholder="PPA">
-            <span class="text-[7px] text-gray-400 font-bold text-center self-center opacity-20">PPA</span>
-            <input type="number" id="a_ppa" class="input-dark" placeholder="PPA">
-            <input type="number" id="h_sca" class="input-dark" placeholder="SCA">
-            <span class="text-[7px] text-gray-400 font-bold text-center self-center opacity-20">SCA</span>
-            <input type="number" id="a_sca" class="input-dark" placeholder="SCA">
-            <input type="number" id="h_pr" class="input-dark" placeholder="PrgR">
-            <span class="text-[7px] text-gray-400 font-bold text-center self-center opacity-20">PrgR</span>
-            <input type="number" id="a_pr" class="input-dark" placeholder="PrgR">
+        
+        <div class="grid grid-cols-3 gap-3 mb-6 items-center">
+            <input type="number" step="0.01" id="h_xg" class="num-input" placeholder="npxG">
+            <span class="text-[8px] font-black opacity-20 text-center uppercase tracking-tighter">Maç xG</span>
+            <input type="number" step="0.01" id="a_xg" class="num-input" placeholder="npxG">
+            
+            <input type="number" id="h_ppa" class="num-input" placeholder="PPA">
+            <span class="text-[8px] font-black opacity-20 text-center uppercase tracking-tighter">Maç PPA</span>
+            <input type="number" id="a_ppa" class="num-input" placeholder="PPA">
+            
+            <input type="number" id="h_sca" class="num-input" placeholder="SCA">
+            <span class="text-[8px] font-black opacity-20 text-center uppercase tracking-tighter">Maç SCA</span>
+            <input type="number" id="a_sca" class="num-input" placeholder="SCA">
+            
+            <input type="number" id="h_pr" class="num-input" placeholder="PrgR">
+            <span class="text-[8px] font-black opacity-20 text-center uppercase tracking-tighter">Maç PrgR</span>
+            <input type="number" id="a_pr" class="num-input" placeholder="PrgR">
         </div>
-        <button onclick="calculate()" class="btn-main">Analizi Kaydet</button>
+        
+        <button onclick="calculate()" class="btn-calc">Verileri Analiz Et</button>
     </div>
 
-    <h2 class="text-[10px] font-black uppercase mb-3 opacity-30 tracking-widest pl-1">Maç Arşivi</h2>
-    <div id="archive" class="archive-scroll"></div>
+    <h3 class="text-[10px] font-black uppercase opacity-20 tracking-widest px-1 mb-4">Analiz Arşivi</h3>
+    <div id="archive" class="space-y-4"></div>
 
-    <div class="fixed bottom-0 left-0 w-full p-4 bg-black/90 backdrop-blur-md border-t border-white/5 flex gap-2">
-        <button onclick="clearInputs()" class="flex-1 py-3 text-[9px] font-black uppercase text-gray-500 border border-white/5 rounded-lg">Temizle</button>
-        <button onclick="clearArchive()" class="flex-1 py-3 text-[9px] font-black uppercase text-red-900 border border-red-950/20 rounded-lg">Arşivi Sil</button>
+    <div class="fixed bottom-0 left-0 w-full p-4 bg-black/80 backdrop-blur-xl border-t border-white/5 flex gap-2">
+        <button onclick="clearInputs()" class="flex-1 py-4 text-[10px] font-black uppercase text-gray-400 bg-white/5 rounded-xl">Input Temizle</button>
+        <button onclick="clearArchive()" class="flex-1 py-4 text-[10px] font-black uppercase text-red-900 bg-red-500/5 rounded-xl">Listeyi Sil</button>
     </div>
 
     <script>
+        // TOPLAM VERİ BARAJLARI (Kümülatif Mantık)
         const BARAJ = {
-            PL: { name: 'Premier League', low: [0.09, 7.5, 18.5, 38], high: [0.12, 11, 25, 52] },
-            LL: { name: 'La Liga', low: [0.08, 6.0, 16.0, 32], high: [0.11, 9, 22, 46] },
-            SA: { name: 'Serie A', low: [0.08, 6.5, 15.5, 30], high: [0.10, 9.5, 21, 44] },
-            BL: { name: 'Bundesliga', low: [0.11, 9.0, 22.0, 45], high: [0.14, 13, 28, 58] },
-            L1: { name: 'Ligue 1', low: [0.09, 7.0, 17.5, 34], high: [0.11, 10, 23, 48] }
+            PL: { name: 'Premier League', low: [0.18, 16, 38, 80], high: [0.24, 24, 52, 110] },
+            LL: { name: 'La Liga', low: [0.16, 12, 32, 64], high: [0.22, 18, 44, 92] },
+            SA: { name: 'Serie A', low: [0.16, 13, 31, 60], high: [0.20, 19, 42, 88] },
+            BL: { name: 'Bundesliga', low: [0.22, 18, 44, 90], high: [0.28, 26, 56, 116] },
+            L1: { name: 'Ligue 1', low: [0.18, 14, 35, 68], high: [0.22, 20, 46, 96] }
         };
 
         let curL = 'PL';
@@ -99,75 +100,87 @@
             curL = l;
             document.body.className = 'theme-' + l;
             document.querySelectorAll('.league-box').forEach(b => b.classList.remove('active'));
-            document.getElementById('box-' + l).classList.add('active');
-            document.getElementById('league-name').innerText = BARAJ[l].name;
+            document.getElementById('l-' + l).classList.add('active');
+            document.getElementById('l-name').innerText = BARAJ[l].name;
         }
 
         function calculate() {
             const hN = document.getElementById('hT').value || 'EV';
             const aN = document.getElementById('aT').value || 'DEP';
-            const hVal = [document.getElementById('h_xg').value, document.getElementById('h_ppa').value, document.getElementById('h_sca').value, document.getElementById('h_pr').value];
-            const aVal = [document.getElementById('a_xg').value, document.getElementById('a_ppa').value, document.getElementById('a_sca').value, document.getElementById('a_pr').value];
+            const hv = [document.getElementById('h_xg').value, document.getElementById('h_ppa').value, document.getElementById('h_sca').value, document.getElementById('h_pr').value];
+            const av = [document.getElementById('a_xg').value, document.getElementById('a_ppa').value, document.getElementById('a_sca').value, document.getElementById('a_pr').value];
             
-            if(hVal.some(v => v === "")) return;
-            const avg = hVal.map((v, i) => (parseFloat(v) + parseFloat(aVal[i])) / 2);
+            if(hv.some(v => v === "")) return;
+
+            // TOPLAM HESAPLAMA: Hata burada giderildi
+            const total = hv.map((v, i) => parseFloat(v) + parseFloat(av[i]));
+            const b = BARAJ[curL];
             
-            let score = 0; let warns = [];
-            avg.forEach((val, i) => {
-                if(val > BARAJ[curL].low[i]) score++;
-                if(val > BARAJ[curL].high[i]) score++;
-                if(val > BARAJ[curL].high[i] * 1.3) warns.push(["xG","PPA","SCA","PR"][i]+"↑");
+            let score = 0;
+            total.forEach((val, i) => {
+                if(val >= b.low[i]) score += 1;
+                if(val >= b.high[i]) score += 1;
             });
 
             let res, p1, p2, p3;
-            if(score <= 2) { res="1.5 ALT"; p1=85; p2=10; p3=5; }
-            else if(score <= 5) { res="TAM 2.0"; p1=15; p2=70; p3=15; }
-            else { res="TAM 3.0"; p1=5; p2=20; p3=75; }
+            if(score <= 2) { res="1.5 ALT"; p1=92; p2=6; p3=2; }
+            else if(score <= 5) { res="TAM 2.0"; p1=10; p2=75; p3=15; }
+            else { res="TAM 3.0"; p1=2; p2=13; p3=85; }
 
-            const html = `
-                <div class="archive-card border-t-2" style="border-top-color: var(--accent)">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-[8px] font-black uppercase opacity-40">${curL} Analiz</span>
-                        <button onclick="this.closest('.archive-card').remove(); save();" class="text-red-500 opacity-30">×</button>
+            const card = `
+                <div class="match-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[8px] font-black px-2 py-1 bg-white/5 rounded" style="color:var(--accent)">${curL} • TOTAL ANALYSIS</span>
+                        <button onclick="this.closest('.match-card').remove(); save();" class="text-white/20 text-xl">×</button>
                     </div>
-                    <div class="text-[10px] font-black uppercase mb-3 truncate">${hN} vs ${aN}</div>
-                    <div class="flex justify-between items-center bg-white/5 p-2 rounded mb-3">
-                        <span class="text-xs font-black italic" style="color: var(--accent)">${res}</span>
-                        <span class="text-[9px] font-bold opacity-30">Skor: ${score}/8</span>
+                    <div class="text-[12px] font-black uppercase mb-4 tracking-tight border-b border-white/5 pb-2">${hN} vs ${aN}</div>
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <span class="text-2xl font-black italic block" style="color: var(--accent)">${res}</span>
+                            <span class="text-[9px] font-bold opacity-30">MAÇ SKORU: ${score}/8</span>
+                        </div>
+                        <div class="text-right text-[8px] font-black opacity-40 leading-tight">
+                            1.5A: ${p1}%<br>T2.0: ${p2}%<br>T3.0: ${p3}%
+                        </div>
                     </div>
-                    <input placeholder="Maç Sonucu (Örn: 2-1)" class="w-full bg-black/50 border border-white/5 rounded p-2 text-[9px] text-center mb-3 outline-none focus:border-white/20">
-                    <div class="flex gap-1 justify-center">
-                        <button onclick="tgl(this,'w')" class="w-full py-2 bg-white/5 rounded text-[8px] font-black uppercase hover:bg-green-500/20">Win</button>
-                        <button onclick="tgl(this,'l')" class="w-full py-2 bg-white/5 rounded text-[8px] font-black uppercase hover:bg-red-500/20">Loss</button>
+                    <div class="flex gap-2">
+                        <button onclick="tgl(this,'w')" class="flex-1 py-4 bg-white/5 rounded-xl text-[10px] font-black uppercase">Win</button>
+                        <button onclick="tgl(this,'l')" class="flex-1 py-4 bg-white/5 rounded-xl text-[10px] font-black uppercase text-white/40">Loss</button>
                     </div>
                 </div>`;
-            document.getElementById('archive').insertAdjacentHTML('afterbegin', html);
+            document.getElementById('archive').insertAdjacentHTML('afterbegin', card);
             save();
         }
 
-        function tgl(btn, type) {
-            btn.parentElement.querySelectorAll('button').forEach(b => { b.style.background = ''; b.style.color = ''; });
-            btn.style.background = type === 'w' ? '#00ff85' : '#ff4b4b';
-            btn.style.color = '#000';
+        function tgl(b, t) {
+            b.parentElement.querySelectorAll('button').forEach(btn => { btn.style.background = ''; btn.style.color = ''; });
+            b.style.background = t === 'w' ? 'var(--accent)' : '#ff4b4b';
+            b.style.color = '#000';
             save(); updateWR();
         }
 
         function updateWR() {
-            const cards = document.querySelectorAll('.archive-card');
-            let w = 0, total = 0;
+            const cards = document.querySelectorAll('.match-card');
+            let w = 0, t = 0;
             cards.forEach(c => {
-                const winBtn = c.querySelector('button[onclick*="\'w\'"]');
-                if(winBtn.style.background === 'rgb(0, 255, 133)') { w++; total++; }
-                else if(c.querySelector('button[onclick*="\'l\'"]').style.background === 'rgb(255, 75, 75)') { total++; }
+                const wb = c.querySelector('button[onclick*="\'w\'"]');
+                if(window.getComputedStyle(wb).backgroundColor !== 'rgba(255, 255, 255, 0.05)') {
+                    if(wb.style.background.includes('var')) { w++; t++; }
+                    else { t++; }
+                }
             });
-            document.getElementById('wr').innerText = total > 0 ? Math.round((w/total)*100) + "%" : "0%";
+            document.getElementById('wr').innerText = t > 0 ? Math.round((w/t)*100) + "%" : "0%";
         }
 
-        function resetStats() { if(confirm("Tüm başarı istatistikleri sıfırlansın mı?")) { localStorage.clear(); location.reload(); } }
-        function save() { localStorage.setItem('sm_archive', document.getElementById('archive').innerHTML); }
-        function clearInputs() { document.querySelectorAll('.input-dark, #hT, #aT').forEach(i => i.value = ''); }
-        function clearArchive() { if(confirm("Arşiv silinsin mi?")) { document.getElementById('archive').innerHTML = ''; save(); updateWR(); } }
-        window.onload = () => { document.getElementById('archive').innerHTML = localStorage.getItem('sm_archive') || ''; updateWR(); };
+        function save() { localStorage.setItem('sm_v32', document.getElementById('archive').innerHTML); }
+        function clearInputs() { document.querySelectorAll('.num-input, #hT, #aT').forEach(i => i.value = ''); }
+        function clearArchive() { if(confirm("Tüm liste temizlensin mi?")) { document.getElementById('archive').innerHTML = ''; save(); updateWR(); } }
+        function resetAll() { if(confirm("Hafıza sıfırlansın mı?")) { localStorage.clear(); location.reload(); } }
+        
+        window.onload = () => { 
+            document.getElementById('archive').innerHTML = localStorage.getItem('sm_v32') || ''; 
+            updateWR();
+        };
     </script>
 </body>
 </html>

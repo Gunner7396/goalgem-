@@ -3,135 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GP ELITE V31</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>GP V32</title>
     <style>
-        :root {
-            --bg: #000; --card: #111; --brd: #222;
-            --grn: #00ff85; --txt: #fff; --dim: #888;
-        }
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--txt); margin: 0; padding: 10px; }
+        :root { --bg: #000; --card: #111; --brd: #222; --grn: #00ff85; --txt: #fff; --red: #ff4d4d; }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: var(--bg); color: var(--txt); margin: 0; padding: 8px; font-size: 12px; }
 
-        /* Header & Stats */
-        .hdr { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--brd); }
-        .logo { font-weight: 900; color: var(--grn); font-size: 16px; }
-        .stat-wrap { display: flex; gap: 10px; font-size: 11px; font-weight: 700; }
-        .reset-link { color: #ff4d4d; text-decoration: none; font-size: 10px; cursor: pointer; }
+        /* Mini Header */
+        .hdr { display: flex; justify-content: space-between; align-items: center; padding: 5px; border-bottom: 1px solid var(--brd); margin-bottom: 8px; }
+        .logo { font-weight: 900; color: var(--grn); }
+        .stats { font-weight: 700; font-size: 11px; }
 
-        /* Input Panel */
-        .panel { background: var(--card); border-radius: 12px; border: 1px solid var(--brd); padding: 12px; margin-top: 10px; }
-        .lg-sel { width: 100%; background: #000; border: 1px solid var(--brd); color: var(--grn); padding: 10px; border-radius: 8px; font-weight: 800; margin-bottom: 12px; }
-
-        /* Yatay Takım Kutuları */
-        .team-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .t-box { display: flex; flex-direction: column; gap: 8px; }
-        .t-box label { font-size: 10px; font-weight: 900; color: var(--dim); text-align: center; }
-        .t-box input[type="text"] { background: #000; border: 1px solid var(--brd); padding: 12px 8px; border-radius: 8px; font-size: 13px; text-align: center; font-weight: 700; }
-
-        /* Metriklerin Dikey Sıralanması */
-        .m-stack { display: flex; flex-direction: column; gap: 6px; }
-        .m-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: center; }
-        .m-row input { background: #1a1a1a; border: 1px solid var(--brd); padding: 10px; border-radius: 6px; color: var(--grn); text-align: center; font-weight: 700; font-size: 14px; }
-        .m-lbl { font-size: 9px; font-weight: 800; color: var(--dim); text-align: center; background: #000; padding: 4px; border-radius: 4px; }
-
-        .btn-start { width: 100%; background: var(--grn); color: #000; border: none; padding: 16px; border-radius: 10px; font-weight: 900; font-size: 14px; margin-top: 15px; }
-        .btn-start:disabled { opacity: 0.2; }
-
-        /* Compact Match Cards */
-        .m-card { background: var(--card); border: 1px solid var(--brd); border-radius: 10px; padding: 10px; margin-top: 10px; }
-        .m-title { font-size: 12px; font-weight: 800; text-align: center; margin-bottom: 8px; }
-        .prob-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
-        .pb { background: #000; padding: 6px; border-radius: 6px; text-align: center; border: 1px solid #222; }
-        .pb b { font-size: 12px; display: block; }
-        .pb i { font-size: 7px; color: var(--dim); font-style: normal; font-weight: 800; }
-
-        .scout-mini { font-size: 10px; color: #bbb; padding: 8px; background: rgba(0,255,133,0.03); border-radius: 6px; margin-top: 8px; line-height: 1.3; }
+        /* Compact Grid Panel */
+        .grid-panel { background: var(--card); border: 1px solid var(--brd); border-radius: 8px; overflow: hidden; }
+        .row { display: flex; border-bottom: 1px solid var(--brd); align-items: center; }
+        .row:last-child { border-bottom: none; }
         
-        .card-ft { display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px; }
-        .ft-btn { padding: 6px 12px; border-radius: 6px; font-size: 9px; font-weight: 900; border: none; }
+        .col-l { width: 30%; background: #1a1a1a; padding: 8px; font-size: 10px; font-weight: 800; color: #888; text-align: center; border-right: 1px solid var(--brd); }
+        .col-r { width: 35%; display: flex; align-items: center; justify-content: center; }
+        
+        input { width: 100%; background: transparent; border: none; color: #fff; padding: 10px 5px; text-align: center; font-size: 13px; font-weight: 700; outline: none; }
+        input::placeholder { color: #444; font-weight: 400; font-size: 11px; }
+        input:focus { background: #222; }
+        .t-name { color: var(--grn); text-transform: uppercase; }
+
+        /* Start Button */
+        .btn-start { width: 100%; background: var(--grn); color: #000; border: none; padding: 14px; font-weight: 900; border-radius: 8px; margin-top: 8px; }
+        .btn-start:disabled { opacity: 0.1; }
+
+        /* Result Card - Ultra Thin */
+        .m-card { background: var(--card); border: 1px solid var(--brd); border-radius: 8px; padding: 8px; margin-top: 8px; }
+        .m-teams { font-weight: 800; font-size: 11px; margin-bottom: 6px; border-bottom: 1px solid #222; padding-bottom: 4px; display: flex; justify-content: space-between; }
+        
+        .p-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; text-align: center; }
+        .p-box { background: #000; padding: 4px; border-radius: 4px; }
+        .p-box i { display: block; font-size: 7px; color: #888; font-style: normal; }
+        .p-box b { font-size: 12px; }
+
+        .scout { font-size: 9px; color: #aaa; margin-top: 6px; padding: 4px; background: #080808; border-radius: 4px; line-height: 1.2; border-left: 2px solid var(--grn); }
+        .actions { display: flex; gap: 5px; margin-top: 6px; }
+        .btn-s { flex: 1; padding: 6px; border-radius: 4px; border: none; font-size: 9px; font-weight: 800; color: #fff; }
     </style>
 </head>
 <body>
 
 <div class="hdr">
     <div class="logo">GOALPATH</div>
-    <div class="stat-wrap">
-        <span id="st-total">0M</span>
-        <span id="st-rate" style="color:var(--grn)">0%</span>
-        <span class="reset-link" onclick="resetStats()">SIFIRLA</span>
+    <div class="stats"><span id="st-total">0M</span> | <span id="st-rate" style="color:var(--grn)">0%</span> | <span style="color:var(--red)" onclick="resetStats()">CLR</span></div>
+</div>
+
+<div class="grid-panel">
+    <div class="row">
+        <div class="col-l">TEAMS</div>
+        <div class="col-r"><input type="text" id="t1-n" placeholder="HOME" class="t-name" oninput="vld()"></div>
+        <div class="col-r" style="border-left:1px solid var(--brd)"><input type="text" id="t2-n" placeholder="AWAY" class="t-name" oninput="vld()"></div>
+    </div>
+    <div class="row">
+        <div class="col-l">npxG</div>
+        <div class="col-r"><input type="number" id="t1-q" step="any" placeholder="0.00" oninput="vld()"></div>
+        <div class="col-r" style="border-left:1px solid var(--brd)"><input type="number" id="t2-q" step="any" placeholder="0.00" oninput="vld()"></div>
+    </div>
+    <div class="row">
+        <div class="col-l">SCA</div>
+        <div class="col-r"><input type="number" id="t1-s" placeholder="0" oninput="vld()"></div>
+        <div class="col-r" style="border-left:1px solid var(--brd)"><input type="number" id="t2-s" placeholder="0" oninput="vld()"></div>
+    </div>
+    <div class="row">
+        <div class="col-l">PRGR</div>
+        <div class="col-r"><input type="number" id="t1-p" placeholder="0" oninput="vld()"></div>
+        <div class="col-r" style="border-left:1px solid var(--brd)"><input type="number" id="t2-p" placeholder="0" oninput="vld()"></div>
+    </div>
+    <div class="row">
+        <div class="col-l">PPA</div>
+        <div class="col-r"><input type="number" id="t1-x" placeholder="0" oninput="vld()"></div>
+        <div class="col-r" style="border-left:1px solid var(--brd)"><input type="number" id="t2-x" placeholder="0" oninput="vld()"></div>
     </div>
 </div>
 
-<div class="panel">
-    <select id="l-sel" class="lg-sel" onchange="upTeams()"></select>
-    
-    <div class="team-row">
-        <div class="t-box"><label>HOME</label><input type="text" list="t-list" id="t1-n" placeholder="Seç/Yaz" oninput="vld()"></div>
-        <div class="t-box"><label>AWAY</label><input type="text" list="t-list" id="t2-n" placeholder="Seç/Yaz" oninput="vld()"></div>
-    </div>
-
-    <div class="m-stack">
-        <div class="m-lbl">npxG (Kalite)</div>
-        <div class="m-row">
-            <input type="number" id="t1-q" step="any" placeholder="0.00" oninput="vld()">
-            <input type="number" id="t2-q" step="any" placeholder="0.00" oninput="vld()">
-        </div>
-        <div class="m-lbl">SCA (Şut Üretimi)</div>
-        <div class="m-row">
-            <input type="number" id="t1-s" placeholder="0" oninput="vld()">
-            <input type="number" id="t2-s" placeholder="0" oninput="vld()">
-        </div>
-        <div class="m-lbl">PRGR (Geçişler)</div>
-        <div class="m-row">
-            <input type="number" id="t1-p" placeholder="0" oninput="vld()">
-            <input type="number" id="t2-p" placeholder="0" oninput="vld()">
-        </div>
-        <div class="m-lbl">PPA (Ceza Sahası)</div>
-        <div class="m-row">
-            <input type="number" id="t1-x" placeholder="0" oninput="vld()">
-            <input type="number" id="t2-x" placeholder="0" oninput="vld()">
-        </div>
-    </div>
-
-    <button id="s-btn" class="btn-start" onclick="run()" disabled>START</button>
-</div>
+<button id="s-btn" class="btn-start" onclick="run()" disabled>START ANALYSIS</button>
 
 <div id="active-list"></div>
-<div style="font-size: 10px; font-weight: 900; color: var(--dim); margin: 20px 0 10px 5px">ARŞİV</div>
-<div id="archive-list" style="opacity: 0.6"></div>
-
-<datalist id="t-list"></datalist>
+<div id="archive-list" style="opacity:0.4; margin-top:15px;"></div>
 
 <script>
-    const eData = { 
-        PL: { q: 0.08, s: 28, x: 10, n: 'PREMIER LEAGUE' },
-        LL: { q: 0.06, s: 34, x: 13, n: 'LA LIGA' },
-        SA: { q: 0.07, s: 30, x: 11, n: 'SERIE A' },
-        BL: { q: 0.08, s: 38, x: 15, n: 'BUNDESLIGA' },
-        L1: { q: 0.08, s: 28, x: 10, n: 'LIGUE 1' }
-    };
-
-    const tData = {
-        PL: ["Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Tottenham"],
-        LL: ["Real Madrid", "Barcelona", "Atl. Madrid", "Girona", "Sevilla"],
-        SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Atalanta"],
-        BL: ["Bayern", "Leverkusen", "Dortmund", "Leipzig"],
-        L1: ["PSG", "Monaco", "Marseille", "Lille", "Lyon"]
-    };
-
-    let stats = JSON.parse(localStorage.getItem('gp31_stats')) || { total: 0, win: 0 };
-    let matches = JSON.parse(localStorage.getItem('gp31_matches')) || [];
-
-    window.onload = () => {
-        document.getElementById('l-sel').innerHTML = Object.keys(eData).map(k => `<option value="${k}">${eData[k].n}</option>`).join('');
-        upTeams(); upUI(); render();
-    };
-
-    function upTeams() {
-        const l = document.getElementById('l-sel').value;
-        document.getElementById('t-list').innerHTML = tData[l].map(t => `<option value="${t}">`).join('');
-    }
+    let stats = JSON.parse(localStorage.getItem('gp32_stats')) || { total: 0, win: 0 };
+    let matches = JSON.parse(localStorage.getItem('gp32_matches')) || [];
 
     function vld() {
         const ids = ['t1-n','t2-n','t1-q','t2-q','t1-s','t2-s','t1-p','t2-p','t1-x','t2-x'];
@@ -143,56 +99,56 @@
         const q1 = parseFloat(document.getElementById('t1-q').value), q2 = parseFloat(document.getElementById('t2-q').value);
         const x1 = parseFloat(document.getElementById('t1-x').value), x2 = parseFloat(document.getElementById('t2-x').value);
         const s1 = parseFloat(document.getElementById('t1-s').value), s2 = parseFloat(document.getElementById('t2-s').value);
-        
-        const cfg = eData[document.getElementById('l-sel').value];
-        let sc = (x1+x2 <= cfg.x ? 45 : 15) + (q1 <= cfg.q && q2 <= cfg.q ? 25 : 5) + (s1+s2 <= cfg.s ? 20 : 5);
+
+        let sc = (x1+x2 <= 11 ? 40 : 10) + (q1 <= 0.08 && q2 <= 0.08 ? 30 : 5) + (s1+s2 <= 30 ? 20 : 5);
         let p1 = Math.min(Math.max(sc, 10), 90);
-        let p3 = Math.max(100 - p1 - 18, 5); let p2 = 100 - (p1 + p3);
+        let p3 = Math.max(100 - p1 - 20, 5); let p2 = 100 - (p1 + p3);
 
-        const scout = p1 > 60 ? `Düşük npxG (${q1}/${q2}) ve yetersiz PPA üretimi savunma ağırlıklı bir maç vaat ediyor.` : `SCA ve PRGR verileri yüksek tempoya işaret ediyor. T3 olasılığı veri setine göre makul.`;
+        const scout = p1 > 55 ? `Zayıf hücum üretimi (${x1+x2} PPA) kısır maç sinyali.` : `Yüksek tempo (${s1+s2} SCA) T3 riskini artırıyor.`;
 
-        matches.unshift({ id: Date.now(), h, a, p1, p2, p3, scout, score: 'VS', status: 'active' });
+        matches.unshift({ id: Date.now(), h, a, p1, p2, p3, scout, res: 'VS', status: 'active' });
         save(); render();
         document.querySelectorAll('input').forEach(i => i.value = ''); vld();
     }
 
     function setRes(id, win) {
-        const s = prompt("Skor?"); if(s === null) return;
         matches = matches.map(m => {
-            if(m.id === id) { m.status = 'archived'; m.res = win ? 'W' : 'L'; m.score = s; stats.total++; if(win) stats.win++; }
+            if(m.id === id) { m.status = 'archived'; m.res = win ? 'WIN' : 'LOSE'; stats.total++; if(win) stats.win++; }
             return m;
         });
-        save(); upUI(); render();
+        save(); render(); upUI();
     }
 
     function render() {
         const draw = (list) => list.map(m => `
             <div class="m-card">
-                <div class="m-title">${m.h} - ${m.a} <span style="color:var(--grn)">(${m.score})</span></div>
-                <div class="prob-bar">
-                    <div class="pb"><i>0-1 GOL</i><b style="color:#ff4d4d">%${m.p1}</b></div>
-                    <div class="pb"><i>T2</i><b style="color:orange">%${m.p2}</b></div>
-                    <div class="pb"><i>T3</i><b style="color:var(--grn)">%${m.p3}</b></div>
+                <div class="m-teams"><span>${m.h} v ${m.a}</span> <span style="color:var(--grn)">${m.res}</span></div>
+                <div class="p-row">
+                    <div class="p-box"><i>0-1 GOL</i><b style="color:var(--red)">%${m.p1}</b></div>
+                    <div class="p-box"><i>T2</i><b style="color:orange">%${m.p2}</b></div>
+                    <div class="p-box"><i>T3</i><b>%${m.p3}</b></div>
                 </div>
-                <div class="scout-mini"><b>Scout:</b> ${m.scout}</div>
-                ${m.status==='active' ? `<div class="card-ft">
-                    <button class="ft-btn" style="color:var(--dim)" onclick="del(${m.id})">SİL</button>
-                    <button class="ft-btn" style="background:#1a3a2a; color:var(--grn)" onclick="setRes(${m.id},true)">W</button>
-                    <button class="ft-btn" style="background:#3a1a1a; color:#ff4d4d" onclick="setRes(${m.id},false)">L</button>
+                <div class="scout">${m.scout}</div>
+                ${m.status==='active' ? `<div class="actions">
+                    <button class="btn-s" style="background:#1a3a2a; color:var(--grn)" onclick="setRes(${m.id},true)">WIN</button>
+                    <button class="btn-s" style="background:#3a1a1a; color:var(--red)" onclick="setRes(${m.id},false)">LOSE</button>
+                    <button class="btn-s" style="background:#222; flex:0.3" onclick="del(${m.id})">✕</button>
                 </div>` : ''}
             </div>
         `).join('');
         document.getElementById('active-list').innerHTML = draw(matches.filter(m => m.status === 'active'));
         document.getElementById('archive-list').innerHTML = draw(matches.filter(m => m.status === 'archived'));
+        upUI();
     }
 
     function del(id) { matches = matches.filter(m => m.id !== id); save(); render(); }
-    function save() { localStorage.setItem('gp31_matches', JSON.stringify(matches)); localStorage.setItem('gp31_stats', JSON.stringify(stats)); }
+    function save() { localStorage.setItem('gp32_matches', JSON.stringify(matches)); localStorage.setItem('gp32_stats', JSON.stringify(stats)); }
     function upUI() { 
         document.getElementById('st-total').innerText = stats.total + 'M';
         document.getElementById('st-rate').innerText = (stats.total ? Math.round(stats.win/stats.total*100) : 0) + '%';
     }
     function resetStats() { if(confirm("Sıfırla?")) { stats={total:0,win:0}; save(); upUI(); } }
+    window.onload = render;
 </script>
 </body>
 </html>

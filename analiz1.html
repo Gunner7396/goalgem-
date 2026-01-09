@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScoreMaster AI v3</title>
+    <title>ScoreMaster AI v4 - PrgR Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body { background-color: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .fotmob-dark { background: #161616; border-radius: 12px; border: 1px solid #222; }
         .accent-green { color: #00ff85; }
-        .input-dark { background: #1f1f1f; border: 1px solid #2a2a2a; border-radius: 6px; padding: 8px; text-align: center; color: white; font-weight: 600; }
+        .input-dark { background: #1f1f1f; border: 1px solid #2a2a2a; border-radius: 6px; padding: 8px; text-align: center; color: white; font-weight: 600; font-size: 13px; }
         .prob-bar { height: 3px; border-radius: 2px; background: #2a2a2a; margin-top: 4px; overflow: hidden; }
         .prob-fill { height: 100%; background: #00ff85; transition: width 0.6s ease; }
-        input::placeholder { color: #444; font-weight: 400; }
     </style>
 </head>
-<body class="p-4 pb-24">
+<body class="p-4 pb-24 text-gray-200">
 
     <div class="flex justify-between items-center mb-5 px-1">
         <div>
             <h1 class="text-xl font-black italic tracking-tighter">SCORE<span class="accent-green">MASTER</span></h1>
-            <div id="winRate" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Başarı: %0</div>
+            <div id="winRate" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest italic">Veri Odaklı Analiz</div>
         </div>
-        <button onclick="location.reload()" class="text-gray-600 hover:text-white transition"><i class="fa-solid fa-rotate-right"></i></button>
+        <div class="flex flex-col items-end">
+            <span id="globalSuccess" class="text-lg font-black accent-green">0%</span>
+            <span class="text-[8px] text-gray-600 font-bold uppercase">Başarı Oranı</span>
+        </div>
     </div>
 
-    <div class="fotmob-dark p-4 mb-4 shadow-2xl">
-        <select id="leagueSelect" onchange="updateTeams()" class="w-full bg-transparent text-[11px] font-black border-none mb-4 text-gray-500 uppercase tracking-widest text-center">
+    <div class="fotmob-dark p-4 mb-4">
+        <select id="leagueSelect" onchange="updateTeams()" class="w-full bg-transparent text-[10px] font-black border-none mb-4 text-gray-500 uppercase tracking-[0.2em] text-center focus:ring-0">
             <option value="PL">Premier League</option>
             <option value="LL">La Liga</option>
             <option value="SA">Serie A</option>
@@ -40,70 +42,70 @@
                 <input list="homeTeamsList" id="homeTeam" placeholder="Ev Sahibi" class="w-full bg-transparent border-b border-gray-800 text-sm py-1 focus:outline-none focus:border-green-500 transition-colors">
                 <datalist id="homeTeamsList"></datalist>
             </div>
-            <div class="absolute left-1/2 -translate-x-1/2 top-1 text-[10px] font-black text-gray-700">VS</div>
+            <div class="absolute left-1/2 -translate-x-1/2 top-1 text-[10px] font-black text-gray-800">VS</div>
             <div class="flex-1 text-right">
                 <input list="awayTeamsList" id="awayTeam" placeholder="Deplasman" class="w-full bg-transparent border-b border-gray-800 text-sm py-1 focus:outline-none focus:border-green-500 text-right transition-colors">
                 <datalist id="awayTeamsList"></datalist>
             </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-3 text-center items-center mb-2">
-            <input type="number" id="h_npxg" class="input-dark text-sm" placeholder="—">
-            <span class="text-[9px] text-gray-600 font-black uppercase">npxG/Sh</span>
-            <input type="number" id="a_npxg" class="input-dark text-sm" placeholder="—">
+        <div class="grid grid-cols-3 gap-3 text-center items-center">
+            <input type="number" id="h_npxg" class="input-dark" placeholder="—">
+            <span class="text-[8px] text-gray-600 font-black uppercase tracking-tighter">npxG/Sh</span>
+            <input type="number" id="a_npxg" class="input-dark" placeholder="—">
 
-            <input type="number" id="h_ppa" class="input-dark text-sm" placeholder="—">
-            <span class="text-[9px] text-gray-600 font-black uppercase">PPA</span>
-            <input type="number" id="a_ppa" class="input-dark text-sm" placeholder="—">
+            <input type="number" id="h_ppa" class="input-dark" placeholder="—">
+            <span class="text-[8px] text-gray-600 font-black uppercase tracking-tighter">PPA (C.S. Pas)</span>
+            <input type="number" id="a_ppa" class="input-dark" placeholder="—">
 
-            <input type="number" id="h_sca" class="input-dark text-sm" placeholder="—">
-            <span class="text-[9px] text-gray-600 font-black uppercase">SCA</span>
-            <input type="number" id="a_sca" class="input-dark text-sm" placeholder="—">
+            <input type="number" id="h_sca" class="input-dark" placeholder="—">
+            <span class="text-[8px] text-gray-600 font-black uppercase tracking-tighter">SCA (Aksiyon)</span>
+            <input type="number" id="a_sca" class="input-dark" placeholder="—">
             
-            <input type="number" id="h_prgr" class="input-dark text-sm" placeholder="—">
-            <span class="text-[9px] text-gray-600 font-black uppercase">PrgR</span>
-            <input type="number" id="a_prgr" class="input-dark text-sm" placeholder="—">
+            <input type="number" id="h_prgr" class="input-dark border-green-900/30" placeholder="—">
+            <span class="text-[8px] accent-green font-black uppercase tracking-tighter">PrgR (İlerleme)</span>
+            <input type="number" id="a_prgr" class="input-dark border-green-900/30" placeholder="—">
         </div>
 
-        <button onclick="calculateAnalysis()" class="w-full bg-[#00ff85] text-black py-4 rounded-xl mt-4 font-black text-xs uppercase italic tracking-wider shadow-lg shadow-green-500/20 active:scale-95 transition-transform">Analiz Et</button>
+        <button onclick="calculateAnalysis()" class="w-full bg-[#00ff85] text-black py-4 rounded-xl mt-5 font-black text-xs uppercase italic tracking-wider active:scale-95 transition-all shadow-lg shadow-green-500/10">Analiz Et</button>
     </div>
 
-    <div id="resultArea" class="hidden animate-in fade-in duration-500 mb-6">
-        <div class="fotmob-dark p-4 border-t-2 border-green-500">
+    <div id="resultArea" class="hidden mb-6">
+        <div class="fotmob-dark p-4 border-l-4 border-green-500 bg-gradient-to-r from-green-950/10 to-transparent">
             <div class="flex justify-between items-center mb-3">
-                <span id="matchLabel" class="text-xs font-black accent-green italic uppercase">ARS vs MCI</span>
-                <span class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Olasılık Dağılımı</span>
+                <span id="matchLabel" class="text-xs font-black italic uppercase">TAKIMLAR</span>
+                <span class="text-[8px] bg-white/10 px-2 py-1 rounded text-gray-400 font-bold uppercase tracking-widest">AI Olasılık</span>
             </div>
 
-            <div class="grid grid-cols-3 gap-4 mb-4">
-                <div class="text-center bg-black/20 p-2 rounded">
-                    <div class="text-[8px] text-gray-500 mb-1 font-bold">1.5 ALT</div>
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="text-center bg-black/40 p-2 rounded">
+                    <div class="text-[7px] text-gray-500 mb-1 font-bold">1.5 ALT</div>
                     <div id="p_alt" class="text-sm font-black italic">0%</div>
                     <div class="prob-bar"><div id="b_alt" class="prob-fill" style="width:0%"></div></div>
                 </div>
-                <div class="text-center bg-black/20 p-2 rounded border border-green-500/20">
-                    <div class="text-[8px] text-gray-500 mb-1 font-bold">TAM 2.0</div>
+                <div class="text-center bg-black/40 p-2 rounded border border-green-500/20">
+                    <div class="text-[7px] text-gray-500 mb-1 font-bold underline">TAM 2.0</div>
                     <div id="p_tam2" class="text-sm font-black italic accent-green">0%</div>
                     <div class="prob-bar"><div id="b_tam2" class="prob-fill" style="width:0%"></div></div>
                 </div>
-                <div class="text-center bg-black/20 p-2 rounded">
-                    <div class="text-[8px] text-gray-500 mb-1 font-bold">TAM 3.0</div>
+                <div class="text-center bg-black/40 p-2 rounded">
+                    <div class="text-[7px] text-gray-500 mb-1 font-bold">TAM 3.0</div>
                     <div id="p_tam3" class="text-sm font-black italic">0%</div>
                     <div class="prob-bar"><div id="b_tam3" class="prob-fill" style="width:0%"></div></div>
                 </div>
             </div>
 
             <div class="flex gap-2 items-center">
-                <input type="number" id="finalHome" placeholder="0" class="w-12 bg-black/50 rounded-lg text-center text-sm p-2 border border-gray-800">
-                <span class="text-gray-700 font-black">-</span>
-                <input type="number" id="finalAway" placeholder="0" class="w-12 bg-black/50 rounded-lg text-center text-sm p-2 border border-gray-800">
-                <button onclick="archiveMatch()" class="flex-1 bg-white text-black text-[10px] py-2.5 rounded-lg font-black uppercase tracking-widest ml-1">Arşivi Güncelle</button>
+                <input type="number" id="finalHome" placeholder="0" class="w-10 bg-black rounded text-center text-xs p-2 border border-gray-800">
+                <span class="text-gray-700 font-bold">-</span>
+                <input type="number" id="finalAway" placeholder="0" class="w-10 bg-black rounded text-center text-xs p-2 border border-gray-800">
+                <button onclick="archiveMatch()" class="flex-1 bg-white text-black text-[9px] py-2.5 rounded font-black uppercase tracking-widest ml-1">Arşivi Güncelle & Sıfırla</button>
             </div>
         </div>
     </div>
 
-    <h2 class="text-[10px] font-black text-gray-600 uppercase mb-3 tracking-[0.2em] ml-1">Geçmiş Analizler</h2>
-    <div id="archiveList" class="space-y-2"></div>
+    <h2 class="text-[9px] font-black text-gray-600 uppercase mb-3 tracking-[0.3em] ml-1">Arşivlenmiş Maçlar</h2>
+    <div id="archiveList" class="space-y-2 text-sm"></div>
 
     <script>
         const teams = {
@@ -129,15 +131,23 @@
         function calculateAnalysis() {
             const h = document.getElementById('homeTeam').value || "EV";
             const a = document.getElementById('awayTeam').value || "DEP";
+            
+            // 4 METRİK ORTALAMALARI
             const avgSCA = (parseFloat(document.getElementById('h_sca').value || 0) + parseFloat(document.getElementById('a_sca').value || 0)) / 2;
             const avgPPA = (parseFloat(document.getElementById('h_ppa').value || 0) + parseFloat(document.getElementById('a_ppa').value || 0)) / 2;
+            const avgPrgR = (parseFloat(document.getElementById('h_prgr').value || 0) + parseFloat(document.getElementById('a_prgr').value || 0)) / 2;
 
-            // Olasılık Dağılım Motoru (Sensörlü)
+            // PrgR DAHİL OLAN YENİ OLASILIK MOTORU
             let p1=0, p2=0, p3=0;
-            if (avgSCA <= 13.5 && avgPPA <= 6) { p1=75; p2=20; p3=5; }
-            else if (avgSCA <= 17.5) { p1=25; p2=60; p3=15; }
-            else if (avgSCA <= 22) { p1=10; p2=65; p3=25; }
-            else { p1=5; p2=20; p3=75; }
+
+            // PrgR Kısırlığı (1.5 Alt Senaryosu)
+            if (avgPrgR <= 32 && avgSCA <= 14) { p1=80; p2=15; p3=5; }
+            // PrgR ve SCA Dengesi (Tam 2.0 Senaryosu)
+            else if (avgPrgR <= 45 && avgSCA <= 20) { p1=20; p2=65; p3=15; }
+            // PrgR Patlaması (Tam 3.0 Senaryosu)
+            else if (avgPrgR > 50 || avgSCA > 25) { p1=5; p2=20; p3=75; }
+            // Arada kalanlar
+            else { p1=15; p2=60; p3=25; }
 
             const finalPredict = p1 > p2 && p1 > p3 ? "1.5 ALT" : (p2 > p3 ? "TAM 2.0" : "TAM 3.0");
             currentAnalysis = { home: h, away: a, predict: finalPredict, date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) };
@@ -158,6 +168,7 @@
             const fa = parseInt(document.getElementById('finalAway').value || 0);
             const total = fh + fa;
             let win = false;
+            
             if (currentAnalysis.predict === "1.5 ALT" && total <= 1) win = true;
             if (currentAnalysis.predict === "TAM 2.0" && total === 2) win = true;
             if (currentAnalysis.predict === "TAM 3.0" && total === 3) win = true;
@@ -165,7 +176,7 @@
             history.unshift({ ...currentAnalysis, score: `${fh}-${fa}`, win });
             localStorage.setItem('matchHistory', JSON.stringify(history));
             
-            // TEMİZLEME İŞLEMİ
+            // OTOMATİK TEMİZLEME
             ["h_npxg", "a_npxg", "h_ppa", "a_ppa", "h_sca", "a_sca", "h_prgr", "a_prgr", "finalHome", "finalAway", "homeTeam", "awayTeam"].forEach(id => {
                 document.getElementById(id).value = "";
             });
@@ -179,13 +190,13 @@
             let wins = 0;
             history.forEach(item => {
                 if(item.win) wins++;
-                list.innerHTML += `<div class="bg-[#111] p-3 rounded-lg flex justify-between items-center text-[10px] border border-gray-900">
-                    <div class="flex flex-col"><span class="font-black italic">${item.home.substring(0,3)} - ${item.away.substring(0,3)}</span><span class="text-[8px] text-gray-600 uppercase">${item.date}</span></div>
-                    <div class="text-gray-500 font-bold uppercase tracking-widest text-[8px]">${item.predict}</div>
-                    <div class="font-black p-1 px-2 rounded ${item.win ? 'bg-green-900/30 text-[#00ff85]' : 'bg-red-900/30 text-red-500'}">${item.score}</div>
+                list.innerHTML += `<div class="bg-[#111] p-3 rounded-lg flex justify-between items-center text-[10px] border border-gray-900 shadow-sm">
+                    <div class="flex flex-col"><span class="font-black italic text-gray-300 uppercase">${item.home.substring(0,3)} - ${item.away.substring(0,3)}</span><span class="text-[7px] text-gray-700">${item.date}</span></div>
+                    <div class="text-[8px] font-black uppercase text-gray-500 tracking-widest">${item.predict}</div>
+                    <div class="font-black px-2 py-1 rounded ${item.win ? 'bg-green-950/30 text-[#00ff85] border border-green-500/20' : 'bg-red-950/30 text-red-500 border border-red-500/20'}">${item.score}</div>
                 </div>`;
             });
-            document.getElementById('winRate').innerText = "Başarı: %" + (history.length > 0 ? Math.round((wins/history.length)*100) : 0);
+            document.getElementById('globalSuccess').innerText = (history.length > 0 ? Math.round((wins/history.length)*100) : 0) + "%";
         }
 
         updateTeams();

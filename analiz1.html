@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>v43 Archive PRC</title>
+    <title>v44 Precision FIX</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #000; color: #fff; font-family: -apple-system, sans-serif; }
+        body { background: #000; color: #fff; font-family: -apple-system, sans-serif; overflow-x: hidden; }
         .glass { background: #1c1c1e; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; }
-        /* Klavye Rakam Optimizasyonu için Input */
         .in-box { background: #2c2c2e; border: none; border-radius: 8px; padding: 10px; color: #fff; font-weight: 700; text-align: center; width: 100%; font-size: 14px; outline: none; }
-        .in-box:focus { background: #3a3a3c; box-shadow: 0 0 0 2px #30d158; }
         .btn-lig { padding: 5px 10px; border-radius: 12px; font-size: 10px; font-weight: 800; background: #1c1c1e; color: #666; border: 1px solid #2c2c2e; }
         .btn-lig.active { background: #30d158; color: #000; border-color: #30d158; }
-        /* Analiz Kartı Tasarımı */
-        .mini-card { background: #1c1c1e; border-radius: 14px; padding: 10px; margin-top: 8px; border: 1px solid rgba(255,255,255,0.08); position: relative; }
+        .mini-card { background: #1c1c1e; border-radius: 14px; padding: 12px; margin-top: 8px; border: 1px solid rgba(255,255,255,0.08); position: relative; }
         .pct-bar { height: 3px; background: #333; border-radius: 2px; overflow: hidden; width: 40px; }
         .pct-fill { height: 100%; }
         .archive-list { display: flex; flex-direction: column-reverse; gap: 8px; margin-top: 15px; }
@@ -25,11 +22,11 @@
 
     <div class="flex justify-between items-center mb-4 px-1">
         <div>
-            <h1 class="text-lg font-black tracking-tighter text-white leading-none">V43<span class="text-green-500">.ARC</span></h1>
-            <p class="text-[9px] font-bold text-gray-500 mt-1 uppercase">Win Rate: <span id="wr" class="text-green-500">0%</span></p>
+            <h1 class="text-lg font-black tracking-tighter text-white">V44<span class="text-green-500">.FIX</span></h1>
+            <p class="text-[9px] font-bold text-gray-500 uppercase">Win Rate: <span id="wr" class="text-green-500">0%</span></p>
         </div>
         <div class="flex gap-2">
-            <button onclick="clearArchive()" class="p-2 glass text-[10px] font-bold text-red-500">🗑️ TÜMÜ</button>
+            <button onclick="clearArchive()" class="p-2 glass text-[10px] font-bold text-red-500">🗑️ SİL</button>
             <button onclick="location.reload()" class="p-2 glass text-[10px] font-bold text-gray-400">🔄</button>
         </div>
     </div>
@@ -47,133 +44,104 @@
             <input id="hN" placeholder="EV" class="bg-transparent border-b border-gray-800 pb-1 text-xs font-black uppercase outline-none">
             <input id="aN" placeholder="DEP" class="bg-transparent border-b border-gray-800 pb-1 text-xs font-black uppercase text-right outline-none">
         </div>
-
-        <div class="space-y-1.5">
-            <div class="grid grid-cols-2 gap-2">
-                <input type="number" inputmode="decimal" id="h_xg" class="in-box" placeholder="npxG">
-                <input type="number" inputmode="decimal" id="a_xg" class="in-box" placeholder="npxG">
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-                <input type="number" inputmode="decimal" id="h_ppa" class="in-box" placeholder="PPA">
-                <input type="number" inputmode="decimal" id="a_ppa" class="in-box" placeholder="PPA">
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-                <input type="number" inputmode="decimal" id="h_sca" class="in-box" placeholder="SCA">
-                <input type="number" inputmode="decimal" id="a_sca" class="in-box" placeholder="SCA">
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-                <input type="number" inputmode="decimal" id="h_pr" class="in-box" placeholder="PrgR">
-                <input type="number" inputmode="decimal" id="a_pr" class="in-box" placeholder="PrgR">
-            </div>
+        <div class="space-y-2">
+            <div class="grid grid-cols-2 gap-2"><input type="number" inputmode="decimal" id="h_xg" class="in-box" placeholder="npxG"><input type="number" inputmode="decimal" id="a_xg" class="in-box" placeholder="npxG"></div>
+            <div class="grid grid-cols-2 gap-2"><input type="number" inputmode="decimal" id="h_ppa" class="in-box" placeholder="PPA"><input type="number" inputmode="decimal" id="a_ppa" class="in-box" placeholder="PPA"></div>
+            <div class="grid grid-cols-2 gap-2"><input type="number" inputmode="decimal" id="h_sca" class="in-box" placeholder="SCA"><input type="number" inputmode="decimal" id="a_sca" class="in-box" placeholder="SCA"></div>
+            <div class="grid grid-cols-2 gap-2"><input type="number" inputmode="decimal" id="h_pr" class="in-box" placeholder="PrgR"><input type="number" inputmode="decimal" id="a_pr" class="in-box" placeholder="PrgR"></div>
         </div>
-
-        <button onclick="analyze()" class="w-full bg-[#30d158] text-black font-black p-3 rounded-xl mt-4 text-[11px] uppercase tracking-widest active:opacity-70">ANALİZİ BAŞLAT</button>
+        <button onclick="analyze()" class="w-full bg-[#30d158] text-black font-black p-3 rounded-xl mt-4 text-[11px] uppercase tracking-widest active:opacity-50 transition">ANALİZİ BAŞLAT</button>
     </div>
 
     <div id="archive" class="archive-list"></div>
 
     <script>
         const B = { PL:[.11,22,48,95], LL:[.09,16,38,75], SA:[.09,17,38,75], BL:[.13,24,50,105], L1:[.1,18,42,85] };
-        let cur='PL';
+        let curL = 'PL';
 
-        function setL(l){ cur=l; document.querySelectorAll('.btn-lig').forEach(b=>b.classList.remove('active')); document.getElementById('l-'+l).classList.add('active'); }
+        function setL(l){ curL=l; document.querySelectorAll('.btn-lig').forEach(b=>b.classList.remove('active')); document.getElementById('l-'+l).classList.add('active'); }
 
         function analyze() {
-            const h = [document.getElementById('h_xg').value, document.getElementById('h_ppa').value, document.getElementById('h_sca').value, document.getElementById('h_pr').value];
-            const a = [document.getElementById('a_xg').value, document.getElementById('a_ppa').value, document.getElementById('a_sca').value, document.getElementById('a_pr').value];
-            
-            // Boş Veri Kontrolü
-            if(h.includes("") || a.includes("")) { alert("Lütfen tüm verileri girin!"); return; }
+            const ids = ["h_xg","a_xg","h_ppa","a_ppa","h_sca","a_sca","h_pr","a_pr"];
+            const vals = ids.map(id => document.getElementById(id).value);
+            if(vals.some(v => v === "")) { alert("Tüm verileri gir!"); return; }
 
             const hN = document.getElementById('hN').value || "EV";
             const aN = document.getElementById('aN').value || "DEP";
-            const b = B[cur];
+            const b = B[curL];
+            const v = vals.map(Number);
             
-            const score = Math.round(((+h[0]+ +a[0])/2/b[0])*40 + ((+h[1]+ +a[1])/b[1])*30 + ((+h[2]+ +a[2])/b[2])*20 + ((+h[3]+ +a[3])/b[3])*10);
-
-            const p1 = Math.max(0, 100 - score); 
-            const p2 = Math.min(score, 110 - Math.abs(score-85)); 
-            const p3 = Math.max(0, score - 85); 
+            const score = Math.round(((v[0]+v[1])/2/b[0])*40 + ((v[2]+v[3])/b[1])*30 + ((v[4]+v[5])/b[2])*20 + ((v[6]+v[7])/b[3])*10);
+            const p1 = Math.max(0, 100 - score); const p2 = Math.min(score, 110 - Math.abs(score-85)); const p3 = Math.max(0, score - 85);
             const tot = p1 + p2 + p3;
             const d = [Math.round((p1/tot)*100), Math.round((p2/tot)*100), Math.round((p3/tot)*100)];
 
-            createCard({ hN, aN, score, d, id: Date.now(), result: null, finalScore: "" });
-            save();
+            const newItem = { hN, aN, score, d, id: Date.now(), res: null, fs: "" };
+            let items = JSON.parse(localStorage.getItem('v44_data') || '[]');
+            items.push(newItem);
+            localStorage.setItem('v44_data', JSON.stringify(items));
+            
+            ids.forEach(id => document.getElementById(id).value = "");
+            render();
         }
 
-        function createCard(data) {
-            const card = document.createElement('div');
-            card.className = "mini-card";
-            card.id = data.id;
-            card.innerHTML = `
-                <button onclick="delCard('${data.id}')" class="absolute top-2 right-2 text-gray-600 font-bold text-[10px]">✕</button>
-                <div class="flex justify-between items-center mb-2 pr-4">
-                    <span class="text-[10px] font-black text-gray-500 uppercase">${data.hN} - ${data.aN}</span>
-                    <input onchange="updFS('${data.id}', this.value)" placeholder="Skor" class="bg-transparent border-none text-[10px] font-bold text-right w-10 outline-none text-green-500" value="${data.finalScore}">
-                </div>
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-[12px] font-black text-white">%${data.score} ENERJİ</span>
-                    <div class="flex gap-1">
-                        <button onclick="setRes('${data.id}', 'W')" class="w-6 h-6 rounded bg-black flex items-center justify-center text-[10px] font-bold ${data.result==='W'?'border border-green-500 text-green-500':''}">W</button>
-                        <button onclick="setRes('${data.id}', 'L')" class="w-6 h-6 rounded bg-black flex items-center justify-center text-[10px] font-bold ${data.result==='L'?'border border-red-500 text-red-500':''}">L</button>
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <div class="flex items-center gap-1"><span class="text-[8px] font-bold opacity-40">0-1: %${data.d[0]}</span><div class="pct-bar"><div class="pct-fill bg-gray-600" style="width:${data.d[0]}%"></div></div></div>
-                    <div class="flex items-center gap-1"><span class="text-[8px] font-bold opacity-40">T2: %${data.d[1]}</span><div class="pct-bar"><div class="pct-fill bg-green-500" style="width:${data.d[1]}%"></div></div></div>
-                    <div class="flex items-center gap-1"><span class="text-[8px] font-bold opacity-40">T3: %${data.d[2]}</span><div class="pct-bar"><div class="pct-fill bg-red-600" style="width:${data.d[2]}%"></div></div></div>
-                </div>`;
-            document.getElementById('archive').appendChild(card);
-        }
+        function render() {
+            const items = JSON.parse(localStorage.getItem('v44_data') || '[]');
+            const container = document.getElementById('archive');
+            container.innerHTML = '';
+            let win = 0, tot = 0;
 
-        function updFS(id, val) { 
-            let items = JSON.parse(localStorage.getItem('v43_arc') || '[]');
-            items = items.map(i => i.id == id ? {...i, finalScore: val} : i);
-            localStorage.setItem('v43_arc', JSON.stringify(items));
-        }
-
-        function setRes(id, res) {
-            let items = JSON.parse(localStorage.getItem('v43_arc') || '[]');
-            items = items.map(i => i.id == id ? {...i, result: res} : i);
-            localStorage.setItem('v43_arc', JSON.stringify(items));
-            refreshList();
-        }
-
-        function delCard(id) {
-            let items = JSON.parse(localStorage.getItem('v43_arc') || '[]');
-            items = items.filter(i => i.id != id);
-            localStorage.setItem('v43_arc', JSON.stringify(items));
-            refreshList();
-        }
-
-        function clearArchive() { if(confirm("Tüm arşiv silinsin mi?")) { localStorage.removeItem('v43_arc'); refreshList(); } }
-
-        function save() {
-            const list = [];
-            document.querySelectorAll('.mini-card').forEach(c => {
-                // Bu kısım createCard sırasında zaten localStorage'a yazılıyor.
-            });
-            // Manuel kayıt yerine her işlemde (analyze, setRes, delCard) localStorage güncellenir.
-            refreshList();
-        }
-
-        function refreshList() {
-            const items = JSON.parse(localStorage.getItem('v43_arc') || '[]');
-            document.getElementById('archive').innerHTML = '';
-            let win = 0, total = 0;
             items.forEach(i => {
-                createCard(i);
-                if(i.result === 'W') win++;
-                if(i.result) total++;
+                const card = document.createElement('div');
+                card.className = "mini-card";
+                card.innerHTML = `
+                    <button onclick="del('${i.id}')" class="absolute top-2 right-2 text-gray-700 font-bold text-[10px]">✕</button>
+                    <div class="flex justify-between items-center mb-2 pr-5">
+                        <span class="text-[10px] font-black text-gray-500 uppercase tracking-tighter">${i.hN} - ${i.aN}</span>
+                        <input onchange="updFS('${i.id}', this.value)" placeholder="0-0" class="bg-transparent border-none text-[10px] font-bold text-right w-10 outline-none text-green-500" value="${i.fs}">
+                    </div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-[13px] font-black text-white">%${i.score} ENERJİ</span>
+                        <div class="flex gap-1">
+                            <button onclick="setRes('${i.id}','W')" class="w-7 h-7 rounded bg-black border ${i.res==='W'?'border-green-500 text-green-500':'border-white/5 text-gray-600'} text-[10px] font-bold">W</button>
+                            <button onclick="setRes('${i.id}','L')" class="w-7 h-7 rounded bg-black border ${i.res==='L'?'border-red-500 text-red-500':'border-white/5 text-gray-600'} text-[10px] font-bold">L</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="flex items-center gap-1"><span class="text-[8px] font-bold opacity-40">0-1:%${i.d[0]}</span><div class="pct-bar"><div class="pct-fill bg-gray-600" style="width:${i.d[0]}%"></div></div></div>
+                        <div class="flex items-center gap-1"><span class="text-[8px] font-bold opacity-40">T2:%${i.d[1]}</span><div class="pct-bar"><div class="pct-fill bg-green-500" style="width:${i.d[1]}%"></div></div></div>
+                        <div class="flex items-center gap-1"><span class="text-[8px] font-bold opacity-40">T3:%${i.d[2]}</span><div class="pct-bar"><div class="pct-fill bg-red-600" style="width:${i.d[2]}%"></div></div></div>
+                    </div>`;
+                container.appendChild(card);
+                if(i.res === 'W') win++;
+                if(i.res) tot++;
             });
-            document.getElementById('wr').innerText = total > 0 ? Math.round((win/total)*100) + "%" : "0%";
-            // Analyze'dan sonra inputları temizle
-            if(items.length > 0) {
-                ["h_xg","a_xg","h_ppa","a_ppa","h_sca","a_sca","h_pr","a_pr"].forEach(id=>document.getElementById(id).value="");
-            }
+            document.getElementById('wr').innerText = tot > 0 ? Math.round((win/tot)*100) + "%" : "0%";
         }
 
-        window.onload = refreshList;
+        function setRes(id, r) {
+            let items = JSON.parse(localStorage.getItem('v44_data') || '[]');
+            items = items.map(i => i.id == id ? {...i, res: (i.res === r ? null : r)} : i);
+            localStorage.setItem('v44_data', JSON.stringify(items));
+            render();
+        }
+
+        function updFS(id, v) {
+            let items = JSON.parse(localStorage.getItem('v44_data') || '[]');
+            items = items.map(i => i.id == id ? {...i, fs: v} : i);
+            localStorage.setItem('v44_data', JSON.stringify(items));
+        }
+
+        function del(id) {
+            let items = JSON.parse(localStorage.getItem('v44_data') || '[]');
+            items = items.filter(i => i.id != id);
+            localStorage.setItem('v44_data', JSON.stringify(items));
+            render();
+        }
+
+        function clearArchive() { if(confirm("Tüm arşiv silinsin mi?")) { localStorage.removeItem('v44_data'); render(); } }
+
+        window.onload = render;
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScoreMaster v35</title>
+    <title>ScoreMaster v36</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --accent: #00ff85; --bg: #050505; }
@@ -11,19 +11,20 @@
         .theme-PL { --accent: #3d195d; } .theme-LL { --accent: #efb810; }
         .theme-SA { --accent: #008fd7; } .theme-BL { --accent: #d20515; }
         .theme-L1 { --accent: #dae025; }
-        .input-box { background: #111; border: 1px solid #222; border-radius: 12px; padding: 12px; text-align: center; color: white; font-weight: 800; width: 100%; outline: none; font-size: 16px; }
-        .input-box:focus { border-color: var(--accent); }
-        .btn-main { background: var(--accent); color: #000; padding: 18px; border-radius: 15px; font-weight: 900; width: 100%; text-transform: uppercase; margin-top: 15px; box-shadow: 0 4px 20px var(--accent); }
+        .input-box { background: #111; border: 1px solid #222; border-radius: 12px; padding: 12px; text-align: center; color: white; font-weight: 800; width: 100%; outline: none; font-size: 16px; transition: 0.2s; }
+        .input-box:focus { border-color: var(--accent); background: #181818; }
+        .team-input { background: transparent; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 8px 0; font-weight: 900; text-transform: uppercase; outline: none; font-size: 12px; font-style: italic; width: 100%; }
+        .team-input:focus { border-color: var(--accent); }
+        .btn-main { background: var(--accent); color: #000; padding: 18px; border-radius: 15px; font-weight: 900; width: 100%; text-transform: uppercase; margin-top: 15px; }
         .match-card { background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 20px; padding: 20px; border-left: 5px solid var(--accent); margin-bottom: 15px; }
+        .league-btn { p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px] cursor-pointer transition: 0.2s; }
+        .league-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(255,255,255,0.05); }
     </style>
 </head>
 <body class="theme-PL p-4 pb-40">
 
     <div class="flex justify-between items-center mb-6 px-1">
-        <div>
-            <h1 class="text-2xl font-black italic uppercase leading-none">Score<span style="color: var(--accent)">Master</span> v35</h1>
-            <p id="l-name" class="text-[9px] font-bold opacity-30 tracking-widest uppercase mt-1">Premier League</p>
-        </div>
+        <h1 class="text-2xl font-black italic uppercase leading-none">Score<span style="color: var(--accent)">Master</span> v36</h1>
         <div onclick="resetStats()" class="text-right cursor-pointer">
             <span id="wr" class="text-2xl font-black text-green-400">0%</span>
             <p class="text-[7px] font-black opacity-30 uppercase">BAŞARI</p>
@@ -31,29 +32,34 @@
     </div>
 
     <div class="grid grid-cols-5 gap-2 mb-6">
-        <div onclick="setL('PL')" id="l-PL" class="p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black active text-[10px] cursor-pointer">PL</div>
-        <div onclick="setL('LL')" id="l-LL" class="p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px] cursor-pointer">LL</div>
-        <div onclick="setL('SA')" id="l-SA" class="p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px] cursor-pointer">SA</div>
-        <div onclick="setL('BL')" id="l-BL" class="p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px] cursor-pointer">BL</div>
-        <div onclick="setL('L1')" id="l-L1" class="p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px] cursor-pointer">L1</div>
+        <div onclick="setL('PL')" id="l-PL" class="league-btn active p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px]">PL</div>
+        <div onclick="setL('LL')" id="l-LL" class="league-btn p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px]">LL</div>
+        <div onclick="setL('SA')" id="l-SA" class="league-btn p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px]">SA</div>
+        <div onclick="setL('BL')" id="l-BL" class="league-btn p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px]">BL</div>
+        <div onclick="setL('L1')" id="l-L1" class="league-btn p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px]">L1</div>
     </div>
 
     <div class="bg-[#0c0c0c] rounded-2xl p-5 border border-white/5 mb-8 shadow-2xl">
+        <div class="flex gap-4 mb-6">
+            <input id="hT" placeholder="EV SAHİBİ" class="team-input text-left">
+            <input id="aT" placeholder="DEPLASMAN" class="team-input text-right">
+        </div>
+        
         <div class="grid grid-cols-3 gap-3 mb-6 items-center text-center">
             <input type="number" step="0.01" id="h_xg" class="input-box" placeholder="H xG">
-            <span class="text-[7px] font-black opacity-40 uppercase tracking-tighter">Avg npxG</span>
+            <span class="text-[7px] font-black opacity-40 uppercase tracking-tighter">AVG npxG</span>
             <input type="number" step="0.01" id="a_xg" class="input-box" placeholder="A xG">
             
             <input type="number" id="h_ppa" class="input-box" placeholder="H PPA">
-            <span class="text-[7px] font-black opacity-40 uppercase tracking-tighter">Sum PPA</span>
+            <span class="text-[7px] font-black opacity-40 uppercase tracking-tighter">SUM PPA</span>
             <input type="number" id="a_ppa" class="input-box" placeholder="A PPA">
             
             <input type="number" id="h_sca" class="input-box" placeholder="H SCA">
-            <span class="text-[7px] font-black opacity-40 uppercase tracking-tighter">Sum SCA</span>
+            <span class="text-[7px] font-black opacity-40 uppercase tracking-tighter">SUM SCA</span>
             <input type="number" id="a_sca" class="input-box" placeholder="A SCA">
             
             <input type="number" id="h_pr" class="input-box" placeholder="H PrR">
-            <span class="text-[7px] font-black opacity-40 uppercase tracking-tighter">Sum PrgR</span>
+            <span class="text-[7px] font-black opacity-40 uppercase tracking-tighter">SUM PrgR</span>
             <input type="number" id="a_pr" class="input-box" placeholder="A PrR">
         </div>
         <button onclick="calculate()" class="btn-main">Analizi Kaydet</button>
@@ -62,7 +68,6 @@
     <div id="archive" class="space-y-4"></div>
 
     <script>
-        // Kalibre Edilmiş Barajlar (npxG için düşük, eylemler için yüksek eşikler)
         const BARAJ = {
             PL: { low: [0.09, 16, 38, 80], high: [0.12, 24, 52, 110] },
             LL: { low: [0.08, 12, 30, 60], high: [0.11, 18, 45, 90] },
@@ -74,22 +79,23 @@
         let curL = 'PL';
         function setL(l) { 
             curL = l; document.body.className = 'theme-'+l; 
-            document.querySelectorAll('[id^="l-"]').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.league-btn').forEach(el => el.classList.remove('active'));
             document.getElementById('l-'+l).classList.add('active');
-            document.getElementById('l-name').innerText = l + " Analiz Modu";
         }
 
         function calculate() {
+            const hName = document.getElementById('hT').value || "EV";
+            const aName = document.getElementById('aT').value || "DEP";
             const hv = [document.getElementById('h_xg').value, document.getElementById('h_ppa').value, document.getElementById('h_sca').value, document.getElementById('h_pr').value];
             const av = [document.getElementById('a_xg').value, document.getElementById('a_ppa').value, document.getElementById('a_sca').value, document.getElementById('a_pr').value];
+            
             if(hv.some(v => v === "")) return;
 
-            // HİBRİT MANTIK: npxG için ortalama, diğerleri için toplam
             const hybridMatrix = [
-                (parseFloat(hv[0]) + parseFloat(av[0])) / 2, // npxG (Ortalama)
-                parseFloat(hv[1]) + parseFloat(av[1]),       // PPA (Toplam)
-                parseFloat(hv[2]) + parseFloat(av[2]),       // SCA (Toplam)
-                parseFloat(hv[3]) + parseFloat(av[3])        // PrgR (Toplam)
+                (parseFloat(hv[0]) + parseFloat(av[0])) / 2, // npxG (Avg)
+                parseFloat(hv[1]) + parseFloat(av[1]),       // PPA (Sum)
+                parseFloat(hv[2]) + parseFloat(av[2]),       // SCA (Sum)
+                parseFloat(hv[3]) + parseFloat(av[3])        // PrgR (Sum)
             ];
 
             const b = BARAJ[curL];
@@ -102,12 +108,13 @@
             let res = score <= 2 ? "1.5 ALT" : (score <= 5 ? "TAM 2.0" : "TAM 3.0");
             
             const card = `<div class="match-card">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-[9px] font-black opacity-30 uppercase">${curL} Hybrid Analysis</span>
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-[8px] font-black opacity-30">${curL} HYBRID</span>
                     <button onclick="this.closest('.match-card').remove(); save();" class="text-white/20">×</button>
                 </div>
+                <div class="text-[10px] font-black uppercase italic border-b border-white/5 pb-2 mb-3">${hName} vs ${aName}</div>
                 <div class="text-xl font-black italic" style="color:var(--accent)">${res}</div>
-                <div class="text-[10px] opacity-40 font-bold mb-4">Hybrid Score: ${score}/8</div>
+                <div class="text-[10px] opacity-40 font-bold mb-4">Skor: ${score}/8</div>
                 <div class="flex gap-2">
                     <button onclick="tgl(this,'w')" class="flex-1 py-3 bg-white/5 rounded-xl font-black text-[10px]">WIN</button>
                     <button onclick="tgl(this,'l')" class="flex-1 py-3 bg-white/5 rounded-xl font-black text-[10px]">LOSS</button>
@@ -137,9 +144,9 @@
             document.getElementById('wr').innerText = t > 0 ? Math.round((w/t)*100) + "%" : "0%";
         }
 
-        function save() { localStorage.setItem('sm_v35', document.getElementById('archive').innerHTML); }
+        function save() { localStorage.setItem('sm_v36', document.getElementById('archive').innerHTML); }
         function resetStats() { if(confirm("Sıfırlansın mı?")) { localStorage.clear(); location.reload(); } }
-        window.onload = () => { document.getElementById('archive').innerHTML = localStorage.getItem('sm_v35') || ''; updateWR(); };
+        window.onload = () => { document.getElementById('archive').innerHTML = localStorage.getItem('sm_v36') || ''; updateWR(); };
     </script>
 </body>
 </html>

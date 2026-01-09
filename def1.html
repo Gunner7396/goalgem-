@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VELOCITY DNA ELITE v11.2</title>
+    <title>VELOCITY DNA ELITE v11.3</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -12,73 +12,51 @@
             --l-color: #00ffa3; 
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; margin: 0; padding: 0; min-height: 100%; overflow-x: hidden; }
+        .wrapper { width: 100%; max-width: 420px; margin: 0 auto; padding: 12px; display: flex; flex-direction: column; }
         
-        /* Mobil Fix: vh yerine min-height ve esnek yapı */
-        html, body { 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: 'Outfit', sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            min-height: 100%;
-            overflow-x: hidden;
-            overflow-y: auto; /* Tüm sayfanın kaymasına izin ver */
-        }
-        
-        .wrapper { 
-            width: 100%; 
-            max-width: 420px; 
-            margin: 0 auto;
-            padding: 15px;
-            display: flex; 
-            flex-direction: column; 
-        }
-        
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; margin-bottom: 10px; }
-        .header h1 { font-size: 18px; font-weight: 900; color: var(--l-color); margin: 0; }
-        .reset-btn { font-size: 8px; font-weight: 800; border: 1px solid var(--dim); padding: 5px 12px; border-radius: 20px; color: var(--dim); cursor: pointer; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; margin-bottom: 8px; }
+        .header h1 { font-size: 17px; font-weight: 900; color: var(--l-color); margin: 0; }
+        .reset-btn { font-size: 8px; font-weight: 800; border: 1px solid var(--dim); padding: 4px 10px; border-radius: 20px; color: var(--dim); cursor: pointer; }
 
-        .dash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
-        .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
-        .st-v { font-family: 'JetBrains Mono'; font-size: 18px; font-weight: 800; color: #fff; display: block; }
+        .dash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+        .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px; text-align: center; }
+        .st-v { font-family: 'JetBrains Mono'; font-size: 16px; font-weight: 800; color: #fff; display: block; }
         .st-l { font-size: 7px; color: var(--dim); text-transform: uppercase; font-weight: 800; }
 
-        .league-box { width: 100%; background: #161b22; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; position: relative; border-left: 4px solid var(--l-color); }
-        #league-select { width: 100%; padding: 15px; background: transparent; border: none; color: #fff; font-weight: 800; font-size: 14px; cursor: pointer; appearance: none; -webkit-appearance: none; }
+        .league-box { width: 100%; background: #161b22; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; position: relative; border-left: 4px solid var(--l-color); }
+        #league-select { width: 100%; padding: 12px; background: transparent; border: none; color: #fff; font-weight: 800; font-size: 13px; appearance: none; -webkit-appearance: none; }
 
-        .engine { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 15px; margin-bottom: 20px; }
-        .row-label { font-size: 10px; font-weight: 900; color: var(--l-color); margin-bottom: 12px; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        .engine { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 12px; margin-bottom: 15px; }
+        .row-label { font-size: 9px; font-weight: 900; color: var(--l-color); margin-bottom: 10px; letter-spacing: 1px; display: flex; align-items: center; gap: 5px; }
         .row-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
         
-        .input-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 15px; }
-        .unit { background: #080a0f; border-bottom: 2px solid var(--border); padding: 10px; border-radius: 4px; }
-        .u-label { font-size: 8px; color: var(--dim); font-weight: 800; display: block; margin-bottom: 4px; }
-        .u-input { width: 100%; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 16px; font-weight: 700; }
+        .input-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px; }
+        .unit { background: #080a0f; border-bottom: 2px solid var(--border); padding: 8px; border-radius: 4px; }
+        .u-label { font-size: 7px; color: var(--dim); font-weight: 800; display: block; margin-bottom: 2px; }
+        .u-input { width: 100%; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 15px; font-weight: 700; }
 
-        .scan-btn { width: 100%; background: var(--l-color); color: #000; border: none; padding: 18px; border-radius: 14px; font-weight: 900; font-size: 14px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .scan-btn { width: 100%; background: var(--l-color); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 900; font-size: 13px; cursor: pointer; }
 
-        /* Raporlar Alanı - Artık sayfa ile beraber kayar */
-        #feed { margin-top: 10px; padding-bottom: 50px; } /* Alt kısımda boşluk bırakıldı */
+        /* Küçültülmüş Sonuç Kartları */
+        #feed { padding-bottom: 40px; }
+        .report-card { background: #0d1117; border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px; border-top: 3px solid var(--l-color); }
+        .rep-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .rep-league { background: #161b22; color: #fff; padding: 3px 6px; border-radius: 4px; font-size: 8px; font-weight: 800; }
         
-        .report-card { background: #0d1117; border: 1px solid var(--border); border-radius: 15px; padding: 18px; margin-bottom: 15px; border-top: 4px solid var(--l-color); animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .rep-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .rep-league { background: #161b22; color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 800; }
-        
-        .rep-main { display: flex; align-items: center; gap: 20px; }
-        .rep-gauge { width: 55px; height: 55px; border-radius: 50%; border: 4px solid var(--border); border-top-color: var(--l-color); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; font-family: 'JetBrains Mono'; }
+        .rep-main { display: flex; align-items: center; gap: 12px; }
+        .rep-gauge { width: 42px; height: 42px; border-radius: 50%; border: 3px solid var(--border); border-top-color: var(--l-color); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; font-family: 'JetBrains Mono'; }
         
         .rep-details { flex-grow: 1; }
-        .rep-val { font-size: 22px; font-weight: 900; color: #fff; margin: 0; }
-        .rep-tag { font-size: 9px; color: var(--l-color); font-weight: 800; text-transform: uppercase; }
+        .rep-val { font-size: 18px; font-weight: 900; color: #fff; margin: 0; }
+        .rep-tag { font-size: 8px; color: var(--l-color); font-weight: 800; }
 
-        .hit-zone { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
-        .hit-btn { flex: 1; background: #161b22; border: 1px solid var(--border); color: #fff; font-size: 10px; font-weight: 800; padding: 12px; border-radius: 10px; cursor: pointer; }
-        .del-btn { color: var(--dim); background: none; border: none; cursor: pointer; font-size: 18px; padding: 5px; }
+        .hit-zone { display: flex; gap: 8px; margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px; }
+        .hit-btn { flex: 1; background: #161b22; border: 1px solid var(--border); color: #fff; font-size: 9px; font-weight: 800; padding: 6px; border-radius: 6px; cursor: pointer; }
+        .del-btn { color: var(--dim); background: none; border: none; font-size: 14px; padding: 0 5px; }
 
-        /* Temalar */
-        .theme-eng { --l-color: #3d195b; }
+        /* Premier Lig: Daha Canlı Mor/Macenta Teması */
+        .theme-eng { --l-color: #ff00ff; --bg: #050005; } /* Neon Magenta/Purple */
         .theme-esp { --l-color: #ff4b4b; }
         .theme-ita { --l-color: #0066ff; }
         .theme-ger { --l-color: #d3010c; }
@@ -89,46 +67,46 @@
 
 <div class="wrapper">
     <div class="header">
-        <h1>DNA TERMINAL v11.2</h1>
+        <h1>DNA ANALİZ v11.3</h1>
         <div class="reset-btn" onclick="resetStats()">Sıfırla</div>
     </div>
 
     <div class="dash">
         <div class="stat-box"><span class="st-v" id="st-total">0</span><span class="st-l">Analiz</span></div>
         <div class="stat-box"><span class="st-v" id="st-rate">%0</span><span class="st-l">Başarı</span></div>
-        <div class="stat-box"><span class="st-v" id="st-hit">0</span><span class="st-l">Sinyal</span></div>
+        <div class="stat-box"><span class="st-v" id="st-hit">0</span><span class="st-l">İsabet</span></div>
     </div>
 
     <div class="league-box">
         <select id="league-select" onchange="applyTheme()">
-            <option value="ENG">PREMIER LEAGUE (ENG)</option>
-            <option value="ESP">LA LIGA (ESP)</option>
-            <option value="ITA">SERIE A (ITA)</option>
-            <option value="GER">BUNDESLIGA (GER)</option>
+            <option value="ENG">PREMIER LİG (İNG)</option>
+            <option value="ESP">LA LIGA (İSP)</option>
+            <option value="ITA">SERIE A (İTA)</option>
+            <option value="GER">BUNDESLIGA (ALM)</option>
             <option value="FRA">LIGUE 1 (FRA)</option>
         </select>
     </div>
 
     <div class="engine">
-        <div class="row-label">DEF</div>
+        <div class="row-label">DEFANSİF VERİLER</div>
         <div class="input-grid">
-            <div class="unit"><span class="u-label">SAVE %</span><input type="number" inputmode="decimal" id="v-save" class="u-input"></div>
-            <div class="unit"><span class="u-label">PPA AGAINST</span><input type="number" inputmode="decimal" id="v-ppa-a" class="u-input"></div>
-            <div class="unit" style="grid-column: span 2;"><span class="u-label">SCA AGAINST</span><input type="number" inputmode="decimal" id="v-sca-a" class="u-input"></div>
+            <div class="unit"><span class="u-label">KURTARIŞ %</span><input type="number" inputmode="decimal" id="v-save" class="u-input"></div>
+            <div class="unit"><span class="u-label">CEZA SAHASI SIZMA</span><input type="number" inputmode="decimal" id="v-ppa-a" class="u-input"></div>
+            <div class="unit" style="grid-column: span 2;"><span class="u-label">ŞUT HAZIRLIĞI (RAKİP)</span><input type="number" inputmode="decimal" id="v-sca-a" class="u-input"></div>
         </div>
-        <div class="row-label">OFF</div>
+        <div class="row-label">HÜCUM GÜCÜ</div>
         <div class="input-grid">
-            <div class="unit"><span class="u-label">PPA FOR</span><input type="number" inputmode="decimal" id="v-ppa-f" class="u-input"></div>
-            <div class="unit"><span class="u-label">NPXG / SHOT</span><input type="number" inputmode="decimal" id="v-npx" class="u-input" step="0.01"></div>
+            <div class="unit"><span class="u-label">İÇERİ PAS</span><input type="number" inputmode="decimal" id="v-ppa-f" class="u-input"></div>
+            <div class="unit"><span class="u-label">ŞUT KALİTESİ (xG)</span><input type="number" inputmode="decimal" id="v-npx" class="u-input" step="0.01"></div>
         </div>
-        <button class="scan-btn" onclick="analyze()">VERİYİ TARA</button>
+        <button class="scan-btn" onclick="analyze()">DNA TARAMASINI BAŞLAT</button>
     </div>
 
     <div id="feed"></div>
 </div>
 
 <script>
-    let stats = JSON.parse(localStorage.getItem('vdna_v112_stats')) || { total: 0, wins: 0 };
+    let stats = JSON.parse(localStorage.getItem('vdna_v113_stats')) || { total: 0, wins: 0 };
     const dnaConfig = {
         ENG: { ppaA: 15.5, scaA: 27.0, save: 61.0, ppaF: 12.5, npx: 0.12, theme: 'theme-eng' },
         ESP: { ppaA: 11.5, scaA: 21.0, save: 64.0, ppaF: 10.0, npx: 0.11, theme: 'theme-esp' },
@@ -172,16 +150,15 @@
             <div class="rep-main">
                 <div class="rep-gauge">${match}%</div>
                 <div class="rep-details">
-                    <p class="rep-tag">SİNYAL GÜVENİ</p>
-                    <p class="rep-val">%${signal} HEDEFLEME</p>
+                    <p class="rep-tag">GOL OLASILIĞI (1.5 ÜST)</p>
+                    <p class="rep-val">%${signal} UYUM</p>
                 </div>
             </div>
             <div class="hit-zone">
-                <button class="hit-btn" onclick="markHit(this)">BAŞARILI İŞARETLE</button>
+                <button class="hit-btn" onclick="markHit(this)">BAŞARIYI ONAYLA</button>
             </div>
         `;
         document.getElementById('feed').prepend(card);
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         saveFeed();
         document.querySelectorAll('.u-input').forEach(i => i.value = "");
         updateUI();
@@ -190,15 +167,13 @@
     function deleteRep(id) { document.getElementById(`rep-${id}`).remove(); saveFeed(); updateUI(); }
     function markHit(btn) { 
         stats.total++; stats.wins++; 
-        localStorage.setItem('vdna_v112_stats', JSON.stringify(stats)); 
-        btn.innerText = "BAŞARI KAYDEDİLDİ ✓"; 
-        btn.style.background = "var(--l-color)"; 
-        btn.style.color = "#000"; 
-        saveFeed(); 
-        updateUI(); 
+        localStorage.setItem('vdna_v113_stats', JSON.stringify(stats)); 
+        btn.innerText = "İSABET KAYDEDİLDİ ✓"; 
+        btn.style.background = "var(--l-color)"; btn.style.color = "#000"; 
+        saveFeed(); updateUI(); 
     }
-    function resetStats() { if(confirm("Tüm istatistikler silinsin mi?")) { stats = {total:0, wins:0}; localStorage.setItem('vdna_v112_stats', JSON.stringify(stats)); updateUI(); } }
-    function saveFeed() { localStorage.setItem('vdna_v112_feed', document.getElementById('feed').innerHTML); }
+    function resetStats() { if(confirm("Sıfırlansın mı?")) { stats = {total:0, wins:0}; localStorage.setItem('vdna_v113_stats', JSON.stringify(stats)); updateUI(); } }
+    function saveFeed() { localStorage.setItem('vdna_v113_feed', document.getElementById('feed').innerHTML); }
     function updateUI() {
         document.getElementById('st-total').innerText = stats.total;
         document.getElementById('st-hit').innerText = stats.wins;
@@ -207,7 +182,7 @@
     }
 
     window.onload = () => {
-        document.getElementById('feed').innerHTML = localStorage.getItem('vdna_v112_feed') || '';
+        document.getElementById('feed').innerHTML = localStorage.getItem('vdna_v113_feed') || '';
         updateUI();
         applyTheme();
     };

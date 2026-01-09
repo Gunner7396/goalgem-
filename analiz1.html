@@ -3,176 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScoreMaster v41 - Precision</title>
+    <title>Precision v41</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Inter:wght@300;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0d0d0f; --card: #16161a; --accent: #00ff85; --danger: #ff3e3e; }
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; }
-        .precision-font { font-family: 'Orbitron', sans-serif; }
-        .input-group { background: var(--card); border-radius: 24px; padding: 24px; border: 1px solid #2a2a30; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        .input-field { background: #1f1f24; border-radius: 12px; border: 1px solid #333; padding: 14px; text-align: center; color: #fff; font-weight: 700; width: 100%; outline: none; transition: 0.3s; }
-        .input-field:focus { border-color: var(--accent); background: #25252b; }
-        .team-input { background: transparent; border: none; border-bottom: 2px solid #333; font-size: 18px; font-weight: 900; color: #fff; width: 100%; padding: 10px; margin-bottom: 20px; outline: none; text-transform: uppercase; letter-spacing: -0.5px; }
-        .tab-btn { padding: 12px 20px; border-radius: 14px; font-size: 12px; font-weight: 900; background: #1f1f24; color: #555; transition: 0.3s; border: 1px solid transparent; }
-        .tab-btn.active { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(0,255,133,0.3); }
-        .gauge-container { height: 12px; background: #222; border-radius: 6px; overflow: hidden; position: relative; }
-        .gauge-fill { height: 100%; transition: width 1s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
-        .danger-glow { box-shadow: 0 0 15px var(--danger); }
+        body { background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(28, 28, 30, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); }
+        .input-box { background: #1c1c1e; border: none; border-radius: 12px; padding: 12px; color: #fff; font-weight: 600; text-align: center; width: 100%; font-size: 15px; transition: 0.3s; }
+        .input-box:focus { background: #2c2c2e; outline: 2px solid #30d158; }
+        .btn-lig { padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #1c1c1e; color: #8e8e93; transition: 0.3s; white-space: nowrap; }
+        .btn-lig.active { background: #fff; color: #000; }
+        .analyze-btn { background: #30d158; color: #000; font-weight: 800; border-radius: 16px; padding: 18px; width: 100%; transition: 0.2s; box-shadow: 0 10px 20px rgba(48, 209, 88, 0.2); }
+        .analyze-btn:active { transform: scale(0.96); opacity: 0.8; }
+        .result-card { border-radius: 24px; padding: 20px; margin-top: 15px; position: relative; overflow: hidden; }
+        .energy-bar-bg { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+        .energy-bar-fill { height: 100%; border-radius: 3px; transition: 1s ease-out; }
     </style>
 </head>
-<body class="p-5 pb-24">
+<body class="p-4">
 
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h1 class="text-3xl font-black italic tracking-tighter precision-font text-white">V41<span class="text-[#00ff85]">.PRECISION</span></h1>
-            <p class="text-[10px] opacity-50 font-bold uppercase tracking-[0.2em]">Ağırlıklı Milimetrik Analiz</p>
-        </div>
-        <div onclick="resetApp()" class="bg-[#1f1f24] p-3 rounded-2xl border border-white/5 active:scale-90 transition">
-            <span id="wr" class="text-xl font-black text-[#00ff85] block">0%</span>
-            <span class="text-[8px] opacity-40 font-bold uppercase block">Win Rate</span>
-        </div>
+    <div class="flex justify-between items-center mb-6 mt-2">
+        <h1 class="text-xl font-bold tracking-tight">V41<span class="text-green-500">.PRECISION</span></h1>
+        <div onclick="location.reload()" class="bg-[#1c1c1e] px-4 py-2 rounded-full text-[10px] font-bold text-gray-400">SIFIRLA</div>
     </div>
 
-    <div class="flex gap-2 mb-8 overflow-x-auto no-scrollbar pb-2">
-        <button onclick="setL('PL')" id="l-PL" class="tab-btn active">PREMIER LEAGUE</button>
-        <button onclick="setL('LL')" id="l-LL" class="tab-btn">LA LIGA</button>
-        <button onclick="setL('SA')" id="l-SA" class="tab-btn">SERIE A</button>
-        <button onclick="setL('BL')" id="l-BL" class="tab-btn">BUNDESLIGA</button>
-        <button onclick="setL('L1')" id="l-L1" class="tab-btn">LIGUE 1</button>
+    <div class="flex gap-2 overflow-x-auto no-scrollbar mb-6 pb-2">
+        <button onclick="setL('PL')" id="l-PL" class="btn-lig active">PREMIER LEAGUE</button>
+        <button onclick="setL('LL')" id="l-LL" class="btn-lig">LA LIGA</button>
+        <button onclick="setL('SA')" id="l-SA" class="btn-lig">SERIE A</button>
+        <button onclick="setL('BL')" id="l-BL" class="btn-lig">BUNDESLIGA</button>
+        <button onclick="setL('L1')" id="l-L1" class="btn-lig">LIGUE 1</button>
     </div>
 
-    <div class="input-group">
-        <div class="flex gap-6">
-            <div class="w-1/2">
-                <input id="hName" placeholder="EV TAKIMI" class="team-input" type="text">
-                <div class="space-y-4">
-                    <div><label class="text-[9px] font-bold opacity-30 ml-2">npxG/sh</label><input type="number" step="0.01" id="h_xg" class="input-field" placeholder="0.00"></div>
-                    <div><label class="text-[9px] font-bold opacity-30 ml-2">PPA</label><input type="number" id="h_ppa" class="input-field" placeholder="0"></div>
-                    <div><label class="text-[9px] font-bold opacity-30 ml-2">SCA</label><input type="number" id="h_sca" class="input-field" placeholder="0"></div>
-                    <div><label class="text-[9px] font-bold opacity-30 ml-2">PrgR</label><input type="number" id="h_pr" class="input-field" placeholder="0"></div>
-                </div>
+    <div class="glass p-5 rounded-[28px] mb-4">
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <input id="hN" placeholder="EV SAHİBİ" class="bg-transparent border-b border-gray-800 p-2 text-sm font-bold uppercase outline-none">
+            <input id="aN" placeholder="DEPLASMAN" class="bg-transparent border-b border-gray-800 p-2 text-sm font-bold uppercase text-right outline-none">
+        </div>
+
+        <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+                <input type="number" step="0.01" id="h_xg" class="input-box" placeholder="EV npxG">
+                <input type="number" step="0.01" id="a_xg" class="input-box" placeholder="DEP npxG">
             </div>
-            <div class="w-1/2 text-right">
-                <input id="aName" placeholder="DEPLASMAN" class="team-input text-right" type="text">
-                <div class="space-y-4">
-                    <div><label class="text-[9px] font-bold opacity-30 mr-2 text-right block">npxG/sh</label><input type="number" step="0.01" id="a_xg" class="input-field" placeholder="0.00"></div>
-                    <div><label class="text-[9px] font-bold opacity-30 mr-2 text-right block">PPA</label><input type="number" id="a_ppa" class="input-field" placeholder="0"></div>
-                    <div><label class="text-[9px] font-bold opacity-30 mr-2 text-right block">SCA</label><input type="number" id="a_sca" class="input-field" placeholder="0"></div>
-                    <div><label class="text-[9px] font-bold opacity-30 mr-2 text-right block">PrgR</label><input type="number" id="a_pr" class="input-field" placeholder="0"></div>
-                </div>
+            <div class="grid grid-cols-2 gap-3">
+                <input type="number" id="h_ppa" class="input-box" placeholder="EV PPA">
+                <input type="number" id="a_ppa" class="input-box" placeholder="DEP PPA">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <input type="number" id="h_sca" class="input-box" placeholder="EV SCA">
+                <input type="number" id="a_sca" class="input-box" placeholder="DEP SCA">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <input type="number" id="h_pr" class="input-box" placeholder="EV PrgR">
+                <input type="number" id="a_pr" class="input-box" placeholder="DEP PrgR">
             </div>
         </div>
-        <button onclick="process()" class="w-full bg-[#00ff85] text-black font-black p-5 rounded-2xl mt-8 uppercase text-sm tracking-widest shadow-xl shadow-green-500/20 active:scale-95 transition">Hassas Analiz Yap</button>
+
+        <button onclick="calculate()" class="analyze-btn mt-8">ANALİZ ET</button>
     </div>
 
-    <div id="results" class="mt-8 space-y-6"></div>
+    <div id="res"></div>
 
     <script>
-        const LIMITS = {
-            PL: [0.11, 22, 48, 95],
-            LL: [0.09, 16, 38, 75],
-            SA: [0.09, 17, 38, 75],
-            BL: [0.13, 24, 50, 105],
-            L1: [0.10, 18, 42, 85]
-        };
+        const BARAJ = { PL: [0.11, 22, 48, 95], LL: [0.09, 16, 38, 75], SA: [0.09, 17, 38, 75], BL: [0.13, 24, 50, 105], L1: [0.10, 18, 42, 85] };
+        let curL = 'PL';
+        function setL(l){ curL=l; document.querySelectorAll('.btn-lig').forEach(b=>b.classList.remove('active')); document.getElementById('l-'+l).classList.add('active'); }
 
-        let currentLig = 'PL';
-        function setL(l) {
-            currentLig = l;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('l-'+l).classList.add('active');
-        }
-
-        function process() {
-            const hN = document.getElementById('hName').value || "EV";
-            const aN = document.getElementById('aName').value || "DEP";
-            const hV = [document.getElementById('h_xg').value, document.getElementById('h_ppa').value, document.getElementById('h_sca').value, document.getElementById('h_pr').value].map(Number);
-            const aV = [document.getElementById('a_xg').value, document.getElementById('a_ppa').value, document.getElementById('a_sca').value, document.getElementById('a_pr').value].map(Number);
-
-            const matrix = [(hV[0]+aV[0])/2, hV[1]+aV[1], hV[2]+aV[2], hV[3]+aV[3]];
-            const b = LIMITS[currentLig];
+        function calculate() {
+            const h = [document.getElementById('h_xg').value, document.getElementById('h_ppa').value, document.getElementById('h_sca').value, document.getElementById('h_pr').value].map(Number);
+            const a = [document.getElementById('a_xg').value, document.getElementById('a_ppa').value, document.getElementById('a_sca').value, document.getElementById('a_pr').value].map(Number);
+            const b = BARAJ[curL];
             
-            // Milimetrik Ağırlıklı Puanlama (v41)
-            const p_npxg = Math.min((matrix[0] / b[0]) * 40, 50); // npxG %40 (Max 50 can trigger danger)
-            const p_ppa  = Math.min((matrix[1] / b[1]) * 30, 40); // PPA %30
-            const p_sca  = Math.min((matrix[2] / b[2]) * 20, 25); // SCA %20
-            const p_prgr = Math.min((matrix[3] / b[3]) * 10, 15); // PrgR %10
+            // Hassas Ağırlıklı Hesaplama
+            const score = Math.round(((h[0]+a[0])/2/b[0])*40 + ((h[1]+a[1])/b[1])*30 + ((h[2]+a[2])/b[2])*20 + ((h[3]+a[3])/b[3])*10);
 
-            const finalScore = Math.round(p_npxg + p_ppa + p_sca + p_prgr);
+            let p="1.5 ALT", c="#8e8e93", s="DÜŞÜK";
+            if(score > 45){ p="1.5 ÜST"; c="#32ade6"; s="ORTA"; }
+            if(score > 75){ p="TAM 2.0"; c="#ff9f0a"; s="YÜKSEK"; }
+            if(score > 95){ p="TAM 3.0"; c="#30d158"; s="KRİTİK"; }
+            if(score >= 110){ p="3.5 ÜST"; c="#ff453a"; s="TEHLİKE"; }
 
-            let pred = "1.5 ALT"; let clr = "#666"; let status = "KISIR";
-            if(finalScore > 45) { pred = "1.5 ÜST"; clr = "#00d1ff"; status = "DENGELİ"; }
-            if(finalScore > 75) { pred = "TAM 2.0"; clr = "#ffb800"; status = "ÜRETKEN"; }
-            if(finalScore > 95) { pred = "TAM 3.0"; clr = "#00ff85"; status = "AGRESİF"; }
-            if(finalScore >= 110) { pred = "3.5 ÜST"; clr = "#ff3e3e"; status = "TEHLİKE (DANGER)"; }
-
-            const card = `
-                <div class="bg-[#16161a] rounded-[32px] p-6 border border-white/5 relative overflow-hidden">
-                    <div class="flex justify-between items-start mb-6">
-                        <div>
-                            <p class="text-[10px] font-bold opacity-30 uppercase tracking-widest">${currentLig} Precision v41</p>
-                            <h3 class="text-lg font-black italic">${hN} vs ${aN}</h3>
-                        </div>
-                        <span class="px-3 py-1 rounded-full bg-white/5 text-[9px] font-black" style="color: ${clr}">${status}</span>
+            const html = `
+                <div class="glass result-card border-l-4" style="border-left-color: ${c}">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-[10px] font-black text-gray-500 uppercase">${document.getElementById('hN').value||'MAÇ'} ANALİZİ</span>
+                        <span class="text-[10px] font-black px-2 py-1 rounded bg-white/5" style="color: ${c}">${s}</span>
                     </div>
-
-                    <div class="flex justify-between items-end mb-6">
+                    <div class="flex justify-between items-end mb-4">
                         <div>
-                            <p class="text-[10px] font-black opacity-40 uppercase mb-1">Potansiyel Tahmin</p>
-                            <h2 class="text-4xl font-black italic precision-font" style="color: ${clr}">${pred}</h2>
+                            <p class="text-[11px] text-gray-500 font-bold uppercase">Tahmin</p>
+                            <h2 class="text-3xl font-black italic" style="color: ${c}">${p}</h2>
                         </div>
                         <div class="text-right">
-                            <p class="text-[10px] font-black opacity-40 uppercase mb-1">Enerji Oranı</p>
-                            <h2 class="text-3xl font-black precision-font">%${finalScore}</h2>
+                            <p class="text-[11px] text-gray-500 font-bold uppercase">Enerji</p>
+                            <h2 class="text-2xl font-black text-white">%${score}</h2>
                         </div>
                     </div>
-
-                    <div class="gauge-container mb-6">
-                        <div class="gauge-fill ${finalScore >= 110 ? 'danger-glow' : ''}" style="width: ${Math.min(finalScore, 100)}%; background: ${clr}"></div>
+                    <div class="energy-bar-bg mb-2">
+                        <div class="energy-bar-fill" style="width: ${Math.min(score,100)}%; background: ${c}"></div>
                     </div>
-
-                    <div class="grid grid-cols-4 gap-2 text-[8px] font-bold opacity-30 uppercase text-center mb-6">
-                        <div class="bg-white/5 p-2 rounded-lg">npxG: ${Math.round(p_npxg)}p</div>
-                        <div class="bg-white/5 p-2 rounded-lg">PPA: ${Math.round(p_ppa)}p</div>
-                        <div class="bg-white/5 p-2 rounded-lg">SCA: ${Math.round(p_sca)}p</div>
-                        <div class="bg-white/5 p-2 rounded-lg">PrgR: ${Math.round(p_prgr)}p</div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="tgl(this,'w')" class="py-4 bg-[#1f1f24] rounded-2xl font-black text-xs uppercase tracking-widest transition">Kazandı</button>
-                        <button onclick="tgl(this,'l')" class="py-4 bg-[#1f1f24] rounded-2xl font-black text-xs uppercase tracking-widest transition">Kaybetti</button>
-                    </div>
+                    <p class="text-[9px] text-gray-600 font-medium">* %110 üstü 3.5 ÜST riskidir. Şu an güvenli bölgedesiniz.</p>
                 </div>`;
-            
-            document.getElementById('results').insertAdjacentHTML('afterbegin', card);
-            saveData();
+            document.getElementById('res').innerHTML = html;
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
-
-        function tgl(btn, type) {
-            btn.parentElement.querySelectorAll('button').forEach(b => { b.style.background = '#1f1f24'; b.style.color = '#fff'; });
-            btn.style.background = type === 'w' ? '#00ff85' : '#ff3e3e';
-            btn.style.color = '#000';
-            updateWR(); saveData();
-        }
-
-        function updateWR() {
-            const cards = document.querySelectorAll('.bg-[#16161a]');
-            let w = 0, t = 0;
-            cards.forEach(c => {
-                const wb = c.querySelector('button[onclick*="\'w\'"]');
-                if(wb && wb.style.background.includes('rgb(0, 255, 133)')) { w++; t++; }
-                else {
-                    const lb = c.querySelector('button[onclick*="\'l\'"]');
-                    if(lb && lb.style.background.includes('rgb(255, 62, 62)')) { t++; }
-                }
-            });
-            document.getElementById('wr').innerText = t > 0 ? Math.round((w/t)*100) + "%" : "0%";
-        }
-
-        function saveData() { localStorage.setItem('sm_v41_final', document.getElementById('results').innerHTML); }
-        function resetApp() { if(confirm("Tüm veriler sıfırlansın mı?")) { localStorage.clear(); location.reload(); } }
-        window.onload = () => { document.getElementById('results').innerHTML = localStorage.getItem('sm_v41_final') || ''; updateWR(); };
     </script>
 </body>
 </html>

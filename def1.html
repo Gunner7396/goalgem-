@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Defans DNA Analiz Motoru</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: white; display: flex; justify-content: center; padding: 20px; }
+        .container { background: #2d2d2d; padding: 20px; border-radius: 10px; width: 600px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .row { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .col { width: 48%; }
+        h3 { border-bottom: 2px solid #444; padding-bottom: 5px; font-size: 14px; }
+        label { display: block; font-size: 12px; margin-top: 10px; color: #aaa; }
+        input { width: 100%; padding: 8px; background: #444; border: 1px solid #555; color: white; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #e74c3c; border: none; color: white; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 20px; }
+        button:hover { background: #c0392b; }
+        #result { margin-top: 20px; padding: 15px; text-align: center; border-radius: 5px; display: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align: center; color: #f1c40f;">DNA ANALİZ MOTORU</h2>
+    
+    <div class="row">
+        <div class="col">
+            <h3>SAVUNMA (HEDEF)</h3>
+            <label>PPA (Against) [Hedef: 15+]</label>
+            <input type="number" id="ppaAgainst" placeholder="Örn: 17.5">
+            
+            <label>SCA (Against) [Hedef: 25+]</label>
+            <input type="number" id="scaAgainst" placeholder="Örn: 28.2">
+            
+            <label>Save % [Hedef: < 60]</label>
+            <input type="number" id="savePercent" placeholder="Örn: 55">
+        </div>
+
+        <div class="col">
+            <h3>HÜCUM (AVCI)</h3>
+            <label>PPA (For) [Hedef: 12+]</label>
+            <input type="number" id="ppaFor" placeholder="Örn: 14.1">
+            
+            <label>npxG/Sh [Hedef: > 0.12]</label>
+            <input type="number" id="npxgSh" placeholder="Örn: 0.14">
+        </div>
+    </div>
+
+    <button onclick="analizEt()">ANALİZİ ÇALIŞTIR</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+function analizEt() {
+    let score = 0;
+    
+    // Savunma Kriterleri
+    if(document.getElementById('ppaAgainst').value >= 15) score += 20;
+    if(document.getElementById('scaAgainst').value >= 25) score += 20;
+    if(document.getElementById('savePercent').value <= 60 && document.getElementById('savePercent').value > 0) score += 20;
+    
+    // Hücum Kriterleri
+    if(document.getElementById('ppaFor').value >= 12) score += 20;
+    if(document.getElementById('npxgSh').value >= 0.12) score += 20;
+
+    const resDiv = document.getElementById('result');
+    resDiv.style.display = 'block';
+    
+    if(score >= 80) {
+        resDiv.style.background = '#27ae60';
+        resDiv.innerHTML = "GÜVEN SKORU: %" + score + "<br>SONUÇ: HEDEF BULUNDU! EN AZ 2 GOL BEKLENİYOR.";
+    } else if(score >= 60) {
+        resDiv.style.background = '#f39c12';
+        resDiv.innerHTML = "GÜVEN SKORU: %" + score + "<br>SONUÇ: POTANSİYEL VAR AMA RİSKLİ.";
+    } else {
+        resDiv.style.background = '#c0392b';
+        resDiv.innerHTML = "GÜVEN SKORU: %" + score + "<br>SONUÇ: PAS GEÇ! SAVUNMA DİRENÇLİ OLABİLİR.";
+    }
+}
+</script>
+
+</body>
+</html>

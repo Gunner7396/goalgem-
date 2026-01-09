@@ -11,12 +11,15 @@
         body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
         .wrapper { width: 100%; max-width: 420px; }
         
-        .brand { text-align: center; margin: 15px 0; }
-        .brand h1 { margin: 0; font-size: 26px; font-weight: 900; color: var(--accent); letter-spacing: -1px; }
+        .brand { text-align: center; margin: 10px 0; }
+        .brand h1 { margin: 0; font-size: 24px; font-weight: 900; color: var(--accent); letter-spacing: -1px; }
 
-        .dash { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; position: relative; }
+        .dash { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; position: relative; }
         .st-v { display: block; font-family: 'JetBrains Mono'; font-size: 18px; font-weight: 800; color: var(--accent); text-align: center; }
         .st-l { font-size: 7px; color: var(--dim); text-transform: uppercase; font-weight: 800; text-align: center; display: block; }
+
+        /* League Select (Future-Ready) */
+        .league-box { width: 100%; background: #161b22; border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; margin-bottom: 10px; font-size: 10px; font-weight: 800; color: var(--dim); display: flex; justify-content: space-between; border-left: 3px solid var(--accent); }
 
         .engine { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 15px; }
         .row-label { font-size: 9px; font-weight: 900; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
@@ -27,20 +30,19 @@
         .u-label { font-size: 7px; color: var(--dim); font-weight: 800; display: block; margin-bottom: 4px; }
         .u-input { width: 100%; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 14px; font-weight: 700; }
 
-        .start-btn { width: 100%; background: var(--accent); color: #000; border: none; padding: 18px; border-radius: 14px; font-weight: 900; font-size: 15px; cursor: pointer; }
+        .start-btn { width: 100%; background: var(--accent); color: #000; border: none; padding: 18px; border-radius: 14px; font-weight: 900; font-size: 15px; cursor: pointer; transition: 0.2s; }
+        .start-btn:active { transform: scale(0.96); opacity: 0.9; }
 
-        /* Modern & Compact Result Card */
-        .res-card { background: #12151c; border: 1px solid var(--border); border-radius: 14px; padding: 12px; margin-top: 10px; position: relative; animation: pop 0.2s ease-out; }
-        @keyframes pop { from { transform: scale(0.98); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .res-card { background: #12151c; border: 1px solid var(--border); border-radius: 14px; padding: 12px; margin-top: 10px; position: relative; animation: pop 0.2s ease-out; border-left: 3px solid var(--accent); }
+        @keyframes pop { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         
-        .res-del { position: absolute; top: 10px; right: 10px; color: var(--dim); font-size: 14px; cursor: pointer; padding: 5px; }
-        .res-header { font-size: 11px; font-weight: 800; margin-bottom: 8px; border-bottom: 1px solid #1e2530; padding-bottom: 5px; color: var(--dim); }
+        .res-del { position: absolute; top: 10px; right: 10px; color: var(--dim); font-size: 14px; cursor: pointer; }
+        .res-header { font-size: 10px; font-weight: 800; margin-bottom: 8px; color: var(--dim); border-bottom: 1px solid #1e2530; padding-bottom: 4px; }
         .res-body { display: flex; justify-content: space-between; align-items: center; }
-        .res-main-val { font-family: 'JetBrains Mono'; font-size: 22px; font-weight: 800; color: var(--accent); }
-        .res-sub-val { font-size: 10px; font-weight: 700; color: #fff; text-align: right; }
-        .res-desc { font-size: 11px; color: #cbd5e1; margin-top: 8px; line-height: 1.3; }
-
-        .hit-btn { background: #1a1f29; border: 1px solid var(--border); color: var(--accent); font-size: 10px; font-weight: 800; padding: 5px 10px; border-radius: 6px; margin-top: 8px; cursor: pointer; }
+        .res-main-val { font-family: 'JetBrains Mono'; font-size: 20px; font-weight: 800; color: var(--accent); }
+        .res-sub-val { font-size: 9px; font-weight: 700; color: #fff; text-align: right; }
+        .res-desc { font-size: 10px; color: #cbd5e1; margin-top: 8px; line-height: 1.3; }
+        .hit-btn { background: #1a1f29; border: 1px solid var(--border); color: var(--accent); font-size: 9px; font-weight: 800; padding: 6px 10px; border-radius: 6px; margin-top: 10px; cursor: pointer; display: inline-block; }
     </style>
 </head>
 <body>
@@ -54,18 +56,23 @@
         <div><span class="st-v" id="st-hit">0</span><span class="st-l">Hits</span></div>
     </div>
 
+    <div class="league-box" onclick="alert('Diğer ligler analiz aşamasında. Şimdilik Premier League aktif.')">
+        <span>PREMIER LEAGUE (ENG)</span>
+        <span style="color: var(--accent)">● ACTIVE</span>
+    </div>
+
     <div class="engine">
         <div class="row-label">HEDEF (DEFENSE)</div>
         <div class="input-grid">
             <div class="unit"><span class="u-label">TEAM NAME</span><input type="text" id="t-def" class="u-input"></div>
-            <div class="unit"><span class="u-label">SAVE %</span><input type="number" id="v-save" class="u-input" step="0.1"></div>
-            <div class="unit"><span class="u-label">PPA AGAINST</span><input type="number" id="v-ppa-a" class="u-input" step="0.1"></div>
-            <div class="unit"><span class="u-label">SCA AGAINST</span><input type="number" id="v-sca-a" class="u-input" step="0.1"></div>
+            <div class="unit"><span class="u-label">SAVE %</span><input type="number" id="v-save" class="u-input"></div>
+            <div class="unit"><span class="u-label">PPA AGAINST</span><input type="number" id="v-ppa-a" class="u-input"></div>
+            <div class="unit"><span class="u-label">SCA AGAINST</span><input type="number" id="v-sca-a" class="u-input"></div>
         </div>
         <div class="row-label">AVCI (OFFENSE)</div>
         <div class="input-grid">
             <div class="unit"><span class="u-label">TEAM NAME</span><input type="text" id="t-off" class="u-input"></div>
-            <div class="unit"><span class="u-label">PPA FOR</span><input type="number" id="v-ppa-f" class="u-input" step="0.1"></div>
+            <div class="unit"><span class="u-label">PPA FOR</span><input type="number" id="v-ppa-f" class="u-input"></div>
             <div class="unit" style="grid-column: span 2;"><span class="u-label">NPXG / SHOT (QUALITY)</span><input type="number" id="v-npx" class="u-input" step="0.01"></div>
         </div>
         <button class="start-btn" onclick="analyze()">START DNA SCAN</button>
@@ -79,8 +86,8 @@
 
     function analyze() {
         const d = {
-            t1: document.getElementById('t-def').value || 'DEF',
-            t2: document.getElementById('t-off').value || 'OFF',
+            t1: document.getElementById('t-def').value || 'HEDEF',
+            t2: document.getElementById('t-off').value || 'AVCI',
             save: parseFloat(document.getElementById('v-save').value || 0),
             ppaA: parseFloat(document.getElementById('v-ppa-a').value || 0),
             scaA: parseFloat(document.getElementById('v-sca-a').value || 0),
@@ -88,20 +95,15 @@
             npx: parseFloat(document.getElementById('v-npx').value || 0)
         };
 
-        if(d.save === 0 || d.ppaA === 0) { alert("Metrikleri girin!"); return; }
+        if(d.save === 0 || d.ppaA === 0 || d.npx === 0) { alert("Lütfen tüm metrikleri girin!"); return; }
 
-        // --- GELİŞMİŞ ÇARPIŞTIRMA ALGORİTMASI ---
-        // Sızıntı Puanı (Savunma Zaafları)
+        // DINAMIK ÇARPIŞTIRMA ALGORITMASI (Ağırlıklandırılmış)
         let leakScore = (d.ppaA / 15 * 30) + (d.scaA / 26 * 30) + ((100 - d.save) / 40 * 40);
-        
-        // Güç Puanı (Hücum Kalitesi)
         let powerScore = (d.ppaF / 12 * 40) + (d.npx / 0.12 * 60);
-
-        // Nihai DNA (İki gücün çarpışması)
-        let finalScore = Math.min(100, Math.round((leakScore * 0.6) + (powerScore * 0.4)));
+        let finalScore = Math.min(100, Math.round((leakScore * 0.55) + (powerScore * 0.45)));
         
-        // Dinamik Olasılık (npxG arttıkça bu değer daha agresif yükselir)
-        let prob15 = Math.min(95, Math.round(finalScore * (d.npx > 0.15 ? 1.1 : 1.0)));
+        // Dinamik Olasılık (npxG çarpanı daha etkin)
+        let prob15 = Math.min(95, Math.round(finalScore * (d.npx >= 0.15 ? 1.15 : (d.npx <= 0.08 ? 0.8 : 1.0))));
 
         const cardId = Date.now();
         const card = document.createElement('div');
@@ -114,28 +116,33 @@
                 <div><span class="res-main-val">%${finalScore}</span><br><span class="st-l" style="text-align:left">DNA MATCH</span></div>
                 <div class="res-sub-val">DEP 1.5 ÜST<br><span style="font-size:18px; color:var(--accent)">%${prob15}</span></div>
             </div>
-            <div class="res-desc">${finalScore >= 80 ? 'Kritik sızıntı onaylandı. Avcı DNA\'sı bitiricilik için uygun.' : 'Düşük frekans. Savunma direnci veya hücum kalitesi yetersiz.'}</div>
-            <button class="hit-btn" onclick="markHit(this)">✅ SONUÇ BAŞARILI</button>
+            <div class="res-desc">${finalScore >= 80 ? 'Kritik sızıntı. Savunma çöktü, avcı kaliteli bitirici.' : 'Zayıf sinyal. Veriler hedeflenen eşleşme kalitesinde değil.'}</div>
+            <button class="hit-btn" onclick="markHit(this)">✅ SUCCESS</button>
         `;
         
         document.getElementById('results-container').prepend(card);
-        localStorage.setItem('vdna_v7_hist', document.getElementById('results-container').innerHTML);
+        saveHistory();
         
-        // Temizlik
+        // Kutuları ve isimleri temizle
         document.querySelectorAll('.u-input').forEach(i => i.value = "");
         updateUI();
     }
 
     function deleteCard(id) {
         document.getElementById(`card-${id}`).remove();
-        localStorage.setItem('vdna_v7_hist', document.getElementById('results-container').innerHTML);
+        saveHistory();
     }
 
     function markHit(btn) {
         stats.total++; stats.wins++;
         localStorage.setItem('vdna_v7_stats', JSON.stringify(stats));
-        btn.replaceWith(document.createElement('span'));
+        btn.remove();
+        saveHistory();
         updateUI();
+    }
+
+    function saveHistory() {
+        localStorage.setItem('vdna_v7_hist', document.getElementById('results-container').innerHTML);
     }
 
     function updateUI() {

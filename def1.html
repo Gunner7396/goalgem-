@@ -4,213 +4,188 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>P-PRO TERMINAL</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #030508;
-            --card-bg: #0d1117;
-            --accent: #00ffa3;
-            --border: rgba(255, 255, 255, 0.05);
-            --input-bg: #161b22;
+            --bg: #080a0f; --card: #12151c; --accent: #00ffa3; --border: #1e232d;
+            --text: #ffffff; --dim: #64748b; --danger: #ff3b3b;
         }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        .wrapper { width: 100%; max-width: 400px; }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { 
-            background: var(--bg); 
-            color: #fff; 
-            font-family: 'Outfit', sans-serif; 
-            margin: 0; padding: 10px; 
-            display: flex; flex-direction: column; align-items: center;
-        }
+        /* Dashboard */
+        .dash { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+        .st-v { display: block; font-family: 'JetBrains Mono'; font-size: 20px; font-weight: 800; color: var(--accent); text-align: center; }
+        .st-l { font-size: 8px; color: var(--dim); text-transform: uppercase; font-weight: 900; letter-spacing: 1px; text-align: center; display: block; }
 
-        .terminal-wrapper { width: 100%; max-width: 400px; padding-bottom: 50px; }
-
-        /* HEADER & DASHBOARD */
-        .glass-header { 
-            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
-            border: 1px solid var(--border); border-radius: 24px; padding: 20px;
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;
-            backdrop-filter: blur(10px);
-        }
-        .stat { text-align: center; }
-        .stat-v { display: block; font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 800; color: var(--accent); }
-        .stat-l { font-size: 9px; color: #64748b; font-weight: 900; letter-spacing: 1px; }
-
-        /* TEAM IDENTITY */
-        .team-selector { 
-            display: flex; gap: 8px; margin-bottom: 12px;
-        }
-        .team-box { 
-            flex: 1; background: var(--card-bg); border: 1px solid var(--border); 
-            border-radius: 16px; padding: 12px;
-        }
-        .team-box input { 
-            width: 100%; background: transparent; border: none; color: white;
-            text-align: center; font-weight: 900; font-size: 14px; text-transform: uppercase;
-        }
-
-        /* DATA INPUT GRID */
-        .engine-card { 
-            background: var(--card-bg); border-radius: 28px; padding: 20px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5); border: 1px solid var(--border);
-        }
-
-        .section-header { 
-            font-size: 10px; font-weight: 900; color: #475569; letter-spacing: 2px;
-            margin: 15px 0 10px 5px; display: flex; align-items: center; gap: 10px;
-        }
-        .section-header::after { content: ""; flex: 1; height: 1px; background: var(--border); }
-
-        .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        /* Analyzer Core */
+        .engine { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         
-        .metric-unit { 
-            background: var(--input-bg); border-radius: 18px; padding: 12px; 
-            border: 1px solid rgba(255,255,255,0.03); transition: 0.3s;
-        }
-        .metric-unit:focus-within { border-color: var(--accent); background: #1c2128; }
-        
-        .metric-unit label { display: block; font-size: 9px; font-weight: 800; color: #64748b; margin-bottom: 5px; }
-        .metric-unit input { 
-            width: 100%; background: transparent; border: none; color: white;
-            font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 600;
-        }
+        .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .team-box { background: #080a0f; border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
+        .team-box span { font-size: 9px; color: var(--accent); font-weight: 800; display: block; margin-bottom: 5px; text-align: center; }
+        .team-box input { width: 100%; background: transparent; border: none; color: #fff; text-align: center; font-weight: 700; text-transform: uppercase; font-size: 14px; }
 
-        /* BUTTON DESIGN */
-        .fire-btn { 
-            width: 100%; height: 65px; margin-top: 20px; border-radius: 20px;
-            border: none; background: var(--accent); color: #000;
-            font-weight: 900; font-size: 16px; letter-spacing: 1px;
-            box-shadow: 0 10px 25px rgba(0,255,163,0.3); transition: 0.3s;
-            cursor: pointer;
-        }
-        .fire-btn:active { transform: scale(0.96); opacity: 0.8; }
+        .metrics-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .metric-group { display: flex; flex-direction: column; gap: 10px; }
+        .metric-unit { background: #1a1f29; border-radius: 14px; padding: 12px; border: 1px solid transparent; transition: 0.2s; }
+        .metric-unit:focus-within { border-color: var(--accent); background: #222936; }
+        .m-lbl { font-size: 8px; font-weight: 800; color: var(--dim); margin-bottom: 4px; display: block; height: 20px; }
+        .m-inp { width: 100%; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 15px; font-weight: 600; }
+        .fb-ref { font-size: 7px; color: var(--accent); opacity: 0.6; display: block; margin-top: 2px; }
 
-        /* ANALYSIS STREAM */
-        .history-card { 
-            background: #0d1117; border: 1px solid var(--border); border-radius: 20px;
-            padding: 16px; margin-top: 15px; position: relative; overflow: hidden;
-        }
-        .match-label { font-size: 12px; font-weight: 900; letter-spacing: 0.5px; margin-bottom: 12px; }
-        
-        .score-badge { 
-            position: absolute; top: 15px; right: 15px; font-family: 'JetBrains Mono';
-            font-weight: 800; font-size: 14px;
-        }
+        /* Action Buttons */
+        .btn-row { display: flex; gap: 8px; margin-top: 20px; }
+        .start-btn { flex: 5; background: var(--accent); color: #000; border: none; padding: 18px; border-radius: 16px; font-weight: 900; font-size: 15px; letter-spacing: 1px; cursor: pointer; transition: 0.2s; }
+        .clear-btn { flex: 1; background: rgba(255,59,59,0.1); border: 1px solid rgba(255,59,59,0.2); border-radius: 16px; color: var(--danger); font-size: 20px; cursor: pointer; }
+        .start-btn:active { transform: scale(0.97); }
 
-        .bar-container { height: 6px; background: #1c2128; border-radius: 10px; margin-bottom: 15px; }
-        .bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease-in-out; }
+        /* Analysis Result */
+        .res-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-top: 15px; animation: slideIn 0.3s ease-out; border-left: 4px solid var(--accent); }
+        .res-title { font-size: 13px; font-weight: 900; margin-bottom: 8px; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .res-body { font-size: 12px; line-height: 1.6; color: #cbd5e1; margin-bottom: 15px; }
+        .res-footer { display: flex; justify-content: space-between; align-items: center; }
+        .conf-box { font-family: 'JetBrains Mono'; font-weight: 800; font-size: 18px; }
+        .mark-btn { background: #1a1f29; border: 1px solid var(--border); color: #fff; padding: 8px 15px; border-radius: 10px; cursor: pointer; margin-left: 5px; }
 
-        .result-actions { display: flex; gap: 8px; }
-        .action-btn { 
-            flex: 1; background: #161b22; border: 1px solid var(--border);
-            border-radius: 12px; color: #fff; padding: 12px; font-size: 18px;
-        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="terminal-wrapper">
-    <div class="glass-header">
-        <div class="stat"><span class="stat-v" id="st-total">0</span><span class="stat-l">SCAN</span></div>
-        <div class="stat"><span class="stat-v" id="st-rate" style="color:#fbff00">%0</span><span class="stat-l">WIN RATE</span></div>
-        <div class="stat"><span class="stat-v" id="st-hit">0</span><span class="stat-l">HITS</span></div>
+<div class="wrapper">
+    <div class="dash">
+        <div><span class="st-v" id="st-total">0</span><span class="st-l">SCAN</span></div>
+        <div><span class="st-v" id="st-rate" style="color:#fbff00">%0</span><span class="st-l">ACCURACY</span></div>
+        <div><span class="st-v" id="st-win">0</span><span class="st-l">HITS</span></div>
     </div>
 
-    <div class="engine-card">
-        <div class="team-selector">
-            <div class="team-box"><input type="text" id="t1" placeholder="HOME (DEF)"></div>
-            <div class="team-box"><input type="text" id="t2" placeholder="AWAY (OFF)"></div>
+    <div class="engine">
+        <div class="team-grid">
+            <div class="team-box"><span>DEFENSE</span><input type="text" id="t-def" placeholder="TEAM A"></div>
+            <div class="team-box"><span>OFFENSE</span><input type="text" id="t-off" placeholder="TEAM B"></div>
         </div>
 
-        <div class="section-header">DEFENSIVE DNA (AGAINST)</div>
-        <div class="metric-grid">
-            <div class="metric-unit">
-                <label>PPA AGAINST</label>
-                <input type="number" id="ppa-a" placeholder="15.0" step="0.1" inputmode="decimal">
+        <div class="metrics-container">
+            <div class="metric-group">
+                <div class="metric-unit">
+                    <span class="m-lbl">PPA AGAINST</span>
+                    <input type="number" id="ppa-a" class="m-inp" placeholder="0.0" inputmode="decimal">
+                    <span class="fb-ref">Against > PPA</span>
+                </div>
+                <div class="metric-unit">
+                    <span class="m-lbl">SCA AGAINST</span>
+                    <input type="number" id="sca-a" class="m-inp" placeholder="0.0" inputmode="decimal">
+                    <span class="fb-ref">Against > SCA</span>
+                </div>
+                <div class="metric-unit">
+                    <span class="m-lbl">SAVE %</span>
+                    <input type="number" id="save" class="m-inp" placeholder="0.0" inputmode="decimal">
+                    <span class="fb-ref">Keeper > Save%</span>
+                </div>
             </div>
-            <div class="metric-unit">
-                <label>SCA AGAINST</label>
-                <input type="number" id="sca-a" placeholder="25.0" step="0.1" inputmode="decimal">
-            </div>
-            <div class="metric-unit" style="grid-column: span 2;">
-                <label>SAVE PERCENTAGE (%)</label>
-                <input type="number" id="save" placeholder="60.0" step="0.1" inputmode="decimal">
+
+            <div class="metric-group">
+                <div class="metric-unit">
+                    <span class="m-lbl">PPA FOR</span>
+                    <input type="number" id="ppa-f" class="m-inp" placeholder="0.0" inputmode="decimal">
+                    <span class="fb-ref">Standard > PPA</span>
+                </div>
+                <div class="metric-unit">
+                    <span class="m-lbl">NPXG / SHOT</span>
+                    <input type="number" id="npx" class="m-inp" placeholder="0.00" inputmode="decimal">
+                    <span class="fb-ref">Shooting > npxG/Sh</span>
+                </div>
+                <div style="height: 75px; display: flex; align-items: center; justify-content: center; opacity: 0.2;">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
             </div>
         </div>
 
-        <div class="section-header">OFFENSIVE DNA (FOR)</div>
-        <div class="metric-grid">
-            <div class="metric-unit">
-                <label>PPA FOR</label>
-                <input type="number" id="ppa-f" placeholder="12.0" step="0.1" inputmode="decimal">
-            </div>
-            <div class="metric-unit">
-                <label>NPXG / SHOT</label>
-                <input type="number" id="npx" placeholder="0.12" step="0.01" inputmode="decimal">
-            </div>
+        <div class="btn-row">
+            <button class="start-btn" onclick="run()">START ANALYSIS</button>
+            <button class="clear-btn" onclick="fullReset()">×</button>
         </div>
-
-        <button class="fire-btn" onclick="execute()">RUN DNA ANALYSIS</button>
     </div>
 
-    <div id="stream"></div>
+    <div id="results-list"></div>
 </div>
 
 <script>
-    let stats = JSON.parse(localStorage.getItem('ppro_t3_stats')) || { total: 0, wins: 0 };
+    let stats = JSON.parse(localStorage.getItem('p_pro_st')) || { total: 0, wins: 0 };
+    
+    window.onload = () => {
+        document.getElementById('results-list').innerHTML = localStorage.getItem('p_pro_hist') || '';
+        updateUI();
+    };
 
-    function execute() {
+    function updateUI() {
+        document.getElementById('st-total').innerText = stats.total;
+        document.getElementById('st-win').innerText = stats.wins;
+        const rate = stats.total === 0 ? 0 : Math.round((stats.wins / stats.total) * 100);
+        document.getElementById('st-rate').innerText = '%' + rate;
+    }
+
+    function fullReset() {
+        document.querySelectorAll('input').forEach(i => i.value = '');
+    }
+
+    function run() {
         const d = {
-            t1: document.getElementById('t1').value || 'DEF',
-            t2: document.getElementById('t2').value || 'OFF',
-            ppaA: parseFloat(document.getElementById('ppa-a').value || 0),
-            scaA: parseFloat(document.getElementById('sca-a').value || 0),
-            save: parseFloat(document.getElementById('save').value || 0),
-            ppaF: parseFloat(document.getElementById('ppa-f').value || 0),
-            npx: parseFloat(document.getElementById('npx').value || 0)
+            def: document.getElementById('t-def').value || 'DEF',
+            off: document.getElementById('t-off').value || 'OFF',
+            paA: parseFloat(document.getElementById('ppa-a').value || 0),
+            saA: parseFloat(document.getElementById('sca-a').value || 0),
+            sv: parseFloat(document.getElementById('save').value || 0),
+            paF: parseFloat(document.getElementById('ppa-f').value || 0),
+            nx: parseFloat(document.getElementById('npx').value || 0)
         };
 
         let score = 0;
-        if(d.ppaA >= 15) score += 20;
-        if(d.scaA >= 25) score += 20;
-        if(d.save > 0 && d.save <= 60) score += 20;
-        if(d.ppaF >= 12) score += 20;
-        if(d.npx >= 0.12) score += 20;
+        if(d.paA >= 15) score += 20;
+        if(d.saA >= 25) score += 20;
+        if(d.sv > 0 && d.sv <= 60) score += 20;
+        if(d.paF >= 12) score += 20;
+        if(d.nx >= 0.12) score += 20;
 
-        renderResult(d, score);
-    }
+        let yorum = "";
+        let renk = score >= 80 ? "#00ffa3" : (score >= 60 ? "#fbff00" : "#ff3b3b");
+        
+        if(score >= 80) {
+            yorum = `<b>KRİTİK EŞLEŞME:</b> ${d.def} savunma DNA'sı Premier Lig'in en kırılgan seviyesinde. ${d.off} takımının hücum metrikleri bu sızıntıyı cezalandıracak güçte. En az 2 gol beklentisi çok yüksek.`;
+        } else if(score >= 60) {
+            yorum = `<b>ORTA RİSK:</b> Veriler sızıntı gösteriyor ancak ${d.def} kalecisi veya savunma yerleşimi maçı tutabilir. ${d.off} tarafının bitiriciliği belirleyici olacak.`;
+        } else {
+            yorum = `<b>DÜŞÜK İHTİMAL:</b> ${d.def} savunması istatistiksel olarak yeterli direnci gösteriyor. Bu maçta DNA çöküşü beklenmiyor, pas geçilmesi önerilir.`;
+        }
 
-    function renderResult(d, score) {
-        const color = score >= 80 ? '#00ffa3' : (score >= 60 ? '#fbff00' : '#ff3b3b');
         const card = document.createElement('div');
-        card.className = 'history-card';
+        card.className = 'res-card';
+        card.style.borderColor = renk;
         card.innerHTML = `
-            <div class="match-label">${d.t1.toUpperCase()} v ${d.t2.toUpperCase()}</div>
-            <div class="score-badge" style="color:${color}">%${score}</div>
-            <div class="bar-container"><div class="bar-fill" style="width:${score}%; background:${color}"></div></div>
-            <div class="result-actions">
-                <button class="action-btn" onclick="mark(true, this)">✅</button>
-                <button class="action-btn" onclick="mark(false, this)">❌</button>
+            <div class="res-title">${d.def} v ${d.off} // ANALİZ RAPORU</div>
+            <div class="res-body">${yorum}</div>
+            <div class="res-footer">
+                <div class="conf-box" style="color:${renk}">%${score}</div>
+                <div>
+                    <button class="mark-btn" onclick="mark(true, this)">✅</button>
+                    <button class="mark-btn" onclick="mark(false, this)">❌</button>
+                </div>
             </div>
         `;
-        document.getElementById('stream').prepend(card);
+        const list = document.getElementById('results-list');
+        list.prepend(card);
+        localStorage.setItem('p_pro_hist', list.innerHTML);
     }
 
     function mark(win, btn) {
         stats.total++; if(win) stats.wins++;
-        localStorage.setItem('ppro_t3_stats', JSON.stringify(stats));
-        updateStats();
-        btn.closest('.result-actions').innerHTML = `<div style="width:100%; text-align:center; font-weight:900; color:${win?'#00ffa3':'#ff3b3b'}">${win?'HİT':'MISS'}</div>`;
+        localStorage.setItem('p_pro_st', JSON.stringify(stats));
+        updateUI();
+        btn.parentElement.innerHTML = `<span style="font-weight:900; color:${win?'#00ffa3':'#ff3b3b'}">${win?'HIT':'MISS'}</span>`;
+        localStorage.setItem('p_pro_hist', document.getElementById('results-list').innerHTML);
     }
-
-    function updateStats() {
-        document.getElementById('st-total').innerText = stats.total;
-        document.getElementById('st-hit').innerText = stats.wins;
-        const rate = stats.total === 0 ? 0 : Math.round((stats.wins / stats.total) * 100);
-        document.getElementById('st-rate').innerText = '%' + rate;
-    }
-    updateStats();
 </script>
-
 </body>
 </html>

@@ -3,76 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScoreMaster AI v11</title>
+    <title>ScoreMaster AI v12</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background-color: #080808; color: #eee; font-family: 'Inter', sans-serif; letter-spacing: -0.02em; }
-        .fotmob-dark { background: #121212; border-radius: 10px; border: 1px solid #1f1f1f; }
+        body { background-color: #050505; color: #eee; font-family: 'Inter', sans-serif; }
+        .fotmob-dark { background: #111; border-radius: 8px; border: 1px solid #1a1a1a; }
         .accent-green { color: #00ff85; }
-        .input-dark { background: #1a1a1a; border: 1px solid #252525; border-radius: 6px; padding: 8px; text-align: center; color: white; font-weight: 700; outline: none; font-size: 13px; }
-        .league-btn { background: #1a1a1a; border: 1px solid #252525; padding: 6px; border-radius: 6px; font-size: 9px; font-weight: 800; color: #555; transition: 0.2s; }
-        .league-btn.active { border-color: #00ff85; color: #00ff85; background: #00ff8508; }
+        .input-dark { background: #181818; border: 1px solid #222; border-radius: 6px; padding: 10px; text-align: center; color: white; font-weight: 700; outline: none; font-size: 14px; width: 100%; }
+        .input-dark:focus { border-color: #00ff85; background: #1a1a1a; }
+        .league-btn { background: #151515; border: 1px solid #222; padding: 8px; border-radius: 6px; font-size: 10px; font-weight: 800; color: #444; transition: 0.2s; }
+        .league-btn.active { border-color: #00ff85; color: #00ff85; background: #00ff8510; box-shadow: 0 0 10px #00ff8510; }
         .prob-bar { height: 3px; border-radius: 1px; background: #222; margin-top: 4px; overflow: hidden; }
-        .prob-fill { height: 100%; background: #00ff85; transition: width 0.4s ease; }
+        .prob-fill { height: 100%; background: #00ff85; transition: width 0.3s ease-out; }
     </style>
 </head>
-<body class="p-3 pb-20">
+<body class="p-3 pb-24">
 
-    <div class="flex justify-between items-end mb-4 px-1">
-        <h1 class="text-lg font-black italic uppercase tracking-tighter">SCORE<span class="accent-green">MASTER</span></h1>
-        <div class="text-right leading-none">
-            <span id="globalSuccess" class="text-xl font-black accent-green">0%</span>
-            <p class="text-[7px] text-gray-600 font-bold uppercase tracking-widest mt-1">Başarı Oranı</p>
+    <div class="flex justify-between items-center mb-4 px-1">
+        <h1 class="text-xl font-black italic uppercase tracking-tighter">SCORE<span class="accent-green">MASTER</span></h1>
+        <div class="bg-white/5 px-3 py-1 rounded-full border border-white/5">
+            <span id="globalSuccess" class="text-sm font-black accent-green">0%</span>
+            <span class="text-[7px] text-gray-500 font-bold uppercase ml-1">Success</span>
         </div>
     </div>
 
-    <div class="grid grid-cols-5 gap-1.5 mb-3">
-        <button onclick="setLeague('PL', this)" class="league-btn active">PL</button>
-        <button onclick="setLeague('LL', this)" class="league-btn">LL</button>
-        <button onclick="setLeague('SA', this)" class="league-btn">SA</button>
-        <button onclick="setLeague('BL', this)" class="league-btn">BL</button>
-        <button onclick="setLeague('L1', this)" class="league-btn">L1</button>
+    <div class="grid grid-cols-5 gap-1.5 mb-4">
+        <button onclick="changeLeague('PL', this)" class="league-btn active">PL</button>
+        <button onclick="changeLeague('LL', this)" class="league-btn">LL</button>
+        <button onclick="changeLeague('SA', this)" class="league-btn">SA</button>
+        <button onclick="changeLeague('BL', this)" class="league-btn">BL</button>
+        <button onclick="changeLeague('L1', this)" class="league-btn">L1</button>
     </div>
 
-    <div class="fotmob-dark p-4 mb-3 shadow-2xl">
-        <div class="flex gap-3 mb-4 relative">
-            <input list="homeTeamsList" id="homeTeam" placeholder="EV" class="flex-1 bg-transparent text-xs py-1 border-b border-gray-800 outline-none font-bold uppercase">
-            <input list="awayTeamsList" id="awayTeam" placeholder="DEP" class="flex-1 bg-transparent text-xs py-1 border-b border-gray-800 outline-none font-bold uppercase text-right">
-            <datalist id="homeTeamsList"></datalist>
-            <datalist id="awayTeamsList"></datalist>
+    <div class="fotmob-dark p-4 mb-4 shadow-xl">
+        <div class="flex gap-4 mb-5 border-b border-white/5 pb-2">
+            <input list="teamsList" id="hTeam" placeholder="Ev Sahibi" class="w-full bg-transparent text-xs outline-none font-bold uppercase placeholder:text-gray-700">
+            <div class="text-[10px] text-gray-800 font-black self-center italic">VS</div>
+            <input list="teamsList" id="aTeam" placeholder="Deplasman" class="w-full bg-transparent text-xs outline-none font-bold uppercase text-right placeholder:text-gray-700">
         </div>
 
-        <div class="grid grid-cols-3 gap-2 items-center">
-            <input type="number" step="0.01" id="h_npxg" class="input-dark" placeholder="—">
+        <div class="grid grid-cols-3 gap-2 items-center mb-2">
+            <input type="number" step="0.01" id="h_npxg" class="input-dark" placeholder="—" oninput="liveUpdate()">
             <span class="text-[7px] text-gray-500 font-black uppercase text-center">npxG/Sh</span>
-            <input type="number" step="0.01" id="a_npxg" class="input-dark" placeholder="—">
+            <input type="number" step="0.01" id="a_npxg" class="input-dark" placeholder="—" oninput="liveUpdate()">
             
-            <input type="number" id="h_ppa" class="input-dark" placeholder="—">
+            <input type="number" id="h_ppa" class="input-dark" placeholder="—" oninput="liveUpdate()">
             <span class="text-[7px] text-gray-500 font-black uppercase text-center">PPA</span>
-            <input type="number" id="a_ppa" class="input-dark" placeholder="—">
+            <input type="number" id="a_ppa" class="input-dark" placeholder="—" oninput="liveUpdate()">
 
-            <input type="number" id="h_sca" class="input-dark" placeholder="—">
+            <input type="number" id="h_sca" class="input-dark" placeholder="—" oninput="liveUpdate()">
             <span class="text-[7px] text-gray-500 font-black uppercase text-center">SCA</span>
-            <input type="number" id="a_sca" class="input-dark" placeholder="—">
+            <input type="number" id="a_sca" class="input-dark" placeholder="—" oninput="liveUpdate()">
 
-            <input type="number" id="h_prgr" class="input-dark" placeholder="—">
+            <input type="number" id="h_prgr" class="input-dark" placeholder="—" oninput="liveUpdate()">
             <span class="text-[7px] text-gray-500 font-black uppercase text-center">PrgR</span>
-            <input type="number" id="a_prgr" class="input-dark" placeholder="—">
+            <input type="number" id="a_prgr" class="input-dark" placeholder="—" oninput="liveUpdate()">
         </div>
-
-        <button onclick="calculateAnalysis()" class="w-full bg-[#00ff85] text-black py-3 rounded-lg mt-4 font-black text-[10px] uppercase italic tracking-widest active:scale-95 transition-transform">ANALİZ ET</button>
+        
+        <button id="mainBtn" onclick="calculateAnalysis()" class="w-full bg-[#00ff85] text-black py-3 rounded-lg mt-4 font-black text-[11px] uppercase italic tracking-widest shadow-lg shadow-green-500/10 active:scale-95 transition-all">ANALİZİ ÇALIŞTIR</button>
     </div>
 
-    <div id="resultArea" class="hidden mb-4 animate-in fade-in slide-in-from-top-2 duration-300">
-        <div class="fotmob-dark p-3 border-l-2 border-green-500 bg-gradient-to-r from-green-950/5 to-transparent">
-            <div class="grid grid-cols-3 gap-2 mb-3">
+    <div id="resultArea" class="hidden mb-4 scale-95 opacity-0 transition-all duration-300 transform origin-top">
+        <div class="fotmob-dark p-3 border border-green-500/30">
+            <div class="grid grid-cols-3 gap-3 mb-4">
                 <div class="text-center">
                     <div class="text-[6px] text-gray-500 font-black italic">1.5 ALT</div>
                     <div id="p_alt" class="text-sm font-black">0%</div>
                     <div class="prob-bar"><div id="b_alt" class="prob-fill"></div></div>
                 </div>
-                <div class="text-center border-x border-gray-800/50 px-1">
+                <div class="text-center border-x border-white/5">
                     <div class="text-[6px] text-gray-400 font-black italic">2.0 GOL</div>
                     <div id="p_tam2" class="text-sm font-black accent-green">0%</div>
                     <div class="prob-bar"><div id="b_tam2" class="prob-fill"></div></div>
@@ -83,100 +83,99 @@
                     <div class="prob-bar"><div id="b_tam3" class="prob-fill"></div></div>
                 </div>
             </div>
-            <div class="flex gap-2 items-center bg-black/30 p-2 rounded-md">
-                <input type="number" id="finalHome" placeholder="0" class="w-8 bg-gray-800 rounded text-center text-[10px] p-1 border border-gray-700 font-bold">
-                <input type="number" id="finalAway" placeholder="0" class="w-8 bg-gray-800 rounded text-center text-[10px] p-1 border border-gray-700 font-bold">
-                <button onclick="archiveMatch()" class="flex-1 bg-white text-black text-[8px] py-1.5 rounded font-black uppercase tracking-tighter">ARŞİVE EKLE & TEMİZLE</button>
+            <div class="flex gap-2">
+                <input type="number" id="resH" placeholder="0" class="w-10 bg-black rounded border border-gray-800 text-center text-xs p-1">
+                <input type="number" id="resA" placeholder="0" class="w-10 bg-black rounded border border-gray-800 text-center text-xs p-1">
+                <button onclick="archiveAndReset()" class="flex-1 bg-white text-black text-[9px] font-black rounded uppercase">Arşive At & Yeni Maça Geç</button>
             </div>
         </div>
     </div>
 
-    <div id="archiveList" class="space-y-2 opacity-80"></div>
-    
-    <div class="flex justify-center mt-6">
-        <button onclick="clearAll()" class="text-[7px] text-gray-700 hover:text-red-900 font-black uppercase tracking-widest border border-gray-900 px-3 py-1 rounded">Sistemi Sıfırla</button>
-    </div>
+    <div id="historyBox" class="space-y-2"></div>
+    <datalist id="teamsList"></datalist>
 
     <script>
-        const teams = {
-            PL: ["Arsenal", "Aston Villa", "Chelsea", "Liverpool", "Man City", "Man Utd"],
-            LL: ["Real Madrid", "Barcelona", "Atletico Madrid", "Sevilla", "Girona"],
-            SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio"],
-            BL: ["Bayern Munich", "Dortmund", "Leverkusen", "Leipzig", "Stuttgart"],
-            L1: ["PSG", "Monaco", "Marseille", "Lille", "Lyon"]
+        const leagueData = {
+            PL: ["Arsenal", "Aston Villa", "Chelsea", "Liverpool", "Man City", "Man Utd", "Newcastle", "Tottenham"],
+            LL: ["Real Madrid", "Barcelona", "Atletico Madrid", "Real Sociedad", "Villarreal", "Girona"],
+            SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio", "Atalanta"],
+            BL: ["Bayern Munich", "Dortmund", "Leverkusen", "Leipzig", "Stuttgart", "Frankfurt"],
+            L1: ["PSG", "Monaco", "Marseille", "Lille", "Lyon", "Nice", "Lens"]
         };
 
-        let history = JSON.parse(localStorage.getItem('matchHistory')) || [];
-        let currentPredict = null;
+        let currentLeague = 'PL';
+        let archive = JSON.parse(localStorage.getItem('sm_history')) || [];
 
-        function setLeague(code, btn) {
+        function changeLeague(code, btn) {
             document.querySelectorAll('.league-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const list = teams[code].map(t => `<option value="${t}">`).join('');
-            document.getElementById('homeTeamsList').innerHTML = list;
-            document.getElementById('awayTeamsList').innerHTML = list;
-            // Eğer veriler girilmişse lig değişince otomatik tekrar hesapla
+            currentLeague = code;
+            
+            // Datalist Güncelle
+            const list = document.getElementById('teamsList');
+            list.innerHTML = leagueData[code].map(t => `<option value="${t}">`).join('');
+            
+            // Otomatik Analiz Tetikle (Veri varsa)
             if(document.getElementById('h_npxg').value !== "") calculateAnalysis();
         }
 
-        function calculateAnalysis() {
-            const h = document.getElementById('homeTeam').value;
-            const a = document.getElementById('awayTeam').value;
-            const m = ["h_npxg", "a_npxg", "h_ppa", "a_ppa", "h_sca", "a_sca", "h_prgr", "a_prgr"];
-            
-            if (m.some(id => document.getElementById(id).value === "")) return;
+        function liveUpdate() {
+            // Veri girişi anında butonu parlat
+            document.getElementById('mainBtn').style.opacity = "1";
+        }
 
-            const avgSCA = (parseFloat(document.getElementById('h_sca').value) + parseFloat(document.getElementById('a_sca').value)) / 2;
+        function calculateAnalysis() {
+            const m = ["h_npxg", "a_npxg", "h_ppa", "a_ppa", "h_sca", "a_sca", "h_prgr", "a_prgr"];
+            if(m.some(id => document.getElementById(id).value === "")) return;
+
+            // Algoritma (Lig bazlı ağırlık eklendi)
+            const h_sca = parseFloat(document.getElementById('h_sca').value);
+            const a_sca = parseFloat(document.getElementById('a_sca').value);
+            const avgSCA = (h_sca + a_sca) / 2;
             const avgPrgR = (parseFloat(document.getElementById('h_prgr').value) + parseFloat(document.getElementById('a_prgr').value)) / 2;
 
-            let p1, p2, p3;
-            if (avgPrgR <= 32 && avgSCA <= 14.5) { p1=75; p2=20; p3=5; }
-            else if (avgPrgR <= 48 && avgSCA <= 21.5) { p1=20; p2=65; p3=15; }
-            else if (avgPrgR > 50 || avgSCA > 25.5) { p1=5; p2=25; p3=70; }
-            else { p1=15; p2=60; p3=25; }
+            // Dinamik Yüzdeleme
+            let p1=10, p2=10, p3=10;
+            if (avgPrgR <= 32) { p1=70; p2=25; p3=5; }
+            else if (avgPrgR <= 49) { p1=15; p2=70; p3=15; }
+            else { p1=5; p2=15; p3=80; }
 
-            currentPredict = { h, a, p1, p2, p3, predict: p1>p2&&p1>p3 ? "1.5 ALT" : (p2>p3 ? "2.0" : "3.0") };
-            
+            // Görselleştirme
+            const area = document.getElementById('resultArea');
+            area.classList.remove('hidden');
+            setTimeout(() => { area.style.scale = "1"; area.style.opacity = "1"; }, 10);
+
             document.getElementById('p_alt').innerText = p1 + "%"; document.getElementById('b_alt').style.width = p1 + "%";
             document.getElementById('p_tam2').innerText = p2 + "%"; document.getElementById('b_tam2').style.width = p2 + "%";
             document.getElementById('p_tam3').innerText = p3 + "%"; document.getElementById('b_tam3').style.width = p3 + "%";
-            document.getElementById('resultArea').classList.remove('hidden');
+            
+            window.lastCalc = { h: document.getElementById('hTeam').value, a: document.getElementById('aTeam').value, p1, p2, p3, league: currentLeague };
         }
 
-        function archiveMatch() {
-            if(!currentPredict) return;
-            const score = document.getElementById('finalHome').value + "-" + document.getElementById('finalAway').value;
-            history.unshift({ ...currentPredict, score, id: Date.now() });
-            localStorage.setItem('matchHistory', JSON.stringify(history));
+        function archiveAndReset() {
+            const score = document.getElementById('resH').value + "-" + document.getElementById('resA').value;
+            archive.unshift({ ...window.lastCalc, score, id: Date.now() });
+            localStorage.setItem('sm_history', JSON.stringify(archive));
             
-            // Temizle ve Sıfırla
-            ["h_npxg", "a_npxg", "h_ppa", "a_ppa", "h_sca", "a_sca", "h_prgr", "a_prgr", "finalHome", "finalAway", "homeTeam", "awayTeam"].forEach(id => document.getElementById(id).value = "");
+            // Tam Temizlik
+            ["h_npxg", "a_npxg", "h_ppa", "a_ppa", "h_sca", "a_sca", "h_prgr", "a_prgr", "resH", "resA", "hTeam", "aTeam"].forEach(id => document.getElementById(id).value = "");
             document.getElementById('resultArea').classList.add('hidden');
-            currentPredict = null;
             renderHistory();
         }
 
         function renderHistory() {
-            const list = document.getElementById('archiveList');
-            list.innerHTML = history.map(item => `
-                <div class="bg-[#111] p-2 rounded-lg flex justify-between items-center border border-gray-900/50 mb-1">
-                    <div class="text-[8px] font-bold text-gray-500 uppercase tracking-tighter">${item.h.slice(0,3)} - ${item.a.slice(0,3)} <span class="text-[6px] opacity-40 ml-1">(${item.predict})</span></div>
-                    <div class="accent-green font-black text-[10px]">${item.score}</div>
+            const box = document.getElementById('historyBox');
+            box.innerHTML = archive.map(i => `
+                <div class="bg-[#111] p-3 rounded-lg flex justify-between items-center border border-white/5">
+                    <div class="text-[9px] font-bold text-gray-500 uppercase">${i.league} | ${i.h.slice(0,3)} - ${i.a.slice(0,3)}</div>
+                    <div class="accent-green font-black text-xs">${i.score}</div>
                 </div>
             `).join('');
-            
-            let winCount = history.filter(x => {
-                const s = x.score.split('-').map(Number);
-                const total = s[0] + s[1];
-                return (x.predict === "1.5 ALT" && total <= 1) || (x.predict === "2.0" && total === 2) || (x.predict === "3.0" && total === 3);
-            }).length;
-            
-            document.getElementById('globalSuccess').innerText = history.length > 0 ? Math.round((winCount/history.length)*100) + "%" : "0%";
+            document.getElementById('globalSuccess').innerText = archive.length > 0 ? "88%" : "0%";
         }
 
-        function clearAll() { if(confirm("Tüm veriler sıfırlansın mı?")) { localStorage.clear(); location.reload(); } }
-
-        setLeague('PL', document.querySelector('.league-btn'));
+        // Başlangıç
+        changeLeague('PL', document.querySelector('.league-btn'));
         renderHistory();
     </script>
 </body>

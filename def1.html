@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VELOCITY SCOUT v16.5</title>
+    <title>VELOCITY SCOUT v18.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -35,26 +35,25 @@
         .u-label { font-size: 7px; color: var(--dim); font-weight: 800; display: block; }
         .u-input { width: 100%; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 15px; font-weight: 700; }
         
-        .scan-btn { width: 100%; background: var(--l-color); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 900; font-size: 14px; cursor: pointer; }
+        .scan-btn { width: 100%; background: var(--l-color); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 900; font-size: 14px; cursor: pointer; transition: 0.3s; }
+        .scan-btn:active { transform: scale(0.95); opacity: 0.8; }
 
         .report-card { 
             background: #111418; border: 1px solid var(--border); border-radius: 12px; 
             padding: 10px; margin-top: 10px; display: grid; grid-template-columns: 45px 1fr 80px; align-items: center; gap: 10px;
-            border-left: 3px solid var(--l-color);
+            border-left: 3px solid var(--l-color); animation: slideIn 0.3s ease-out;
         }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
         .rep-score { height: 40px; width: 40px; border-radius: 8px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono'; font-size: 13px; font-weight: 700; color: var(--l-color); }
         .team-display { font-size: 11px; font-weight: 900; color: #fff; text-transform: uppercase; margin:0; }
-        .mini-btn { flex: 1; background: #1a1f26; border: 1px solid var(--border); font-size: 14px; padding: 8px 0; border-radius: 6px; cursor: pointer; }
+        .mini-btn { flex: 1; background: #1a1f26; border: 1px solid var(--border); font-size: 14px; padding: 8px 0; border-radius: 6px; cursor: pointer; color: #fff; }
 
         .archive-item { 
             background: #0d1117; border: 1px solid var(--border); padding: 8px 12px; 
             border-radius: 10px; margin-bottom: 6px; display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 10px;
         }
         .arch-score-box { background: var(--border); color: var(--success); font-family: 'JetBrains Mono'; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 800; }
-
-        .theme-eng { --l-color: #ff00ff; } .theme-esp { --l-color: #ff4b4b; }
-        .theme-ita { --l-color: #0066ff; } .theme-ger { --l-color: #d3010c; }
-        .theme-fra { --l-color: #daff00; }
     </style>
 </head>
 <body class="theme-eng">
@@ -72,7 +71,7 @@
     </div>
 
     <div class="engine">
-        <select id="league-select" onchange="updateTeams()" style="width:100%; background:none; border:none; color:#fff; font-weight:700; margin-bottom:12px; font-size: 13px;">
+        <select id="league-select" onchange="updateTeams()" style="width:100%; background:none; border:none; color:#fff; font-weight:700; margin-bottom:12px; font-size: 13px; border-bottom: 1px solid var(--border);">
             <option value="ENG">PREMIER LEAGUE (İNG)</option>
             <option value="ESP">LA LIGA (İSP)</option>
             <option value="ITA">SERIE A (İTA)</option>
@@ -87,14 +86,14 @@
             <datalist id="team-list"></datalist>
         </div>
 
-        <div class="row-label">DEF (A)</div>
+        <div class="row-label">DEFENCE CRISIS (A)</div>
         <div class="input-grid">
             <div class="unit"><span class="u-label">Save%</span><input type="number" id="v-save" class="u-input" placeholder="0"></div>
             <div class="unit"><span class="u-label">PPA (A)</span><input type="number" id="v-ppa-a" class="u-input" placeholder="0"></div>
             <div class="unit" style="grid-column: span 2;"><span class="u-label">SCA (A)</span><input type="number" id="v-sca-a" class="u-input" placeholder="0"></div>
         </div>
 
-        <div class="row-label">OFF (F)</div>
+        <div class="row-label">OFFENSIVE (F)</div>
         <div class="input-grid">
             <div class="unit"><span class="u-label">PPA (F)</span><input type="number" id="v-ppa-f" class="u-input" placeholder="0"></div>
             <div class="unit"><span class="u-label">npxG/Sh</span><input type="number" id="v-npx" class="u-input" step="0.01" placeholder="0.00"></div>
@@ -104,19 +103,19 @@
 
     <div id="feed"></div>
     <div class="archive-section">
-        <h2 style="font-size: 10px; color: var(--success); margin: 15px 0 10px 0;">✅ ANALİZ GEÇMİŞİ</h2>
+        <h2 style="font-size: 10px; color: var(--success); margin: 20px 0 10px 0;">✅ ANALİZ GEÇMİŞİ</h2>
         <div id="archive-list"></div>
     </div>
 </div>
 
 <script>
-    // LİGLERİN GERÇEK BENCHMARK ARALIKLARI (Katsayı Değil, Eşik Değerler)
-    const leagueBenchmarks = {
-        ENG: { save: 68, ppaA: 14.5, scaA: 26.0, ppaF: 12.0, npx: 0.11 },
-        ESP: { save: 71, ppaA: 11.0, scaA: 21.0, ppaF: 10.5, npx: 0.10 },
-        ITA: { save: 72, ppaA: 9.5, scaA: 19.5, ppaF: 9.0, npx: 0.09 },
-        GER: { save: 66, ppaA: 15.5, scaA: 28.0, ppaF: 13.0, npx: 0.13 },
-        FRA: { save: 69, ppaA: 12.5, scaA: 23.0, ppaF: 11.5, npx: 0.11 }
+    // KRİTİK LİG EŞİKLERİ (SAVUNMA ÇÖKÜŞ NOKTALARI)
+    const leagueThresholds = {
+        ENG: { ppaA: 13.5, scaA: 25.0, save: 67, ppaF: 12.0, npx: 0.11 },
+        ESP: { ppaA: 11.0, scaA: 21.0, save: 70, ppaF: 10.5, npx: 0.10 },
+        ITA: { ppaA: 9.5,  scaA: 19.5, save: 72, ppaF: 9.0,  npx: 0.09 },
+        GER: { ppaA: 15.0, scaA: 28.0, save: 65, ppaF: 13.0, npx: 0.13 },
+        FRA: { ppaA: 12.5, scaA: 23.0, save: 69, ppaF: 11.5, npx: 0.11 }
     };
 
     const leagueTeams = {
@@ -127,8 +126,8 @@
         FRA: ["Angers", "Auxerre", "Brest", "Le Havre", "Lens", "Lille", "Lyon", "Marseille", "Monaco", "Montpellier", "Nantes", "Nice", "PSG", "Reims", "Rennes", "St-Etienne", "Strasbourg", "Toulouse"]
     };
 
-    let stats = JSON.parse(localStorage.getItem('v165_stats')) || { total: 0, wins: 0 };
-    let archive = JSON.parse(localStorage.getItem('v165_archive')) || [];
+    let stats = JSON.parse(localStorage.getItem('v18_stats')) || { total: 0, wins: 0 };
+    let archive = JSON.parse(localStorage.getItem('v18_archive')) || [];
 
     function updateTeams() {
         const l = document.getElementById('league-select').value;
@@ -138,7 +137,7 @@
 
     function analyze() {
         const l = document.getElementById('league-select').value;
-        const b = leagueBenchmarks[l]; // Seçilen ligin gerçek aralığını al
+        const T = leagueThresholds[l];
         
         const d = {
             save: parseFloat(document.getElementById('v-save').value || 0),
@@ -150,16 +149,18 @@
 
         if(!d.save || !d.ppaA) return;
 
-        // ANALİZ MOTORU: SADECE ARALIKLARA UZAKLIĞA BAKAR (KATSAYI YOK)
-        let score = 50;
+        // ÇÖKÜŞ ANALİZİ (Savunma kötüleştikçe skor yükselir)
+        let score = 40; 
         
-        score += (d.save - b.save) * 1.0;     // Kaleci performansı aralığa göre
-        score += (b.ppaA - d.ppaA) * 3.0;     // Savunma geçişi aralığa göre
-        score += (b.scaA - d.scaA) * 2.0;     // Şut fırsatı engelleme aralığa göre
-        score += (d.ppaF - b.ppaF) * 2.5;     // Hücum üretkenliği aralığa göre
-        score += (d.npx - b.npx) * 180;       // Şut kalitesi aralığa göre
+        // Bu veriler eşiği (Threshold) aştığı oranda "Fırsat Yüzdesi" artar
+        score += (d.ppaA - T.ppaA) * 5.0; // PPA yedikçe puan artar
+        score += (d.scaA - T.scaA) * 3.0; // SCA verdikçe puan artar
+        score += (T.save - d.save) * 1.5; // Kaleci düştükçe puan artar
+        
+        // Hücumda da biraz ışık varsa (npxG) ihtimal iyice pekişir
+        score += (d.npx - T.npx) * 100;
 
-        const matchPct = Math.max(5, Math.min(95, Math.round(score)));
+        const matchPct = Math.max(10, Math.min(99, Math.round(score)));
 
         const id = Date.now();
         const card = document.createElement('div');
@@ -168,7 +169,7 @@
             <div class="rep-score">${matchPct}%</div>
             <div class="rep-info">
                 <p class="team-display">${document.getElementById('v-team-h').value || 'EV'} - ${document.getElementById('v-team-a').value || 'DEP'}</p>
-                <p style="font-size:8px; color:var(--dim); margin:0;">${l} STANDARTLARIYLA HESAPLANDI</p>
+                <p style="font-size:8px; color:var(--dim); margin:0;">${l} KRİZ EŞİĞİ ANALİZİ</p>
             </div>
             <div class="rep-actions">
                 <button class="mini-btn" onclick="moveToArchive('${id}', '${document.getElementById('v-team-h').value}', '${document.getElementById('v-team-a').value}', ${matchPct})">✅</button>
@@ -185,15 +186,15 @@
     }
 
     function updateScore(id) {
-        const s = prompt("Maç sonucunu girin:");
+        const s = prompt("Sonuç:");
         if(s) { archive[archive.findIndex(i => i.id == id)].res = s; saveAndRefresh(); }
     }
 
-    function deleteItem(id) { if(confirm("Kaydı sil?")) { archive = archive.filter(i => i.id != id); saveAndRefresh(); } }
+    function deleteItem(id) { if(confirm("Silsin mi?")) { archive = archive.filter(i => i.id != id); saveAndRefresh(); } }
     
     function saveAndRefresh() {
-        localStorage.setItem('v165_stats', JSON.stringify(stats));
-        localStorage.setItem('v165_archive', JSON.stringify(archive));
+        localStorage.setItem('v18_stats', JSON.stringify(stats));
+        localStorage.setItem('v18_archive', JSON.stringify(archive));
         renderArchive(); updateUI();
     }
 
@@ -203,7 +204,7 @@
                 <div onclick="updateScore(${i.id})">
                     <span style="font-size:7px; background:#1a1f26; padding:2px 4px; border-radius:3px; color:var(--dim); margin-right:5px;">${i.league}</span>
                     <span style="font-size:10px; font-weight:900; color:var(--success);">${i.teams}</span><br>
-                    <span style="font-size:8px; color:var(--dim);">%${i.pct} Uyum • ${i.date}</span>
+                    <span style="font-size:8px; color:var(--dim);">%${i.pct} Fırsat • ${i.date}</span>
                 </div>
                 <div class="arch-score-box" onclick="updateScore(${i.id})">${i.res}</div>
                 <div style="color:var(--danger); cursor:pointer;" onclick="deleteItem(${i.id})">🗑️</div>
@@ -217,7 +218,7 @@
         document.getElementById('st-rate').innerText = '%' + rate;
     }
 
-    function clearAll() { if(confirm("TÜM VERİLER SİLİNSİN Mİ?")) { localStorage.clear(); location.reload(); } }
+    function clearAll() { if(confirm("TÜMÜ SİLİNSİN Mİ?")) { localStorage.clear(); location.reload(); } }
     window.onload = () => { updateTeams(); renderArchive(); updateUI(); };
 </script>
 </body>

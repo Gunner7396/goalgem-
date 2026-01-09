@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScoreMaster Pro | Analiz</title>
+    <title>ScoreMaster Pro | Performans Takip</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -12,25 +12,26 @@
         .accent-green { color: #00ff85; }
         .bg-green { background-color: #00ff85; color: #000; }
         .input-dark { background: #262626; border: 1px solid #333; border-radius: 8px; padding: 10px; text-align: center; font-size: 14px; }
-        select { appearance: none; -webkit-appearance: none; }
-        .team-indicator { width: 4px; height: 24px; border-radius: 2px; }
+        .archive-card { background: #151515; border-left: 4px solid #333; margin-bottom: 8px; padding: 12px; border-radius: 8px; }
+        .success { border-left-color: #00ff85 !important; }
+        .fail { border-left-color: #ff4d4d !important; }
     </style>
 </head>
 <body class="p-4 pb-24">
 
     <div class="flex justify-between items-center mb-6">
-        <div class="flex flex-col">
-            <span class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Analiz Motoru</span>
+        <div>
             <h1 class="text-xl font-black italic">SCORE<span class="accent-green">MASTER</span></h1>
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Performans Takibi</p>
         </div>
-        <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center border border-gray-700">
-            <i class="fa-solid fa-bolt accent-green"></i>
+        <div class="text-right">
+            <div id="winRate" class="text-2xl font-black accent-green">0%</div>
+            <div class="text-[9px] text-gray-500 uppercase">Başarı Oranı</div>
         </div>
     </div>
 
-    <div class="fotmob-dark p-5 mb-4">
-        <label class="text-[10px] text-gray-500 font-bold mb-2 block uppercase text-center">Lig Seçimi</label>
-        <select id="leagueSelect" onchange="updateTeams()" class="w-full bg-transparent text-center text-lg font-bold border-none focus:ring-0 mb-6">
+    <div class="fotmob-dark p-5 mb-6">
+        <select id="leagueSelect" onchange="updateTeams()" class="w-full bg-transparent text-center text-sm font-bold border-none mb-4">
             <option value="PL">Premier League</option>
             <option value="LL">La Liga</option>
             <option value="SA">Serie A</option>
@@ -38,130 +39,149 @@
             <option value="L1">Ligue 1</option>
         </select>
 
-        <div class="flex items-center justify-between gap-4">
-            <div class="flex-1 text-center">
-                <div class="w-12 h-12 bg-gray-800 rounded-full mx-auto mb-2 flex items-center justify-center border border-gray-700">
-                    <i class="fa-solid fa-shield-halved text-blue-400"></i>
-                </div>
-                <select id="homeTeam" class="w-full bg-transparent text-xs font-bold text-center"></select>
-            </div>
-
+        <div class="flex items-center justify-between gap-4 mb-6">
+            <select id="homeTeam" class="flex-1 bg-transparent text-xs font-bold text-center border-b border-gray-700 pb-1"></select>
             <div class="text-xs font-black text-gray-600">VS</div>
+            <select id="awayTeam" class="flex-1 bg-transparent text-xs font-bold text-center border-b border-gray-700 pb-1"></select>
+        </div>
 
-            <div class="flex-1 text-center">
-                <div class="w-12 h-12 bg-gray-800 rounded-full mx-auto mb-2 flex items-center justify-center border border-gray-700">
-                    <i class="fa-solid fa-shield-halved text-red-400"></i>
-                </div>
-                <select id="awayTeam" class="w-full bg-transparent text-xs font-bold text-center"></select>
+        <div class="grid grid-cols-3 gap-2 mb-4 text-center">
+            <div class="text-[10px] text-gray-500 uppercase">EV</div>
+            <div class="text-[10px] text-gray-300 font-bold uppercase">Metrik</div>
+            <div class="text-[10px] text-gray-500 uppercase">DEP</div>
+            
+            <input type="number" id="h_npxg" placeholder="0.11" class="input-dark">
+            <div class="flex items-center justify-center text-[9px] text-gray-400">npxG/Sh</div>
+            <input type="number" id="a_npxg" placeholder="0.10" class="input-dark">
+
+            <input type="number" id="h_ppa" placeholder="8.5" class="input-dark">
+            <div class="flex items-center justify-center text-[9px] text-gray-400">PPA</div>
+            <input type="number" id="a_ppa" placeholder="7.8" class="input-dark">
+
+            <input type="number" id="h_sca" placeholder="19.2" class="input-dark">
+            <div class="flex items-center justify-center text-[9px] text-gray-400">SCA</div>
+            <input type="number" id="a_sca" placeholder="16.5" class="input-dark">
+        </div>
+
+        <button onclick="calculateAnalysis()" class="w-full bg-green py-3 rounded-xl font-black text-xs uppercase">Analiz Et & Beklemeye Al</button>
+    </div>
+
+    <div id="resultArea" class="hidden mb-8">
+        <div class="fotmob-dark p-5 border-2 border-green-500/30">
+            <div class="flex justify-between items-center mb-4">
+                <span id="currentMatchTitle" class="text-xs font-bold text-gray-400">ARS vs MCI</span>
+                <span class="text-[10px] bg-green-900 text-green-300 px-2 py-1 rounded">BEKLİYOR...</span>
             </div>
-        </div>
-    </div>
-
-    <div class="space-y-4">
-        <div class="flex justify-between text-[10px] font-bold text-gray-500 px-2 uppercase">
-            <span>Metrikler (Son 5 Maç)</span>
-            <span>Ev Sahibi vs Dep.</span>
-        </div>
-
-        <div class="flex gap-2">
-            <input type="number" id="h_npxg" placeholder="0.11" class="flex-1 input-dark">
-            <div class="w-20 flex items-center justify-center text-[10px] font-bold text-gray-400">npxG/Sh</div>
-            <input type="number" id="a_npxg" placeholder="0.10" class="flex-1 input-dark">
-        </div>
-
-        <div class="flex gap-2">
-            <input type="number" id="h_ppa" placeholder="8.5" class="flex-1 input-dark">
-            <div class="w-20 flex items-center justify-center text-[10px] font-bold text-gray-400">PPA</div>
-            <input type="number" id="a_ppa" placeholder="7.8" class="flex-1 input-dark">
-        </div>
-
-        <div class="flex gap-2">
-            <input type="number" id="h_sca" placeholder="19.2" class="flex-1 input-dark">
-            <div class="w-20 flex items-center justify-center text-[10px] font-bold text-gray-400">SCA</div>
-            <input type="number" id="a_sca" placeholder="16.5" class="flex-1 input-dark">
-        </div>
-
-        <div class="flex gap-2">
-            <input type="number" id="h_prgr" placeholder="42.0" class="flex-1 input-dark">
-            <div class="w-20 flex items-center justify-center text-[10px] font-bold text-gray-400">PrgR</div>
-            <input type="number" id="a_prgr" placeholder="38.5" class="flex-1 input-dark">
-        </div>
-    </div>
-
-    <button onclick="calculateAnalysis()" class="w-full bg-green py-4 rounded-xl mt-6 font-black text-sm uppercase tracking-tighter">
-        %80 Başarı İle Analiz Et
-    </button>
-
-    <div id="resultArea" class="mt-6 hidden">
-        <div class="fotmob-dark p-6 text-center">
-            <div class="text-[10px] text-gray-500 font-bold uppercase mb-2">Tahmin Edilen Skor</div>
-            <div id="scoreResult" class="text-5xl font-black accent-green mb-2">TAM 2.0</div>
-            <div id="confBox" class="inline-block px-3 py-1 bg-green-900 text-green-400 rounded-full text-[10px] font-bold">
-                YÜKSEK GÜVEN (%82)
+            <div class="text-center mb-4">
+                <div id="scoreResult" class="text-4xl font-black accent-green tracking-tighter">TAM 2.0</div>
+                <p class="text-[10px] text-gray-500 mt-1 uppercase">Tahmin Edilen Skor Aralığı</p>
             </div>
             
-            <div class="mt-6 pt-6 border-t border-gray-800 text-[11px] text-gray-400 leading-relaxed italic" id="aiAdvice">
-                "İki takımın metrikleri dengeli bir kilitlenmeye işaret ediyor. Premier Lig standartlarına göre 1-1 veya 2-0 ihtimali %80'in üzerinde."
+            <div class="flex gap-2 items-center bg-black/40 p-3 rounded-lg">
+                <div class="text-[10px] text-gray-400 flex-1">Skoru Gir:</div>
+                <input type="number" id="finalHome" placeholder="0" class="w-12 bg-gray-800 border-none rounded text-center text-sm p-1">
+                <div class="text-gray-600">-</div>
+                <input type="number" id="finalAway" placeholder="0" class="w-12 bg-gray-800 border-none rounded text-center text-sm p-1">
+                <button onclick="archiveMatch()" class="bg-white text-black text-[10px] px-3 py-2 rounded font-bold ml-2">ARŞİVLE</button>
             </div>
         </div>
     </div>
+
+    <h2 class="text-xs font-black text-gray-500 uppercase mb-3 ml-2">Geçmiş Analizler</h2>
+    <div id="archiveList" class="space-y-2">
+        </div>
 
     <script>
         const teams = {
-            PL: ["Arsenal", "Man City", "Liverpool", "Aston Villa", "Tottenham", "Chelsea", "Man Utd", "Newcastle", "Fulham", "Brentford"],
-            LL: ["Real Madrid", "Barcelona", "Atletico Madrid", "Girona", "Sociedad", "Athletic Bilbao", "Getafe", "Villarreal"],
-            SA: ["Inter", "Juventus", "AC Milan", "Napoli", "AS Roma", "Atalanta", "Lazio", "Fiorentina"],
-            BL: ["Leverkusen", "Bayern Munich", "Stuttgart", "Dortmund", "RB Leipzig", "Frankfurt"],
-            L1: ["PSG", "Monaco", "Lille", "Brest", "Nice", "Lens", "Marseille", "Lyon"]
+            PL: ["Arsenal", "Man City", "Liverpool", "Aston Villa", "Tottenham", "Chelsea"],
+            LL: ["Real Madrid", "Barcelona", "Atletico Madrid", "Girona", "Getafe"],
+            SA: ["Inter", "Juventus", "AC Milan", "Napoli", "AS Roma"],
+            BL: ["Leverkusen", "Bayern Munich", "Dortmund", "RB Leipzig"],
+            L1: ["PSG", "Monaco", "Lille", "Marseille", "Lyon"]
         };
+
+        let currentAnalysis = null;
+        let history = JSON.parse(localStorage.getItem('matchHistory')) || [];
 
         function updateTeams() {
             const league = document.getElementById('leagueSelect').value;
             const homeSelect = document.getElementById('homeTeam');
             const awaySelect = document.getElementById('awayTeam');
-            
-            const leagueTeams = teams[league];
             let options = "";
-            leagueTeams.forEach(team => {
-                options += `<option value="${team}">${team}</option>`;
-            });
-            
+            teams[league].forEach(team => options += `<option value="${team}">${team}</option>`);
             homeSelect.innerHTML = options;
             awaySelect.innerHTML = options;
             awaySelect.selectedIndex = 1;
         }
 
         function calculateAnalysis() {
-            // Basit bir toplam ortalama alarak senin aralıklara sokuyoruz
-            const league = document.getElementById('leagueSelect').value;
-            const avgPPA = (parseFloat(document.getElementById('h_ppa').value) + parseFloat(document.getElementById('a_ppa').value)) / 2;
+            const h = document.getElementById('homeTeam').value;
+            const a = document.getElementById('awayTeam').value;
             const avgSCA = (parseFloat(document.getElementById('h_sca').value) + parseFloat(document.getElementById('a_sca').value)) / 2;
-            const avgNpxG = (parseFloat(document.getElementById('h_npxg').value) + parseFloat(document.getElementById('a_npxg').value)) / 2;
-
-            let finalScore = "";
-            let confidence = 80;
-
-            // Örnek Premier Lig mantığı (Senin verdiğin tablolardan)
-            if (avgSCA < 15.5) {
-                finalScore = "1.5 ALT";
-                confidence = 85;
-            } else if (avgSCA < 21.5) {
-                finalScore = "TAM 2.0";
-                confidence = 82;
-            } else {
-                finalScore = "TAM 3.0";
-                confidence = 80;
-            }
-
-            document.getElementById('resultArea').classList.remove('hidden');
-            document.getElementById('scoreResult').innerText = finalScore;
-            document.getElementById('confBox').innerText = `GÜVEN: %${confidence}`;
             
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            let prediction = "";
+            if (avgSCA < 15.5) prediction = "1.5 ALT";
+            else if (avgSCA < 21.5) prediction = "TAM 2.0";
+            else prediction = "TAM 3.0";
+
+            currentAnalysis = { home: h, away: a, predict: prediction, date: new Date().toLocaleDateString() };
+            
+            document.getElementById('currentMatchTitle').innerText = `${h.substring(0,3)} vs ${a.substring(0,3)}`;
+            document.getElementById('scoreResult').innerText = prediction;
+            document.getElementById('resultArea').classList.remove('hidden');
         }
 
-        // İlk açılışta takımları yükle
+        function archiveMatch() {
+            const fh = parseInt(document.getElementById('finalHome').value || 0);
+            const fa = parseInt(document.getElementById('finalAway').value || 0);
+            const totalGoals = fh + fa;
+            
+            let isWin = false;
+            if (currentAnalysis.predict === "1.5 ALT" && totalGoals <= 1) isWin = true;
+            if (currentAnalysis.predict === "TAM 2.0" && totalGoals === 2) isWin = true;
+            if (currentAnalysis.predict === "TAM 3.0" && totalGoals === 3) isWin = true;
+
+            const archived = { ...currentAnalysis, score: `${fh}-${fa}`, result: isWin };
+            history.unshift(archived);
+            localStorage.setItem('matchHistory', JSON.stringify(history));
+            
+            document.getElementById('resultArea').classList.add('hidden');
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('archiveList');
+            list.innerHTML = "";
+            let wins = 0;
+
+            history.forEach(item => {
+                if(item.result) wins++;
+                list.innerHTML += `
+                    <div class="archive-card ${item.result ? 'success' : 'fail'}">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-bold">${item.home} vs ${item.away}</span>
+                            <span class="text-[9px] text-gray-500">${item.date}</span>
+                        </div>
+                        <div class="flex justify-between items-end mt-2">
+                            <div>
+                                <div class="text-[9px] text-gray-500 uppercase">Tahmin</div>
+                                <div class="text-xs font-black">${item.predict}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-[9px] text-gray-500 uppercase">Skor</div>
+                                <div class="text-xs font-black ${item.result ? 'accent-green' : 'text-red-500'}">${item.score}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            const rate = history.length > 0 ? Math.round((wins / history.length) * 100) : 0;
+            document.getElementById('winRate').innerText = rate + "%";
+        }
+
         updateTeams();
+        renderHistory();
     </script>
 </body>
 </html>

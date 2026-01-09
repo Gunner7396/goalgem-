@@ -3,186 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GP PRO V27</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>GP SCOUT ELITE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --fm-bg: #0e0e0e; --fm-card: #1c1c1e; --fm-border: #2c2c2e;
-            --fm-green: #00ff85; --fm-text: #ffffff; --fm-dim: #929292;
-            --fm-red: #ff4d4d; --fm-gold: #ffcc00;
+            --bg: #0a0a0a; --card: #161618; --brd: #262628;
+            --grn: #00ff85; --txt: #ffffff; --dim: #888; --red: #ff4d4d;
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
-        body { background: var(--fm-bg); color: var(--fm-text); margin: 0; padding-bottom: 30px; }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--txt); margin: 0; padding-bottom: 20px; font-size: 13px; }
 
-        /* Modern Nav */
-        .nav { background: var(--fm-card); padding: 12px 15px; border-bottom: 1px solid var(--fm-border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 16px; font-weight: 800; color: var(--fm-green); }
-        .reset-btn { font-size: 9px; font-weight: 700; color: var(--fm-red); text-transform: uppercase; }
+        /* Compact Header */
+        .hdr { background: var(--card); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--brd); }
+        .logo { font-weight: 800; color: var(--grn); letter-spacing: -1px; }
+        .stats-mini { display: flex; gap: 10px; font-size: 10px; font-weight: 700; }
 
-        /* Stats Strip */
-        .stats-strip { display: flex; background: #000; padding: 10px; border-bottom: 1px solid var(--fm-border); justify-content: space-around; }
-        .s-item { text-align: center; }
-        .s-v { display: block; font-size: 14px; font-weight: 800; }
-        .s-l { font-size: 8px; color: var(--fm-dim); font-weight: 700; }
-
-        /* Compact Input Section */
-        .main-card { background: var(--fm-card); margin: 10px; border-radius: 12px; border: 1px solid var(--fm-border); padding: 12px; }
-        .lg-select { width: 100%; background: #2c2c2e; border: 1px solid var(--fm-border); padding: 8px; border-radius: 6px; color: #fff; margin-bottom: 12px; font-size: 12px; font-weight: 700; }
+        /* Main Entry */
+        .panel { background: var(--card); margin: 8px; border-radius: 12px; padding: 12px; border: 1px solid var(--brd); }
+        .lg-sel { width: 100%; background: #000; border: 1px solid var(--brd); color: var(--grn); padding: 8px; border-radius: 6px; font-weight: 800; margin-bottom: 10px; }
         
-        .team-section { background: rgba(0,0,0,0.2); border-radius: 8px; padding: 10px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.03); }
-        .t-header { display: flex; gap: 8px; margin-bottom: 8px; }
-        .t-name-input { flex: 2; background: #000; border: 1px solid var(--fm-border); padding: 8px; border-radius: 6px; color: #fff; font-size: 12px; font-weight: 600; }
-        .t-select-mini { flex: 1; background: #2c2c2e; color: #fff; border: none; border-radius: 6px; font-size: 10px; }
-
-        .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
-        .m-box { display: flex; flex-direction: column; }
-        .m-box input { background: #000; border: 1px solid var(--fm-border); padding: 8px 2px; border-radius: 4px; color: var(--fm-green); font-size: 11px; text-align: center; font-weight: 700; width: 100%; }
-        .m-box span { font-size: 7px; color: var(--fm-dim); text-align: center; margin-top: 3px; font-weight: 800; }
-
-        .btn-run { width: 100%; background: var(--fm-green); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; margin-top: 5px; }
-        .btn-clear { text-align: center; color: var(--fm-dim); font-size: 10px; margin-top: 10px; cursor: pointer; text-decoration: underline; }
-
-        /* Match Card */
-        .match-card { background: var(--fm-card); margin: 10px; border-radius: 12px; padding: 12px; border: 1px solid var(--fm-border); }
-        .m-head { font-size: 9px; color: var(--fm-dim); font-weight: 800; margin-bottom: 8px; display: flex; justify-content: space-between; text-transform: uppercase; }
-        .m-teams { display: flex; align-items: center; justify-content: space-between; margin: 10px 0; }
-        .m-t-name { font-size: 13px; font-weight: 700; flex: 1; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .m-vs { font-size: 18px; font-weight: 900; color: var(--fm-green); padding: 0 10px; }
+        .t-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .t-col { display: flex; flex-direction: column; gap: 5px; }
+        input { background: #000; border: 1px solid var(--brd); color: #fff; padding: 8px; border-radius: 6px; font-size: 11px; outline: none; }
+        input:focus { border-color: var(--grn); }
         
-        .p-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-        .p-card { background: #000; padding: 8px; border-radius: 8px; text-align: center; border: 1px solid var(--fm-border); }
-        .p-l { font-size: 7px; color: var(--fm-dim); display: block; font-weight: 800; margin-bottom: 2px; }
-        .p-v { font-size: 12px; font-weight: 800; }
+        .m-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
+        .m-grid input { padding: 6px 2px; text-align: center; color: var(--grn); font-weight: 700; }
+        .m-lbl { font-size: 7px; color: var(--dim); text-align: center; font-weight: 800; margin-top: 2px; }
 
-        .m-foot { display: flex; justify-content: flex-end; gap: 6px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--fm-border); }
-        .st-btn { padding: 5px 10px; border-radius: 6px; font-size: 9px; font-weight: 800; border: none; }
-        .st-w { background: rgba(0,255,133,0.1); color: var(--fm-green); }
-        .st-l { background: rgba(255,77,77,0.1); color: var(--fm-red); }
+        .btn-start { width: 100%; background: var(--grn); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: 800; margin-top: 10px; cursor: pointer; }
+        .btn-start:disabled { opacity: 0.3; }
 
-        .section-lbl { padding: 5px 15px; font-size: 11px; font-weight: 800; color: var(--fm-green); opacity: 0.8; }
+        /* Ultra Compact Result Card */
+        .m-card { background: var(--card); margin: 6px 8px; border-radius: 10px; border: 1px solid var(--brd); padding: 10px; }
+        .m-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .m-names { font-weight: 700; font-size: 12px; color: #fff; }
+        .m-res-box { display: flex; gap: 5px; margin: 8px 0; }
+        .res-p { flex: 1; background: #000; padding: 6px; border-radius: 6px; text-align: center; border: 1px solid var(--brd); }
+        .res-p b { display: block; font-size: 11px; }
+        .res-p span { font-size: 8px; color: var(--dim); font-weight: 800; }
+
+        /* Scout AI Box */
+        .scout-note { background: rgba(0,255,133,0.05); border-left: 2px solid var(--grn); padding: 8px; font-size: 10px; color: #ccc; line-height: 1.3; font-style: italic; margin-top: 5px; }
+        .scout-tag { color: var(--grn); font-weight: 800; font-size: 9px; margin-bottom: 3px; display: block; }
+
+        .m-btns { display: flex; justify-content: flex-end; gap: 5px; margin-top: 8px; }
+        .btn-act { padding: 4px 10px; border-radius: 4px; border: none; font-size: 9px; font-weight: 800; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="nav">
-    <div class="logo">GOALPATH PRO</div>
-    <div class="reset-btn" onclick="resetStats()">Sıfırla</div>
+<div class="hdr">
+    <div class="logo">GP SCOUT</div>
+    <div class="stats-mini">
+        <span id="st-total">0 M</span>
+        <span id="st-rate" style="color:var(--grn)">0%</span>
+        <span id="st-win">0 W</span>
+    </div>
 </div>
 
-<div class="stats-strip">
-    <div class="s-item"><span id="st-total" class="s-v">0</span><span class="s-l">MAÇ</span></div>
-    <div class="s-item"><span id="st-rate" class="s-v" style="color:var(--fm-green)">0%</span><span class="s-l">BAŞARI</span></div>
-    <div class="s-item"><span id="st-win" class="s-v">0</span><span class="s-l">WINS</span></div>
-</div>
-
-<div class="main-card">
-    <select id="l-sel" class="lg-select" onchange="upTeams()"></select>
+<div class="panel">
+    <select id="l-sel" class="lg-sel" onchange="upTeams()"></select>
     
-    <div class="team-section">
-        <div class="t-header">
-            <input type="text" id="t1-name" class="t-name-input" placeholder="Ev Sahibi">
-            <select id="t1-select" class="t-select-mini" onchange="document.getElementById('t1-name').value=this.value"></select>
+    <div class="t-row">
+        <div class="t-col">
+            <input list="t-list" id="t1-n" placeholder="Ev Sahibi">
+            <div class="m-grid">
+                <input type="number" id="t1-q" placeholder="xG" oninput="vld()">
+                <input type="number" id="t1-s" placeholder="SCA" oninput="vld()">
+                <input type="number" id="t1-p" placeholder="PRG" oninput="vld()">
+                <input type="number" id="t1-x" placeholder="PPA" oninput="vld()">
+            </div>
+            <div class="m-grid"><span class="m-lbl">npxG</span><span class="m-lbl">SCA</span><span class="m-lbl">PRGR</span><span class="m-lbl">PPA</span></div>
         </div>
-        <div class="metrics-row">
-            <div class="m-box"><input type="number" id="t1-q" step="any" inputmode="decimal" placeholder="0.00"><span>npxG</span></div>
-            <div class="m-box"><input type="number" id="t1-s" inputmode="numeric" placeholder="0"><span>SCA</span></div>
-            <div class="m-box"><input type="number" id="t1-p" inputmode="numeric" placeholder="0"><span>PRGR</span></div>
-            <div class="m-box"><input type="number" id="t1-x" inputmode="numeric" placeholder="0"><span>PPA</span></div>
-        </div>
-    </div>
-
-    <div class="team-section">
-        <div class="t-header">
-            <input type="text" id="t2-name" class="t-name-input" placeholder="Deplasman">
-            <select id="t2-select" class="t-select-mini" onchange="document.getElementById('t2-name').value=this.value"></select>
-        </div>
-        <div class="metrics-row">
-            <div class="m-box"><input type="number" id="t2-q" step="any" inputmode="decimal" placeholder="0.00"><span>npxG</span></div>
-            <div class="m-box"><input type="number" id="t2-s" inputmode="numeric" placeholder="0"><span>SCA</span></div>
-            <div class="m-box"><input type="number" id="t2-p" inputmode="numeric" placeholder="0"><span>PRGR</span></div>
-            <div class="m-box"><input type="number" id="t2-x" inputmode="numeric" placeholder="0"><span>PPA</span></div>
+        <div class="t-col">
+            <input list="t-list" id="t2-n" placeholder="Deplasman">
+            <div class="m-grid">
+                <input type="number" id="t2-q" placeholder="xG" oninput="vld()">
+                <input type="number" id="t2-s" placeholder="SCA" oninput="vld()">
+                <input type="number" id="t2-p" placeholder="PRG" oninput="vld()">
+                <input type="number" id="t2-x" placeholder="PPA" oninput="vld()">
+            </div>
+            <div class="m-grid"><span class="m-lbl">npxG</span><span class="m-lbl">SCA</span><span class="m-lbl">PRGR</span><span class="m-lbl">PPA</span></div>
         </div>
     </div>
-
-    <button class="btn-run" onclick="run()">ANALİZİ ÇIKAR</button>
-    <div class="btn-clear" onclick="cls()">Formu Temizle</div>
+    
+    <button id="s-btn" class="btn-start" onclick="run()" disabled>START</button>
+    <datalist id="t-list"></datalist>
 </div>
 
-<div class="section-lbl">BEKLEYENLER</div>
 <div id="active-list"></div>
-
-<div class="section-lbl">ARŞİV</div>
-<div id="archive-list"></div>
-<div style="text-align:center; padding: 15px; font-size:9px; color:var(--fm-red); font-weight:bold" onclick="clsArc()">ARŞİVİ BOŞALT</div>
+<div id="archive-list" style="opacity: 0.6;"></div>
 
 <script>
     const eData = { 
-        PL: { q: 0.08, s: 28, x: 10, p: 60, n: 'Premier League' },
-        LL: { q: 0.06, s: 34, x: 13, p: 75, n: 'La Liga' },
-        SA: { q: 0.07, s: 30, x: 11, p: 58, n: 'Serie A' },
-        BL: { q: 0.08, s: 38, x: 15, p: 85, n: 'Bundesliga' },
-        L1: { q: 0.08, s: 28, x: 10, p: 62, n: 'Ligue 1' }
+        PL: { q: 0.08, s: 28, x: 10, n: 'Premier League' },
+        LL: { q: 0.06, s: 34, x: 13, n: 'La Liga' },
+        SA: { q: 0.07, s: 30, x: 11, n: 'Serie A' },
+        BL: { q: 0.08, s: 38, x: 15, n: 'Bundesliga' },
+        L1: { q: 0.08, s: 28, x: 10, n: 'Ligue 1' }
     };
 
     const tData = {
-        PL: ["Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Tottenham", "Aston Villa", "Newcastle"],
-        LL: ["Real Madrid", "Barcelona", "Atl. Madrid", "Girona", "Real Sociedad", "Villarreal"],
+        PL: ["Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Tottenham", "Aston Villa", "Newcastle", "Everton"],
+        LL: ["Real Madrid", "Barcelona", "Atl. Madrid", "Girona", "Real Sociedad", "Villarreal", "Sevilla"],
         SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio", "Atalanta"],
-        BL: ["Bayern Munich", "Leverkusen", "Dortmund", "RB Leipzig", "Stuttgart"],
+        BL: ["Bayern", "Leverkusen", "Dortmund", "Leipzig", "Stuttgart"],
         L1: ["PSG", "Monaco", "Marseille", "Lille", "Lyon", "Nice"]
     };
 
-    let stats = JSON.parse(localStorage.getItem('gp_v27_stats')) || { total: 0, win: 0 };
-    let matches = JSON.parse(localStorage.getItem('gp_v27_matches')) || [];
+    let stats = JSON.parse(localStorage.getItem('gp_sc_stats')) || { total: 0, win: 0 };
+    let matches = JSON.parse(localStorage.getItem('gp_sc_matches')) || [];
 
     window.onload = () => {
-        const sel = document.getElementById('l-sel');
-        sel.innerHTML = Object.keys(eData).map(k => `<option value="${k}">${eData[k].n}</option>`).join('');
+        document.getElementById('l-sel').innerHTML = Object.keys(eData).map(k => `<option value="${k}">${eData[k].n}</option>`).join('');
         upTeams(); upUI(); render();
     };
 
     function upTeams() {
         const l = document.getElementById('l-sel').value;
-        const opts = `<option value="">Seç</option>` + tData[l].sort().map(t => `<option value="${t}">${t}</option>`).join('');
-        document.getElementById('t1-select').innerHTML = opts;
-        document.getElementById('t2-select').innerHTML = opts;
+        document.getElementById('t-list').innerHTML = tData[l].map(t => `<option value="${t}">`).join('');
     }
 
-    function cls() { 
-        document.querySelectorAll('input').forEach(i => i.value = ''); 
-        document.querySelectorAll('select').forEach(s => s.selectedIndex = (s.id==='l-sel'?s.selectedIndex:0));
+    function vld() {
+        const inputs = document.querySelectorAll('.m-grid input');
+        let allSet = true;
+        inputs.forEach(i => { if(!i.value) allSet = false; });
+        document.getElementById('s-btn').disabled = !allSet;
+    }
+
+    function generateScoutNote(h, a, p1, p3, x1, x2, s1, s2) {
+        if(p1 > 60) return `Savunma disiplini ön planda. ${h} ve ${a} düşük PPA (${x1+x2}) değerleriyle ceza sahasına girmekte zorlanıyor. 0-1 Gol ihtimali yüksek bir satranç maçı.`;
+        if(p3 > 40) return `Yüksek tempo sinyali. Toplam SCA (${s1+s2}) üretim hızı lig ortalamasının üstünde. İki takımın da bitiriciliği (npxG) skorun T3'e evrilmesini sağlayacaktır.`;
+        return `Dengeli bir eşleşme. Orta saha geçişleri (PRGR) belirleyici olacak. Takımlar risk almaktan kaçınabilir, T2 odaklı bir tempo bekliyorum.`;
     }
 
     function run() {
-        const t1 = document.getElementById('t1-name').value;
-        const t2 = document.getElementById('t2-name').value;
-        if(!t1 || !t2) return alert("İsimler eksik!");
-
-        const l = document.getElementById('l-sel').value;
-        const cfg = eData[l];
-        const xT = (parseFloat(document.getElementById('t1-x').value)||0) + (parseFloat(document.getElementById('t2-x').value)||0);
-        const sT = (parseFloat(document.getElementById('t1-s').value)||0) + (parseFloat(document.getElementById('t2-s').value)||0);
-        const q1 = parseFloat(document.getElementById('t1-q').value)||0;
-        const q2 = parseFloat(document.getElementById('t2-q').value)||0;
+        const h = document.getElementById('t1-n').value, a = document.getElementById('t2-n').value;
+        const l = document.getElementById('l-sel').value, cfg = eData[l];
         
-        let sc = 0;
-        if(xT <= cfg.x) sc += 45;
-        if(q1 <= cfg.q && q2 <= cfg.q) sc += 25;
-        if(sT <= cfg.s) sc += 20;
+        const x1 = parseFloat(document.getElementById('t1-x').value), x2 = parseFloat(document.getElementById('t2-x').value);
+        const s1 = parseFloat(document.getElementById('t1-s').value), s2 = parseFloat(document.getElementById('t2-s').value);
+        const q1 = parseFloat(document.getElementById('t1-q').value), q2 = parseFloat(document.getElementById('t2-q').value);
 
+        let sc = (x1+x2 <= cfg.x ? 45 : 15) + (q1 <= cfg.q && q2 <= cfg.q ? 25 : 5) + (s1+s2 <= cfg.s ? 20 : 5);
         let p1 = Math.min(Math.max(sc, 10), 90);
-        let p3 = Math.max(100 - p1 - (Math.random() * 5 + 15), 5); 
-        let p2 = 100 - (parseFloat(p1) + parseFloat(p3));
+        let p3 = Math.max(100 - p1 - 15, 5); let p2 = 100 - (p1 + p3);
 
-        matches.unshift({ id: Date.now(), lg: l, h: t1, a: t2, p1: p1.toFixed(0), p2: p2.toFixed(0), p3: p3.toFixed(0), score: 'VS', status: 'active' });
-        save(); render(); cls();
+        const scoutNote = generateScoutNote(h, a, p1, p3, x1, x2, s1, s2);
+
+        matches.unshift({ id: Date.now(), lg: l, h, a, p1, p2, p3, scout: scoutNote, score: 'VS', status: 'active' });
+        save(); render();
+        document.querySelectorAll('input').forEach(i => i.value = ''); vld();
     }
 
     function setRes(id, win) {
-        const s = prompt("Skor?");
-        if(s === null) return;
+        const s = prompt("Skor?"); if(s === null) return;
         matches = matches.map(m => {
-            if(m.id === id) { m.status = 'archived'; m.res = win ? 'WIN' : 'LOSE'; m.score = s; stats.total++; if(win) stats.win++; }
+            if(m.id === id) { m.status = 'archived'; m.res = win ? 'W' : 'L'; m.score = s; stats.total++; if(win) stats.win++; }
             return m;
         });
         save(); upUI(); render();
@@ -191,36 +169,33 @@
     function del(id) { if(confirm("Sil?")) { matches = matches.filter(m => m.id !== id); save(); render(); } }
 
     function render() {
-        const active = matches.filter(m => m.status === 'active');
-        const archive = matches.filter(m => m.status === 'archived');
-        const html = (list) => list.map(m => `
-            <div class="match-card">
-                <div class="m-head"><span>${m.lg}</span><span onclick="del(${m.id})">✕</span></div>
-                <div class="m-teams"><div class="m-t-name">${m.h}</div><div class="m-vs">${m.score}</div><div class="m-t-name">${m.a}</div></div>
-                <div class="p-grid">
-                    <div class="p-card"><span class="p-l">0-1 GOL</span><span class="p-v" style="color:var(--fm-red)">%${m.p1}</span></div>
-                    <div class="p-card"><span class="p-l">T2</span><span class="p-v" style="color:var(--fm-gold)">%${m.p2}</span></div>
-                    <div class="p-card"><span class="p-l">T3</span><span class="p-v" style="color:var(--fm-green)">%${m.p3}</span></div>
+        const draw = (list) => list.map(m => `
+            <div class="m-card">
+                <div class="m-top"><span class="m-names">${m.h} - ${m.a}</span><span style="font-size:10px;color:var(--grn)">${m.score}</span></div>
+                <div class="m-res-box">
+                    <div class="res-p"><span>0-1 GOL</span><b style="color:var(--red)">%${m.p1}</b></div>
+                    <div class="res-p"><span>T2</span><b style="color:orange">%${m.p2}</b></div>
+                    <div class="res-p"><span>T3</span><b style="color:var(--grn)">%${m.p3}</b></div>
                 </div>
-                <div class="m-foot">
-                    ${m.status === 'active' ? `<button class="st-btn st-w" onclick="setRes(${m.id}, true)">W</button><button class="st-btn st-l" onclick="setRes(${m.id}, false)">L</button>` : 
-                    `<span style="font-size:10px; font-weight:800; color:${m.res === 'WIN' ? 'var(--fm-green)' : 'var(--fm-red)'}">${m.res}</span>`}
+                <div class="scout-note"><span class="scout-tag">SCOUT GÖZLEMİ</span>${m.scout}</div>
+                <div class="m-btns">
+                    <span style="color:var(--dim); font-size:14px; margin-right:auto" onclick="del(${m.id})">×</span>
+                    ${m.status==='active' ? `<button class="btn-act win" onclick="setRes(${m.id}, true)">WIN</button><button class="btn-act lose" onclick="setRes(${m.id}, false)">LOSE</button>` : 
+                    `<b style="color:${m.res==='W'?'var(--grn)':'var(--red)'}">${m.res}</b>`}
                 </div>
             </div>
         `).join('');
-        document.getElementById('active-list').innerHTML = active.length ? html(active) : '';
-        document.getElementById('archive-list').innerHTML = archive.length ? html(archive) : '';
+        document.getElementById('active-list').innerHTML = draw(matches.filter(m => m.status === 'active'));
+        document.getElementById('archive-list').innerHTML = draw(matches.filter(m => m.status === 'archived'));
     }
 
-    function save() { localStorage.setItem('gp_v27_matches', JSON.stringify(matches)); localStorage.setItem('gp_v27_stats', JSON.stringify(stats)); }
+    function save() { localStorage.setItem('gp_sc_matches', JSON.stringify(matches)); localStorage.setItem('gp_sc_stats', JSON.stringify(stats)); }
     function upUI() { 
-        document.getElementById('st-total').innerText = stats.total;
-        document.getElementById('st-win').innerText = stats.win;
-        const r = stats.total === 0 ? 0 : Math.round((stats.win / stats.total) * 100);
-        document.getElementById('st-rate').innerText = r + '%';
+        document.getElementById('st-total').innerText = stats.total + ' M';
+        document.getElementById('st-win').innerText = stats.win + ' W';
+        document.getElementById('st-rate').innerText = (stats.total ? Math.round(stats.win/stats.total*100) : 0) + '%';
     }
-    function resetStats() { if(confirm("Sıfırla?")) { stats = {total:0, win:0}; save(); upUI(); } }
-    function clsArc() { if(confirm("Arşiv silinsin mi?")) { matches = matches.filter(m => m.status === 'active'); save(); render(); } }
+    function resetStats() { if(confirm("Sıfırla?")) { stats={total:0,win:0}; save(); upUI(); } }
 </script>
 </body>
 </html>

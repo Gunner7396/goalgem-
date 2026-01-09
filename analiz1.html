@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P-PRO V18.5 - DELETE CONTROLS</title>
+    <title>P-PRO V18.6 - ORIGINAL ENGINE + DELETE</title>
     <style>
         :root {
             --bg: #05070a; --panel: #0f1217; --accent: #00ffa3; --border: #1e2530;
@@ -17,8 +17,6 @@
         .dash-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-around; text-align: center; position: relative; }
         .stat-val { font-size: 16px; font-weight: 900; color: var(--accent); display: block; }
         .stat-lbl { font-size: 8px; color: var(--dim); text-transform: uppercase; }
-        
-        /* Dashboard Sil Butonu */
         .reset-stats { position: absolute; top: 4px; right: 8px; font-size: 8px; color: var(--red); cursor: pointer; border: 1px solid #ff4d4d33; padding: 2px 6px; border-radius: 4px; font-weight: bold; background: #ff4d4d11; }
 
         .main-card { background: var(--panel); border: 1px solid var(--border); padding: 10px; border-radius: 15px; }
@@ -31,15 +29,10 @@
         #clear-inputs { flex: 1; border-radius: 10px; border: 1px solid #ff4d4d44; background: #ff4d4d11; color: var(--red); cursor: pointer; }
 
         .scroll-area { flex-grow: 1; overflow-y: auto; padding: 10px; -webkit-overflow-scrolling: touch; }
-        
-        /* Kart Tasarımı Güncelleme */
         .hist-card { background: #0f1217; border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; position: relative; }
-        .card-top { display: flex; justify-content: space-between; align-items: center; padding-right: 25px; } /* Silme butonu için boşluk */
+        .card-top { display: flex; justify-content: space-between; align-items: center; padding-right: 20px; }
+        .card-delete { position: absolute; top: 8px; right: 8px; color: var(--dim); cursor: pointer; font-size: 12px; }
         
-        /* Kart Silme Butonu */
-        .card-delete { position: absolute; top: 8px; right: 8px; color: var(--dim); cursor: pointer; font-size: 12px; padding: 4px; }
-        .card-delete:hover { color: var(--red); }
-
         .card-mid { display: flex; justify-content: space-around; background: #080a0c; padding: 8px; border-radius: 8px; }
         .card-bot { font-size: 10px; color: var(--dim); font-style: italic; border-top: 1px solid #1e2530; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; }
         
@@ -50,7 +43,7 @@
         .p-val { font-size: 12px; font-weight: 900; }
         
         .risk-bar { height: 3px; background: #1e2530; border-radius: 2px; width: 40px; overflow: hidden; }
-        .risk-fill { height: 100%; transition: width 0.3s; }
+        .risk-fill { height: 100%; }
         .mini-btn { padding: 4px 10px; border: none; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; }
         
         .dropdown-container { margin-bottom: 8px; border: 1px solid var(--border); border-radius: 8px; background: #161b22; }
@@ -147,34 +140,41 @@
     function analyze() {
         const lg = document.getElementById('lg-text').getAttribute('data-league');
         const config = engineData[lg];
-        const xTotal = parseFloat(document.getElementById('t1-x').value || 0) + parseFloat(document.getElementById('t2-x').value || 0);
-        const s1 = parseFloat(document.getElementById('t1-s').value || 0);
-        const s2 = parseFloat(document.getElementById('t2-s').value || 0);
-        const sTotal = s1 + s2;
+        
+        // ORIJINAL MOTOR HESAPLAMASI
+        const x1 = parseFloat(document.getElementById('t1-x').value || 0);
+        const x2 = parseFloat(document.getElementById('t2-x').value || 0);
         const q1 = parseFloat(document.getElementById('t1-q').value || 0);
         const q2 = parseFloat(document.getElementById('t2-q').value || 0);
+        const s1 = parseFloat(document.getElementById('t1-s').value || 0);
+        const s2 = parseFloat(document.getElementById('t2-s').value || 0);
+        
+        const sTotal = s1 + s2;
+        const xTotal = x1 + x2;
         
         let score15 = 0;
         if(xTotal <= config.x) score15 += 45;
         if(q1 <= config.q && q2 <= config.q) score15 += 25;
         if(sTotal <= config.s) score15 += 20;
 
-        let insight = score15 >= 70 ? "Savunmalar sağlam, kilitli maç." : (score15 < 40 ? "Tempo çok yüksek, düello." : "Dengeli oyun.");
+        let insight = score15 >= 70 ? "Savunma disiplini ön planda." : (score15 < 40 ? "Yüksek tempo ve açık alan." : "Dengeli bir oyun bekliyor.");
+        
         let p1 = Math.min(Math.max(score15, 10), 90);
-        let p3 = Math.max(100 - p1 - 20, 5); 
+        let p3 = Math.max(100 - p1 - (Math.random() * 5 + 15), 5); 
         let p2 = 100 - (parseFloat(p1) + parseFloat(p3));
         
         renderCard(p1.toFixed(0), p2.toFixed(0), p3.toFixed(0), lg, insight, 100-score15);
     }
 
     function renderCard(p1, p2, p3, lg, insight, risk) {
-        const t1 = (document.getElementById('t1').value || 'EV').toUpperCase();
-        const t2 = (document.getElementById('t2').value || 'DEP').toUpperCase();
+        const t1 = (document.getElementById('t1').value || 'EV').toUpperCase().substring(0,8);
+        const t2 = (document.getElementById('t2').value || 'DEP').toUpperCase().substring(0,8);
         const card = document.createElement('div');
+        const cardId = "c" + Date.now();
         card.className = `hist-card`;
-        card.id = "card-" + Date.now();
+        card.id = cardId;
         card.innerHTML = `
-            <span class="card-delete" onclick="deleteSingleCard('${card.id}')">✕</span>
+            <span class="card-delete" onclick="deleteCard('${cardId}')">✕</span>
             <div class="card-top">
                 <div class="h-teams">${t1}-${t2} <span class="h-lig">${lg}</span></div>
                 <div class="h-actions">
@@ -184,31 +184,27 @@
             </div>
             <div class="card-mid">
                 <div class="p-box"><span class="p-lbl">1.5 ALT</span><span class="p-val" style="color:var(--red)">%${p1}</span></div>
-                <div class="p-box"><span class="p-lbl">T2</span><span class="p-val" style="color:var(--gold)">%${p2}</span></div>
-                <div class="p-box"><span class="p-lbl">3+</span><span class="p-val" style="color:var(--accent)">%${p3}</span></div>
+                <div class="p-box"><span class="p-lbl">T2 GOL</span><span class="p-val" style="color:var(--gold)">%${p2}</span></div>
+                <div class="p-box"><span class="p-lbl">3+ GOL</span><span class="p-val" style="color:var(--accent)">%${p3}</span></div>
             </div>
             <div class="card-bot">
                 <span>${insight}</span>
                 <div class="risk-bar"><div class="risk-fill" style="width:${risk}%; background:${risk > 60 ? 'var(--red)' : 'var(--accent)'}"></div></div>
             </div>
         `;
-        const list = document.getElementById('history-list');
-        list.prepend(card);
+        document.getElementById('history-list').prepend(card);
         saveHistory();
         document.getElementById('scroll-section').scrollTop = 0;
     }
 
-    function deleteSingleCard(id) {
-        const el = document.getElementById(id);
-        if(el) {
-            el.remove();
+    function deleteCard(id) {
+        if(confirm("Bu analizi silmek istediğine emin misin?")) {
+            document.getElementById(id).remove();
             saveHistory();
         }
     }
 
-    function saveHistory() {
-        localStorage.setItem('ppro_history', document.getElementById('history-list').innerHTML);
-    }
+    function saveHistory() { localStorage.setItem('ppro_history', document.getElementById('history-list').innerHTML); }
 
     function mark(win, btn) { 
         stats.total++; if(win) stats.wins++; 
@@ -219,14 +215,12 @@
     }
 
     function clearAllData() { 
-        if(confirm("DİKKAT: Tüm istatistikler ve analiz listesi silinecek!")){ 
-            if(confirm("Son kez soruyorum, emin misin?")){
-                stats={total:0,wins:0}; 
-                localStorage.removeItem('ppro_history');
-                localStorage.setItem('ppro_stats',JSON.stringify(stats)); 
-                document.getElementById('history-list').innerHTML = '';
-                updateUI(); 
-            }
+        if(confirm("Tüm istatistikleri ve listeyi sıfırla?")){ 
+            stats={total:0,wins:0}; 
+            localStorage.removeItem('ppro_history');
+            localStorage.setItem('ppro_stats',JSON.stringify(stats)); 
+            document.getElementById('history-list').innerHTML = '';
+            updateUI(); 
         } 
     }
 </script>

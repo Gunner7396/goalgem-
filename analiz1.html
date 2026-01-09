@@ -3,28 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScoreMaster AI</title>
+    <title>ScoreMaster AI v3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background-color: #0d0d0d; color: #fff; font-family: 'Inter', sans-serif; }
-        .fotmob-dark { background: #1a1a1a; border-radius: 12px; border: 1px solid #282828; }
+        body { background-color: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .fotmob-dark { background: #161616; border-radius: 12px; border: 1px solid #222; }
         .accent-green { color: #00ff85; }
-        .input-dark { background: #262626; border: 1px solid #333; border-radius: 8px; padding: 10px; text-align: center; color: white; }
-        .mini-card { padding: 8px 12px; background: #151515; border-radius: 8px; border: 1px solid #333; }
-        .prob-bar { height: 4px; border-radius: 2px; background: #333; margin-top: 4px; overflow: hidden; }
-        .prob-fill { height: 100%; background: #00ff85; transition: width 0.8s ease; }
+        .input-dark { background: #1f1f1f; border: 1px solid #2a2a2a; border-radius: 6px; padding: 8px; text-align: center; color: white; font-weight: 600; }
+        .prob-bar { height: 3px; border-radius: 2px; background: #2a2a2a; margin-top: 4px; overflow: hidden; }
+        .prob-fill { height: 100%; background: #00ff85; transition: width 0.6s ease; }
+        input::placeholder { color: #444; font-weight: 400; }
     </style>
 </head>
-<body class="p-4 pb-20">
+<body class="p-4 pb-24">
 
-    <div class="flex justify-between items-center mb-4">
-        <h1 class="text-lg font-black italic">SCORE<span class="accent-green">MASTER</span></h1>
-        <div id="winRate" class="text-sm font-bold accent-green">0% Başarı</div>
+    <div class="flex justify-between items-center mb-5 px-1">
+        <div>
+            <h1 class="text-xl font-black italic tracking-tighter">SCORE<span class="accent-green">MASTER</span></h1>
+            <div id="winRate" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Başarı: %0</div>
+        </div>
+        <button onclick="location.reload()" class="text-gray-600 hover:text-white transition"><i class="fa-solid fa-rotate-right"></i></button>
     </div>
 
-    <div class="fotmob-dark p-4 mb-4">
-        <select id="leagueSelect" onchange="updateTeams()" class="w-full bg-transparent text-xs font-bold border-none mb-3 text-gray-400 uppercase tracking-widest">
+    <div class="fotmob-dark p-4 mb-4 shadow-2xl">
+        <select id="leagueSelect" onchange="updateTeams()" class="w-full bg-transparent text-[11px] font-black border-none mb-4 text-gray-500 uppercase tracking-widest text-center">
             <option value="PL">Premier League</option>
             <option value="LL">La Liga</option>
             <option value="SA">Serie A</option>
@@ -32,79 +35,83 @@
             <option value="L1">Ligue 1</option>
         </select>
 
-        <div class="flex gap-2 mb-4">
+        <div class="flex gap-4 mb-6 relative">
             <div class="flex-1">
-                <input list="homeTeamsList" id="homeTeam" placeholder="Ev Sahibi" class="w-full bg-transparent border-b border-gray-700 text-xs py-1 focus:outline-none focus:border-green-500">
+                <input list="homeTeamsList" id="homeTeam" placeholder="Ev Sahibi" class="w-full bg-transparent border-b border-gray-800 text-sm py-1 focus:outline-none focus:border-green-500 transition-colors">
                 <datalist id="homeTeamsList"></datalist>
             </div>
-            <div class="text-gray-600 font-bold self-end text-xs">VS</div>
-            <div class="flex-1">
-                <input list="awayTeamsList" id="awayTeam" placeholder="Deplasman" class="w-full bg-transparent border-b border-gray-700 text-xs py-1 focus:outline-none focus:border-green-500 text-right">
+            <div class="absolute left-1/2 -translate-x-1/2 top-1 text-[10px] font-black text-gray-700">VS</div>
+            <div class="flex-1 text-right">
+                <input list="awayTeamsList" id="awayTeam" placeholder="Deplasman" class="w-full bg-transparent border-b border-gray-800 text-sm py-1 focus:outline-none focus:border-green-500 text-right transition-colors">
                 <datalist id="awayTeamsList"></datalist>
             </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-2 text-center items-center">
+        <div class="grid grid-cols-3 gap-3 text-center items-center mb-2">
             <input type="number" id="h_npxg" class="input-dark text-sm" placeholder="—">
-            <span class="text-[9px] text-gray-500 font-bold">npxG/Sh</span>
+            <span class="text-[9px] text-gray-600 font-black uppercase">npxG/Sh</span>
             <input type="number" id="a_npxg" class="input-dark text-sm" placeholder="—">
 
             <input type="number" id="h_ppa" class="input-dark text-sm" placeholder="—">
-            <span class="text-[9px] text-gray-500 font-bold">PPA</span>
+            <span class="text-[9px] text-gray-600 font-black uppercase">PPA</span>
             <input type="number" id="a_ppa" class="input-dark text-sm" placeholder="—">
 
             <input type="number" id="h_sca" class="input-dark text-sm" placeholder="—">
-            <span class="text-[9px] text-gray-500 font-bold">SCA</span>
+            <span class="text-[9px] text-gray-600 font-black uppercase">SCA</span>
             <input type="number" id="a_sca" class="input-dark text-sm" placeholder="—">
+            
+            <input type="number" id="h_prgr" class="input-dark text-sm" placeholder="—">
+            <span class="text-[9px] text-gray-600 font-black uppercase">PrgR</span>
+            <input type="number" id="a_prgr" class="input-dark text-sm" placeholder="—">
         </div>
 
-        <button onclick="calculateAnalysis()" class="w-full bg-[#00ff85] text-black py-3 rounded-lg mt-4 font-black text-xs uppercase italic tracking-tighter">Analiz Et</button>
+        <button onclick="calculateAnalysis()" class="w-full bg-[#00ff85] text-black py-4 rounded-xl mt-4 font-black text-xs uppercase italic tracking-wider shadow-lg shadow-green-500/20 active:scale-95 transition-transform">Analiz Et</button>
     </div>
 
-    <div id="resultArea" class="hidden mb-6">
-        <div class="fotmob-dark p-3 border-l-4 border-green-500">
-            <div class="flex justify-between items-center mb-2">
-                <span id="matchLabel" class="text-[10px] font-bold text-gray-400 uppercase">ARS vs MCI</span>
-                <span class="text-[9px] text-gray-500 uppercase italic">Olasılık Dağılımı</span>
+    <div id="resultArea" class="hidden animate-in fade-in duration-500 mb-6">
+        <div class="fotmob-dark p-4 border-t-2 border-green-500">
+            <div class="flex justify-between items-center mb-3">
+                <span id="matchLabel" class="text-xs font-black accent-green italic uppercase">ARS vs MCI</span>
+                <span class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Olasılık Dağılımı</span>
             </div>
 
-            <div class="grid grid-cols-3 gap-3 mb-4">
-                <div class="text-center">
-                    <div class="text-[9px] text-gray-500 mb-1">1.5 ALT</div>
+            <div class="grid grid-cols-3 gap-4 mb-4">
+                <div class="text-center bg-black/20 p-2 rounded">
+                    <div class="text-[8px] text-gray-500 mb-1 font-bold">1.5 ALT</div>
                     <div id="p_alt" class="text-sm font-black italic">0%</div>
                     <div class="prob-bar"><div id="b_alt" class="prob-fill" style="width:0%"></div></div>
                 </div>
-                <div class="text-center">
-                    <div class="text-[9px] text-gray-500 mb-1">TAM 2.0</div>
+                <div class="text-center bg-black/20 p-2 rounded border border-green-500/20">
+                    <div class="text-[8px] text-gray-500 mb-1 font-bold">TAM 2.0</div>
                     <div id="p_tam2" class="text-sm font-black italic accent-green">0%</div>
                     <div class="prob-bar"><div id="b_tam2" class="prob-fill" style="width:0%"></div></div>
                 </div>
-                <div class="text-center">
-                    <div class="text-[9px] text-gray-500 mb-1">TAM 3.0</div>
+                <div class="text-center bg-black/20 p-2 rounded">
+                    <div class="text-[8px] text-gray-500 mb-1 font-bold">TAM 3.0</div>
                     <div id="p_tam3" class="text-sm font-black italic">0%</div>
                     <div class="prob-bar"><div id="b_tam3" class="prob-fill" style="width:0%"></div></div>
                 </div>
             </div>
 
-            <div class="flex gap-2 items-center pt-2 border-t border-gray-800">
-                <input type="number" id="finalHome" placeholder="0" class="w-10 bg-black rounded text-center text-xs p-1">
-                <span class="text-gray-700">-</span>
-                <input type="number" id="finalAway" placeholder="0" class="w-10 bg-black rounded text-center text-xs p-1">
-                <button onclick="archiveMatch()" class="flex-1 bg-white text-black text-[9px] py-2 rounded font-black uppercase">Arşivle</button>
+            <div class="flex gap-2 items-center">
+                <input type="number" id="finalHome" placeholder="0" class="w-12 bg-black/50 rounded-lg text-center text-sm p-2 border border-gray-800">
+                <span class="text-gray-700 font-black">-</span>
+                <input type="number" id="finalAway" placeholder="0" class="w-12 bg-black/50 rounded-lg text-center text-sm p-2 border border-gray-800">
+                <button onclick="archiveMatch()" class="flex-1 bg-white text-black text-[10px] py-2.5 rounded-lg font-black uppercase tracking-widest ml-1">Arşivi Güncelle</button>
             </div>
         </div>
     </div>
 
-    <h2 class="text-[10px] font-black text-gray-600 uppercase mb-2 tracking-widest ml-1">Arşiv</h2>
+    <h2 class="text-[10px] font-black text-gray-600 uppercase mb-3 tracking-[0.2em] ml-1">Geçmiş Analizler</h2>
     <div id="archiveList" class="space-y-2"></div>
 
     <script>
         const teams = {
-            PL: ["Arsenal", "Man City", "Liverpool", "Aston Villa", "Tottenham", "Chelsea", "Man Utd", "Newcastle", "Fulham", "Brighton", "West Ham", "Brentford", "Bournemouth", "Everton", "Wolves", "Leicester", "Ipswich", "Southampton", "Nottm Forest", "Crystal Palace"],
-            LL: ["Real Madrid", "Barcelona", "Atletico Madrid", "Girona", "Sociedad", "Athletic Bilbao", "Getafe", "Villarreal", "Betis", "Sevilla", "Osasuna", "Valencia", "Celta Vigo", "Mallorca", "Alaves", "Las Palmas", "Leganes", "Valladolid", "Espanyol", "Rayo Vallecano"],
-            SA: ["Inter", "Juventus", "AC Milan", "Napoli", "Roma", "Lazio", "Atalanta", "Fiorentina", "Bologna", "Torino", "Genoa", "Monza", "Verona", "Udinese", "Cagliari", "Lecce", "Empoli", "Parma", "Como", "Venezia"],
-            BL: ["Leverkusen", "Bayern Munich", "Dortmund", "RB Leipzig", "Stuttgart", "Frankfurt", "Hoffenheim", "Heidenheim", "Werder Bremen", "Freiburg", "Augsburg", "Wolfsburg", "Mainz", "Gladbach", "Union Berlin", "Bochum", "St. Pauli", "Holstein Kiel"],
-            L1: ["PSG", "Monaco", "Lille", "Brest", "Nice", "Lyon", "Lens", "Marseille", "Reims", "Rennes", "Toulouse", "Montpellier", "Strasbourg", "Le Havre", "Nantes", "Angers", "Auxerre", "St-Etienne"]
+            PL: ["Arsenal", "Aston Villa", "Bournemouth", "Brentford", "Brighton", "Chelsea", "Crystal Palace", "Everton", "Fulham", "Ipswich", "Leicester", "Liverpool", "Man City", "Man Utd", "Newcastle", "Nottm Forest", "Southampton", "Tottenham", "West Ham", "Wolves"],
+            LL: ["Alaves", "Athletic Bilbao", "Atletico Madrid", "Barcelona", "Celta Vigo", "Espanyol", "Getafe", "Girona", "Las Palmas", "Leganes", "Mallorca", "Osasuna", "Rayo Vallecano", "Real Betis", "Real Madrid", "Real Sociedad", "Sevilla", "Valencia", "Valladolid", "Villarreal"],
+            SA: ["Atalanta", "Bologna", "Cagliari", "Como", "Empoli", "Fiorentina", "Genoa", "Inter", "Juventus", "Lazio", "Lecce", "Milan", "Monza", "Napoli", "Parma", "Roma", "Torino", "Udinese", "Venezia", "Verona"],
+            BL: ["Augsburg", "Bayern Munich", "Bochum", "Dortmund", "Frankfurt", "Freiburg", "Gladbach", "Heidenheim", "Hoffenheim", "Holstein Kiel", "Leipzig", "Leverkusen", "Mainz", "St. Pauli", "Stuttgart", "Union Berlin", "Werder Bremen", "Wolfsburg"],
+            L1: ["Angers", "Auxerre", "Brest", "Le Havre", "Lens", "Lille", "Lyon", "Marseille", "Monaco", "Montpellier", "Nantes", "Nice", "PSG", "Reims", "Rennes", "St-Etienne", "Strasbourg", "Toulouse"]
         };
 
         let currentAnalysis = null;
@@ -123,17 +130,17 @@
             const h = document.getElementById('homeTeam').value || "EV";
             const a = document.getElementById('awayTeam').value || "DEP";
             const avgSCA = (parseFloat(document.getElementById('h_sca').value || 0) + parseFloat(document.getElementById('a_sca').value || 0)) / 2;
-            
-            // Olasılık Dağılım Algoritması (Gelişmiş)
+            const avgPPA = (parseFloat(document.getElementById('h_ppa').value || 0) + parseFloat(document.getElementById('a_ppa').value || 0)) / 2;
+
+            // Olasılık Dağılım Motoru (Sensörlü)
             let p1=0, p2=0, p3=0;
-            if (avgSCA <= 14) { p1=70; p2=25; p3=5; }
-            else if (avgSCA <= 17) { p1=30; p2=55; p3=15; }
-            else if (avgSCA <= 21) { p1=10; p2=65; p3=25; }
-            else { p1=5; p2=25; p3=70; }
+            if (avgSCA <= 13.5 && avgPPA <= 6) { p1=75; p2=20; p3=5; }
+            else if (avgSCA <= 17.5) { p1=25; p2=60; p3=15; }
+            else if (avgSCA <= 22) { p1=10; p2=65; p3=25; }
+            else { p1=5; p2=20; p3=75; }
 
             const finalPredict = p1 > p2 && p1 > p3 ? "1.5 ALT" : (p2 > p3 ? "TAM 2.0" : "TAM 3.0");
-
-            currentAnalysis = { home: h, away: a, predict: finalPredict, date: new Date().toLocaleDateString() };
+            currentAnalysis = { home: h, away: a, predict: finalPredict, date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) };
             
             document.getElementById('matchLabel').innerText = `${h.substring(0,3)} vs ${a.substring(0,3)}`;
             document.getElementById('p_alt').innerText = p1 + "%";
@@ -157,6 +164,11 @@
 
             history.unshift({ ...currentAnalysis, score: `${fh}-${fa}`, win });
             localStorage.setItem('matchHistory', JSON.stringify(history));
+            
+            // TEMİZLEME İŞLEMİ
+            ["h_npxg", "a_npxg", "h_ppa", "a_ppa", "h_sca", "a_sca", "h_prgr", "a_prgr", "finalHome", "finalAway", "homeTeam", "awayTeam"].forEach(id => {
+                document.getElementById(id).value = "";
+            });
             document.getElementById('resultArea').classList.add('hidden');
             renderHistory();
         }
@@ -167,13 +179,13 @@
             let wins = 0;
             history.forEach(item => {
                 if(item.win) wins++;
-                list.innerHTML += `<div class="mini-card flex justify-between items-center text-[10px] ${item.win ? 'border-green-900' : 'border-red-900'} opacity-80">
-                    <span class="font-bold">${item.home.substring(0,3)} - ${item.away.substring(0,3)}</span>
-                    <span class="text-gray-500">${item.predict}</span>
-                    <span class="font-black ${item.win ? 'accent-green' : 'text-red-500'}">${item.score}</span>
+                list.innerHTML += `<div class="bg-[#111] p-3 rounded-lg flex justify-between items-center text-[10px] border border-gray-900">
+                    <div class="flex flex-col"><span class="font-black italic">${item.home.substring(0,3)} - ${item.away.substring(0,3)}</span><span class="text-[8px] text-gray-600 uppercase">${item.date}</span></div>
+                    <div class="text-gray-500 font-bold uppercase tracking-widest text-[8px]">${item.predict}</div>
+                    <div class="font-black p-1 px-2 rounded ${item.win ? 'bg-green-900/30 text-[#00ff85]' : 'bg-red-900/30 text-red-500'}">${item.score}</div>
                 </div>`;
             });
-            document.getElementById('winRate').innerText = (history.length > 0 ? Math.round((wins/history.length)*100) : 0) + "% Başarı";
+            document.getElementById('winRate').innerText = "Başarı: %" + (history.length > 0 ? Math.round((wins/history.length)*100) : 0);
         }
 
         updateTeams();

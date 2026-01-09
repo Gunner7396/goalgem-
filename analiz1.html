@@ -3,150 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ScoreMaster v36</title>
+    <title>ScoreMaster v37 - FotMob UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #00ff85; --bg: #050505; }
-        body { background-color: var(--bg); color: #fff; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .theme-PL { --accent: #3d195d; } .theme-LL { --accent: #efb810; }
-        .theme-SA { --accent: #008fd7; } .theme-BL { --accent: #d20515; }
-        .theme-L1 { --accent: #dae025; }
-        .input-box { background: #111; border: 1px solid #222; border-radius: 12px; padding: 12px; text-align: center; color: white; font-weight: 800; width: 100%; outline: none; font-size: 16px; transition: 0.2s; }
-        .input-box:focus { border-color: var(--accent); background: #181818; }
-        .team-input { background: transparent; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 8px 0; font-weight: 900; text-transform: uppercase; outline: none; font-size: 12px; font-style: italic; width: 100%; }
-        .team-input:focus { border-color: var(--accent); }
-        .btn-main { background: var(--accent); color: #000; padding: 18px; border-radius: 15px; font-weight: 900; width: 100%; text-transform: uppercase; margin-top: 15px; }
-        .match-card { background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 20px; padding: 20px; border-left: 5px solid var(--accent); margin-bottom: 15px; }
-        .league-btn { p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px] cursor-pointer transition: 0.2s; }
-        .league-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(255,255,255,0.05); }
+        :root { --fotmob-bg: #121214; --fotmob-card: #1a1a1c; --fotmob-accent: #00ff85; --fotmob-text: #ececed; }
+        body { background-color: var(--fotmob-bg); color: var(--fotmob-text); font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        /* FotMob Style Inputs */
+        .fm-input-group { background: var(--fotmob-card); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid #2a2a2c; }
+        .fm-field { background: #252528; border-radius: 8px; border: none; padding: 12px; text-align: center; color: white; font-weight: 700; width: 100%; outline: none; }
+        .fm-field:focus { box-shadow: 0 0 0 2px var(--fotmob-accent); }
+        
+        .team-header-input { background: transparent; border: none; font-size: 18px; font-weight: 800; color: white; width: 100%; border-bottom: 2px solid #2a2a2c; padding-bottom: 4px; margin-bottom: 10px; }
+        .team-header-input:focus { border-color: var(--fotmob-accent); }
+
+        /* League Tabs */
+        .fm-tab { padding: 10px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; background: #252528; color: #8a8a8e; transition: 0.2s; }
+        .fm-tab.active { background: var(--fotmob-accent); color: #000; }
+
+        .fm-btn-primary { background: var(--fotmob-accent); color: #000; padding: 16px; border-radius: 12px; font-weight: 800; width: 100%; text-transform: uppercase; margin-top: 10px; }
+        .fm-match-card { background: var(--fotmob-card); border-radius: 16px; padding: 16px; margin-bottom: 12px; border-left: 4px solid var(--fotmob-accent); }
+        
+        .stat-label { font-size: 9px; font-weight: 600; color: #8a8a8e; text-transform: uppercase; margin-top: 4px; }
     </style>
 </head>
-<body class="theme-PL p-4 pb-40">
+<body class="p-4 pb-32">
 
-    <div class="flex justify-between items-center mb-6 px-1">
-        <h1 class="text-2xl font-black italic uppercase leading-none">Score<span style="color: var(--accent)">Master</span> v36</h1>
-        <div onclick="resetStats()" class="text-right cursor-pointer">
-            <span id="wr" class="text-2xl font-black text-green-400">0%</span>
-            <p class="text-[7px] font-black opacity-30 uppercase">BAŞARI</p>
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <span class="text-[10px] font-bold text-[#00ff85] tracking-widest uppercase">Live Analysis</span>
+            <h1 class="text-xl font-extrabold tracking-tight">SCOREMASTER</h1>
+        </div>
+        <div onclick="resetStats()" class="bg-[#252528] px-4 py-2 rounded-full text-right cursor-pointer">
+            <span id="wr" class="text-sm font-bold text-[#00ff85]">0%</span>
+            <span class="text-[8px] block opacity-50">WIN RATE</span>
         </div>
     </div>
 
-    <div class="grid grid-cols-5 gap-2 mb-6">
-        <div onclick="setL('PL')" id="l-PL" class="league-btn active p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px]">PL</div>
-        <div onclick="setL('LL')" id="l-LL" class="league-btn p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px]">LL</div>
-        <div onclick="setL('SA')" id="l-SA" class="league-btn p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px]">SA</div>
-        <div onclick="setL('BL')" id="l-BL" class="league-btn p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px]">BL</div>
-        <div onclick="setL('L1')" id="l-L1" class="league-btn p-3 bg-white/5 rounded-xl border border-white/5 text-center font-black text-[10px]">L1</div>
+    <div class="flex gap-2 overflow-x-auto pb-4 mb-4 no-scrollbar">
+        <button onclick="setL('PL')" id="l-PL" class="fm-tab active">Premier League</button>
+        <button onclick="setL('LL')" id="l-LL" class="fm-tab">LaLiga</button>
+        <button onclick="setL('SA')" id="l-SA" class="fm-tab">Serie A</button>
+        <button onclick="setL('BL')" id="l-BL" class="fm-tab">Bundesliga</button>
+        <button onclick="setL('L1')" id="l-L1" class="fm-tab">Ligue 1</button>
     </div>
 
-    <div class="bg-[#0c0c0c] rounded-2xl p-5 border border-white/5 mb-8 shadow-2xl">
+    <div class="fm-input-group shadow-xl">
         <div class="flex gap-4 mb-6">
-            <input id="hT" placeholder="EV SAHİBİ" class="team-input text-left">
-            <input id="aT" placeholder="DEPLASMAN" class="team-input text-right">
+            <div class="w-1/2">
+                <input id="hT" placeholder="HOME TEAM" class="team-header-input">
+                <div class="grid grid-cols-1 gap-2">
+                    <input type="number" step="0.01" id="h_xg" class="fm-field" placeholder="npxG">
+                    <input type="number" id="h_ppa" class="fm-field" placeholder="PPA">
+                    <input type="number" id="h_sca" class="fm-field" placeholder="SCA">
+                    <input type="number" id="h_pr" class="fm-field" placeholder="PrgR">
+                </div>
+            </div>
+            <div class="w-1/2">
+                <input id="aT" placeholder="AWAY TEAM" class="team-header-input text-right">
+                <div class="grid grid-cols-1 gap-2">
+                    <input type="number" step="0.01" id="a_xg" class="fm-field" placeholder="npxG">
+                    <input type="number" id="a_ppa" class="fm-field" placeholder="PPA">
+                    <input type="number" id="a_sca" class="fm-field" placeholder="SCA">
+                    <input type="number" id="a_pr" class="fm-field" placeholder="PrgR">
+                </div>
+            </div>
         </div>
-        
-        <div class="grid grid-cols-3 gap-3 mb-6 items-center text-center">
-            <input type="number" step="0.01" id="h_xg" class="input-box" placeholder="H xG">
-            <span class="text-[7px] font-black opacity-40 uppercase tracking-tighter">AVG npxG</span>
-            <input type="number" step="0.01" id="a_xg" class="input-box" placeholder="A xG">
-            
-            <input type="number" id="h_ppa" class="input-box" placeholder="H PPA">
-            <span class="text-[7px] font-black opacity-40 uppercase tracking-tighter">SUM PPA</span>
-            <input type="number" id="a_ppa" class="input-box" placeholder="A PPA">
-            
-            <input type="number" id="h_sca" class="input-box" placeholder="H SCA">
-            <span class="text-[7px] font-black opacity-40 uppercase tracking-tighter">SUM SCA</span>
-            <input type="number" id="a_sca" class="input-box" placeholder="A SCA">
-            
-            <input type="number" id="h_pr" class="input-box" placeholder="H PrR">
-            <span class="text-[7px] font-black opacity-40 uppercase tracking-tighter">SUM PrgR</span>
-            <input type="number" id="a_pr" class="input-box" placeholder="A PrR">
-        </div>
-        <button onclick="calculate()" class="btn-main">Analizi Kaydet</button>
+        <button onclick="calculate()" class="fm-btn-primary">Analyze Match</button>
     </div>
 
-    <div id="archive" class="space-y-4"></div>
+    <div id="archive" class="mt-6 space-y-4"></div>
 
     <script>
         const BARAJ = {
-            PL: { low: [0.09, 16, 38, 80], high: [0.12, 24, 52, 110] },
-            LL: { low: [0.08, 12, 30, 60], high: [0.11, 18, 45, 90] },
-            SA: { low: [0.08, 13, 31, 60], high: [0.10, 19, 42, 88] },
-            BL: { low: [0.11, 18, 35, 75], high: [0.14, 24, 52, 110] },
-            L1: { low: [0.09, 14, 32, 65], high: [0.11, 20, 48, 95] }
+            PL: [0.09, 16, 38, 80], LL: [0.08, 12, 30, 60],
+            SA: [0.08, 13, 31, 60], BL: [0.11, 18, 35, 75], L1: [0.09, 14, 32, 65]
         };
 
         let curL = 'PL';
-        function setL(l) { 
-            curL = l; document.body.className = 'theme-'+l; 
-            document.querySelectorAll('.league-btn').forEach(el => el.classList.remove('active'));
+        function setL(l) {
+            curL = l;
+            document.querySelectorAll('.fm-tab').forEach(t => t.classList.remove('active'));
             document.getElementById('l-'+l).classList.add('active');
         }
 
         function calculate() {
-            const hName = document.getElementById('hT').value || "EV";
-            const aName = document.getElementById('aT').value || "DEP";
-            const hv = [document.getElementById('h_xg').value, document.getElementById('h_ppa').value, document.getElementById('h_sca').value, document.getElementById('h_pr').value];
-            const av = [document.getElementById('a_xg').value, document.getElementById('a_ppa').value, document.getElementById('a_sca').value, document.getElementById('a_pr').value];
-            
-            if(hv.some(v => v === "")) return;
+            const hN = document.getElementById('hT').value || "Home";
+            const aN = document.getElementById('aT').value || "Away";
+            const hv = [document.getElementById('h_xg').value, document.getElementById('h_ppa').value, document.getElementById('h_sca').value, document.getElementById('h_pr').value].map(Number);
+            const av = [document.getElementById('a_xg').value, document.getElementById('a_ppa').value, document.getElementById('a_sca').value, document.getElementById('a_pr').value].map(Number);
 
-            const hybridMatrix = [
-                (parseFloat(hv[0]) + parseFloat(av[0])) / 2, // npxG (Avg)
-                parseFloat(hv[1]) + parseFloat(av[1]),       // PPA (Sum)
-                parseFloat(hv[2]) + parseFloat(av[2]),       // SCA (Sum)
-                parseFloat(hv[3]) + parseFloat(av[3])        // PrgR (Sum)
-            ];
+            if(hv.includes(0) && hv[0] === 0) return; // Basit kontrol
 
+            // HİBRİT MATEMATİK: npxG (ortalama), diğerleri (toplam)
+            const matrix = [(hv[0]+av[0])/2, hv[1]+av[1], hv[2]+av[2], hv[3]+av[3]];
             const b = BARAJ[curL];
             let score = 0;
-            hybridMatrix.forEach((val, i) => {
-                if(val >= b.low[i]) score += 1;
-                if(val >= b.high[i]) score += 1;
-            });
+            matrix.forEach((val, i) => { if(val >= b[i]) score++; if(val >= b[i]*1.4) score++; });
 
-            let res = score <= 2 ? "1.5 ALT" : (score <= 5 ? "TAM 2.0" : "TAM 3.0");
-            
-            const card = `<div class="match-card">
-                <div class="flex justify-between items-center mb-1">
-                    <span class="text-[8px] font-black opacity-30">${curL} HYBRID</span>
-                    <button onclick="this.closest('.match-card').remove(); save();" class="text-white/20">×</button>
-                </div>
-                <div class="text-[10px] font-black uppercase italic border-b border-white/5 pb-2 mb-3">${hName} vs ${aName}</div>
-                <div class="text-xl font-black italic" style="color:var(--accent)">${res}</div>
-                <div class="text-[10px] opacity-40 font-bold mb-4">Skor: ${score}/8</div>
-                <div class="flex gap-2">
-                    <button onclick="tgl(this,'w')" class="flex-1 py-3 bg-white/5 rounded-xl font-black text-[10px]">WIN</button>
-                    <button onclick="tgl(this,'l')" class="flex-1 py-3 bg-white/5 rounded-xl font-black text-[10px]">LOSS</button>
-                </div>
-            </div>`;
+            let res = score <= 2 ? "1.5 UNDER" : (score <= 5 ? "OVER 2.0" : "OVER 3.0");
+            let color = score <= 2 ? "#ff4b4b" : (score <= 5 ? "#ffb800" : "#00ff85");
+
+            const card = `
+                <div class="fm-match-card">
+                    <div class="flex justify-between text-[10px] font-bold opacity-40 mb-2 uppercase">
+                        <span>${curL} Hybrid Analysis</span>
+                        <button onclick="this.closest('.fm-match-card').remove(); save();">DELETE</button>
+                    </div>
+                    <div class="text-sm font-extrabold mb-3">${hN} vs ${aN}</div>
+                    <div class="flex items-center justify-between bg-[#252528] p-4 rounded-xl">
+                        <div>
+                            <span class="text-xs font-bold opacity-50 block uppercase">Prediction</span>
+                            <span class="text-lg font-black italic" style="color:${color}">${res}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs font-bold opacity-50 block uppercase">Confidence</span>
+                            <span class="text-lg font-black">${Math.min(score*12.5, 99)}%</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <button onclick="tgl(this,'w')" class="flex-1 py-3 bg-[#252528] rounded-lg font-bold text-xs uppercase">Win</button>
+                        <button onclick="tgl(this,'l')" class="flex-1 py-3 bg-[#252528] rounded-lg font-bold text-xs uppercase">Loss</button>
+                    </div>
+                </div>`;
             document.getElementById('archive').insertAdjacentHTML('afterbegin', card);
             save();
         }
 
         function tgl(btn, type) {
-            btn.parentElement.querySelectorAll('button').forEach(b => { b.style.background = ''; b.style.color = ''; });
-            btn.style.background = type === 'w' ? 'var(--accent)' : '#ff4b4b';
+            btn.parentElement.querySelectorAll('button').forEach(b => { b.style.background = '#252528'; b.style.color = 'white'; });
+            btn.style.background = type === 'w' ? '#00ff85' : '#ff4b4b';
             btn.style.color = '#000';
             updateWR(); save();
         }
 
         function updateWR() {
-            const cards = document.querySelectorAll('.match-card');
+            const cards = document.querySelectorAll('.fm-match-card');
             let w = 0, t = 0;
             cards.forEach(c => {
                 const winBtn = c.querySelector('button[onclick*="\'w\'"]');
-                if(winBtn.style.background !== '') {
-                    if(winBtn.style.background.includes('var')) { w++; t++; }
-                    else { t++; }
-                }
+                if(winBtn.style.background.includes('rgb(0, 255, 133)')) { w++; t++; }
+                else if(c.querySelector('button[onclick*="\'l\'"]').style.background.includes('rgb(255, 75, 75)')) { t++; }
             });
             document.getElementById('wr').innerText = t > 0 ? Math.round((w/t)*100) + "%" : "0%";
         }
 
-        function save() { localStorage.setItem('sm_v36', document.getElementById('archive').innerHTML); }
-        function resetStats() { if(confirm("Sıfırlansın mı?")) { localStorage.clear(); location.reload(); } }
-        window.onload = () => { document.getElementById('archive').innerHTML = localStorage.getItem('sm_v36') || ''; updateWR(); };
+        function save() { localStorage.setItem('fm_v37', document.getElementById('archive').innerHTML); }
+        function resetStats() { if(confirm("Clear Data?")) { localStorage.clear(); location.reload(); } }
+        window.onload = () => { document.getElementById('archive').innerHTML = localStorage.getItem('fm_v37') || ''; updateWR(); };
     </script>
 </body>
 </html>

@@ -3,35 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>v46.X Final Precision</title>
+    <title>v47.1 Stable Final</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #000; color: #fff; font-family: -apple-system, sans-serif; overflow-x: hidden; }
+        body { background: #000; color: #fff; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
         .glass { background: #1c1c1e; border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; }
-        .in-box { background: #2c2c2e; border: none; border-radius: 8px; padding: 10px; color: #fff; font-weight: 700; text-align: center; width: 100%; font-size: 14px; outline: none; transition: 0.2s; }
-        .in-box:focus { background: #3a3a3c; box-shadow: 0 0 0 2px #30d158; }
-        .btn-lig { padding: 5px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: #1c1c1e; color: #555; border: 1px solid #2c2c2e; }
+        .in-box { background: #2c2c2e; border: none; border-radius: 8px; padding: 12px; color: #fff; font-weight: 700; text-align: center; width: 100%; font-size: 14px; outline: none; }
+        .btn-lig { padding: 6px 12px; border-radius: 10px; font-size: 10px; font-weight: 800; background: #1c1c1e; color: #555; border: 1px solid #2c2c2e; }
         .btn-lig.active { background: #30d158; color: #000; border-color: #30d158; }
-        .mini-card { background: #1c1c1e; border-radius: 12px; padding: 10px; margin-top: 8px; border: 1px solid rgba(255,255,255,0.05); position: relative; }
-        .pct-bar { height: 3px; background: #333; border-radius: 2px; overflow: hidden; width: 35px; }
-        .pct-fill { height: 100%; transition: width 0.6s ease-in-out; }
-        input::placeholder { font-weight: 400; opacity: 0.5; font-size: 11px; }
+        .mini-card { background: #1c1c1e; border-radius: 12px; padding: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .pct-bar { height: 3px; background: #333; border-radius: 2px; overflow: hidden; width: 40px; }
+        .pct-fill { height: 100%; transition: width 0.6s ease; }
+        #archiveContainer { display: none; margin-top: 15px; border-top: 1px dashed #333; padding-top: 15px; }
+        input::placeholder { font-weight: 400; opacity: 0.3; }
     </style>
 </head>
-<body class="p-3 pb-12">
+<body class="p-3 pb-16">
 
-    <div class="flex justify-between items-center mb-4 px-1">
+    <div class="flex justify-between items-center mb-5 px-1">
         <div>
-            <h1 class="text-lg font-black tracking-tighter">V46<span class="text-green-500">.PRECISION</span></h1>
-            <p class="text-[9px] font-bold text-gray-500 uppercase">BAŞARI: <span id="wr" class="text-green-500">0%</span></p>
+            <h1 class="text-xl font-black tracking-tighter italic">V47<span class="text-green-500">.STABLE</span></h1>
+            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">W/R: <span id="wr" class="text-green-500">0%</span></p>
         </div>
         <div class="flex gap-2">
-            <button onclick="clrAll()" class="p-2 glass text-[9px] font-bold text-red-500">ARŞİVİ BOŞALT</button>
-            <button onclick="location.reload()" class="p-2 glass text-[9px]">🔄</button>
+            <button onclick="toggleArchive()" class="p-2 glass text-[10px] font-black text-blue-400">📂 ARŞİV</button>
+            <button onclick="clrAll()" class="p-2 glass text-[10px] font-black text-red-500">🗑️ SİL</button>
         </div>
     </div>
 
-    <div class="flex gap-1 overflow-x-auto no-scrollbar mb-4">
+    <div class="flex gap-1 overflow-x-auto no-scrollbar mb-4 pb-1">
         <button onclick="sL('PL')" id="l-PL" class="btn-lig active">PL</button>
         <button onclick="sL('LL')" id="l-LL" class="btn-lig">LL</button>
         <button onclick="sL('SA')" id="l-SA" class="btn-lig">SA</button>
@@ -39,88 +39,111 @@
         <button onclick="sL('L1')" id="l-L1" class="btn-lig">L1</button>
     </div>
 
-    <div class="glass p-4 mb-4">
-        <div class="grid grid-cols-2 gap-4 mb-4 px-1">
-            <input id="hN" placeholder="EV" class="bg-transparent border-b border-gray-800 pb-1 text-xs font-black uppercase outline-none focus:border-green-500">
-            <input id="aN" placeholder="DEP" class="bg-transparent border-b border-gray-800 pb-1 text-xs font-black uppercase text-right outline-none focus:border-green-500">
+    <div class="glass p-5 mb-5">
+        <div class="grid grid-cols-2 gap-5 mb-5 px-1">
+            <input id="hN" placeholder="EV SAHİBİ" class="bg-transparent border-b border-gray-800 pb-2 text-xs font-black uppercase outline-none focus:border-green-500">
+            <input id="aN" placeholder="DEPLASMAN" class="bg-transparent border-b border-gray-800 pb-2 text-xs font-black uppercase text-right outline-none focus:border-green-500">
         </div>
-        <div class="space-y-1.5">
+        <div class="space-y-2">
             <div class="grid grid-cols-2 gap-2"><input type="number" inputmode="decimal" id="h_xg" class="in-box" placeholder="npxG"><input type="number" inputmode="decimal" id="a_xg" class="in-box" placeholder="npxG"></div>
             <div class="grid grid-cols-2 gap-2"><input type="number" inputmode="decimal" id="h_ppa" class="in-box" placeholder="PPA"><input type="number" inputmode="decimal" id="a_ppa" class="in-box" placeholder="PPA"></div>
             <div class="grid grid-cols-2 gap-2"><input type="number" inputmode="decimal" id="h_sca" class="in-box" placeholder="SCA"><input type="number" inputmode="decimal" id="a_sca" class="in-box" placeholder="SCA"></div>
             <div class="grid grid-cols-2 gap-2"><input type="number" inputmode="decimal" id="h_pr" class="in-box" placeholder="PrgR"><input type="number" inputmode="decimal" id="a_pr" class="in-box" placeholder="PrgR"></div>
         </div>
-        <button onclick="run()" id="mainBtn" class="w-full bg-[#30d158] text-black font-black p-3.5 rounded-xl mt-4 text-[10px] uppercase tracking-tighter active:scale-95 transition">ANALİZİ BAŞLAT</button>
+        <button onclick="run()" class="w-full bg-[#30d158] text-black font-black p-4 rounded-xl mt-5 text-[11px] uppercase tracking-widest active:scale-95 transition">ANALİZİ TAMAMLA</button>
     </div>
 
-    <div id="arc" class="flex flex-col-reverse gap-2"></div>
+    <div id="latestCard"></div>
+
+    <div id="archiveContainer">
+        <div class="flex items-center justify-between mb-3 px-1">
+            <span class="text-[10px] font-black text-gray-600 tracking-widest uppercase">Geçmiş Analizler</span>
+            <span onclick="toggleArchive()" class="text-[10px] text-gray-400">Kapat</span>
+        </div>
+        <div id="arcList" class="flex flex-col gap-3"></div>
+    </div>
 
     <script>
         const B = { PL:[.11,22,48,95], LL:[.09,16,38,75], SA:[.09,17,38,75], BL:[.13,24,50,105], L1:[.1,18,42,85] };
         let cL = 'PL';
 
         function sL(l){ cL=l; document.querySelectorAll('.btn-lig').forEach(b=>b.classList.remove('active')); document.getElementById('l-'+l).classList.add('active'); }
+        function toggleArchive() { const c = document.getElementById('archiveContainer'); c.style.display = (c.style.display === 'block') ? 'none' : 'block'; }
 
         function run() {
             const f = ["h_xg","a_xg","h_ppa","a_ppa","h_sca","a_sca","h_pr","a_pr"];
             const v = f.map(id => document.getElementById(id).value);
-            if(v.some(x => x === "")) { alert("Tüm verileri doldur!"); return; }
+            if(v.some(x => x === "")) { alert("Tüm kutuları doldurmalısın!"); return; }
 
             const hN = document.getElementById('hN').value || "EV";
             const aN = document.getElementById('aN').value || "DEP";
             const b = B[cL];
             const n = v.map(Number);
             
-            // ANALİZ MOTORU (Dokunulmadı)
-            const score = Math.round(((n[0]+n[1])/2/b[0])*40 + ((n[1]+n[2])/b[1])*30 + ((n[4]+n[5])/b[2])*20 + ((n[6]+n[7])/b[3])*10);
+            // Hassas Analiz Motoru
+            const score = Math.round(((n[0]+n[1])/2/b[0])*40 + ((n[2]+n[3])/b[1])*30 + ((n[4]+n[5])/b[2])*20 + ((n[6]+n[7])/b[3])*10);
 
-            // YÜZDESEL DAĞILIM (Hassasiyet Artırıldı)
             const p1 = Math.max(2, 100 - score);
-            const p2 = Math.min(score, 115 - Math.abs(score-80)); // T2 merkezini 80'e çektim
-            const p3 = Math.max(0, score - 80); // T3 tetikleyicisi 85'ten 80'e indi
+            const p2 = Math.min(score, 115 - Math.abs(score-80)); 
+            const p3 = Math.max(0, score - 80);
             const tot = p1 + p2 + p3;
             const d = [Math.round((p1/tot)*100), Math.round((p2/tot)*100), Math.round((p3/tot)*100)];
 
-            const item = { hN, aN, score, d, id: Date.now(), res: null, sk: "" };
-            let data = JSON.parse(localStorage.getItem('v46_db') || '[]');
+            const item = { hN, aN, score, d, id: Date.now(), res: null, sk: "", league: cL };
+            let data = JSON.parse(localStorage.getItem('v47_db') || '[]');
             data.push(item);
-            localStorage.setItem('v46_db', JSON.stringify(data));
+            localStorage.setItem('v47_db', JSON.stringify(data));
 
             f.forEach(id => document.getElementById(id).value = "");
+            document.getElementById('hN').value = ""; document.getElementById('aN').value = "";
+            document.activeElement.blur(); // Klavyeyi kapat
             render();
         }
 
         function render() {
-            const data = JSON.parse(localStorage.getItem('v46_db') || '[]');
-            const container = document.getElementById('arc');
-            container.innerHTML = "";
+            const data = JSON.parse(localStorage.getItem('v47_db') || '[]');
+            const arcList = document.getElementById('arcList');
+            const latest = document.getElementById('latestCard');
+            arcList.innerHTML = ""; latest.innerHTML = "";
             let w=0, t=0;
 
-            data.forEach(i => {
-                const card = document.createElement('div');
-                card.className = "mini-card";
-                card.innerHTML = `
-                    <button onclick="rm('${i.id}')" class="absolute top-2 right-2 text-gray-700 text-[10px]">✕</button>
-                    <div class="flex justify-between items-center mb-1 pr-6">
-                        <span class="text-[9px] font-black text-gray-500 uppercase">${i.hN} vs ${i.aN}</span>
-                        <input onchange="upSk('${i.id}', this.value)" placeholder="Skor" class="bg-transparent text-[10px] font-bold text-right w-8 text-green-500 outline-none" value="${i.sk}">
-                    </div>
-                    <div class="flex justify-between items-center mb-2">
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-[15px] font-black italic text-white">%${i.score}</span>
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">${i.score > 80 ? 'Yüksek Risk' : 'Dengeli'}</span>
+            data.forEach((i, idx) => {
+                const statusTxt = i.score > 80 ? 'POTANSİYEL GOL' : 'DENGELİ AKIŞ';
+                const statusClr = i.score > 80 ? 'text-red-500' : 'text-blue-400';
+                
+                const cardHTML = `
+                    <div class="mini-card relative mb-1">
+                        <button onclick="rm('${i.id}')" class="absolute top-2 right-2 text-gray-700 text-[10px] w-5 h-5">✕</button>
+                        <div class="flex justify-between items-center mb-2 pr-6">
+                            <span class="text-[8px] font-black text-white bg-gray-800 px-2 py-0.5 rounded italic">${i.league}</span>
+                            <span class="text-[10px] font-black text-gray-500 uppercase tracking-tighter">${i.hN} - ${i.aN}</span>
+                            <input onchange="upSk('${i.id}', this.value)" placeholder="Skor" class="bg-transparent text-[10px] font-bold text-right w-10 text-green-500 outline-none" value="${i.sk}">
                         </div>
-                        <div class="flex gap-1">
-                            <button onclick="setR('${i.id}','W')" class="w-7 h-7 rounded border ${i.res==='W'?'border-green-500 text-green-500 bg-green-500/10':'border-white/10 text-gray-600'} text-[9px] font-black">W</button>
-                            <button onclick="setR('${i.id}','L')" class="w-7 h-7 rounded border ${i.res==='L'?'border-red-500 text-red-500 bg-red-500/10':'border-white/10 text-gray-600'} text-[9px] font-black">L</button>
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex flex-col">
+                                <span class="text-[18px] font-black italic text-white leading-tight">%${i.score} ENERJİ</span>
+                                <span class="text-[9px] font-bold ${statusClr} uppercase tracking-widest">${statusTxt}</span>
+                            </div>
+                            <div class="flex gap-1.5">
+                                <button onclick="setR('${i.id}','W')" class="w-9 h-9 rounded-lg border ${i.res==='W'?'border-green-500 text-green-500 bg-green-500/10':'border-white/5 text-gray-600'} text-[11px] font-black transition-all">W</button>
+                                <button onclick="setR('${i.id}','L')" class="w-9 h-9 rounded-lg border ${i.res==='L'?'border-red-500 text-red-500 bg-red-500/10':'border-white/5 text-gray-600'} text-[11px] font-black transition-all">L</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex justify-between items-center gap-4 border-t border-white/5 pt-2">
-                        <div class="flex items-center gap-1"><span class="text-[8px] font-bold opacity-40">0-1:%${i.d[0]}</span><div class="pct-bar"><div class="pct-fill bg-gray-500" style="width:${i.d[0]}%"></div></div></div>
-                        <div class="flex items-center gap-1"><span class="text-[8px] font-bold opacity-40">T2:%${i.d[1]}</span><div class="pct-bar"><div class="pct-fill bg-green-500" style="width:${i.d[1]}%"></div></div></div>
-                        <div class="flex items-center gap-1"><span class="text-[8px] font-bold opacity-40">T3:%${i.d[2]}</span><div class="pct-bar"><div class="pct-fill bg-red-500" style="width:${i.d[2]}%"></div></div></div>
+                        <div class="flex justify-between items-center gap-2 border-t border-white/5 pt-3">
+                            <div class="flex items-center gap-1.5"><span class="text-[8px] font-bold opacity-30 uppercase">0-1:%${i.d[0]}</span><div class="pct-bar"><div class="pct-fill bg-gray-600" style="width:${i.d[0]}%"></div></div></div>
+                            <div class="flex items-center gap-1.5"><span class="text-[8px] font-bold opacity-30 uppercase">T2:%${i.d[1]}</span><div class="pct-bar"><div class="pct-fill bg-green-500" style="width:${i.d[1]}%"></div></div></div>
+                            <div class="flex items-center gap-1.5"><span class="text-[8px] font-bold opacity-30 uppercase">T3:%${i.d[2]}</span><div class="pct-bar"><div class="pct-fill bg-red-600" style="width:${i.d[2]}%"></div></div></div>
+                        </div>
                     </div>`;
-                container.appendChild(card);
+
+                if(idx === data.length - 1) {
+                    latest.innerHTML = `<h3 class="text-[10px] font-black text-green-500 mb-2 ml-1 uppercase tracking-widest italic">✓ Son Analiz Tamamlandı</h3>` + cardHTML;
+                }
+                
+                const arcItem = document.createElement('div');
+                arcItem.innerHTML = cardHTML;
+                arcList.prepend(arcItem);
+
                 if(i.res === 'W') w++;
                 if(i.res) t++;
             });
@@ -128,26 +151,26 @@
         }
 
         function setR(id, r) {
-            let data = JSON.parse(localStorage.getItem('v46_db') || '[]');
+            let data = JSON.parse(localStorage.getItem('v47_db') || '[]');
             data = data.map(i => i.id == id ? {...i, res: (i.res === r ? null : r)} : i);
-            localStorage.setItem('v46_db', JSON.stringify(data));
+            localStorage.setItem('v47_db', JSON.stringify(data));
             render();
         }
 
         function upSk(id, v) {
-            let data = JSON.parse(localStorage.getItem('v46_db') || '[]');
+            let data = JSON.parse(localStorage.getItem('v47_db') || '[]');
             data = data.map(i => i.id == id ? {...i, sk: v} : i);
-            localStorage.setItem('v46_db', JSON.stringify(data));
+            localStorage.setItem('v47_db', JSON.stringify(data));
         }
 
         function rm(id) {
-            let data = JSON.parse(localStorage.getItem('v46_db') || '[]');
+            let data = JSON.parse(localStorage.getItem('v47_db') || '[]');
             data = data.filter(i => i.id != id);
-            localStorage.setItem('v46_db', JSON.stringify(data));
+            localStorage.setItem('v47_db', JSON.stringify(data));
             render();
         }
 
-        function clrAll() { if(confirm("Tüm arşivi temizle?")) { localStorage.removeItem('v46_db'); render(); } }
+        function clrAll() { if(confirm("Tüm arşivi kalıcı olarak temizle?")) { localStorage.removeItem('v47_db'); render(); } }
 
         window.onload = render;
     </script>

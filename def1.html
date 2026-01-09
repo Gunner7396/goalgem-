@@ -3,47 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VELOCITY DNA ELITE v11</title>
+    <title>VELOCITY DNA ELITE v11.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
     <style>
         :root { 
             --bg: #040609; --card: #0d1117; --accent: #00ffa3; --border: #1e2530; 
             --text: #f0f3f5; --dim: #64748b; --danger: #ff4d4d;
-            --l-color: #00ffa3; /* Dynamic league color */
+            --l-color: #00ffa3; 
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: all 0.3s ease; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: all 0.2s ease; }
         body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; margin: 0; padding: 10px; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 5px 10px; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 5px 10px; flex-shrink: 0; }
         .header h1 { font-size: 18px; font-weight: 900; letter-spacing: -0.5px; color: var(--l-color); margin: 0; }
         .reset-btn { font-size: 8px; font-weight: 800; border: 1px solid var(--dim); padding: 4px 10px; border-radius: 20px; color: var(--dim); cursor: pointer; text-transform: uppercase; }
-        .reset-btn:hover { color: var(--danger); border-color: var(--danger); }
 
-        .dash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0; }
+        .dash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0; flex-shrink: 0; }
         .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px; text-align: center; }
         .st-v { font-family: 'JetBrains Mono'; font-size: 18px; font-weight: 800; color: #fff; display: block; }
         .st-l { font-size: 7px; color: var(--dim); text-transform: uppercase; font-weight: 800; }
 
-        .league-box { width: 100%; background: #161b22; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; position: relative; border-left: 4px solid var(--l-color); }
-        #league-select { width: 100%; padding: 14px; background: transparent; border: none; color: #fff; font-weight: 800; font-size: 13px; cursor: pointer; appearance: none; }
+        .league-box { width: 100%; background: #161b22; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; position: relative; border-left: 4px solid var(--l-color); flex-shrink: 0; }
+        #league-select { width: 100%; padding: 14px; background: transparent; border: none; color: #fff; font-weight: 800; font-size: 13px; cursor: pointer; appearance: none; -webkit-appearance: none; }
+        .league-box::after { content: '▼'; position: absolute; right: 15px; top: 15px; font-size: 10px; color: var(--dim); }
 
-        .engine { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 15px; position: relative; }
-        .row-label { font-size: 10px; font-weight: 900; color: var(--l-color); margin-bottom: 10px; letter-spacing: 1px; }
+        .engine { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 15px; flex-shrink: 0; }
+        .row-label { font-size: 10px; font-weight: 900; color: var(--l-color); margin-bottom: 10px; letter-spacing: 1px; display: flex; align-items: center; gap: 5px; }
+        .row-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
         
         .input-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
         .unit { background: #080a0f; border-bottom: 2px solid var(--border); padding: 8px; }
-        .unit:focus-within { border-color: var(--l-color); }
         .u-label { font-size: 7px; color: var(--dim); font-weight: 800; display: block; margin-bottom: 3px; }
-        .u-input { width: 100%; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 15px; font-weight: 700; }
+        .u-input { width: 100%; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 16px; font-weight: 700; }
 
         .scan-btn { width: 100%; background: var(--l-color); color: #000; border: none; padding: 16px; border-radius: 12px; font-weight: 900; font-size: 13px; cursor: pointer; letter-spacing: 1px; }
 
-        /* Report Scroll Area */
-        #feed { flex-grow: 1; overflow-y: auto; margin-top: 15px; padding-bottom: 20px; }
-        .report-card { background: #0d1117; border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 12px; border-top: 4px solid var(--l-color); }
+        #feed { flex-grow: 1; overflow-y: auto; margin-top: 15px; padding-bottom: 20px; scrollbar-width: none; }
+        #feed::-webkit-scrollbar { display: none; }
+        
+        .report-card { background: #0d1117; border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 12px; border-top: 4px solid var(--l-color); animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
         .rep-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-        .rep-info { font-size: 10px; color: var(--dim); font-weight: 800; }
-        .rep-league { background: #161b22; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 9px; }
+        .rep-league { background: #161b22; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; }
         
         .rep-main { display: flex; align-items: center; gap: 15px; }
         .rep-gauge { width: 50px; height: 50px; border-radius: 50%; border: 4px solid var(--border); border-top-color: var(--l-color); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; font-family: 'JetBrains Mono'; }
@@ -54,23 +56,21 @@
 
         .hit-zone { display: flex; gap: 8px; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
         .hit-btn { flex: 1; background: #161b22; border: 1px solid var(--border); color: #fff; font-size: 9px; font-weight: 800; padding: 8px; border-radius: 8px; cursor: pointer; }
-        .hit-btn:hover { background: var(--l-color); color: #000; }
-        .del-btn { color: var(--dim); background: none; border: none; cursor: pointer; font-size: 12px; }
+        .del-btn { color: var(--dim); background: none; border: none; cursor: pointer; font-size: 14px; }
 
-        /* League Themes */
-        .theme-eng { --l-color: #3d195b; } /* PL Purple */
-        .theme-esp { --l-color: #ff4b4b; } /* LaLiga Red */
-        .theme-ita { --l-color: #0066ff; } /* SerieA Blue */
-        .theme-ger { --l-color: #d3010c; } /* Buli Red */
-        .theme-fra { --l-color: #daff00; } /* Ligue1 Yellow */
+        .theme-eng { --l-color: #3d195b; }
+        .theme-esp { --l-color: #ff4b4b; }
+        .theme-ita { --l-color: #0066ff; }
+        .theme-ger { --l-color: #d3010c; }
+        .theme-fra { --l-color: #daff00; }
     </style>
 </head>
 <body class="theme-eng">
 
 <div class="wrapper">
     <div class="header">
-        <h1>DNA TERMINAL <span id="ver">v11</span></h1>
-        <div class="reset-btn" onclick="resetStats()">Reset Database</div>
+        <h1>DNA TERMINAL v11.1</h1>
+        <div class="reset-btn" onclick="resetStats()">Reset Data</div>
     </div>
 
     <div class="dash">
@@ -81,25 +81,25 @@
 
     <div class="league-box">
         <select id="league-select" onchange="applyTheme()">
-            <option value="ENG">PREMIER LEAGUE</option>
-            <option value="ESP">LA LIGA</option>
-            <option value="ITA">SERIE A</option>
-            <option value="GER">BUNDESLIGA</option>
-            <option value="FRA">LIGUE 1</option>
+            <option value="ENG">PREMIER LEAGUE (ENG)</option>
+            <option value="ESP">LA LIGA (ESP)</option>
+            <option value="ITA">SERIE A (ITA)</option>
+            <option value="GER">BUNDESLIGA (GER)</option>
+            <option value="FRA">LIGUE 1 (FRA)</option>
         </select>
     </div>
 
     <div class="engine">
-        <div class="row-label">DEF METRICS</div>
+        <div class="row-label">DEF</div>
         <div class="input-grid">
-            <div class="unit"><span class="u-label">SAVE %</span><input type="number" id="v-save" class="u-input"></div>
-            <div class="unit"><span class="u-label">PPA AGAINST</span><input type="number" id="v-ppa-a" class="u-input"></div>
-            <div class="unit" style="grid-column: span 2;"><span class="u-label">SCA AGAINST</span><input type="number" id="v-sca-a" class="u-input"></div>
+            <div class="unit"><span class="u-label">SAVE %</span><input type="number" inputmode="decimal" id="v-save" class="u-input"></div>
+            <div class="unit"><span class="u-label">PPA AGAINST</span><input type="number" inputmode="decimal" id="v-ppa-a" class="u-input"></div>
+            <div class="unit" style="grid-column: span 2;"><span class="u-label">SCA AGAINST</span><input type="number" inputmode="decimal" id="v-sca-a" class="u-input"></div>
         </div>
-        <div class="row-label">OFF METRICS</div>
+        <div class="row-label">OFF</div>
         <div class="input-grid">
-            <div class="unit"><span class="u-label">PPA FOR</span><input type="number" id="v-ppa-f" class="u-input"></div>
-            <div class="unit"><span class="u-label">NPXG / SHOT</span><input type="number" id="v-npx" class="u-input" step="0.01"></div>
+            <div class="unit"><span class="u-label">PPA FOR</span><input type="number" inputmode="decimal" id="v-ppa-f" class="u-input"></div>
+            <div class="unit"><span class="u-label">NPXG / SHOT</span><input type="number" inputmode="decimal" id="v-npx" class="u-input" step="0.01"></div>
         </div>
         <button class="scan-btn" onclick="analyze()">RUN DATA SCAN</button>
     </div>
@@ -108,7 +108,7 @@
 </div>
 
 <script>
-    let stats = JSON.parse(localStorage.getItem('vdna_v11_stats')) || { total: 0, wins: 0 };
+    let stats = JSON.parse(localStorage.getItem('vdna_v111_stats')) || { total: 0, wins: 0 };
     const dnaConfig = {
         ENG: { ppaA: 15.5, scaA: 27.0, save: 61.0, ppaF: 12.5, npx: 0.12, theme: 'theme-eng' },
         ESP: { ppaA: 11.5, scaA: 21.0, save: 64.0, ppaF: 10.0, npx: 0.11, theme: 'theme-esp' },
@@ -146,18 +146,18 @@
         card.id = `rep-${id}`;
         card.innerHTML = `
             <div class="rep-top">
-                <span class="rep-league">${document.getElementById('league-select').options[document.getElementById('league-select').selectedIndex].text}</span>
+                <span class="rep-league">${l} REPORT</span>
                 <button class="del-btn" onclick="deleteRep('${id}')">✕</button>
             </div>
             <div class="rep-main">
                 <div class="rep-gauge">${match}%</div>
                 <div class="rep-details">
                     <p class="rep-tag">SIGNAL CONFIDENCE</p>
-                    <p class="rep-val">%${signal} ACCURACY</p>
+                    <p class="rep-val">%${signal} TARGETING</p>
                 </div>
             </div>
             <div class="hit-zone">
-                <button class="hit-btn" onclick="markHit(this)">CONFIRM SUCCESS</button>
+                <button class="hit-btn" onclick="markHit(this)">MARK AS SUCCESS</button>
             </div>
         `;
         document.getElementById('feed').prepend(card);
@@ -167,9 +167,9 @@
     }
 
     function deleteRep(id) { document.getElementById(`rep-${id}`).remove(); saveFeed(); }
-    function markHit(btn) { stats.total++; stats.wins++; localStorage.setItem('vdna_v11_stats', JSON.stringify(stats)); btn.innerText = "HIT CONFIRMED ✓"; btn.style.background = "var(--l-color)"; btn.style.color = "#000"; saveFeed(); updateUI(); }
-    function resetStats() { if(confirm("Reset data?")) { stats = {total:0, wins:0}; localStorage.setItem('vdna_v11_stats', JSON.stringify(stats)); updateUI(); } }
-    function saveFeed() { localStorage.setItem('vdna_v11_feed', document.getElementById('feed').innerHTML); }
+    function markHit(btn) { stats.total++; stats.wins++; localStorage.setItem('vdna_v101_stats', JSON.stringify(stats)); btn.innerText = "HIT CONFIRMED ✓"; btn.style.background = "var(--l-color)"; btn.style.color = "#000"; saveFeed(); updateUI(); }
+    function resetStats() { if(confirm("Clear database?")) { stats = {total:0, wins:0}; localStorage.setItem('vdna_v101_stats', JSON.stringify(stats)); updateUI(); } }
+    function saveFeed() { localStorage.setItem('vdna_v101_feed', document.getElementById('feed').innerHTML); }
     function updateUI() {
         document.getElementById('st-total').innerText = stats.total;
         document.getElementById('st-hit').innerText = stats.wins;
@@ -178,7 +178,7 @@
     }
 
     window.onload = () => {
-        document.getElementById('feed').innerHTML = localStorage.getItem('vdna_v11_feed') || '';
+        document.getElementById('feed').innerHTML = localStorage.getItem('vdna_v101_feed') || '';
         updateUI();
         applyTheme();
     };

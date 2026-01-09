@@ -3,132 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOAL-PATH PRO V25</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <title>GOAL-PATH SOFA EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0d1117; --panel: #161b22; --accent: #00ffa3; --border: #30363d;
-            --text: #f0f6fc; --dim: #8b949e; --gold: #d29922; --red: #f85149;
+            --sofa-blue: #004696; --sofa-bg: #f8f9fa; --sofa-card: #ffffff;
+            --sofa-text: #212529; --sofa-dim: #6c757d; --sofa-border: #e9ecef;
+            --sofa-accent: #3c5a99; --win-green: #2b823e; --lose-red: #d93025;
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding: 0; min-height: 100vh; overflow-y: auto; line-height: 1.4; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Roboto', sans-serif; }
+        body { background: var(--sofa-bg); color: var(--sofa-text); margin: 0; padding-bottom: 50px; }
 
-        /* Header & Stats Modernized */
-        .header { padding: 15px; text-align: center; background: linear-gradient(to bottom, #161b22, transparent); }
-        .brand { font-size: 22px; font-weight: 900; color: var(--accent); letter-spacing: -0.5px; }
+        /* SofaHeader */
+        .sofa-header { background: var(--sofa-blue); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .sofa-brand { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
         
-        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 15px 15px; }
-        .stat-box { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 10px; text-align: center; position: relative; }
-        .stat-val { font-size: 16px; font-weight: 700; display: block; color: var(--text); }
-        .stat-lbl { font-size: 8px; color: var(--dim); text-transform: uppercase; font-weight: 600; }
-        .stat-reset { position: absolute; top: 4px; right: 6px; font-size: 10px; color: var(--red); opacity: 0.5; cursor: pointer; }
+        /* Stats Bar */
+        .stats-bar { background: white; padding: 12px 15px; display: flex; justify-content: space-around; border-bottom: 1px solid var(--sofa-border); margin-bottom: 10px; }
+        .stat-item { text-align: center; }
+        .stat-val { display: block; font-size: 16px; font-weight: 700; color: var(--sofa-blue); }
+        .stat-lbl { font-size: 10px; color: var(--sofa-dim); text-transform: uppercase; font-weight: 500; }
 
-        /* Compact Form Design */
-        .card { background: var(--panel); margin: 0 12px 12px; padding: 15px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        /* Modern Input Form */
+        .sofa-form-card { background: white; margin: 10px; border-radius: 8px; border: 1px solid var(--sofa-border); overflow: hidden; }
+        .form-header { background: #f1f3f5; padding: 8px 15px; font-size: 11px; font-weight: 700; color: var(--sofa-dim); border-bottom: 1px solid var(--sofa-border); }
+        .form-body { padding: 15px; }
         
-        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
-        select, input { 
-            width: 100%; background: #010409; border: 1px solid var(--border); 
-            padding: 10px; border-radius: 8px; color: #fff; font-weight: 600; 
-            font-size: 13px; outline: none; transition: all 0.2s;
-        }
-        select:focus, input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-        
-        .m-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-        .m-lbl { grid-column: span 4; font-size: 8px; color: var(--dim); text-align: center; font-weight: 700; padding: 4px 0; text-transform: uppercase; }
+        .league-row { margin-bottom: 12px; }
+        select, input { width: 100%; border: 1px solid #ced4da; padding: 10px; border-radius: 4px; font-size: 14px; background: #fff; color: var(--sofa-text); outline: none; transition: border-color 0.2s; }
+        select:focus, input:focus { border-color: var(--sofa-blue); }
 
-        .btn-group { display: flex; gap: 8px; margin-top: 12px; }
-        #analyze-btn { flex: 4; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #0d1117; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 13px; }
-        #analyze-btn:active { transform: scale(0.98); }
-        #clear-inputs { flex: 1; padding: 14px; border-radius: 10px; border: 1px solid #30363d; background: #21262d; color: var(--text); cursor: pointer; font-size: 16px; }
+        .team-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .metrics-grid input { text-align: center; padding: 8px 5px; font-size: 13px; }
 
-        /* Modern Match Cards */
-        .section-title { padding: 10px 15px; font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; opacity: 0.8; }
-        .match-card { background: var(--panel); margin: 0 12px 12px; padding: 12px; border-radius: 14px; border: 1px solid var(--border); }
-        .c-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .l-tag { background: rgba(0,255,163,0.1); color: var(--accent); font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--accent); }
-        .m-name { font-size: 13px; font-weight: 700; flex: 1; margin: 0 10px; }
-        .m-score { color: var(--gold); font-weight: 800; font-size: 13px; }
+        .btn-action-group { display: flex; gap: 10px; padding: 15px; background: #f8f9fa; border-top: 1px solid var(--sofa-border); }
+        #analyze-btn { flex: 4; background: var(--sofa-blue); color: white; border: none; padding: 12px; border-radius: 4px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 13px; }
+        #clear-btn { flex: 1; background: white; border: 1px solid #ced4da; border-radius: 4px; cursor: pointer; color: var(--sofa-dim); }
 
-        .p-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; margin-bottom: 10px; }
-        .p-box { text-align: center; border-right: 1px solid rgba(255,255,255,0.05); }
-        .p-box:last-child { border: none; }
-        .p-lbl { font-size: 7px; color: var(--dim); display: block; margin-bottom: 2px; }
-        .p-val { font-size: 13px; font-weight: 800; }
+        /* Sofa Match Card */
+        .match-card { background: white; margin-bottom: 1px; padding: 15px; display: flex; flex-direction: column; border-bottom: 1px solid var(--sofa-border); position: relative; }
+        .card-top { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 11px; color: var(--sofa-dim); font-weight: 500; }
+        .match-main { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .teams-col { flex: 1; }
+        .team-line { display: flex; align-items: center; margin-bottom: 4px; }
+        .team-line span { font-size: 15px; font-weight: 500; }
+        .score-col { font-size: 18px; font-weight: 700; color: var(--sofa-blue); min-width: 40px; text-align: right; }
 
-        .c-foot { display: flex; justify-content: space-between; align-items: center; }
-        .act-btn { padding: 6px 12px; border-radius: 6px; border: none; font-size: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .btn-w { background: #238636; color: white; }
-        .btn-l { background: #da3633; color: white; }
-        .btn-del { background: none; color: var(--dim); font-size: 14px; cursor: pointer; border: none; padding: 5px; }
+        .analysis-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 5px; }
+        .prob-item { background: #f8f9fa; padding: 8px; border-radius: 4px; text-align: center; border: 1px solid var(--sofa-border); }
+        .prob-label { display: block; font-size: 9px; color: var(--sofa-dim); font-weight: 700; margin-bottom: 2px; }
+        .prob-percent { font-size: 13px; font-weight: 700; }
 
-        .archive-empty { text-align: center; padding: 20px; color: var(--dim); font-size: 11px; font-style: italic; }
-        .clear-archive { text-align: center; padding: 20px; color: var(--red); font-size: 10px; font-weight: 700; cursor: pointer; text-decoration: underline; }
+        .card-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px; border-top: 1px dotted var(--sofa-border); padding-top: 10px; }
+        .status-btn { padding: 6px 15px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid transparent; }
+        .win-btn { background: #e6f4ea; color: var(--win-green); border-color: #ceead6; }
+        .lose-btn { background: #fce8e6; color: var(--lose-red); border-color: #fad2cf; }
+        .del-x { color: #dee2e6; cursor: pointer; font-weight: bold; padding: 0 5px; }
+
+        .archive-title { padding: 15px 15px 5px; font-size: 13px; font-weight: 700; color: var(--sofa-blue); background: #eee; margin-top: 20px; }
+        .empty-msg { text-align: center; padding: 30px; color: var(--sofa-dim); font-size: 13px; background: white; }
     </style>
 </head>
 <body>
 
-<div class="header"><div class="brand">GOAL-PATH PRO</div></div>
-
-<div class="stats">
-    <div class="stat-box">
-        <span class="stat-reset" onclick="resetStats()">↺</span>
-        <span class="stat-lbl">TOPLAM</span><span id="st-total" class="stat-val">0</span>
-    </div>
-    <div class="stat-box"><span class="stat-lbl">BAŞARI</span><span id="st-rate" class="stat-val" style="color:var(--gold)">%0</span></div>
-    <div class="stat-box"><span class="stat-lbl">WINS</span><span id="st-win" class="stat-val" style="color:var(--accent)">0</span></div>
+<div class="sofa-header">
+    <div class="sofa-brand">GOAL-PATH</div>
+    <div style="font-size: 12px; font-weight: 500;" onclick="resetStats()">SIFIRLA</div>
 </div>
 
-<div class="card">
-    <div class="row">
-        <select id="l-sel" onchange="upTeams()"></select>
-        <div style="display:flex; gap:4px;">
-            <select id="t1"></select><select id="t2"></select>
+<div class="stats-bar">
+    <div class="stat-item"><span class="stat-lbl">Toplam</span><span id="st-total" class="stat-val">0</span></div>
+    <div class="stat-item"><span class="stat-lbl">Başarı</span><span id="st-rate" class="stat-val">0%</span></div>
+    <div class="stat-item"><span class="stat-lbl">Wins</span><span id="st-win" class="stat-val">0</span></div>
+</div>
+
+<div class="sofa-form-card">
+    <div class="form-header">YENİ ANALİZ OLUŞTUR</div>
+    <div class="form-body">
+        <div class="league-row">
+            <select id="l-sel" onchange="upTeams()"></select>
+        </div>
+        <div class="team-row">
+            <select id="t1"></select>
+            <select id="t2"></select>
+        </div>
+        <div class="metrics-grid">
+            <input type="number" id="t1-q" step="any" inputmode="decimal" placeholder="Q1">
+            <input type="number" id="t1-s" inputmode="numeric" placeholder="SCA1">
+            <input type="number" id="t1-p" inputmode="numeric" placeholder="PRGR1">
+            <input type="number" id="t1-x" inputmode="numeric" placeholder="PPA1">
+            <input type="number" id="t2-q" step="any" inputmode="decimal" placeholder="Q2">
+            <input type="number" id="t2-s" inputmode="numeric" placeholder="SCA2">
+            <input type="number" id="t2-p" inputmode="numeric" placeholder="PRGR2">
+            <input type="number" id="t2-x" inputmode="numeric" placeholder="PPA2">
         </div>
     </div>
-    <div class="m-grid">
-        <div class="m-lbl">QUALITY | SCA | PRGR | PPA</div>
-        <input type="number" id="t1-q" step="any" inputmode="decimal" placeholder="Q1">
-        <input type="number" id="t1-s" inputmode="numeric" placeholder="SCA1">
-        <input type="number" id="t1-p" inputmode="numeric" placeholder="PRGR1">
-        <input type="number" id="t1-x" inputmode="numeric" placeholder="PPA1">
-        <input type="number" id="t2-q" step="any" inputmode="decimal" placeholder="Q2">
-        <input type="number" id="t2-s" inputmode="numeric" placeholder="SCA2">
-        <input type="number" id="t2-p" inputmode="numeric" placeholder="PRGR2">
-        <input type="number" id="t2-x" inputmode="numeric" placeholder="PPA2">
-    </div>
-    <div class="btn-group">
-        <button id="analyze-btn" onclick="run()">ANALİZİ BAŞLAT</button>
-        <button id="clear-inputs" onclick="cls()">🧹</button>
+    <div class="btn-action-group">
+        <button id="analyze-btn" onclick="run()">Analizi Başlat</button>
+        <button id="clear-btn" onclick="cls()">🧹</button>
     </div>
 </div>
 
-<div class="section-title">Bekleyen Maçlar</div>
+<div class="archive-title">BEKLEYEN MAÇLAR</div>
 <div id="active-list"></div>
 
-<div class="section-title">Geçmiş Arşiv</div>
+<div class="archive-title">ARŞİV (BİTMİŞ)</div>
 <div id="archive-list"></div>
-<div class="clear-archive" onclick="clsArc()">Arşivi Kalıcı Olarak Sil</div>
+<div style="text-align: center; padding: 20px;"><span style="color:red; font-size:12px; font-weight:700;" onclick="clsArc()">ARŞİVİ TEMİZLE</span></div>
 
 <script>
     const eData = { 
-        PL: { q: 0.08, s: 28, x: 10, p: 60, n: 'ENG: PREMIER', c: '#00ffa3' },
-        LL: { q: 0.06, s: 34, x: 13, p: 75, n: 'ESP: LA LIGA', c: '#ff4d4d' },
-        SA: { q: 0.07, s: 30, x: 11, p: 58, n: 'ITA: SERIE A', c: '#fbff00' },
-        BL: { q: 0.08, s: 38, x: 15, p: 85, n: 'GER: BUNDES', c: '#00d4ff' },
-        L1: { q: 0.08, s: 28, x: 10, p: 62, n: 'FRA: LIGUE 1', c: '#da70d6' }
+        PL: { q: 0.08, s: 28, x: 10, p: 60, n: 'Premier League', c: '#3d195b' },
+        LL: { q: 0.06, s: 34, x: 13, p: 75, n: 'La Liga', c: '#ee2e24' },
+        SA: { q: 0.07, s: 30, x: 11, p: 58, n: 'Serie A', c: '#008fd7' },
+        BL: { q: 0.08, s: 38, x: 15, p: 85, n: 'Bundesliga', c: '#d2021b' },
+        L1: { q: 0.08, s: 28, x: 10, p: 62, n: 'Ligue 1', c: '#dae025' }
     };
 
     const tData = {
-        PL: ["Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Tottenham", "Aston Villa", "Newcastle", "Brighton", "West Ham"],
-        LL: ["Real Madrid", "Barcelona", "Atl. Madrid", "Girona", "Real Sociedad", "Villarreal", "Ath. Bilbao", "Sevilla"],
-        SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio", "Atalanta", "Fiorentina"],
-        BL: ["Bayern Munich", "Leverkusen", "Dortmund", "RB Leipzig", "Stuttgart", "Frankfurt", "Wolfsburg"],
-        L1: ["PSG", "Monaco", "Marseille", "Lille", "Lyon", "Nice", "Lens", "Rennes"]
+        PL: ["Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Tottenham", "Newcastle", "Aston Villa"],
+        LL: ["Real Madrid", "Barcelona", "Atl. Madrid", "Girona", "Real Sociedad", "Villarreal"],
+        SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio", "Atalanta"],
+        BL: ["Bayern Munich", "Leverkusen", "Dortmund", "RB Leipzig", "Stuttgart"],
+        L1: ["PSG", "Monaco", "Marseille", "Lille", "Lyon", "Nice"]
     };
 
-    let stats = JSON.parse(localStorage.getItem('gp_stats')) || { total: 0, win: 0 };
-    let matches = JSON.parse(localStorage.getItem('gp_matches')) || [];
+    let stats = JSON.parse(localStorage.getItem('gp_stats_sofa')) || { total: 0, win: 0 };
+    let matches = JSON.parse(localStorage.getItem('gp_matches_sofa')) || [];
 
     window.onload = () => {
         const sel = document.getElementById('l-sel');
@@ -141,20 +143,15 @@
         const opts = tData[l].sort().map(t => `<option value="${t}">${t}</option>`).join('');
         document.getElementById('t1').innerHTML = opts;
         document.getElementById('t2').innerHTML = opts;
-        document.documentElement.style.setProperty('--accent', eData[l].c);
     }
 
-    function cls() { document.querySelectorAll('.m-grid input').forEach(i => i.value = ''); }
+    function cls() { document.querySelectorAll('.metrics-grid input').forEach(i => i.value = ''); }
 
     function run() {
-        const inputs = document.querySelectorAll('.m-grid input');
+        const inputs = document.querySelectorAll('.metrics-grid input');
         let empty = false;
         inputs.forEach(i => { if(i.value === "") empty = true; });
-
-        if(empty) {
-            alert("Lütfen tüm analiz verilerini girin!");
-            return;
-        }
+        if(empty) { alert("Eksik verileri tamamlayın!"); return; }
 
         const l = document.getElementById('l-sel').value;
         const cfg = eData[l];
@@ -172,34 +169,24 @@
         let p3 = Math.max(100 - p1 - (Math.random() * 5 + 15), 5); 
         let p2 = 100 - (parseFloat(p1) + parseFloat(p3));
 
-        const m = {
-            id: Date.now(),
-            lg: l, h: document.getElementById('t1').value, a: document.getElementById('t2').value,
-            p1: p1.toFixed(0), p2: p2.toFixed(0), p3: p3.toFixed(0),
-            score: '', status: 'active'
-        };
-
-        matches.unshift(m);
+        matches.unshift({
+            id: Date.now(), lg: l, h: document.getElementById('t1').value, a: document.getElementById('t2').value,
+            p1: p1.toFixed(0), p2: p2.toFixed(0), p3: p3.toFixed(0), score: '?', status: 'active'
+        });
         save(); render(); cls();
-        window.scrollTo({ top: document.querySelector('.section-title').offsetTop - 20, behavior: 'smooth' });
     }
 
     function setRes(id, win) {
-        const s = prompt("Maçın bitmiş skorunu girin:");
+        const s = prompt("Maç skoru?");
         if(s === null) return;
         matches = matches.map(m => {
-            if(m.id === id) {
-                m.status = 'archived';
-                m.res = win ? 'WIN' : 'LOSE';
-                m.score = s;
-                stats.total++; if(win) stats.win++;
-            }
+            if(m.id === id) { m.status = 'archived'; m.res = win ? 'WIN' : 'LOSE'; m.score = s; stats.total++; if(win) stats.win++; }
             return m;
         });
         save(); upUI(); render();
     }
 
-    function del(id) { if(confirm("Kaydı silmek istediğinize emin misiniz?")) { matches = matches.filter(m => m.id !== id); save(); render(); } }
+    function del(id) { if(confirm("Sil?")) { matches = matches.filter(m => m.id !== id); save(); render(); } }
 
     function render() {
         const active = matches.filter(m => m.status === 'active');
@@ -207,39 +194,44 @@
 
         const html = (list) => list.map(m => `
             <div class="match-card">
-                <div class="c-head">
-                    <span class="l-tag">${m.lg}</span>
-                    <span class="m-name">${m.h} - ${m.a}</span>
-                    <span class="m-score">${m.score}</span>
-                    <button class="btn-del" onclick="del(${m.id})">✕</button>
+                <div class="card-top">
+                    <span>${eData[m.lg].n}</span>
+                    <span class="del-x" onclick="del(${m.id})">✕</span>
                 </div>
-                <div class="p-row">
-                    <div class="p-box"><span class="p-lbl">0-1 GOL</span><span class="p-val" style="color:var(--red)">%${m.p1}</span></div>
-                    <div class="p-box"><span class="p-lbl">T2</span><span class="p-val" style="color:var(--gold)">%${m.p2}</span></div>
-                    <div class="p-box"><span class="p-lbl">T3</span><span class="p-val" style="color:var(--accent)">%${m.p3}</span></div>
+                <div class="match-main">
+                    <div class="teams-col">
+                        <div class="team-line"><span>${m.h}</span></div>
+                        <div class="team-line"><span>${m.a}</span></div>
+                    </div>
+                    <div class="score-col">${m.score}</div>
                 </div>
-                <div class="c-foot">
+                <div class="analysis-row">
+                    <div class="prob-item"><span class="prob-label">0-1 GOL</span><span class="prob-percent" style="color:var(--lose-red)">%${m.p1}</span></div>
+                    <div class="prob-item"><span class="prob-label">T2</span><span class="prob-percent" style="color:var(--sofa-blue)">%${m.p2}</span></div>
+                    <div class="prob-item"><span class="prob-label">T3</span><span class="prob-percent" style="color:var(--win-green)">%${m.p3}</span></div>
+                </div>
+                <div class="card-actions">
                     ${m.status === 'active' ? `
-                        <button class="act-btn btn-w" onclick="setRes(${m.id}, true)">KAZANDI</button>
-                        <button class="act-btn btn-l" onclick="setRes(${m.id}, false)" style="margin-left:8px">KAYBETTİ</button>
-                    ` : `<span style="font-size:10px; font-weight:900; color:${m.res === 'WIN' ? 'var(--accent)' : 'var(--red)'}">${m.res === 'WIN' ? 'BAŞARILI' : 'BAŞARISIZ'}</span>`}
+                        <button class="status-btn win-btn" onclick="setRes(${m.id}, true)">KAZANDI</button>
+                        <button class="status-btn lose-btn" onclick="setRes(${m.id}, false)">KAYBETTİ</button>
+                    ` : `<span style="font-size:12px; font-weight:700; color:${m.res === 'WIN' ? 'var(--win-green)' : 'var(--lose-red)'}">${m.res === 'WIN' ? 'BAŞARILI ✓' : 'BAŞARISIZ ✕'}</span>`}
                 </div>
             </div>
         `).join('');
 
-        document.getElementById('active-list').innerHTML = active.length ? html(active) : '<div class="archive-empty">Analiz bekleniyor...</div>';
-        document.getElementById('archive-list').innerHTML = archive.length ? html(archive) : '<div class="archive-empty">Arşiv henüz boş.</div>';
+        document.getElementById('active-list').innerHTML = active.length ? html(active) : '<div class="empty-msg">Aktif maç bulunmuyor.</div>';
+        document.getElementById('archive-list').innerHTML = archive.length ? html(archive) : '<div class="empty-msg">Arşiv boş.</div>';
     }
 
-    function save() { localStorage.setItem('gp_matches', JSON.stringify(matches)); localStorage.setItem('gp_stats', JSON.stringify(stats)); }
+    function save() { localStorage.setItem('gp_matches_sofa', JSON.stringify(matches)); localStorage.setItem('gp_stats_sofa', JSON.stringify(stats)); }
     function upUI() { 
         document.getElementById('st-total').innerText = stats.total;
         document.getElementById('st-win').innerText = stats.win;
         const r = stats.total === 0 ? 0 : Math.round((stats.win / stats.total) * 100);
-        document.getElementById('st-rate').innerText = '%' + r;
+        document.getElementById('st-rate').innerText = r + '%';
     }
-    function resetStats() { if(confirm("Tüm başarı istatistikleri sıfırlansın mı?")) { stats = {total:0, win:0}; save(); upUI(); } }
-    function clsArc() { if(confirm("Arşivdeki tüm kayıtlar kalıcı olarak silinsin mi?")) { matches = matches.filter(m => m.status === 'active'); save(); render(); } }
+    function resetStats() { if(confirm("İstatistikler sıfırlansın mı?")) { stats = {total:0, win:0}; save(); upUI(); } }
+    function clsArc() { if(confirm("Arşiv silinsin mi?")) { matches = matches.filter(m => m.status === 'active'); save(); render(); } }
 </script>
 </body>
 </html>

@@ -3,93 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOAL-PATH PRO V21</title>
+    <title>GOAL-PATH PRO V22</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0b0f14; --panel: #161c24; --accent: #00ffa3; --border: #2d3748;
             --text: #ffffff; --dim: #8e9aaf; --gold: #f6ad55; --red: #ff4d4d;
-            --card-grad: linear-gradient(145deg, #1e2530, #161c24);
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* Mobil Kaydırma Düzeni */
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 0; 
+            min-height: 100vh; 
+            overflow-y: auto; /* Kaydırma aktif */
+            -webkit-overflow-scrolling: touch;
+        }
 
-        /* Header */
-        .brand-header { padding: 15px; text-align: center; background: linear-gradient(to bottom, #161c24, transparent); }
-        .brand-name { font-size: 22px; font-weight: 900; letter-spacing: 2px; color: var(--accent); }
-        .brand-sub { font-size: 9px; color: var(--dim); letter-spacing: 3px; text-transform: uppercase; margin-top: 2px; }
-
-        /* Stat Panel */
-        .stat-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 15px 15px; }
-        .stat-box { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 10px; text-align: center; position: relative; }
+        .brand-header { padding: 20px 15px 10px; text-align: center; }
+        .brand-name { font-size: 24px; font-weight: 900; color: var(--accent); letter-spacing: 2px; }
+        
+        .stat-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px; }
+        .stat-box { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
         .stat-val { font-size: 18px; font-weight: 800; display: block; }
         .stat-lbl { font-size: 9px; color: var(--dim); text-transform: uppercase; }
 
-        /* Input Area */
-        .main-card { background: var(--panel); margin: 0 15px; padding: 15px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .league-select { width: 100%; background: #0b0f14; border: 1px solid var(--border); padding: 12px; border-radius: 10px; color: var(--accent); font-weight: 800; margin-bottom: 10px; text-align: center; appearance: none; cursor: pointer; }
+        .main-card { background: var(--panel); margin: 0 15px; padding: 15px; border-radius: 20px; border: 1px solid var(--border); }
         
-        .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-        .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-        .metric-title { grid-column: span 4; font-size: 8px; color: var(--dim); text-align: center; padding: 5px 0; font-weight: 700; text-transform: uppercase; }
+        select, input { 
+            width: 100%; background: #0b0f14; border: 1px solid var(--border); 
+            padding: 12px; border-radius: 10px; color: #fff; font-weight: 700; 
+            font-size: 14px; outline: none; margin-bottom: 8px;
+        }
 
-        input, select.team-pick { width: 100%; background: #0b0f14; border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: #fff; text-align: center; font-weight: 700; font-size: 13px; outline: none; transition: 0.2s; }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(0,255,163,0.1); }
+        .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .metric-title { grid-column: span 4; font-size: 9px; color: var(--dim); text-align: center; padding: 5px 0; font-weight: 700; }
+
+        #btn { 
+            width: 100%; margin-top: 15px; padding: 16px; border-radius: 12px; border: none; 
+            background: var(--accent); color: #000; font-weight: 900; cursor: pointer; text-transform: uppercase; 
+        }
+
+        /* Kartlar */
+        .scroll-area { padding: 15px; }
+        .hist-card { 
+            background: linear-gradient(145deg, #1e2530, #161c24); 
+            border: 1px solid var(--border); border-radius: 16px; padding: 15px; margin-bottom: 15px; 
+        }
+
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .league-tag { background: var(--accent); color: #000; font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 4px; }
+        .match-title { font-size: 14px; font-weight: 800; flex: 1; margin-left: 10px; }
         
-        #btn { width: 100%; margin-top: 15px; padding: 15px; border-radius: 12px; border: none; background: var(--accent); color: #000; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+        .score-display { color: var(--gold); font-weight: 900; margin-left: 10px; }
 
-        /* Scroll Area */
-        .scroll-area { flex: 1; overflow-y: auto; padding: 15px; margin-top: 10px; }
-        .hist-card { background: var(--card-grad); border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; position: relative; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; }
-        .team-names { font-size: 14px; font-weight: 800; color: #fff; }
-        .league-badge { font-size: 9px; color: var(--accent); border: 1px solid var(--accent); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 5px; }
-
-        .prob-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; }
+        .prob-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 12px; }
         .prob-box { text-align: center; }
-        .prob-lbl { font-size: 8px; color: var(--dim); display: block; margin-bottom: 3px; }
+        .prob-lbl { font-size: 8px; color: var(--dim); display: block; }
         .prob-val { font-size: 14px; font-weight: 900; }
 
-        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
         .insight-text { font-size: 10px; color: var(--dim); font-style: italic; }
-        
-        .action-btns { display: flex; gap: 8px; }
-        .icon-btn { width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-        .btn-win { background: rgba(0, 255, 163, 0.1); color: var(--accent); }
-        .btn-lose { background: rgba(255, 77, 77, 0.1); color: var(--red); }
-        .btn-del { background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 10px; }
 
-        /* Utilities */
-        .reset-all { color: var(--red); font-size: 10px; text-decoration: none; font-weight: bold; cursor: pointer; }
+        .action-btns { display: flex; gap: 8px; }
+        .btn-status { padding: 8px 12px; border-radius: 8px; border: none; font-size: 11px; font-weight: 800; cursor: pointer; }
+        .win { background: rgba(0, 255, 163, 0.1); color: var(--accent); }
+        .lose { background: rgba(255, 77, 77, 0.1); color: var(--red); }
+        .btn-del { background: none; border: none; color: var(--dim); cursor: pointer; font-size: 14px; }
+
+        .reset-all { text-align: center; padding: 20px; color: var(--red); font-size: 11px; font-weight: 800; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="brand-header">
     <div class="brand-name">GOAL-PATH PRO</div>
-    <div class="brand-sub">5 MAJOR EUROPEAN LEAGUES ANALYTICS</div>
 </div>
 
 <div class="stat-container">
-    <div class="stat-box"><span class="stat-lbl">TOTAL</span><span id="st-total" class="stat-val">0</span></div>
-    <div class="stat-box"><span class="stat-lbl">WIN RATE</span><span id="st-rate" class="stat-val" style="color:var(--gold)">%0</span></div>
-    <div class="stat-box"><span class="stat-lbl">SUCCESS</span><span id="st-win" class="stat-val" style="color:var(--accent)">0</span></div>
+    <div class="stat-box"><span class="stat-lbl">MAÇ</span><span id="st-total" class="stat-val">0</span></div>
+    <div class="stat-box"><span class="stat-lbl">BAŞARI</span><span id="st-rate" class="stat-val" style="color:var(--gold)">%0</span></div>
+    <div class="stat-box"><span class="stat-lbl">WINS</span><span id="st-win" class="stat-val" style="color:var(--accent)">0</span></div>
 </div>
 
 <div class="main-card">
-    <select id="leagueSelect" class="league-select" onchange="updateTeams()">
-        <option value="PL">ENG: PREMIER LEAGUE</option>
-        <option value="LL">ESP: LA LIGA</option>
-        <option value="SA">ITA: SERIE A</option>
-        <option value="BL">GER: BUNDESLIGA</option>
-        <option value="L1">FRA: LIGUE 1</option>
+    <select id="leagueSelect" onchange="updateTeams()">
+        <option value="PL">PREMIER LEAGUE</option>
+        <option value="LL">LA LIGA</option>
+        <option value="SA">SERIE A</option>
+        <option value="BL">BUNDESLIGA</option>
+        <option value="L1">LIGUE 1</option>
     </select>
 
-    <div class="team-grid">
-        <select id="t1" class="team-pick"></select>
-        <select id="t2" class="team-pick"></select>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <select id="t1"></select>
+        <select id="t2"></select>
     </div>
 
     <div class="metric-grid">
@@ -98,26 +109,20 @@
         <input type="number" id="t1-s" inputmode="numeric" placeholder="SCA1">
         <input type="number" id="t1-p" inputmode="numeric" placeholder="PrgR1">
         <input type="number" id="t1-x" inputmode="numeric" placeholder="PPA1">
-        
         <input type="number" id="t2-q" step="any" inputmode="decimal" placeholder="Q2">
         <input type="number" id="t2-s" inputmode="numeric" placeholder="SCA2">
         <input type="number" id="t2-p" inputmode="numeric" placeholder="PrgR2">
         <input type="number" id="t2-x" inputmode="numeric" placeholder="PPA2">
     </div>
 
-    <button id="btn" onclick="analyze()">RUN ANALYTICS</button>
-    <div style="text-align: center; margin-top: 10px;">
-        <span class="reset-all" onclick="clearAllData()">WIPE ALL HISTORY</span>
-    </div>
+    <button id="btn" onclick="analyze()">ANALİZİ BAŞLAT</button>
 </div>
 
-<div class="scroll-area" id="scroll-section">
-    <div id="history-list"></div>
-    <div style="height: 50px;"></div>
-</div>
+<div class="scroll-area" id="history-list"></div>
+
+<div class="reset-all" onclick="clearAllData()">TÜM GEÇMİŞİ TEMİZLE</div>
 
 <script>
-    // Analiz Motoru Verileri (Aynen Korundu)
     const engineData = { 
         PL: { q: 0.08, s: 28, x: 10, p: 60, col: '#00ffa3' },
         LL: { q: 0.06, s: 34, x: 13, p: 75, col: '#ff4d4d' },
@@ -126,35 +131,32 @@
         L1: { q: 0.08, s: 28, x: 10, p: 62, col: '#da70d6' }
     };
 
-    // Güncel Takımlar (İsteğin üzerine eklendi)
     const teamsData = {
-        PL: ["Arsenal", "Aston Villa", "Chelsea", "Liverpool", "Man City", "Man Utd", "Newcastle", "Tottenham", "Brighton", "West Ham"],
-        LL: ["Real Madrid", "Barcelona", "Atl. Madrid", "Real Sociedad", "Girona", "Villarreal", "Sevilla", "Ath. Bilbao"],
-        SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio", "Atalanta", "Fiorentina"],
-        BL: ["Bayern Munich", "Leverkusen", "Dortmund", "RB Leipzig", "Frankfurt", "Stuttgart", "Wolfsburg"],
-        L1: ["PSG", "Monaco", "Marseille", "Lille", "Lens", "Lyon", "Nice", "Rennes"]
+        PL: ["Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Tottenham", "Aston Villa", "Newcastle"],
+        LL: ["Real Madrid", "Barcelona", "Atl. Madrid", "Girona", "Real Sociedad", "Villarreal"],
+        SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio", "Atalanta"],
+        BL: ["Bayern Munich", "Leverkusen", "Dortmund", "RB Leipzig", "Stuttgart"],
+        L1: ["PSG", "Monaco", "Marseille", "Lille", "Lyon", "Nice"]
     };
 
     let stats = JSON.parse(localStorage.getItem('ppro_stats')) || { total: 0, wins: 0 };
 
     window.onload = () => { 
-        updateTeams();
+        updateTeams(); 
         updateUI(); 
-        document.getElementById('history-list').innerHTML = localStorage.getItem('ppro_history') || ''; 
+        loadHistory();
     };
 
     function updateTeams() {
         const lg = document.getElementById('leagueSelect').value;
-        const t1 = document.getElementById('t1');
-        const t2 = document.getElementById('t2');
         const teams = teamsData[lg];
         const options = teams.map(t => `<option value="${t}">${t}</option>`).join('');
-        t1.innerHTML = options;
-        t2.innerHTML = options;
+        document.getElementById('t1').innerHTML = options;
+        document.getElementById('t2').innerHTML = options;
         document.documentElement.style.setProperty('--accent', engineData[lg].col);
     }
 
-    // ANALİZ MOTORU HESAPLAMA (DEĞİŞTİRİLMEDİ)
+    // ANALİZ MOTORU (ORİJİNAL FORMÜLLER)
     function analyze() {
         const lg = document.getElementById('leagueSelect').value;
         const config = engineData[lg];
@@ -168,77 +170,103 @@
         if(q1 <= config.q && q2 <= config.q) score15 += 25;
         if(sTotal <= config.s) score15 += 20;
 
-        let insight = score15 >= 70 ? "Savunma Ağırlıklı Oyun" : (score15 < 40 ? "Yüksek Tempo Potansiyeli" : "Dengeli Mücadele");
+        let insight = score15 >= 70 ? "Savunma Odaklı" : (score15 < 40 ? "Yüksek Tempo" : "Dengeli");
         let p1 = Math.min(Math.max(score15, 10), 90);
         let p3 = Math.max(100 - p1 - (Math.random() * 5 + 15), 5); 
         let p2 = 100 - (parseFloat(p1) + parseFloat(p3));
         
-        renderCard(p1.toFixed(0), p2.toFixed(0), p3.toFixed(0), lg, insight, 100-score15);
+        createCard({
+            id: Date.now(),
+            home: document.getElementById('t1').value,
+            away: document.getElementById('t2').value,
+            lg: lg,
+            p1: p1.toFixed(0), p2: p2.toFixed(0), p3: p3.toFixed(0),
+            insight: insight,
+            finalScore: "",
+            status: "pending"
+        });
     }
 
-    function renderCard(p1, p2, p3, lg, insight, risk) {
-        const hTeam = document.getElementById('t1').value;
-        const aTeam = document.getElementById('t2').value;
-        const cardId = "c" + Date.now();
-        const card = document.createElement('div');
-        card.className = `hist-card`;
-        card.id = cardId;
-        card.innerHTML = `
-            <div class="card-header">
-                <div class="team-names">${hTeam} - ${aTeam} <span class="league-badge">${lg}</span></div>
-                <button class="icon-btn btn-del" onclick="deleteCard('${cardId}')">🗑️</button>
-            </div>
-            <div class="prob-row">
-                <div class="prob-box"><span class="prob-lbl">1.5 ALT</span><span class="prob-val" style="color:var(--red)">%${p1}</span></div>
-                <div class="prob-box"><span class="prob-lbl">KG VAR</span><span class="prob-val" style="color:var(--gold)">%${p2}</span></div>
-                <div class="prob-box"><span class="prob-lbl">2.5 ÜST</span><span class="prob-val" style="color:var(--accent)">%${p3}</span></div>
-            </div>
-            <div class="card-footer">
-                <span class="insight-text">${insight}</span>
-                <div class="action-btns">
-                    <button class="icon-btn btn-win" onclick="mark(true, this)">✓</button>
-                    <button class="icon-btn btn-lose" onclick="mark(false, this)">✕</button>
+    function createCard(data) {
+        let history = JSON.parse(localStorage.getItem('ppro_history_data') || '[]');
+        history.unshift(data);
+        localStorage.setItem('ppro_history_data', JSON.stringify(history));
+        renderList();
+    }
+
+    function renderList() {
+        const list = JSON.parse(localStorage.getItem('ppro_history_data') || '[]');
+        document.getElementById('history-list').innerHTML = list.map(m => `
+            <div class="hist-card">
+                <div class="card-header">
+                    <span class="league-tag">${m.lg}</span>
+                    <span class="match-title">${m.home} - ${m.away}</span>
+                    <span class="score-display">${m.finalScore}</span>
+                    <button class="btn-del" onclick="deleteItem(${m.id})">🗑️</button>
+                </div>
+                <div class="prob-row">
+                    <div class="prob-box"><span class="prob-lbl">1.5 ALT</span><span class="prob-val" style="color:var(--red)">%${m.p1}</span></div>
+                    <div class="prob-box"><span class="prob-lbl">KG VAR</span><span class="prob-val" style="color:var(--gold)">%${m.p2}</span></div>
+                    <div class="prob-box"><span class="prob-lbl">2.5 ÜST</span><span class="prob-val" style="color:var(--accent)">%${m.p3}</span></div>
+                </div>
+                <div class="card-footer">
+                    <span class="insight-text">${m.insight}</span>
+                    <div class="action-btns" id="actions-${m.id}">
+                        ${m.status === 'pending' ? `
+                            <button class="btn-status win" onclick="setResult(${m.id}, true)">KAZANDI</button>
+                            <button class="btn-status lose" onclick="setResult(${m.id}, false)">KAYBETTİ</button>
+                        ` : `<span style="font-size:11px; font-weight:900; color:${m.status === 'win' ? 'var(--accent)' : 'var(--red)'}">${m.status === 'win' ? 'BAŞARILI' : 'BAŞARISIZ'}</span>`}
+                    </div>
                 </div>
             </div>
-        `;
-        document.getElementById('history-list').prepend(card);
-        saveHistory();
+        `).join('');
     }
 
-    function mark(win, btn) { 
-        stats.total++; if(win) stats.wins++; 
-        localStorage.setItem('ppro_stats', JSON.stringify(stats)); 
-        updateUI(); 
-        const parent = btn.parentElement;
-        parent.innerHTML = `<span style="font-weight:bold; color:${win?'var(--accent)':'var(--red)'}">${win?'KAZANDI ✅':'KAYBETTİ ❌'}</span>`; 
-        saveHistory(); 
+    function setResult(id, isWin) {
+        const score = prompt("Maç Sonucu Nedir? (Örn: 2-1)");
+        if (score === null) return;
+
+        let history = JSON.parse(localStorage.getItem('ppro_history_data'));
+        history = history.map(m => {
+            if(m.id === id) {
+                m.status = isWin ? 'win' : 'lose';
+                m.finalScore = score;
+                stats.total++;
+                if(isWin) stats.wins++;
+            }
+            return m;
+        });
+        
+        localStorage.setItem('ppro_history_data', JSON.stringify(history));
+        localStorage.setItem('ppro_stats', JSON.stringify(stats));
+        updateUI();
+        renderList();
     }
 
-    function deleteCard(id) {
-        if(confirm("Bu analizi silmek istiyor musun?")) {
-            document.getElementById(id).remove();
-            saveHistory();
+    function deleteItem(id) {
+        if(!confirm("Bu analiz silinsin mi?")) return;
+        let history = JSON.parse(localStorage.getItem('ppro_history_data'));
+        history = history.filter(m => m.id !== id);
+        localStorage.setItem('ppro_history_data', JSON.stringify(history));
+        renderList();
+    }
+
+    function updateUI() {
+        document.getElementById('st-total').innerText = stats.total;
+        document.getElementById('st-win').innerText = stats.wins;
+        const rate = stats.total === 0 ? 0 : Math.round((stats.wins / stats.total) * 100);
+        document.getElementById('st-rate').innerText = '%' + rate;
+    }
+
+    function clearAllData() {
+        if(confirm("Tüm veriler silinecek!")) {
+            localStorage.clear();
+            location.reload();
         }
     }
 
-    function updateUI() { 
-        document.getElementById('st-total').innerText = stats.total; 
-        document.getElementById('st-win').innerText = stats.wins; 
-        const r = stats.total === 0 ? 0 : Math.round((stats.wins / stats.total) * 100); 
-        document.getElementById('st-rate').innerText = '%' + r; 
-    }
-
-    function saveHistory() { localStorage.setItem('ppro_history', document.getElementById('history-list').innerHTML); }
-
-    function clearAllData() { 
-        if(confirm("Tüm istatistikler ve geçmiş silinecek. Emin misin?")){ 
-            stats={total:0,wins:0}; 
-            localStorage.removeItem('ppro_history');
-            localStorage.setItem('ppro_stats',JSON.stringify(stats)); 
-            document.getElementById('history-list').innerHTML = '';
-            updateUI(); 
-        } 
-    }
+    function loadHistory() { renderList(); }
 </script>
+
 </body>
 </html>

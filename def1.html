@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VELOCITY SCOUT v15.5</title>
+    <title>VELOCITY SCOUT v16.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -104,19 +104,19 @@
 
     <div id="feed"></div>
     <div class="archive-section">
-        <h2 style="font-size: 10px; color: var(--success); margin: 15px 0 10px 0;">✅ BAŞARILI ARŞİV</h2>
+        <h2 style="font-size: 10px; color: var(--success); margin: 15px 0 10px 0;">✅ ANALİZ GEÇMİŞİ</h2>
         <div id="archive-list"></div>
     </div>
 </div>
 
 <script>
-    // LİG DNA AYARLARI (Hata Düzeltildi - Dinamik Katsayılar)
-    const dnaConfig = {
-        ENG: { offWeight: 1.15, defBase: 42, threshold: 75 }, 
-        ESP: { offWeight: 1.05, defBase: 35, threshold: 78 }, 
-        ITA: { offWeight: 0.85, defBase: 28, threshold: 82 }, // İtalya'da defans zayıflığına ceza daha büyük
-        GER: { offWeight: 1.25, defBase: 48, threshold: 70 }, // Almanya'da yüksek veriye tolerans daha çok
-        FRA: { offWeight: 1.00, defBase: 38, threshold: 76 }
+    // LİGLERİN GERÇEK BENCHMARK ARALIKLARI (Katsayı Değil, Eşik Değerler)
+    const leagueBenchmarks = {
+        ENG: { save: 68, ppaA: 14.5, scaA: 26.0, ppaF: 12.0, npx: 0.11 },
+        ESP: { save: 71, ppaA: 11.0, scaA: 21.0, ppaF: 10.5, npx: 0.10 },
+        ITA: { save: 72, ppaA: 9.5, scaA: 19.5, ppaF: 9.0, npx: 0.09 },
+        GER: { save: 66, ppaA: 15.5, scaA: 28.0, ppaF: 13.0, npx: 0.13 },
+        FRA: { save: 69, ppaA: 12.5, scaA: 23.0, ppaF: 11.5, npx: 0.11 }
     };
 
     const leagueTeams = {
@@ -127,8 +127,8 @@
         FRA: ["Angers", "Auxerre", "Brest", "Le Havre", "Lens", "Lille", "Lyon", "Marseille", "Monaco", "Montpellier", "Nantes", "Nice", "PSG", "Reims", "Rennes", "St-Etienne", "Strasbourg", "Toulouse"]
     };
 
-    let stats = JSON.parse(localStorage.getItem('v155_stats')) || { total: 0, wins: 0 };
-    let archive = JSON.parse(localStorage.getItem('v155_archive')) || [];
+    let stats = JSON.parse(localStorage.getItem('v165_stats')) || { total: 0, wins: 0 };
+    let archive = JSON.parse(localStorage.getItem('v165_archive')) || [];
 
     function updateTeams() {
         const l = document.getElementById('league-select').value;
@@ -138,7 +138,7 @@
 
     function analyze() {
         const l = document.getElementById('league-select').value;
-        const conf = dnaConfig[l];
+        const b = leagueBenchmarks[l]; // Seçilen ligin gerçek aralığını al
         
         const d = {
             save: parseFloat(document.getElementById('v-save').value || 0),
@@ -150,18 +150,16 @@
 
         if(!d.save || !d.ppaA) return;
 
-        // DİNAMİK HESAPLAMA MOTORU
-        // Savunma skoru ligin baz değerine göre oranlanır (İtalya'da az hata büyük ceza)
-        let defLeak = ((d.ppaA + (d.scaA / 2)) / conf.defBase) * 40;
+        // ANALİZ MOTORU: SADECE ARALIKLARA UZAKLIĞA BAKAR (KATSAYI YOK)
+        let score = 50;
         
-        // Hücum skoru ligin temposuna göre çarpılır
-        let offPower = ((d.ppaF * 2.5) + (d.npx * 450)) * conf.offWeight;
-        
-        // Save% katkısı (Lineer)
-        let goalieFix = (d.save - 65) * 0.5;
+        score += (d.save - b.save) * 1.0;     // Kaleci performansı aralığa göre
+        score += (b.ppaA - d.ppaA) * 3.0;     // Savunma geçişi aralığa göre
+        score += (b.scaA - d.scaA) * 2.0;     // Şut fırsatı engelleme aralığa göre
+        score += (d.ppaF - b.ppaF) * 2.5;     // Hücum üretkenliği aralığa göre
+        score += (d.npx - b.npx) * 180;       // Şut kalitesi aralığa göre
 
-        let finalScore = Math.round((offPower - defLeak) + goalieFix + 45);
-        const matchPct = Math.max(5, Math.min(98, finalScore));
+        const matchPct = Math.max(5, Math.min(95, Math.round(score)));
 
         const id = Date.now();
         const card = document.createElement('div');
@@ -170,7 +168,7 @@
             <div class="rep-score">${matchPct}%</div>
             <div class="rep-info">
                 <p class="team-display">${document.getElementById('v-team-h').value || 'EV'} - ${document.getElementById('v-team-a').value || 'DEP'}</p>
-                <p style="font-size:8px; color:var(--dim); margin:0;">${l} STANDARTLARINA GÖRE ANALİZ</p>
+                <p style="font-size:8px; color:var(--dim); margin:0;">${l} STANDARTLARIYLA HESAPLANDI</p>
             </div>
             <div class="rep-actions">
                 <button class="mini-btn" onclick="moveToArchive('${id}', '${document.getElementById('v-team-h').value}', '${document.getElementById('v-team-a').value}', ${matchPct})">✅</button>
@@ -180,21 +178,22 @@
     }
 
     function moveToArchive(id, h, a, pct) {
-        archive.unshift({ id, teams: `${h} - ${a}`, pct, date: new Date().toLocaleDateString('tr-TR'), res: "MS?" });
+        const l = document.getElementById('league-select').value;
+        archive.unshift({ id, teams: `${h} - ${a}`, pct, league: l, date: new Date().toLocaleDateString('tr-TR'), res: "MS?" });
         stats.total++; stats.wins++; saveAndRefresh();
         if(document.getElementById(`rep-${id}`)) document.getElementById(`rep-${id}`).remove();
     }
 
     function updateScore(id) {
-        const s = prompt("Skor girin:");
+        const s = prompt("Maç sonucunu girin:");
         if(s) { archive[archive.findIndex(i => i.id == id)].res = s; saveAndRefresh(); }
     }
 
-    function deleteItem(id) { if(confirm("Silinsin mi?")) { archive = archive.filter(i => i.id != id); saveAndRefresh(); } }
+    function deleteItem(id) { if(confirm("Kaydı sil?")) { archive = archive.filter(i => i.id != id); saveAndRefresh(); } }
     
     function saveAndRefresh() {
-        localStorage.setItem('v155_stats', JSON.stringify(stats));
-        localStorage.setItem('v155_archive', JSON.stringify(archive));
+        localStorage.setItem('v165_stats', JSON.stringify(stats));
+        localStorage.setItem('v165_archive', JSON.stringify(archive));
         renderArchive(); updateUI();
     }
 
@@ -202,6 +201,7 @@
         document.getElementById('archive-list').innerHTML = archive.map(i => `
             <div class="archive-item">
                 <div onclick="updateScore(${i.id})">
+                    <span style="font-size:7px; background:#1a1f26; padding:2px 4px; border-radius:3px; color:var(--dim); margin-right:5px;">${i.league}</span>
                     <span style="font-size:10px; font-weight:900; color:var(--success);">${i.teams}</span><br>
                     <span style="font-size:8px; color:var(--dim);">%${i.pct} Uyum • ${i.date}</span>
                 </div>
@@ -217,7 +217,7 @@
         document.getElementById('st-rate').innerText = '%' + rate;
     }
 
-    function clearAll() { if(confirm("DATABASE SIFIRLANSIN MI?")) { localStorage.clear(); location.reload(); } }
+    function clearAll() { if(confirm("TÜM VERİLER SİLİNSİN Mİ?")) { localStorage.clear(); location.reload(); } }
     window.onload = () => { updateTeams(); renderArchive(); updateUI(); };
 </script>
 </body>

@@ -3,61 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOAL-PATH PRO V24</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <title>GOAL-PATH PRO V25</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #090c10; --panel: #161b22; --accent: #00ffa3; --border: #30363d;
+            --bg: #0d1117; --panel: #161b22; --accent: #00ffa3; --border: #30363d;
             --text: #f0f6fc; --dim: #8b949e; --gold: #d29922; --red: #f85149;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding: 0; min-height: 100vh; overflow-y: auto; }
+        body { background: var(--bg); color: var(--text); margin: 0; padding: 0; min-height: 100vh; overflow-y: auto; line-height: 1.4; }
 
-        /* Header & Stats */
-        .header { padding: 20px 15px 5px; text-align: center; }
-        .brand { font-size: 26px; font-weight: 900; color: var(--accent); }
+        /* Header & Stats Modernized */
+        .header { padding: 15px; text-align: center; background: linear-gradient(to bottom, #161b22, transparent); }
+        .brand { font-size: 22px; font-weight: 900; color: var(--accent); letter-spacing: -0.5px; }
         
-        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px; }
-        .stat-box { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; position: relative; }
-        .stat-val { font-size: 18px; font-weight: 800; display: block; }
-        .stat-lbl { font-size: 9px; color: var(--dim); text-transform: uppercase; }
-        .stat-reset { position: absolute; top: 5px; right: 5px; font-size: 10px; color: var(--red); cursor: pointer; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 15px 15px; }
+        .stat-box { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 10px; text-align: center; position: relative; }
+        .stat-val { font-size: 16px; font-weight: 700; display: block; color: var(--text); }
+        .stat-lbl { font-size: 8px; color: var(--dim); text-transform: uppercase; font-weight: 600; }
+        .stat-reset { position: absolute; top: 4px; right: 6px; font-size: 10px; color: var(--red); opacity: 0.5; cursor: pointer; }
 
-        /* Main Form */
-        .card { background: var(--panel); margin: 0 15px 15px; padding: 20px; border-radius: 20px; border: 1px solid var(--border); }
+        /* Compact Form Design */
+        .card { background: var(--panel); margin: 0 12px 12px; padding: 15px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
         select, input { 
-            width: 100%; background: #0d1117; border: 1px solid var(--border); 
-            padding: 12px; border-radius: 10px; color: #fff; font-weight: 700; 
-            font-size: 14px; outline: none; margin-bottom: 8px;
+            width: 100%; background: #010409; border: 1px solid var(--border); 
+            padding: 10px; border-radius: 8px; color: #fff; font-weight: 600; 
+            font-size: 13px; outline: none; transition: all 0.2s;
         }
+        select:focus, input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+        
         .m-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-        .m-lbl { grid-column: span 4; font-size: 8px; color: var(--dim); text-align: center; font-weight: 800; padding: 5px 0; }
+        .m-lbl { grid-column: span 4; font-size: 8px; color: var(--dim); text-align: center; font-weight: 700; padding: 4px 0; text-transform: uppercase; }
 
-        .btn-group { display: flex; gap: 8px; margin-top: 10px; }
-        #analyze-btn { flex: 3; padding: 16px; border-radius: 12px; border: none; background: var(--accent); color: #000; font-weight: 900; cursor: pointer; }
-        #clear-inputs { flex: 1; padding: 16px; border-radius: 12px; border: 1px solid var(--red); background: transparent; color: var(--red); cursor: pointer; font-size: 18px; }
+        .btn-group { display: flex; gap: 8px; margin-top: 12px; }
+        #analyze-btn { flex: 4; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #0d1117; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 13px; }
+        #analyze-btn:active { transform: scale(0.98); }
+        #clear-inputs { flex: 1; padding: 14px; border-radius: 10px; border: 1px solid #30363d; background: #21262d; color: var(--text); cursor: pointer; font-size: 16px; }
 
-        /* Match Cards */
-        .section-title { padding: 10px 20px; font-size: 12px; font-weight: 800; color: var(--dim); text-transform: uppercase; }
-        .match-card { background: var(--panel); margin: 0 15px 15px; padding: 15px; border-radius: 16px; border: 1px solid var(--border); }
-        .c-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .l-tag { background: var(--accent); color: #000; font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 4px; }
-        .m-name { font-size: 14px; font-weight: 800; flex: 1; margin-left: 10px; }
-        .m-score { color: var(--gold); font-weight: 900; }
+        /* Modern Match Cards */
+        .section-title { padding: 10px 15px; font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; opacity: 0.8; }
+        .match-card { background: var(--panel); margin: 0 12px 12px; padding: 12px; border-radius: 14px; border: 1px solid var(--border); }
+        .c-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .l-tag { background: rgba(0,255,163,0.1); color: var(--accent); font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--accent); }
+        .m-name { font-size: 13px; font-weight: 700; flex: 1; margin: 0 10px; }
+        .m-score { color: var(--gold); font-weight: 800; font-size: 13px; }
 
-        .p-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 12px; margin-bottom: 12px; }
-        .p-box { text-align: center; }
-        .p-lbl { font-size: 8px; color: var(--dim); display: block; margin-bottom: 2px; }
-        .p-val { font-size: 14px; font-weight: 900; }
+        .p-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; margin-bottom: 10px; }
+        .p-box { text-align: center; border-right: 1px solid rgba(255,255,255,0.05); }
+        .p-box:last-child { border: none; }
+        .p-lbl { font-size: 7px; color: var(--dim); display: block; margin-bottom: 2px; }
+        .p-val { font-size: 13px; font-weight: 800; }
 
         .c-foot { display: flex; justify-content: space-between; align-items: center; }
-        .act-btn { padding: 8px 12px; border-radius: 8px; border: none; font-size: 10px; font-weight: 800; cursor: pointer; }
-        .btn-w { background: rgba(0,255,163,0.1); color: var(--accent); }
-        .btn-l { background: rgba(248,81,73,0.1); color: var(--red); }
-        .btn-del { background: none; color: var(--dim); font-size: 16px; cursor: pointer; border: none; }
+        .act-btn { padding: 6px 12px; border-radius: 6px; border: none; font-size: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-w { background: #238636; color: white; }
+        .btn-l { background: #da3633; color: white; }
+        .btn-del { background: none; color: var(--dim); font-size: 14px; cursor: pointer; border: none; padding: 5px; }
 
-        .archive-empty { text-align: center; padding: 40px; color: var(--dim); font-size: 12px; }
-        .clear-archive { text-align: center; padding: 20px; color: var(--red); font-size: 11px; font-weight: 800; cursor: pointer; }
+        .archive-empty { text-align: center; padding: 20px; color: var(--dim); font-size: 11px; font-style: italic; }
+        .clear-archive { text-align: center; padding: 20px; color: var(--red); font-size: 10px; font-weight: 700; cursor: pointer; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -70,13 +76,15 @@
         <span class="stat-lbl">TOPLAM</span><span id="st-total" class="stat-val">0</span>
     </div>
     <div class="stat-box"><span class="stat-lbl">BAŞARI</span><span id="st-rate" class="stat-val" style="color:var(--gold)">%0</span></div>
-    <div class="stat-box"><span class="stat-lbl">KAZANÇ</span><span id="st-win" class="stat-val" style="color:var(--accent)">0</span></div>
+    <div class="stat-box"><span class="stat-lbl">WINS</span><span id="st-win" class="stat-val" style="color:var(--accent)">0</span></div>
 </div>
 
 <div class="card">
-    <select id="l-sel" onchange="upTeams()"></select>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-        <select id="t1"></select><select id="t2"></select>
+    <div class="row">
+        <select id="l-sel" onchange="upTeams()"></select>
+        <div style="display:flex; gap:4px;">
+            <select id="t1"></select><select id="t2"></select>
+        </div>
     </div>
     <div class="m-grid">
         <div class="m-lbl">QUALITY | SCA | PRGR | PPA</div>
@@ -90,33 +98,33 @@
         <input type="number" id="t2-x" inputmode="numeric" placeholder="PPA2">
     </div>
     <div class="btn-group">
-        <button id="analyze-btn" onclick="run()">ANALİZ ET</button>
+        <button id="analyze-btn" onclick="run()">ANALİZİ BAŞLAT</button>
         <button id="clear-inputs" onclick="cls()">🧹</button>
     </div>
 </div>
 
-<div class="section-title">Aktif Analizler</div>
+<div class="section-title">Bekleyen Maçlar</div>
 <div id="active-list"></div>
 
 <div class="section-title">Geçmiş Arşiv</div>
 <div id="archive-list"></div>
-<div class="clear-archive" onclick="clsArc()">ARŞİVİ TEMİZLE</div>
+<div class="clear-archive" onclick="clsArc()">Arşivi Kalıcı Olarak Sil</div>
 
 <script>
     const eData = { 
-        PL: { q: 0.08, s: 28, x: 10, p: 60, n: 'PREMIER LEAGUE', c: '#00ffa3' },
-        LL: { q: 0.06, s: 34, x: 13, p: 75, n: 'LA LIGA', c: '#ff4d4d' },
-        SA: { q: 0.07, s: 30, x: 11, p: 58, n: 'SERIE A', c: '#fbff00' },
-        BL: { q: 0.08, s: 38, x: 15, p: 85, n: 'BUNDESLIGA', c: '#00d4ff' },
-        L1: { q: 0.08, s: 28, x: 10, p: 62, n: 'LIGUE 1', c: '#da70d6' }
+        PL: { q: 0.08, s: 28, x: 10, p: 60, n: 'ENG: PREMIER', c: '#00ffa3' },
+        LL: { q: 0.06, s: 34, x: 13, p: 75, n: 'ESP: LA LIGA', c: '#ff4d4d' },
+        SA: { q: 0.07, s: 30, x: 11, p: 58, n: 'ITA: SERIE A', c: '#fbff00' },
+        BL: { q: 0.08, s: 38, x: 15, p: 85, n: 'GER: BUNDES', c: '#00d4ff' },
+        L1: { q: 0.08, s: 28, x: 10, p: 62, n: 'FRA: LIGUE 1', c: '#da70d6' }
     };
 
     const tData = {
-        PL: ["Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Tottenham", "Aston Villa", "Newcastle"],
-        LL: ["Real Madrid", "Barcelona", "Atl. Madrid", "Girona", "Real Sociedad", "Villarreal"],
-        SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio", "Atalanta"],
-        BL: ["Bayern Munich", "Leverkusen", "Dortmund", "RB Leipzig", "Stuttgart"],
-        L1: ["PSG", "Monaco", "Marseille", "Lille", "Lyon", "Nice"]
+        PL: ["Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Tottenham", "Aston Villa", "Newcastle", "Brighton", "West Ham"],
+        LL: ["Real Madrid", "Barcelona", "Atl. Madrid", "Girona", "Real Sociedad", "Villarreal", "Ath. Bilbao", "Sevilla"],
+        SA: ["Inter", "Milan", "Juventus", "Napoli", "Roma", "Lazio", "Atalanta", "Fiorentina"],
+        BL: ["Bayern Munich", "Leverkusen", "Dortmund", "RB Leipzig", "Stuttgart", "Frankfurt", "Wolfsburg"],
+        L1: ["PSG", "Monaco", "Marseille", "Lille", "Lyon", "Nice", "Lens", "Rennes"]
     };
 
     let stats = JSON.parse(localStorage.getItem('gp_stats')) || { total: 0, win: 0 };
@@ -139,12 +147,21 @@
     function cls() { document.querySelectorAll('.m-grid input').forEach(i => i.value = ''); }
 
     function run() {
+        const inputs = document.querySelectorAll('.m-grid input');
+        let empty = false;
+        inputs.forEach(i => { if(i.value === "") empty = true; });
+
+        if(empty) {
+            alert("Lütfen tüm analiz verilerini girin!");
+            return;
+        }
+
         const l = document.getElementById('l-sel').value;
         const cfg = eData[l];
-        const xT = parseFloat(document.getElementById('t1-x').value||0) + parseFloat(document.getElementById('t2-x').value||0);
-        const sT = parseFloat(document.getElementById('t1-s').value||0) + parseFloat(document.getElementById('t2-s').value||0);
-        const q1 = parseFloat(document.getElementById('t1-q').value||0);
-        const q2 = parseFloat(document.getElementById('t2-q').value||0);
+        const xT = parseFloat(document.getElementById('t1-x').value) + parseFloat(document.getElementById('t2-x').value);
+        const sT = parseFloat(document.getElementById('t1-s').value) + parseFloat(document.getElementById('t2-s').value);
+        const q1 = parseFloat(document.getElementById('t1-q').value);
+        const q2 = parseFloat(document.getElementById('t2-q').value);
         
         let sc = 0;
         if(xT <= cfg.x) sc += 45;
@@ -164,10 +181,11 @@
 
         matches.unshift(m);
         save(); render(); cls();
+        window.scrollTo({ top: document.querySelector('.section-title').offsetTop - 20, behavior: 'smooth' });
     }
 
     function setRes(id, win) {
-        const s = prompt("Skor nedir? (Örn: 1-0)");
+        const s = prompt("Maçın bitmiş skorunu girin:");
         if(s === null) return;
         matches = matches.map(m => {
             if(m.id === id) {
@@ -181,7 +199,7 @@
         save(); upUI(); render();
     }
 
-    function del(id) { if(confirm("Silinsin mi?")) { matches = matches.filter(m => m.id !== id); save(); render(); } }
+    function del(id) { if(confirm("Kaydı silmek istediğinize emin misiniz?")) { matches = matches.filter(m => m.id !== id); save(); render(); } }
 
     function render() {
         const active = matches.filter(m => m.status === 'active');
@@ -202,15 +220,15 @@
                 </div>
                 <div class="c-foot">
                     ${m.status === 'active' ? `
-                        <div class="act-btn btn-w" onclick="setRes(${m.id}, true)">KAZANDI</div>
-                        <div class="act-btn btn-l" onclick="setRes(${m.id}, false)">KAYBETTİ</div>
-                    ` : `<span style="font-size:11px; font-weight:900; color:${m.res === 'WIN' ? 'var(--accent)' : 'var(--red)'}">${m.res}</span>`}
+                        <button class="act-btn btn-w" onclick="setRes(${m.id}, true)">KAZANDI</button>
+                        <button class="act-btn btn-l" onclick="setRes(${m.id}, false)" style="margin-left:8px">KAYBETTİ</button>
+                    ` : `<span style="font-size:10px; font-weight:900; color:${m.res === 'WIN' ? 'var(--accent)' : 'var(--red)'}">${m.res === 'WIN' ? 'BAŞARILI' : 'BAŞARISIZ'}</span>`}
                 </div>
             </div>
         `).join('');
 
-        document.getElementById('active-list').innerHTML = active.length ? html(active) : '<div class="archive-empty">Aktif analiz bulunmuyor.</div>';
-        document.getElementById('archive-list').innerHTML = archive.length ? html(archive) : '<div class="archive-empty">Arşiv boş.</div>';
+        document.getElementById('active-list').innerHTML = active.length ? html(active) : '<div class="archive-empty">Analiz bekleniyor...</div>';
+        document.getElementById('archive-list').innerHTML = archive.length ? html(archive) : '<div class="archive-empty">Arşiv henüz boş.</div>';
     }
 
     function save() { localStorage.setItem('gp_matches', JSON.stringify(matches)); localStorage.setItem('gp_stats', JSON.stringify(stats)); }
@@ -220,8 +238,8 @@
         const r = stats.total === 0 ? 0 : Math.round((stats.win / stats.total) * 100);
         document.getElementById('st-rate').innerText = '%' + r;
     }
-    function resetStats() { if(confirm("İstatistikler sıfırlansın mı?")) { stats = {total:0, win:0}; save(); upUI(); } }
-    function clsArc() { if(confirm("Tüm arşiv silinsin mi?")) { matches = matches.filter(m => m.status === 'active'); save(); render(); } }
+    function resetStats() { if(confirm("Tüm başarı istatistikleri sıfırlansın mı?")) { stats = {total:0, win:0}; save(); upUI(); } }
+    function clsArc() { if(confirm("Arşivdeki tüm kayıtlar kalıcı olarak silinsin mi?")) { matches = matches.filter(m => m.status === 'active'); save(); render(); } }
 </script>
 </body>
 </html>

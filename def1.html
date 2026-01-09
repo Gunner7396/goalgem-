@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VELOCITY DNA ELITE v11.3</title>
+    <title>VELOCITY DNA ELITE v11.4</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --bg: #040609; --card: #0d1117; --accent: #00ffa3; --border: #1e2530; 
+            --bg: #040609; --card: #0d1117; --accent: #ff00ff; --border: #1e2530; 
             --text: #f0f3f5; --dim: #64748b; --danger: #ff4d4d;
-            --l-color: #00ffa3; 
+            --l-color: #ff00ff; 
         }
+        /* Mavi Çizgi Kaldırma */
+        *:focus { outline: none !important; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         html, body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; margin: 0; padding: 0; min-height: 100%; overflow-x: hidden; }
         .wrapper { width: 100%; max-width: 420px; margin: 0 auto; padding: 12px; display: flex; flex-direction: column; }
         
@@ -36,11 +39,10 @@
         .u-label { font-size: 7px; color: var(--dim); font-weight: 800; display: block; margin-bottom: 2px; }
         .u-input { width: 100%; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 15px; font-weight: 700; }
 
-        .scan-btn { width: 100%; background: var(--l-color); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 900; font-size: 13px; cursor: pointer; }
+        .scan-btn { width: 100%; background: var(--l-color); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 900; font-size: 14px; cursor: pointer; letter-spacing: 1px; }
 
-        /* Küçültülmüş Sonuç Kartları */
         #feed { padding-bottom: 40px; }
-        .report-card { background: #0d1117; border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px; border-top: 3px solid var(--l-color); }
+        .report-card { background: #0d1117; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; border-top: 3px solid var(--l-color); }
         .rep-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .rep-league { background: #161b22; color: #fff; padding: 3px 6px; border-radius: 4px; font-size: 8px; font-weight: 800; }
         
@@ -51,12 +53,12 @@
         .rep-val { font-size: 18px; font-weight: 900; color: #fff; margin: 0; }
         .rep-tag { font-size: 8px; color: var(--l-color); font-weight: 800; }
 
-        .hit-zone { display: flex; gap: 8px; margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px; }
-        .hit-btn { flex: 1; background: #161b22; border: 1px solid var(--border); color: #fff; font-size: 9px; font-weight: 800; padding: 6px; border-radius: 6px; cursor: pointer; }
-        .del-btn { color: var(--dim); background: none; border: none; font-size: 14px; padding: 0 5px; }
+        /* Emoji Buton Alanı */
+        .hit-zone { display: flex; gap: 10px; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; justify-content: space-around; }
+        .emoji-btn { background: #161b22; border: 1px solid var(--border); font-size: 18px; padding: 8px 25px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        .emoji-btn:active { transform: scale(0.9); background: var(--border); }
 
-        /* Premier Lig: Daha Canlı Mor/Macenta Teması */
-        .theme-eng { --l-color: #ff00ff; --bg: #050005; } /* Neon Magenta/Purple */
+        .theme-eng { --l-color: #ff00ff; }
         .theme-esp { --l-color: #ff4b4b; }
         .theme-ita { --l-color: #0066ff; }
         .theme-ger { --l-color: #d3010c; }
@@ -67,7 +69,7 @@
 
 <div class="wrapper">
     <div class="header">
-        <h1>DNA ANALİZ v11.3</h1>
+        <h1>DNA ANALİZ v11.4</h1>
         <div class="reset-btn" onclick="resetStats()">Sıfırla</div>
     </div>
 
@@ -88,25 +90,25 @@
     </div>
 
     <div class="engine">
-        <div class="row-label">DEFANSİF VERİLER</div>
+        <div class="row-label">DEF</div>
         <div class="input-grid">
-            <div class="unit"><span class="u-label">KURTARIŞ %</span><input type="number" inputmode="decimal" id="v-save" class="u-input"></div>
-            <div class="unit"><span class="u-label">CEZA SAHASI SIZMA</span><input type="number" inputmode="decimal" id="v-ppa-a" class="u-input"></div>
-            <div class="unit" style="grid-column: span 2;"><span class="u-label">ŞUT HAZIRLIĞI (RAKİP)</span><input type="number" inputmode="decimal" id="v-sca-a" class="u-input"></div>
+            <div class="unit"><span class="u-label">Save%</span><input type="number" inputmode="decimal" id="v-save" class="u-input"></div>
+            <div class="unit"><span class="u-label">PPA</span><input type="number" inputmode="decimal" id="v-ppa-a" class="u-input"></div>
+            <div class="unit" style="grid-column: span 2;"><span class="u-label">SCA</span><input type="number" inputmode="decimal" id="v-sca-a" class="u-input"></div>
         </div>
-        <div class="row-label">HÜCUM GÜCÜ</div>
+        <div class="row-label">OFF</div>
         <div class="input-grid">
-            <div class="unit"><span class="u-label">İÇERİ PAS</span><input type="number" inputmode="decimal" id="v-ppa-f" class="u-input"></div>
-            <div class="unit"><span class="u-label">ŞUT KALİTESİ (xG)</span><input type="number" inputmode="decimal" id="v-npx" class="u-input" step="0.01"></div>
+            <div class="unit"><span class="u-label">PPA</span><input type="number" inputmode="decimal" id="v-ppa-f" class="u-input"></div>
+            <div class="unit"><span class="u-label">npXG/Sh</span><input type="number" inputmode="decimal" id="v-npx" class="u-input" step="0.01"></div>
         </div>
-        <button class="scan-btn" onclick="analyze()">DNA TARAMASINI BAŞLAT</button>
+        <button class="scan-btn" onclick="analyze()">BAŞLAT</button>
     </div>
 
     <div id="feed"></div>
 </div>
 
 <script>
-    let stats = JSON.parse(localStorage.getItem('vdna_v113_stats')) || { total: 0, wins: 0 };
+    let stats = JSON.parse(localStorage.getItem('vdna_v114_stats')) || { total: 0, wins: 0 };
     const dnaConfig = {
         ENG: { ppaA: 15.5, scaA: 27.0, save: 61.0, ppaF: 12.5, npx: 0.12, theme: 'theme-eng' },
         ESP: { ppaA: 11.5, scaA: 21.0, save: 64.0, ppaF: 10.0, npx: 0.11, theme: 'theme-esp' },
@@ -145,7 +147,6 @@
         card.innerHTML = `
             <div class="rep-top">
                 <span class="rep-league">${l} RAPORU</span>
-                <button class="del-btn" onclick="deleteRep('${id}')">✕</button>
             </div>
             <div class="rep-main">
                 <div class="rep-gauge">${match}%</div>
@@ -155,7 +156,8 @@
                 </div>
             </div>
             <div class="hit-zone">
-                <button class="hit-btn" onclick="markHit(this)">BAŞARIYI ONAYLA</button>
+                <button class="emoji-btn" onclick="markHit('${id}', true)">✅</button>
+                <button class="emoji-btn" onclick="markHit('${id}', false)">❌</button>
             </div>
         `;
         document.getElementById('feed').prepend(card);
@@ -164,16 +166,22 @@
         updateUI();
     }
 
-    function deleteRep(id) { document.getElementById(`rep-${id}`).remove(); saveFeed(); updateUI(); }
-    function markHit(btn) { 
-        stats.total++; stats.wins++; 
-        localStorage.setItem('vdna_v113_stats', JSON.stringify(stats)); 
-        btn.innerText = "İSABET KAYDEDİLDİ ✓"; 
-        btn.style.background = "var(--l-color)"; btn.style.color = "#000"; 
-        saveFeed(); updateUI(); 
+    function markHit(id, isWin) {
+        if (isWin) {
+            stats.total++;
+            stats.wins++;
+        } else {
+            // Başarısızlıkta sadece toplam analizi artırıp başarıyı artırmıyoruz
+            stats.total++;
+        }
+        localStorage.setItem('vdna_v114_stats', JSON.stringify(stats));
+        document.getElementById(`rep-${id}`).remove();
+        saveFeed();
+        updateUI();
     }
-    function resetStats() { if(confirm("Sıfırlansın mı?")) { stats = {total:0, wins:0}; localStorage.setItem('vdna_v113_stats', JSON.stringify(stats)); updateUI(); } }
-    function saveFeed() { localStorage.setItem('vdna_v113_feed', document.getElementById('feed').innerHTML); }
+
+    function resetStats() { if(confirm("Tüm veriler sıfırlansın mı?")) { stats = {total:0, wins:0}; localStorage.setItem('vdna_v114_stats', JSON.stringify(stats)); updateUI(); } }
+    function saveFeed() { localStorage.setItem('vdna_v114_feed', document.getElementById('feed').innerHTML); }
     function updateUI() {
         document.getElementById('st-total').innerText = stats.total;
         document.getElementById('st-hit').innerText = stats.wins;
@@ -182,7 +190,7 @@
     }
 
     window.onload = () => {
-        document.getElementById('feed').innerHTML = localStorage.getItem('vdna_v113_feed') || '';
+        document.getElementById('feed').innerHTML = localStorage.getItem('vdna_v114_feed') || '';
         updateUI();
         applyTheme();
     };

@@ -3,186 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VELOCITY DNA | PRO ANALYZER</title>
+    <title>VELOCITY DNA v7</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #040609; --card: #0d1117; --accent: #00ffa3; --border: #1e2530;
-            --text: #f0f3f5; --dim: #64748b; --danger: #ff4d4d; --warning: #fbff00;
-        }
+        :root { --bg: #040609; --card: #0d1117; --accent: #00ffa3; --border: #1e2530; --text: #f0f3f5; --dim: #64748b; --danger: #ff4d4d; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
         .wrapper { width: 100%; max-width: 420px; }
-
-        .brand { text-align: center; margin: 10px 0; }
-        .brand h1 { margin: 0; font-size: 24px; font-weight: 900; color: var(--accent); letter-spacing: -1px; }
-        .brand span { font-size: 9px; color: var(--dim); letter-spacing: 2px; text-transform: uppercase; }
-
-        /* Dashboard */
-        .dash { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 8px; position: relative; }
-        .st-v { display: block; font-family: 'JetBrains Mono'; font-size: 16px; font-weight: 800; color: var(--accent); text-align: center; }
-        .st-l { font-size: 7px; color: var(--dim); text-transform: uppercase; font-weight: 800; text-align: center; display: block; }
-        .clear-stats { position: absolute; top: -5px; right: 10px; font-size: 6px; background: var(--danger); color: white; padding: 2px 5px; border-radius: 3px; cursor: pointer; }
-
-        /* Analyzer Box */
-        .engine { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
+        .brand { text-align: center; margin: 15px 0; }
+        .brand h1 { margin: 0; font-size: 26px; font-weight: 900; color: var(--accent); letter-spacing: -1px; }
+
+        .dash { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; position: relative; }
+        .st-v { display: block; font-family: 'JetBrains Mono'; font-size: 18px; font-weight: 800; color: var(--accent); text-align: center; }
+        .st-l { font-size: 7px; color: var(--dim); text-transform: uppercase; font-weight: 800; text-align: center; display: block; }
+
+        .engine { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 15px; }
         .row-label { font-size: 9px; font-weight: 900; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
         .row-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
 
         .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .unit { background: #161b22; border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
-        .unit:focus-within { border-color: var(--accent); }
         .u-label { font-size: 7px; color: var(--dim); font-weight: 800; display: block; margin-bottom: 4px; }
         .u-input { width: 100%; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 14px; font-weight: 700; }
-        .fb-ref { font-size: 6px; color: var(--accent); opacity: 0.4; display: block; margin-top: 3px; }
 
-        .start-btn { width: 100%; background: var(--accent); color: #000; border: none; padding: 16px; border-radius: 14px; font-weight: 900; font-size: 14px; cursor: pointer; transition: 0.2s; }
-        .start-btn:active { transform: scale(0.97); }
+        .start-btn { width: 100%; background: var(--accent); color: #000; border: none; padding: 18px; border-radius: 14px; font-weight: 900; font-size: 15px; cursor: pointer; }
 
-        /* Result Area */
-        .res-box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 15px; margin-top: 10px; border-left: 5px solid var(--accent); animation: slide 0.3s ease-out; }
-        @keyframes slide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Modern & Compact Result Card */
+        .res-card { background: #12151c; border: 1px solid var(--border); border-radius: 14px; padding: 12px; margin-top: 10px; position: relative; animation: pop 0.2s ease-out; }
+        @keyframes pop { from { transform: scale(0.98); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
-        .res-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .res-tag { font-size: 10px; font-weight: 900; background: rgba(0,255,163,0.1); color: var(--accent); padding: 3px 8px; border-radius: 5px; }
-        
-        .veto-warning { background: rgba(255,77,77,0.1); border: 1px solid var(--danger); border-radius: 10px; padding: 8px; margin-top: 10px; font-size: 11px; color: var(--danger); font-weight: 600; }
-        
-        .prob-card { display: flex; justify-content: space-around; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin: 10px 0; border: 1px solid var(--border); }
-        .prob-item { text-align: center; }
-        .prob-num { display: block; font-family: 'JetBrains Mono'; font-size: 18px; font-weight: 800; }
-        .prob-txt { font-size: 8px; color: var(--dim); text-transform: uppercase; }
+        .res-del { position: absolute; top: 10px; right: 10px; color: var(--dim); font-size: 14px; cursor: pointer; padding: 5px; }
+        .res-header { font-size: 11px; font-weight: 800; margin-bottom: 8px; border-bottom: 1px solid #1e2530; padding-bottom: 5px; color: var(--dim); }
+        .res-body { display: flex; justify-content: space-between; align-items: center; }
+        .res-main-val { font-family: 'JetBrains Mono'; font-size: 22px; font-weight: 800; color: var(--accent); }
+        .res-sub-val { font-size: 10px; font-weight: 700; color: #fff; text-align: right; }
+        .res-desc { font-size: 11px; color: #cbd5e1; margin-top: 8px; line-height: 1.3; }
 
-        .btn-group { display: flex; gap: 5px; margin-top: 10px; }
-        .m-btn { flex: 1; background: #1a1f29; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 8px; cursor: pointer; }
+        .hit-btn { background: #1a1f29; border: 1px solid var(--border); color: var(--accent); font-size: 10px; font-weight: 800; padding: 5px 10px; border-radius: 6px; margin-top: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
-    <div class="brand">
-        <h1>VELOCITY DNA</h1>
-        <span>PREMIER STRATEGY TERMINAL</span>
-    </div>
+    <div class="brand"><h1>VELOCITY DNA</h1></div>
 
     <div class="dash">
-        <span class="clear-stats" onclick="resetStats()">Sıfırla</span>
         <div><span class="st-v" id="st-total">0</span><span class="st-l">Scan</span></div>
         <div><span class="st-v" id="st-rate">%0</span><span class="st-l">Success</span></div>
         <div><span class="st-v" id="st-hit">0</span><span class="st-l">Hits</span></div>
     </div>
 
     <div class="engine">
-        <div class="row-label">HEDEF TAKIM (DEFENSE)</div>
+        <div class="row-label">HEDEF (DEFENSE)</div>
         <div class="input-grid">
-            <div class="unit"><span class="u-label">TEAM NAME</span><input type="text" id="t-def" class="u-input" placeholder=" Sheffield Utd"></div>
-            <div class="unit"><span class="u-label">SAVE %</span><input type="number" id="v-save" class="u-input" placeholder="60.0" step="0.1"></div>
-            <div class="unit"><span class="u-label">PPA AGAINST</span><input type="number" id="v-ppa-a" class="u-input" placeholder="15.0" step="0.1"></div>
-            <div class="unit"><span class="u-label">SCA AGAINST</span><input type="number" id="v-sca-a" class="u-input" placeholder="26.0" step="0.1"></div>
+            <div class="unit"><span class="u-label">TEAM NAME</span><input type="text" id="t-def" class="u-input"></div>
+            <div class="unit"><span class="u-label">SAVE %</span><input type="number" id="v-save" class="u-input" step="0.1"></div>
+            <div class="unit"><span class="u-label">PPA AGAINST</span><input type="number" id="v-ppa-a" class="u-input" step="0.1"></div>
+            <div class="unit"><span class="u-label">SCA AGAINST</span><input type="number" id="v-sca-a" class="u-input" step="0.1"></div>
         </div>
-
-        <div class="row-label">AVCI TAKIM (OFFENSE)</div>
+        <div class="row-label">AVCI (OFFENSE)</div>
         <div class="input-grid">
-            <div class="unit"><span class="u-label">TEAM NAME</span><input type="text" id="t-off" class="u-input" placeholder="Arsenal"></div>
-            <div class="unit"><span class="u-label">PPA FOR</span><input type="number" id="v-ppa-f" class="u-input" placeholder="12.0" step="0.1"></div>
-            <div class="unit" style="grid-column: span 2;"><span class="u-label">NPXG / SHOT (QUALITY)</span><input type="number" id="v-npx" class="u-input" placeholder="0.12" step="0.01"></div>
+            <div class="unit"><span class="u-label">TEAM NAME</span><input type="text" id="t-off" class="u-input"></div>
+            <div class="unit"><span class="u-label">PPA FOR</span><input type="number" id="v-ppa-f" class="u-input" step="0.1"></div>
+            <div class="unit" style="grid-column: span 2;"><span class="u-label">NPXG / SHOT (QUALITY)</span><input type="number" id="v-npx" class="u-input" step="0.01"></div>
         </div>
-
-        <button class="start-btn" onclick="runAnalysis()">START DNA SCAN</button>
+        <button class="start-btn" onclick="analyze()">START DNA SCAN</button>
     </div>
 
-    <div id="results-stream"></div>
+    <div id="results-container"></div>
 </div>
 
 <script>
-    let stats = JSON.parse(localStorage.getItem('vdna_pro_stats')) || { total: 0, wins: 0 };
+    let stats = JSON.parse(localStorage.getItem('vdna_v7_stats')) || { total: 0, wins: 0 };
 
-    function runAnalysis() {
+    function analyze() {
         const d = {
-            t1: document.getElementById('t-def').value,
-            t2: document.getElementById('t-off').value,
-            save: parseFloat(document.getElementById('v-save').value),
-            ppaA: parseFloat(document.getElementById('v-ppa-a').value),
-            scaA: parseFloat(document.getElementById('v-sca-a').value),
-            ppaF: parseFloat(document.getElementById('v-ppa-f').value),
-            npx: parseFloat(document.getElementById('v-npx').value)
+            t1: document.getElementById('t-def').value || 'DEF',
+            t2: document.getElementById('t-off').value || 'OFF',
+            save: parseFloat(document.getElementById('v-save').value || 0),
+            ppaA: parseFloat(document.getElementById('v-ppa-a').value || 0),
+            scaA: parseFloat(document.getElementById('v-sca-a').value || 0),
+            ppaF: parseFloat(document.getElementById('v-ppa-f').value || 0),
+            npx: parseFloat(document.getElementById('v-npx').value || 0)
         };
 
-        if(!d.t1 || isNaN(d.save)) { alert("Eksik veri girişi!"); return; }
+        if(d.save === 0 || d.ppaA === 0) { alert("Metrikleri girin!"); return; }
 
-        let score = 0;
-        let veto = false;
-        let vetoMsg = "";
+        // --- GELİŞMİŞ ÇARPIŞTIRMA ALGORİTMASI ---
+        // Sızıntı Puanı (Savunma Zaafları)
+        let leakScore = (d.ppaA / 15 * 30) + (d.scaA / 26 * 30) + ((100 - d.save) / 40 * 40);
+        
+        // Güç Puanı (Hücum Kalitesi)
+        let powerScore = (d.ppaF / 12 * 40) + (d.npx / 0.12 * 60);
 
-        // DNA Calculation
-        if(d.ppaA >= 15) score += 20;
-        if(d.scaA >= 26) score += 20;
-        if(d.save <= 62) score += 20;
-        if(d.ppaF >= 12) score += 20;
-        if(d.npx >= 0.12) score += 20;
+        // Nihai DNA (İki gücün çarpışması)
+        let finalScore = Math.min(100, Math.round((leakScore * 0.6) + (powerScore * 0.4)));
+        
+        // Dinamik Olasılık (npxG arttıkça bu değer daha agresif yükselir)
+        let prob15 = Math.min(95, Math.round(finalScore * (d.npx > 0.15 ? 1.1 : 1.0)));
 
-        // Veto Logic (%20 Sapma Kontrolü)
-        if(d.ppaA < 10 && score > 60) { veto = true; vetoMsg = "DİKKAT: Hedef takımın alan savunması beklenenden sert (%20 risk)."; }
-        if(d.npx < 0.09) { veto = true; vetoMsg = "DİKKAT: Avcı takımın bitiricilik kalitesi çok düşük (%20 risk)."; }
-
-        renderResult(d, score, veto, vetoMsg);
-    }
-
-    function renderResult(d, score, veto, vetoMsg) {
-        const stream = document.getElementById('results-stream');
-        const color = score >= 80 ? 'var(--accent)' : (score >= 60 ? 'var(--warning)' : 'var(--danger)');
-        const p15 = score >= 80 ? "85" : (score >= 60 ? "65" : "40");
-
+        const cardId = Date.now();
         const card = document.createElement('div');
-        card.className = 'res-box';
-        card.style.borderColor = color;
+        card.className = 'res-card';
+        card.id = `card-${cardId}`;
         card.innerHTML = `
-            <div class="res-header">
-                <span style="font-weight:900; font-size:12px;">${d.t1} v ${d.t2}</span>
-                <span class="res-tag">%${score} DNA MATCH</span>
+            <span class="res-del" onclick="deleteCard('${cardId}')">✕</span>
+            <div class="res-header">${d.t1.toUpperCase()} vs ${d.t2.toUpperCase()}</div>
+            <div class="res-body">
+                <div><span class="res-main-val">%${finalScore}</span><br><span class="st-l" style="text-align:left">DNA MATCH</span></div>
+                <div class="res-sub-val">DEP 1.5 ÜST<br><span style="font-size:18px; color:var(--accent)">%${prob15}</span></div>
             </div>
-            <div style="font-size:12px; font-weight:600; color:#fff;">
-                ${score >= 80 ? 'Kritik Sızıntı: Hedef savunma DNA\'sı %80+ ihtimalle dağılmaya hazır.' : 'Belirsiz DNA: Sızıntı var ancak tam çöküş onayı alınamadı.'}
-            </div>
-            ${veto ? `<div class="veto-warning">⚠️ ${vetoMsg}</div>` : ''}
-            <div class="prob-card">
-                <div class="prob-item"><span class="prob-num" style="color:${color}">%${p15}</span><span class="prob-txt">DEP 1.5 ÜST</span></div>
-                <div class="prob-item"><span class="prob-num" style="color:#fff">${score >= 80 && !veto ? 'FIRE' : 'WAIT'}</span><span class="prob-txt">ACTION</span></div>
-            </div>
-            <div class="btn-group">
-                <button class="m-btn" onclick="mark(true, this)">✅ HİT</button>
-                <button class="m-btn" onclick="mark(false, this)">❌ MISS</button>
-            </div>
+            <div class="res-desc">${finalScore >= 80 ? 'Kritik sızıntı onaylandı. Avcı DNA\'sı bitiricilik için uygun.' : 'Düşük frekans. Savunma direnci veya hücum kalitesi yetersiz.'}</div>
+            <button class="hit-btn" onclick="markHit(this)">✅ SONUÇ BAŞARILI</button>
         `;
-        stream.prepend(card);
-        localStorage.setItem('vdna_pro_hist', stream.innerHTML);
-        document.querySelectorAll('input').forEach(i => i.value = "");
-        updateStats();
+        
+        document.getElementById('results-container').prepend(card);
+        localStorage.setItem('vdna_v7_hist', document.getElementById('results-container').innerHTML);
+        
+        // Temizlik
+        document.querySelectorAll('.u-input').forEach(i => i.value = "");
+        updateUI();
     }
 
-    function mark(win, btn) {
-        stats.total++; if(win) stats.wins++;
-        localStorage.setItem('vdna_pro_stats', JSON.stringify(stats));
-        updateStats();
-        btn.closest('.btn-group').innerHTML = `<div style="width:100%; text-align:center; font-weight:900; color:${win?'var(--accent)':'var(--danger)'}">${win?'SUCCESS':'FAILED'}</div>`;
-        localStorage.setItem('vdna_pro_hist', document.getElementById('results-stream').innerHTML);
+    function deleteCard(id) {
+        document.getElementById(`card-${id}`).remove();
+        localStorage.setItem('vdna_v7_hist', document.getElementById('results-container').innerHTML);
     }
 
-    function resetStats() { if(confirm('Sıfırlansın mı?')) { stats={total:0,wins:0}; localStorage.setItem('vdna_pro_stats', JSON.stringify(stats)); updateStats(); } }
-    function updateStats() {
+    function markHit(btn) {
+        stats.total++; stats.wins++;
+        localStorage.setItem('vdna_v7_stats', JSON.stringify(stats));
+        btn.replaceWith(document.createElement('span'));
+        updateUI();
+    }
+
+    function updateUI() {
         document.getElementById('st-total').innerText = stats.total;
         document.getElementById('st-hit').innerText = stats.wins;
         const rate = stats.total === 0 ? 0 : Math.round((stats.wins / stats.total) * 100);
         document.getElementById('st-rate').innerText = '%' + rate;
     }
-    
+
     window.onload = () => {
-        document.getElementById('results-stream').innerHTML = localStorage.getItem('vdna_pro_hist') || '';
+        document.getElementById('results-container').innerHTML = localStorage.getItem('vdna_v7_hist') || '';
         updateUI();
     };
-    updateStats();
 </script>
-
 </body>
 </html>

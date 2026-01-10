@@ -3,70 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>V50.9 FINAL MATRIX</title>
+    <title>V51.0 COMPACT PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background: #000; color: #fff; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-        .glass { background: #1c1c1e; border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; }
-        .in-box { background: #2c2c2e; border: none; border-radius: 10px; padding: 12px; color: #fff; font-weight: 700; text-align: center; width: 100%; font-size: 14px; outline: none; border: 1px solid transparent; transition: 0.2s; }
-        .in-box:focus { border-color: #30d158; background: #333; }
-        .btn-lig { padding: 8px 12px; border-radius: 10px; font-size: 10px; font-weight: 900; background: #1c1c1e; color: #555; border: 1px solid #2c2c2e; transition: 0.2s; flex-shrink: 0; }
-        .btn-lig.active { background: #30d158; color: #000; border-color: #30d158; transform: scale(1.05); }
-        .mini-card { background: #1c1c1e; border-radius: 14px; padding: 16px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 12px; }
-        .badge-secure { background: #30d158; color: #000; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 900; box-shadow: 0 0 10px rgba(48,209,88,0.4); }
+        .glass { background: #1c1c1e; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; }
+        .in-box { background: #2c2c2e; border: none; border-radius: 8px; padding: 10px; color: #fff; font-weight: 700; text-align: center; width: 100%; font-size: 13px; outline: none; border: 1px solid transparent; }
+        .in-box:focus { border-color: #30d158; }
+        .btn-lig { padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; background: #1c1c1e; color: #555; border: 1px solid #2c2c2e; flex-shrink: 0; }
+        .btn-lig.active { background: #30d158; color: #000; border-color: #30d158; }
+        .mini-card { background: #1c1c1e; border-radius: 12px; padding: 12px; border: 1.5px solid rgba(255,255,255,0.05); margin-bottom: 8px; transition: 0.2s; }
+        .win-border { border-color: #30d158 !important; box-shadow: 0 0 10px rgba(48,209,88,0.1); }
+        .loss-border { border-color: #ff3b30 !important; box-shadow: 0 0 10px rgba(255,59,48,0.1); }
+        .badge-secure { font-size: 8px; font-weight: 900; padding: 1px 4px; border-radius: 3px; margin-left: 4px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="p-4 pb-24">
+<body class="p-3 pb-24">
 
-    <div class="flex justify-between items-center mb-6 px-1">
+    <div class="flex justify-between items-end mb-5 px-1">
         <div>
-            <h1 class="text-2xl font-black italic tracking-tighter uppercase">V50<span class="text-green-500">.9</span></h1>
-            <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Confidence System Active</p>
+            <h1 class="text-xl font-black italic tracking-tighter">V51<span class="text-green-500">.0</span></h1>
+            <div class="flex gap-3 mt-1">
+                <div class="text-[9px] font-bold text-gray-500 uppercase">BAŞARI: <span id="wr" class="text-green-500 text-xs">0%</span></div>
+                <div class="text-[9px] font-bold text-gray-500 uppercase">W: <span id="wCount" class="text-white">0</span></div>
+                <div class="text-[9px] font-bold text-gray-500 uppercase">L: <span id="lCount" class="text-white">0</span></div>
+            </div>
         </div>
         <div class="flex gap-2">
-            <button onclick="toggleArchive()" class="p-2.5 glass text-[10px] font-black text-blue-400">📂</button>
-            <button onclick="clrAll()" class="p-2.5 glass text-[10px] font-black text-red-500">🗑️</button>
+            <button onclick="toggleArchive()" class="p-2 glass text-[10px] font-black text-blue-400">ARŞİV</button>
+            <button onclick="clrAll()" class="p-2 glass text-[10px] font-black text-red-500 text-xs">🗑️</button>
         </div>
     </div>
 
-    <div class="flex gap-2 overflow-x-auto no-scrollbar mb-6 pb-2">
-        <button onclick="sL('PL')" id="l-PL" class="btn-lig active">PREMIER LIG</button>
-        <button onclick="sL('LL')" id="l-LL" class="btn-lig">LA LIGA</button>
-        <button onclick="sL('SA')" id="l-SA" class="btn-lig">SERIE A</button>
-        <button onclick="sL('BL')" id="l-BL" class="btn-lig">BUNDESLIGA</button>
-        <button onclick="sL('L1')" id="l-L1" class="btn-lig">LIGUE 1</button>
+    <div class="flex gap-2 overflow-x-auto no-scrollbar mb-5">
+        <button onclick="sL('PL')" id="l-PL" class="btn-lig active">PL</button>
+        <button onclick="sL('LL')" id="l-LL" class="btn-lig">LL</button>
+        <button onclick="sL('SA')" id="l-SA" class="btn-lig">SA</button>
+        <button onclick="sL('BL')" id="l-BL" class="btn-lig">BL</button>
+        <button onclick="sL('L1')" id="l-L1" class="btn-lig">L1</button>
     </div>
 
-    <div class="glass p-5 mb-8 shadow-2xl">
-        <div class="grid grid-cols-2 gap-4 mb-5">
-            <input id="hN" placeholder="EV SAHİBİ" class="bg-transparent border-b border-gray-800 pb-2 text-[11px] font-black uppercase outline-none focus:border-green-500 transition-all">
-            <input id="aN" placeholder="DEPLASMAN" class="bg-transparent border-b border-gray-800 pb-2 text-[11px] font-black uppercase text-right outline-none focus:border-green-500 transition-all">
+    <div class="glass p-4 mb-6">
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <input id="hN" placeholder="EV SAHİBİ" class="bg-transparent border-b border-gray-800 pb-1 text-[11px] font-black uppercase outline-none focus:border-green-500">
+            <input id="aN" placeholder="DEPLASMAN" class="bg-transparent border-b border-gray-800 pb-1 text-[11px] font-black uppercase text-right outline-none focus:border-green-500">
         </div>
-        <div class="space-y-3">
-            <div class="grid grid-cols-2 gap-3">
-                <input type="number" step="0.001" inputmode="decimal" id="h_xg" class="in-box" placeholder="npxG/Sh">
-                <input type="number" step="0.001" inputmode="decimal" id="a_xg" class="in-box" placeholder="npxG/Sh">
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <input type="number" step="0.1" inputmode="decimal" id="h_ppa" class="in-box" placeholder="PPA">
-                <input type="number" step="0.1" inputmode="decimal" id="a_ppa" class="in-box" placeholder="PPA">
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <input type="number" step="0.1" inputmode="decimal" id="h_sca" class="in-box" placeholder="SCA">
-                <input type="number" step="0.1" inputmode="decimal" id="a_sca" class="in-box" placeholder="SCA">
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <input type="number" step="0.1" inputmode="decimal" id="h_pr" class="in-box" placeholder="PrgR">
-                <input type="number" step="0.1" inputmode="decimal" id="a_pr" class="in-box" placeholder="PrgR">
-            </div>
+        <div class="grid grid-cols-2 gap-2">
+            <input type="number" step="0.001" inputmode="decimal" id="h_xg" class="in-box" placeholder="npxG/Sh">
+            <input type="number" step="0.001" inputmode="decimal" id="a_xg" class="in-box" placeholder="npxG/Sh">
+            <input type="number" inputmode="decimal" id="h_ppa" class="in-box" placeholder="PPA">
+            <input type="number" inputmode="decimal" id="a_ppa" class="in-box" placeholder="PPA">
+            <input type="number" inputmode="decimal" id="h_sca" class="in-box" placeholder="SCA">
+            <input type="number" inputmode="decimal" id="a_sca" class="in-box" placeholder="SCA">
+            <input type="number" inputmode="decimal" id="h_pr" class="in-box" placeholder="PrgR">
+            <input type="number" inputmode="decimal" id="a_pr" class="in-box" placeholder="PrgR">
         </div>
-        <button onclick="run()" class="w-full bg-[#30d158] text-black font-black p-4 rounded-xl mt-6 text-[12px] uppercase tracking-widest active:scale-95 transition shadow-lg shadow-green-500/20">VAADİ ANALİZ ET</button>
+        <button onclick="run()" class="w-full bg-[#30d158] text-black font-black py-3 rounded-lg mt-4 text-[11px] uppercase tracking-tighter shadow-lg shadow-green-500/10">ANALİZ ET VE KAYDET</button>
     </div>
 
     <div id="latestCard"></div>
-    <div id="archiveContainer" class="hidden mt-4 pt-6 border-t border-dashed border-gray-800">
-        <div id="arcList" class="flex flex-col gap-4"></div>
+    <div id="archiveContainer" class="hidden mt-4 pt-4 border-t border-dashed border-gray-800">
+        <div id="arcList" class="flex flex-col gap-2"></div>
     </div>
 
     <script>
@@ -78,72 +76,84 @@
 
         function run() {
             const ids = ["h_xg","a_xg","h_ppa","a_ppa","h_sca","a_sca","h_pr","a_pr"];
-            if (ids.some(id => document.getElementById(id).value.trim() === "")) { alert("Tüm kutuları doldur!"); return; }
-
+            if (ids.some(id => document.getElementById(id).value.trim() === "")) { alert("Eksik veri!"); return; }
             const n = ids.map(id => Number(document.getElementById(id).value));
-            // Power calculation based on weights
             const power = ((n[0]+n[1])/2/B[cL][0])*0.4 + ((n[2]+n[3])/B[cL][1])*0.3 + ((n[4]+n[5])/B[cL][2])*0.2 + ((n[6]+n[7])/B[cL][3])*0.1;
-
-            // Confidence Points
-            const t1 = Math.round(Math.max(0, 100 - Math.abs(power - 0.45) * 160));
-            const t2 = Math.round(Math.max(0, 100 - Math.abs(power - 0.80) * 160));
-            const t3 = Math.round(Math.max(0, 100 - Math.abs(power - 1.25) * 160));
-
-            const item = { hN: document.getElementById('hN').value||"EV", aN: document.getElementById('aN').value||"DEP", conf: [t1, t2, t3], id: Date.now(), league: cL, sk: "" };
-            let data = JSON.parse(localStorage.getItem('v50_db') || '[]');
+            const conf = [
+                Math.round(Math.max(0, 100 - Math.abs(power - 0.45) * 160)),
+                Math.round(Math.max(0, 100 - Math.abs(power - 0.80) * 160)),
+                Math.round(Math.max(0, 100 - Math.abs(power - 1.25) * 160))
+            ];
+            const item = { hN: document.getElementById('hN').value||"EV", aN: document.getElementById('aN').value||"DEP", conf, id: Date.now(), league: cL, sk: "", result: null };
+            let data = JSON.parse(localStorage.getItem('v51_db') || '[]');
             data.push(item);
-            localStorage.setItem('v50_db', JSON.stringify(data));
-            
+            localStorage.setItem('v51_db', JSON.stringify(data));
             ids.forEach(id => document.getElementById(id).value = "");
             document.getElementById('hN').value = ""; document.getElementById('aN').value = "";
             render();
-            window.scrollTo({ top: document.getElementById('latestCard').offsetTop - 20, behavior: 'smooth' });
         }
 
         function render() {
-            const data = JSON.parse(localStorage.getItem('v50_db') || '[]');
+            const data = JSON.parse(localStorage.getItem('v51_db') || '[]');
             const arcList = document.getElementById('arcList');
             const latest = document.getElementById('latestCard');
             arcList.innerHTML = ""; latest.innerHTML = "";
-            
+            let w = 0, l = 0;
+
             data.forEach((i, idx) => {
-                const cardHTML = `<div class="mini-card relative border border-white/5">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-[9px] font-black bg-white/10 px-2.5 py-1 rounded text-gray-400 uppercase tracking-widest">${i.league}</span>
-                        <input onchange="upSk('${i.id}',this.value)" placeholder="SKOR" class="bg-transparent text-[12px] font-black text-right w-16 text-green-500 outline-none border-b border-white/5" value="${i.sk}">
+                if(i.result === 'W') w++; if(i.result === 'L') l++;
+                const borderClass = i.result === 'W' ? 'win-border' : (i.result === 'L' ? 'loss-border' : '');
+                
+                const cardHTML = `<div class="mini-card relative ${borderClass}">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[8px] font-black opacity-40 uppercase">${i.league} | ${i.hN}-${i.aN}</span>
+                        <div class="flex gap-1">
+                            <button onclick="setRes('${i.id}','W')" class="w-5 h-5 rounded text-[10px] font-black ${i.result==='W'?'bg-green-500 text-black':'bg-green-500/10 text-green-500'}">W</button>
+                            <button onclick="setRes('${i.id}','L')" class="w-5 h-5 rounded text-[10px] font-black ${i.result==='L'?'bg-red-500 text-black':'bg-red-500/10 text-red-500'}">L</button>
+                            <input onchange="upSk('${i.id}',this.value)" value="${i.sk}" placeholder="0-0" class="w-10 bg-transparent text-[10px] text-right font-bold outline-none text-gray-400">
+                        </div>
                     </div>
-                    <div class="text-[11px] font-bold text-gray-400 uppercase tracking-tighter mb-5">${i.hN} - ${i.aN}</div>
-                    
-                    <div class="space-y-5">
-                        ${renderConfRow("T1 VAADİ (0-1 GOL)", i.conf[0], "#30d158")}
-                        ${renderConfRow("T2 VAADİ (TAM 2 GOL)", i.conf[1], "#007aff")}
-                        ${renderConfRow("T3 VAADİ (TAM 3 GOL)", i.conf[2], "#ff3b30")}
+                    <div class="grid grid-cols-3 gap-2">
+                        ${miniBox("T1", i.conf[0], "#30d158")}
+                        ${miniBox("T2", i.conf[1], "#007aff")}
+                        ${miniBox("T3", i.conf[2], "#ff3b30")}
                     </div>
-                    <button onclick="rm('${i.id}')" class="absolute -top-1 -right-1 text-white/10 p-2 text-xs">×</button>
+                    <button onclick="rm('${i.id}')" class="absolute -bottom-1 -right-1 p-2 text-[10px] opacity-10">×</button>
                 </div>`;
-                if(idx === data.length - 1) latest.innerHTML = `<h3 class="text-[10px] font-black text-green-500 mb-3 uppercase tracking-widest flex items-center gap-2">🟢 ANALİZ TAMAMLANDI</h3>` + cardHTML;
+                
+                if(idx === data.length - 1) latest.innerHTML = `<p class="text-[8px] font-black text-green-500 mb-2 tracking-widest uppercase">Son Analiz</p>` + cardHTML;
                 const div = document.createElement('div'); div.innerHTML = cardHTML; arcList.prepend(div);
             });
+            
+            document.getElementById('wCount').innerText = w;
+            document.getElementById('lCount').innerText = l;
+            const total = w + l;
+            document.getElementById('wr').innerText = total > 0 ? Math.round((w/total)*100) + "%" : "0%";
         }
 
-        function renderConfRow(label, val, color) {
-            const isSecure = val >= 80;
-            return `
-            <div class="flex items-center justify-between">
-                <div class="flex flex-col">
-                    <span class="text-[10px] font-black ${isSecure ? '' : 'text-gray-600'}" style="color:${isSecure ? color : ''}">${label}</span>
-                    <span class="text-[8px] text-gray-600 uppercase italic">Uyum Testi</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    ${isSecure ? `<span class="badge-secure" style="background:${color}">SECURE</span>` : ''}
-                    <span class="text-xl font-black ${isSecure ? '' : 'text-gray-900'}" style="color:${isSecure ? color : ''}">%${val}</span>
-                </div>
+        function miniBox(lbl, val, clr) {
+            const secure = val >= 80;
+            return `<div class="flex flex-col items-center justify-center p-1 rounded bg-white/5 border ${secure?'border-white/20':'border-transparent'}">
+                <span class="text-[7px] font-bold text-gray-500 uppercase">${lbl} ${secure?'<b style="color:'+clr+'">SEC</b>':''}</span>
+                <span class="text-[14px] font-black" style="color:${secure?clr:'#333'}">%${val}</span>
             </div>`;
         }
 
-        function upSk(id, v) { let data = JSON.parse(localStorage.getItem('v50_db') || '[]'); data = data.map(i => i.id == id ? {...i, sk: v} : i); localStorage.setItem('v50_db', JSON.stringify(data)); }
-        function rm(id) { if(confirm("Analiz silinsin mi?")) { let data = JSON.parse(localStorage.getItem('v50_db') || '[]'); data = data.filter(i => i.id != id); localStorage.setItem('v50_db', JSON.stringify(data)); render(); } }
-        function clrAll() { if(confirm("Tüm arşiv silinecek?")) { localStorage.removeItem('v50_db'); render(); } }
+        function setRes(id, res) {
+            let data = JSON.parse(localStorage.getItem('v51_db') || '[]');
+            data = data.map(i => i.id == id ? {...i, result: i.result === res ? null : res} : i);
+            localStorage.setItem('v51_db', JSON.stringify(data));
+            render();
+        }
+
+        function upSk(id, v) { 
+            let data = JSON.parse(localStorage.getItem('v51_db') || '[]');
+            data = data.map(i => i.id == id ? {...i, sk: v} : i);
+            localStorage.setItem('v51_db', JSON.stringify(data));
+        }
+
+        function rm(id) { if(confirm("Sil?")) { let data = JSON.parse(localStorage.getItem('v51_db') || '[]'); data = data.filter(i => i.id != id); localStorage.setItem('v51_db', JSON.stringify(data)); render(); } }
+        function clrAll() { if(confirm("Tüm arşiv?")) { localStorage.removeItem('v51_db'); render(); } }
         window.onload = render;
     </script>
 </body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>V50.6 FULL SYNC</title>
+    <title>V50.7 PRO TRACKER</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background: #000; color: #fff; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -12,16 +12,21 @@
         .in-box:focus { border-color: #30d158; }
         .btn-lig { padding: 8px 12px; border-radius: 10px; font-size: 10px; font-weight: 900; background: #1c1c1e; color: #555; border: 1px solid #2c2c2e; transition: 0.2s; flex-shrink: 0; }
         .btn-lig.active { background: #30d158; color: #000; border-color: #30d158; }
-        .mini-card { background: #1c1c1e; border-radius: 14px; padding: 16px; border: 1px solid rgba(255,255,255,0.05); }
+        .mini-card { background: #1c1c1e; border-radius: 14px; padding: 16px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
         .pct-bar { height: 4px; background: #333; border-radius: 2px; overflow: hidden; width: 50px; }
         .pct-fill { height: 100%; transition: width 0.8s ease; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        .win-bg { border-color: #30d158 !important; box-shadow: 0 0 15px rgba(48, 209, 88, 0.1); }
+        .loss-bg { border-color: #ff453a !important; box-shadow: 0 0 15px rgba(255, 69, 58, 0.1); }
     </style>
 </head>
 <body class="p-4 pb-24">
 
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-black italic">V50<span class="text-green-500">.6</span></h1>
+    <div class="flex justify-between items-center mb-6 px-1">
+        <div>
+            <h1 class="text-2xl font-black italic">V50<span class="text-green-500">.7</span></h1>
+            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Win Rate: <span id="wr" class="text-green-500">0%</span></p>
+        </div>
         <div class="flex gap-2">
             <button onclick="toggleArchive()" class="p-2 glass text-[10px] font-black text-blue-400 uppercase">Arşiv</button>
             <button onclick="clrAll()" class="p-2 glass text-[10px] font-black text-red-500 uppercase">Sil</button>
@@ -85,7 +90,7 @@
             const tot = p1 + p2 + p3;
             const d = [Math.round((p1/tot)*100), Math.round((p2/tot)*100), Math.round((p3/tot)*100)];
 
-            const item = { hN: document.getElementById('hN').value||"EV", aN: document.getElementById('aN').value||"DEP", score, d, id: Date.now(), league: cL, sk: "" };
+            const item = { hN: document.getElementById('hN').value||"EV", aN: document.getElementById('aN').value||"DEP", score, d, id: Date.now(), league: cL, sk: "", res: null };
             let data = JSON.parse(localStorage.getItem('v50_db') || '[]');
             data.push(item);
             localStorage.setItem('v50_db', JSON.stringify(data));
@@ -100,31 +105,49 @@
             const arcList = document.getElementById('arcList');
             const latest = document.getElementById('latestCard');
             arcList.innerHTML = ""; latest.innerHTML = "";
-            
-            if(data.length === 0) return;
+            let wins = 0, totalRes = 0;
+
+            if(data.length === 0) { document.getElementById('wr').innerText = "0%"; return; }
 
             data.forEach((i, idx) => {
+                if(i.res === 'W') wins++;
+                if(i.res) totalRes++;
+
                 const statusTxt = i.score > 80 ? 'T3 ODAKLI (TAM 3)' : (i.score < 50 ? 'T1 ODAKLI (0-1)' : 'T2 ODAKLI (TAM 2)');
                 const statusClr = i.score > 80 ? 'text-red-500' : (i.score < 50 ? 'text-gray-500' : 'text-blue-400');
-                const cardHTML = `<div class="mini-card relative">
-                    <div class="flex justify-between mb-2">
+                const resClass = i.res === 'W' ? 'win-bg' : (i.res === 'L' ? 'loss-bg' : '');
+
+                const cardHTML = `<div class="mini-card relative border-2 ${resClass}">
+                    <div class="flex justify-between items-center mb-3">
                         <span class="text-[9px] font-black bg-white/10 px-2 py-1 rounded">${i.league}</span>
-                        <input onchange="upSk('${i.id}',this.value)" placeholder="SKOR" class="bg-transparent text-[11px] font-bold text-right w-16 text-green-500 outline-none" value="${i.sk}">
+                        <div class="flex gap-1">
+                           <button onclick="setRes('${i.id}','W')" class="w-6 h-6 rounded bg-green-500/10 text-green-500 text-[10px] font-bold ${i.res==='W'?'bg-green-500 text-black':''}">W</button>
+                           <button onclick="setRes('${i.id}','L')" class="w-6 h-6 rounded bg-red-500/10 text-red-500 text-[10px] font-bold ${i.res==='L'?'bg-red-500 text-black':''}">L</button>
+                           <input onchange="upSk('${i.id}',this.value)" placeholder="SKOR" class="bg-transparent text-[11px] font-bold text-right w-12 text-white outline-none ml-2 border-b border-white/10" value="${i.sk}">
+                        </div>
                     </div>
                     <div class="text-[11px] font-bold text-gray-400 uppercase mb-1">${i.hN} - ${i.aN}</div>
-                    <div class="text-[26px] font-black italic leading-none">%${i.score} ENERJİ</div>
+                    <div class="text-[26px] font-black italic leading-none mb-1">%${i.score} ENERJİ</div>
                     <div class="text-[10px] font-black ${statusClr} mb-5 uppercase italic tracking-widest">${statusTxt}</div>
                     <div class="grid grid-cols-3 gap-2 border-t border-white/5 pt-4">
                         <div class="flex flex-col items-center"><span class="text-[8px] opacity-30 uppercase">T1(0-1)</span><span class="text-[12px] font-bold">${i.d[0]}%</span><div class="pct-bar"><div class="pct-fill bg-gray-600" style="width:${i.d[0]}%"></div></div></div>
                         <div class="flex flex-col items-center"><span class="text-[8px] text-green-500/50 uppercase">T2(2)</span><span class="text-[12px] font-bold text-green-500">${i.d[1]}%</span><div class="pct-bar"><div class="pct-fill bg-green-500" style="width:${i.d[1]}%"></div></div></div>
                         <div class="flex flex-col items-center"><span class="text-[8px] text-red-500/50 uppercase">T3(3)</span><span class="text-[12px] font-bold text-red-500">${i.d[2]}%</span><div class="pct-bar"><div class="pct-fill bg-red-600" style="width:${i.d[2]}%"></div></div></div>
                     </div>
-                    <button onclick="rm('${i.id}')" class="absolute -top-1 -right-1 text-red-500/30 p-2">×</button>
+                    <button onclick="rm('${i.id}')" class="absolute -top-1 -right-1 text-white/10 p-2">×</button>
                 </div>`;
                 
                 if(idx === data.length - 1) latest.innerHTML = `<h3 class="text-[10px] font-black text-green-500 mb-3 uppercase italic">🟢 SON ANALİZ SONUCU</h3>` + cardHTML;
                 const div = document.createElement('div'); div.innerHTML = cardHTML; arcList.prepend(div);
             });
+            document.getElementById('wr').innerText = totalRes > 0 ? Math.round((wins/totalRes)*100) + "%" : "0%";
+        }
+
+        function setRes(id, res) {
+            let data = JSON.parse(localStorage.getItem('v50_db') || '[]');
+            data = data.map(i => i.id == id ? {...i, res: i.res === res ? null : res} : i);
+            localStorage.setItem('v50_db', JSON.stringify(data));
+            render();
         }
 
         function upSk(id, v) { 

@@ -3,72 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>V50.7 PRO TRACKER</title>
+    <title>V50.9 FINAL MATRIX</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background: #000; color: #fff; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
         .glass { background: #1c1c1e; border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; }
-        .in-box { background: #2c2c2e; border: none; border-radius: 10px; padding: 12px; color: #fff; font-weight: 700; text-align: center; width: 100%; font-size: 14px; outline: none; border: 1px solid transparent; }
-        .in-box:focus { border-color: #30d158; }
+        .in-box { background: #2c2c2e; border: none; border-radius: 10px; padding: 12px; color: #fff; font-weight: 700; text-align: center; width: 100%; font-size: 14px; outline: none; border: 1px solid transparent; transition: 0.2s; }
+        .in-box:focus { border-color: #30d158; background: #333; }
         .btn-lig { padding: 8px 12px; border-radius: 10px; font-size: 10px; font-weight: 900; background: #1c1c1e; color: #555; border: 1px solid #2c2c2e; transition: 0.2s; flex-shrink: 0; }
-        .btn-lig.active { background: #30d158; color: #000; border-color: #30d158; }
-        .mini-card { background: #1c1c1e; border-radius: 14px; padding: 16px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
-        .pct-bar { height: 4px; background: #333; border-radius: 2px; overflow: hidden; width: 50px; }
-        .pct-fill { height: 100%; transition: width 0.8s ease; }
+        .btn-lig.active { background: #30d158; color: #000; border-color: #30d158; transform: scale(1.05); }
+        .mini-card { background: #1c1c1e; border-radius: 14px; padding: 16px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 12px; }
+        .badge-secure { background: #30d158; color: #000; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 900; box-shadow: 0 0 10px rgba(48,209,88,0.4); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .win-bg { border-color: #30d158 !important; box-shadow: 0 0 15px rgba(48, 209, 88, 0.1); }
-        .loss-bg { border-color: #ff453a !important; box-shadow: 0 0 15px rgba(255, 69, 58, 0.1); }
     </style>
 </head>
 <body class="p-4 pb-24">
 
     <div class="flex justify-between items-center mb-6 px-1">
         <div>
-            <h1 class="text-2xl font-black italic">V50<span class="text-green-500">.7</span></h1>
-            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Win Rate: <span id="wr" class="text-green-500">0%</span></p>
+            <h1 class="text-2xl font-black italic tracking-tighter uppercase">V50<span class="text-green-500">.9</span></h1>
+            <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Confidence System Active</p>
         </div>
         <div class="flex gap-2">
-            <button onclick="toggleArchive()" class="p-2 glass text-[10px] font-black text-blue-400 uppercase">Arşiv</button>
-            <button onclick="clrAll()" class="p-2 glass text-[10px] font-black text-red-500 uppercase">Sil</button>
+            <button onclick="toggleArchive()" class="p-2.5 glass text-[10px] font-black text-blue-400">📂</button>
+            <button onclick="clrAll()" class="p-2.5 glass text-[10px] font-black text-red-500">🗑️</button>
         </div>
     </div>
 
     <div class="flex gap-2 overflow-x-auto no-scrollbar mb-6 pb-2">
-        <button onclick="sL('PL')" id="l-PL" class="btn-lig active">PL</button>
-        <button onclick="sL('LL')" id="l-LL" class="btn-lig">LL</button>
-        <button onclick="sL('SA')" id="l-SA" class="btn-lig">SA</button>
-        <button onclick="sL('BL')" id="l-BL" class="btn-lig">BL</button>
-        <button onclick="sL('L1')" id="l-L1" class="btn-lig">L1</button>
+        <button onclick="sL('PL')" id="l-PL" class="btn-lig active">PREMIER LIG</button>
+        <button onclick="sL('LL')" id="l-LL" class="btn-lig">LA LIGA</button>
+        <button onclick="sL('SA')" id="l-SA" class="btn-lig">SERIE A</button>
+        <button onclick="sL('BL')" id="l-BL" class="btn-lig">BUNDESLIGA</button>
+        <button onclick="sL('L1')" id="l-L1" class="btn-lig">LIGUE 1</button>
     </div>
 
-    <div class="glass p-5 mb-8 shadow-xl">
+    <div class="glass p-5 mb-8 shadow-2xl">
         <div class="grid grid-cols-2 gap-4 mb-5">
-            <input id="hN" placeholder="EV SAHİBİ" class="bg-transparent border-b border-gray-800 pb-2 text-xs font-black uppercase outline-none focus:border-green-500">
-            <input id="aN" placeholder="DEPLASMAN" class="bg-transparent border-b border-gray-800 pb-2 text-xs font-black uppercase text-right outline-none focus:border-green-500">
+            <input id="hN" placeholder="EV SAHİBİ" class="bg-transparent border-b border-gray-800 pb-2 text-[11px] font-black uppercase outline-none focus:border-green-500 transition-all">
+            <input id="aN" placeholder="DEPLASMAN" class="bg-transparent border-b border-gray-800 pb-2 text-[11px] font-black uppercase text-right outline-none focus:border-green-500 transition-all">
         </div>
         <div class="space-y-3">
             <div class="grid grid-cols-2 gap-3">
-                <input type="number" step="0.01" inputmode="decimal" id="h_xg" class="in-box" placeholder="npxG/Sh">
-                <input type="number" step="0.01" inputmode="decimal" id="a_xg" class="in-box" placeholder="npxG/Sh">
+                <input type="number" step="0.001" inputmode="decimal" id="h_xg" class="in-box" placeholder="npxG/Sh">
+                <input type="number" step="0.001" inputmode="decimal" id="a_xg" class="in-box" placeholder="npxG/Sh">
             </div>
             <div class="grid grid-cols-2 gap-3">
-                <input type="number" inputmode="decimal" id="h_ppa" class="in-box" placeholder="PPA">
-                <input type="number" inputmode="decimal" id="a_ppa" class="in-box" placeholder="PPA">
+                <input type="number" step="0.1" inputmode="decimal" id="h_ppa" class="in-box" placeholder="PPA">
+                <input type="number" step="0.1" inputmode="decimal" id="a_ppa" class="in-box" placeholder="PPA">
             </div>
             <div class="grid grid-cols-2 gap-3">
-                <input type="number" inputmode="decimal" id="h_sca" class="in-box" placeholder="SCA">
-                <input type="number" inputmode="decimal" id="a_sca" class="in-box" placeholder="SCA">
+                <input type="number" step="0.1" inputmode="decimal" id="h_sca" class="in-box" placeholder="SCA">
+                <input type="number" step="0.1" inputmode="decimal" id="a_sca" class="in-box" placeholder="SCA">
             </div>
             <div class="grid grid-cols-2 gap-3">
-                <input type="number" inputmode="decimal" id="h_pr" class="in-box" placeholder="PrgR">
-                <input type="number" inputmode="decimal" id="a_pr" class="in-box" placeholder="PrgR">
+                <input type="number" step="0.1" inputmode="decimal" id="h_pr" class="in-box" placeholder="PrgR">
+                <input type="number" step="0.1" inputmode="decimal" id="a_pr" class="in-box" placeholder="PrgR">
             </div>
         </div>
-        <button onclick="run()" class="w-full bg-[#30d158] text-black font-black p-4 rounded-xl mt-6 text-[12px] uppercase tracking-widest active:scale-95 transition">Analizi Kaydet</button>
+        <button onclick="run()" class="w-full bg-[#30d158] text-black font-black p-4 rounded-xl mt-6 text-[12px] uppercase tracking-widest active:scale-95 transition shadow-lg shadow-green-500/20">VAADİ ANALİZ ET</button>
     </div>
 
     <div id="latestCard"></div>
-    <div id="archiveContainer" class="hidden mt-6 pt-6 border-t border-dashed border-gray-800"><div id="arcList" class="flex flex-col gap-4"></div></div>
+    <div id="archiveContainer" class="hidden mt-4 pt-6 border-t border-dashed border-gray-800">
+        <div id="arcList" class="flex flex-col gap-4"></div>
+    </div>
 
     <script>
         const B = { PL:[.11,22,48,95], LL:[.09,16,38,75], SA:[.09,17,38,75], BL:[.13,24,50,105], L1:[.1,18,42,85] };
@@ -79,18 +78,18 @@
 
         function run() {
             const ids = ["h_xg","a_xg","h_ppa","a_ppa","h_sca","a_sca","h_pr","a_pr"];
-            if (ids.some(id => document.getElementById(id).value.trim() === "")) { alert("Tüm verileri gir!"); return; }
+            if (ids.some(id => document.getElementById(id).value.trim() === "")) { alert("Tüm kutuları doldur!"); return; }
 
             const n = ids.map(id => Number(document.getElementById(id).value));
-            const score = Math.round(((n[0]+n[1])/2/B[cL][0])*40 + ((n[2]+n[3])/B[cL][1])*30 + ((n[4]+n[5])/B[cL][2])*20 + ((n[6]+n[7])/B[cL][3])*10);
-            
-            const p1 = Math.max(2, 100 - score);
-            const p2 = Math.min(score, 115 - Math.abs(score-80)); 
-            const p3 = Math.max(0, score - 80);
-            const tot = p1 + p2 + p3;
-            const d = [Math.round((p1/tot)*100), Math.round((p2/tot)*100), Math.round((p3/tot)*100)];
+            // Power calculation based on weights
+            const power = ((n[0]+n[1])/2/B[cL][0])*0.4 + ((n[2]+n[3])/B[cL][1])*0.3 + ((n[4]+n[5])/B[cL][2])*0.2 + ((n[6]+n[7])/B[cL][3])*0.1;
 
-            const item = { hN: document.getElementById('hN').value||"EV", aN: document.getElementById('aN').value||"DEP", score, d, id: Date.now(), league: cL, sk: "", res: null };
+            // Confidence Points
+            const t1 = Math.round(Math.max(0, 100 - Math.abs(power - 0.45) * 160));
+            const t2 = Math.round(Math.max(0, 100 - Math.abs(power - 0.80) * 160));
+            const t3 = Math.round(Math.max(0, 100 - Math.abs(power - 1.25) * 160));
+
+            const item = { hN: document.getElementById('hN').value||"EV", aN: document.getElementById('aN').value||"DEP", conf: [t1, t2, t3], id: Date.now(), league: cL, sk: "" };
             let data = JSON.parse(localStorage.getItem('v50_db') || '[]');
             data.push(item);
             localStorage.setItem('v50_db', JSON.stringify(data));
@@ -98,6 +97,7 @@
             ids.forEach(id => document.getElementById(id).value = "");
             document.getElementById('hN').value = ""; document.getElementById('aN').value = "";
             render();
+            window.scrollTo({ top: document.getElementById('latestCard').offsetTop - 20, behavior: 'smooth' });
         }
 
         function render() {
@@ -105,67 +105,45 @@
             const arcList = document.getElementById('arcList');
             const latest = document.getElementById('latestCard');
             arcList.innerHTML = ""; latest.innerHTML = "";
-            let wins = 0, totalRes = 0;
-
-            if(data.length === 0) { document.getElementById('wr').innerText = "0%"; return; }
-
+            
             data.forEach((i, idx) => {
-                if(i.res === 'W') wins++;
-                if(i.res) totalRes++;
-
-                const statusTxt = i.score > 80 ? 'T3 ODAKLI (TAM 3)' : (i.score < 50 ? 'T1 ODAKLI (0-1)' : 'T2 ODAKLI (TAM 2)');
-                const statusClr = i.score > 80 ? 'text-red-500' : (i.score < 50 ? 'text-gray-500' : 'text-blue-400');
-                const resClass = i.res === 'W' ? 'win-bg' : (i.res === 'L' ? 'loss-bg' : '');
-
-                const cardHTML = `<div class="mini-card relative border-2 ${resClass}">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-[9px] font-black bg-white/10 px-2 py-1 rounded">${i.league}</span>
-                        <div class="flex gap-1">
-                           <button onclick="setRes('${i.id}','W')" class="w-6 h-6 rounded bg-green-500/10 text-green-500 text-[10px] font-bold ${i.res==='W'?'bg-green-500 text-black':''}">W</button>
-                           <button onclick="setRes('${i.id}','L')" class="w-6 h-6 rounded bg-red-500/10 text-red-500 text-[10px] font-bold ${i.res==='L'?'bg-red-500 text-black':''}">L</button>
-                           <input onchange="upSk('${i.id}',this.value)" placeholder="SKOR" class="bg-transparent text-[11px] font-bold text-right w-12 text-white outline-none ml-2 border-b border-white/10" value="${i.sk}">
-                        </div>
+                const cardHTML = `<div class="mini-card relative border border-white/5">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-[9px] font-black bg-white/10 px-2.5 py-1 rounded text-gray-400 uppercase tracking-widest">${i.league}</span>
+                        <input onchange="upSk('${i.id}',this.value)" placeholder="SKOR" class="bg-transparent text-[12px] font-black text-right w-16 text-green-500 outline-none border-b border-white/5" value="${i.sk}">
                     </div>
-                    <div class="text-[11px] font-bold text-gray-400 uppercase mb-1">${i.hN} - ${i.aN}</div>
-                    <div class="text-[26px] font-black italic leading-none mb-1">%${i.score} ENERJİ</div>
-                    <div class="text-[10px] font-black ${statusClr} mb-5 uppercase italic tracking-widest">${statusTxt}</div>
-                    <div class="grid grid-cols-3 gap-2 border-t border-white/5 pt-4">
-                        <div class="flex flex-col items-center"><span class="text-[8px] opacity-30 uppercase">T1(0-1)</span><span class="text-[12px] font-bold">${i.d[0]}%</span><div class="pct-bar"><div class="pct-fill bg-gray-600" style="width:${i.d[0]}%"></div></div></div>
-                        <div class="flex flex-col items-center"><span class="text-[8px] text-green-500/50 uppercase">T2(2)</span><span class="text-[12px] font-bold text-green-500">${i.d[1]}%</span><div class="pct-bar"><div class="pct-fill bg-green-500" style="width:${i.d[1]}%"></div></div></div>
-                        <div class="flex flex-col items-center"><span class="text-[8px] text-red-500/50 uppercase">T3(3)</span><span class="text-[12px] font-bold text-red-500">${i.d[2]}%</span><div class="pct-bar"><div class="pct-fill bg-red-600" style="width:${i.d[2]}%"></div></div></div>
+                    <div class="text-[11px] font-bold text-gray-400 uppercase tracking-tighter mb-5">${i.hN} - ${i.aN}</div>
+                    
+                    <div class="space-y-5">
+                        ${renderConfRow("T1 VAADİ (0-1 GOL)", i.conf[0], "#30d158")}
+                        ${renderConfRow("T2 VAADİ (TAM 2 GOL)", i.conf[1], "#007aff")}
+                        ${renderConfRow("T3 VAADİ (TAM 3 GOL)", i.conf[2], "#ff3b30")}
                     </div>
-                    <button onclick="rm('${i.id}')" class="absolute -top-1 -right-1 text-white/10 p-2">×</button>
+                    <button onclick="rm('${i.id}')" class="absolute -top-1 -right-1 text-white/10 p-2 text-xs">×</button>
                 </div>`;
-                
-                if(idx === data.length - 1) latest.innerHTML = `<h3 class="text-[10px] font-black text-green-500 mb-3 uppercase italic">🟢 SON ANALİZ SONUCU</h3>` + cardHTML;
+                if(idx === data.length - 1) latest.innerHTML = `<h3 class="text-[10px] font-black text-green-500 mb-3 uppercase tracking-widest flex items-center gap-2">🟢 ANALİZ TAMAMLANDI</h3>` + cardHTML;
                 const div = document.createElement('div'); div.innerHTML = cardHTML; arcList.prepend(div);
             });
-            document.getElementById('wr').innerText = totalRes > 0 ? Math.round((wins/totalRes)*100) + "%" : "0%";
         }
 
-        function setRes(id, res) {
-            let data = JSON.parse(localStorage.getItem('v50_db') || '[]');
-            data = data.map(i => i.id == id ? {...i, res: i.res === res ? null : res} : i);
-            localStorage.setItem('v50_db', JSON.stringify(data));
-            render();
+        function renderConfRow(label, val, color) {
+            const isSecure = val >= 80;
+            return `
+            <div class="flex items-center justify-between">
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-black ${isSecure ? '' : 'text-gray-600'}" style="color:${isSecure ? color : ''}">${label}</span>
+                    <span class="text-[8px] text-gray-600 uppercase italic">Uyum Testi</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    ${isSecure ? `<span class="badge-secure" style="background:${color}">SECURE</span>` : ''}
+                    <span class="text-xl font-black ${isSecure ? '' : 'text-gray-900'}" style="color:${isSecure ? color : ''}">%${val}</span>
+                </div>
+            </div>`;
         }
 
-        function upSk(id, v) { 
-            let data = JSON.parse(localStorage.getItem('v50_db') || '[]'); 
-            data = data.map(i => i.id == id ? {...i, sk: v} : i); 
-            localStorage.setItem('v50_db', JSON.stringify(data)); 
-        }
-
-        function rm(id) {
-            if(confirm("Silmek istediğine emin misin?")) {
-                let data = JSON.parse(localStorage.getItem('v50_db') || '[]');
-                data = data.filter(i => i.id != id);
-                localStorage.setItem('v50_db', JSON.stringify(data));
-                render();
-            }
-        }
-
-        function clrAll() { if(confirm("Tüm arşivi temizle?")) { localStorage.removeItem('v50_db'); render(); } }
+        function upSk(id, v) { let data = JSON.parse(localStorage.getItem('v50_db') || '[]'); data = data.map(i => i.id == id ? {...i, sk: v} : i); localStorage.setItem('v50_db', JSON.stringify(data)); }
+        function rm(id) { if(confirm("Analiz silinsin mi?")) { let data = JSON.parse(localStorage.getItem('v50_db') || '[]'); data = data.filter(i => i.id != id); localStorage.setItem('v50_db', JSON.stringify(data)); render(); } }
+        function clrAll() { if(confirm("Tüm arşiv silinecek?")) { localStorage.removeItem('v50_db'); render(); } }
         window.onload = render;
     </script>
 </body>

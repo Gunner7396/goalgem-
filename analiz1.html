@@ -3,66 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FUEL ENGINE PRO V51.1</title>
+    <title>FUEL V51.1 MOBI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #000; color: #fff; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-        .glass { background: #1c1c1e; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; }
-        .in-box { background: #2c2c2e; border: none; border-radius: 8px; padding: 10px; color: #fff; font-weight: 700; text-align: center; width: 100%; font-size: 13px; outline: none; border: 1px solid transparent; transition: 0.2s; }
-        .in-box:focus { border-color: #30d158; background: #3a3a3c; }
-        .btn-lig { padding: 8px 12px; border-radius: 8px; font-size: 10px; font-weight: 900; background: #1c1c1e; color: #555; border: 1px solid #2c2c2e; flex-shrink: 0; transition: 0.2s; }
-        .btn-lig.active { background: #30d158; color: #000; border-color: #30d158; transform: scale(1.05); }
-        .mini-card { background: #1c1c1e; border-radius: 12px; padding: 12px; border: 1.5px solid rgba(255,255,255,0.05); margin-bottom: 8px; }
-        .win-border { border-color: #30d158 !important; box-shadow: 0 0 15px rgba(48,209,88,0.1); }
-        .loss-border { border-color: #ff3b30 !important; box-shadow: 0 0 15px rgba(255,59,48,0.1); }
+        body { background: #09090b; color: #fafafa; font-family: -apple-system, system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass { background: #18181b; border: 1px solid #27272a; border-radius: 16px; }
+        .in-box { background: #27272a; border: 1px solid transparent; border-radius: 10px; padding: 12px 8px; color: #fff; font-weight: 800; text-align: center; width: 100%; font-size: 14px; outline: none; transition: 0.2s; }
+        .in-box:focus { border-color: #22c55e; background: #3f3f46; }
+        .btn-lig { padding: 10px; border-radius: 12px; font-size: 11px; font-weight: 800; background: #18181b; color: #71717a; border: 1px solid #27272a; flex: 1; text-align: center; transition: 0.2s; }
+        .btn-lig.active { background: #22c55e; color: #000; border-color: #22c55e; transform: scale(1.02); }
+        .mini-card { background: #18181b; border-radius: 16px; padding: 14px; border: 1px solid #27272a; margin-bottom: 10px; }
+        .win-border { border-color: #22c55e !important; box-shadow: 0 0 20px rgba(34,197,94,0.1); }
+        .loss-border { border-color: #ef4444 !important; }
+        .metric-label { font-size: 9px; font-weight: 900; color: #52525b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; display: block; text-align: center; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="p-3 pb-24">
+<body class="p-4 pb-28">
 
-    <div class="flex justify-between items-end mb-5 px-1">
+    <div class="flex justify-between items-center mb-6">
         <div>
-            <h1 class="text-xl font-black italic tracking-tighter uppercase">FUEL <span class="text-green-500">ENGINE</span> <span class="text-[10px] bg-white/10 px-1 rounded text-gray-400 font-normal ml-1">V51.1</span></h1>
-            <div class="flex gap-3 mt-1">
-                <div class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">SUCCESS: <span id="wr" class="text-green-500 text-xs">0%</span></div>
-                <div class="text-[9px] font-bold text-gray-500 uppercase tracking-widest">W: <span id="wCount" class="text-white">0</span> | L: <span id="lCount" class="text-white">0</span></div>
+            <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none text-white">FUEL <span class="text-green-500">MOBI</span></h1>
+            <div class="flex gap-2 mt-1">
+                <span class="text-[10px] font-bold text-zinc-500 uppercase">WinRate: <span id="wr" class="text-green-500 font-black">0%</span></span>
             </div>
         </div>
         <div class="flex gap-2">
-            <button onclick="toggleArchive()" class="p-2 glass text-[10px] font-black text-blue-400 uppercase">Arşiv</button>
-            <button onclick="clrAll()" class="p-2 glass text-xs">🗑️</button>
+            <button onclick="toggleArchive()" class="w-10 h-10 glass flex items-center justify-center text-blue-400">📁</button>
+            <button onclick="clrAll()" class="w-10 h-10 glass flex items-center justify-center text-red-500">🗑️</button>
         </div>
     </div>
 
-    <div class="flex gap-2 overflow-x-auto no-scrollbar mb-5 py-1">
-        <button onclick="sL('PL')" id="l-PL" class="btn-lig active">PREMIER LIG</button>
-        <button onclick="sL('LL')" id="l-LL" class="btn-lig">LA LIGA</button>
-        <button onclick="sL('SA')" id="l-SA" class="btn-lig">SERIE A</button>
-        <button onclick="sL('BL')" id="l-BL" class="btn-lig">BUNDESLIGA</button>
-        <button onclick="sL('L1')" id="l-L1" class="btn-lig">LIGUE 1</button>
+    <div class="flex gap-2 mb-6 py-1 overflow-x-auto no-scrollbar">
+        <button onclick="sL('PL')" id="l-PL" class="btn-lig active">PL</button>
+        <button onclick="sL('LL')" id="l-LL" class="btn-lig">LL</button>
+        <button onclick="sL('SA')" id="l-SA" class="btn-lig">SA</button>
+        <button onclick="sL('BL')" id="l-BL" class="btn-lig">BL</button>
+        <button onclick="sL('L1')" id="l-L1" class="btn-lig">L1</button>
     </div>
 
-    <div class="glass p-4 mb-6 shadow-2xl">
-        <div class="grid grid-cols-2 gap-3 mb-4">
-            <input id="hN" placeholder="EV SAHİBİ" class="bg-transparent border-b border-gray-800 pb-1 text-[11px] font-black uppercase outline-none focus:border-green-500 transition-all">
-            <input id="aN" placeholder="DEPLASMAN" class="bg-transparent border-b border-gray-800 pb-1 text-[11px] font-black uppercase text-right outline-none focus:border-green-500 transition-all">
+    <div class="glass p-5 shadow-2xl mb-8">
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <input id="hN" placeholder="EV SAHİBİ" class="bg-transparent border-b-2 border-zinc-800 py-1 text-sm font-black uppercase outline-none focus:border-green-500">
+            <input id="aN" placeholder="DEPLASMAN" class="bg-transparent border-b-2 border-zinc-800 py-1 text-sm font-black uppercase text-right outline-none focus:border-green-500">
         </div>
-        <div class="grid grid-cols-2 gap-2">
-            <input type="number" step="0.001" inputmode="decimal" id="h_xg" class="in-box" placeholder="Ev npxG/Sh">
-            <input type="number" step="0.001" inputmode="decimal" id="a_xg" class="in-box" placeholder="Dep npxG/Sh">
-            <input type="number" inputmode="decimal" id="h_ppa" class="in-box" placeholder="Ev PPA">
-            <input type="number" inputmode="decimal" id="a_ppa" class="in-box" placeholder="Dep PPA">
-            <input type="number" inputmode="decimal" id="h_pr" class="in-box" placeholder="Ev PrgR">
-            <input type="number" inputmode="decimal" id="a_pr" class="in-box" placeholder="Dep PrgR">
-            <input type="number" inputmode="decimal" id="h_sca" class="in-box" placeholder="Ev SCA">
-            <input type="number" inputmode="decimal" id="a_sca" class="in-box" placeholder="Dep SCA">
+
+        <div class="space-y-4">
+            <div>
+                <span class="metric-label">npxG / SHOT</span>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" step="0.001" inputmode="decimal" id="h_xg" class="in-box" placeholder="0.000">
+                    <input type="number" step="0.001" inputmode="decimal" id="a_xg" class="in-box" placeholder="0.000">
+                </div>
+            </div>
+            <div>
+                <span class="metric-label">PPA (Pass into Pen)</span>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" inputmode="decimal" id="h_ppa" class="in-box" placeholder="0">
+                    <input type="number" inputmode="decimal" id="a_ppa" class="in-box" placeholder="0">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <span class="metric-label">PrgR</span>
+                    <div class="grid grid-cols-2 gap-1">
+                        <input type="number" inputmode="decimal" id="h_pr" class="in-box" placeholder="0">
+                        <input type="number" inputmode="decimal" id="a_pr" class="in-box" placeholder="0">
+                    </div>
+                </div>
+                <div>
+                    <span class="metric-label">SCA</span>
+                    <div class="grid grid-cols-2 gap-1">
+                        <input type="number" inputmode="decimal" id="h_sca" class="in-box" placeholder="0">
+                        <input type="number" inputmode="decimal" id="a_sca" class="in-box" placeholder="0">
+                    </div>
+                </div>
+            </div>
         </div>
-        <button onclick="run()" class="w-full bg-[#30d158] text-black font-black py-4 rounded-xl mt-4 text-[12px] uppercase tracking-tighter shadow-lg shadow-green-500/20 active:scale-95 transition-transform">ANALİZİ BAŞLAT</button>
+
+        <button onclick="run()" class="w-full bg-green-500 text-black font-black py-4 rounded-2xl mt-8 text-sm uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-green-500/20">HESAPLA</button>
     </div>
 
     <div id="latestCard"></div>
-    <div id="archiveContainer" class="hidden mt-4 pt-4 border-t border-dashed border-gray-800">
-        <div id="arcList" class="flex flex-col gap-2"></div>
+    <div id="archiveContainer" class="hidden mt-6 space-y-3">
+        <h2 class="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] mb-4">Geçmiş Analizler</h2>
+        <div id="arcList"></div>
     </div>
 
     <script>
@@ -75,50 +100,44 @@
         };
 
         let cL = 'PL';
-
         function sL(l){ cL=l; document.querySelectorAll('.btn-lig').forEach(b=>b.classList.remove('active')); document.getElementById('l-'+l).classList.add('active'); }
         function toggleArchive() { document.getElementById('archiveContainer').classList.toggle('hidden'); }
 
         function run() {
             const getV = (id) => Number(document.getElementById(id).value);
             const ids = ["h_xg","a_xg","h_ppa","a_ppa","h_pr","a_pr","h_sca","a_sca"];
-            if (ids.some(id => document.getElementById(id).value === "")) { alert("Tüm yakıt verilerini girin!"); return; }
+            if (ids.some(id => document.getElementById(id).value === "")) { alert("Eksik veri!"); return; }
 
             const l = CONFIG[cL];
             const avgXG = (getV("h_xg") + getV("a_xg")) / 2;
             const tPPA = getV("h_ppa") + getV("a_ppa");
             const tSCA = getV("h_sca") + getV("a_sca");
             const tPR = getV("h_pr") + getV("a_pr");
-            
-            // PrgR/PPA Oranı (Şanzıman Verimliliği)
             const ratio = tPR / (tPPA || 1);
             
-            // ANALİZ MOTORU ÇEKİRDEK HESABI (Ağırlıklı)
-            const xgP = (avgXG / l.xg_b) * 45; // Bitiricilik %45 ağırlık
-            const ppaP = ((tPPA / l.ppa_b) * l.res) * 40; // Hacim %40 ağırlık
-            const scaP = ((tSCA / l.sca_b) * l.res) * 15; // Aksiyon %15 ağırlık
+            const xgP = (avgXG / l.xg_b) * 45;
+            const ppaP = ((tPPA / l.ppa_b) * l.res) * 40;
+            const scaP = ((tSCA / l.sca_b) * l.res) * 15;
 
-            // Verimlilik Limitörü (Ratio 4.5 ideal kabul edilir)
-            let efficiencyMod = 4.5 / (ratio || 1);
-            efficiencyMod = Math.min(1.25, Math.max(0.75, efficiencyMod)); // Max %25 etki sınırı
+            let effMod = 4.5 / (ratio || 1);
+            effMod = Math.min(1.25, Math.max(0.75, effMod));
 
-            const finalScore = (xgP + ppaP + scaP) * efficiencyMod;
+            const finalScore = (xgP + ppaP + scaP) * effMod;
 
-            // Tahmin Kutuları Hassasiyeti (Puanın merkeze uzaklığı)
             const c = [
-                Math.round(Math.max(0, 100 - Math.abs(finalScore - 48) * 4)), // 2 GOL
-                Math.round(Math.max(0, 100 - Math.abs(finalScore - 75) * 4)), // 3 GOL
-                Math.round(Math.max(0, 100 - Math.abs(finalScore - 105) * 4)) // 3.5 ÜST
+                Math.round(Math.max(0, 100 - Math.abs(finalScore - 48) * 4)),
+                Math.round(Math.max(0, 100 - Math.abs(finalScore - 75) * 4)),
+                Math.round(Math.max(0, 100 - Math.abs(finalScore - 105) * 4))
             ];
 
             const item = { 
-                hN: document.getElementById('hN').value||"EV", aN: document.getElementById('aN').value||"DEP", 
-                c, id: Date.now(), l: cL, res: null, r: ratio.toFixed(1), score: finalScore.toFixed(0)
+                h: document.getElementById('hN').value||"EV", a: document.getElementById('aN').value||"DEP", 
+                c, id: Date.now(), l: cL, res: null, r: ratio.toFixed(1)
             };
 
-            let db = JSON.parse(localStorage.getItem('fuel_final_db') || '[]');
+            let db = JSON.parse(localStorage.getItem('fuel_mobi_db') || '[]');
             db.push(item);
-            localStorage.setItem('fuel_final_db', JSON.stringify(db));
+            localStorage.setItem('fuel_mobi_db', JSON.stringify(db));
             
             ids.forEach(id => document.getElementById(id).value = "");
             document.getElementById('hN').value = ""; document.getElementById('aN').value = "";
@@ -126,7 +145,7 @@
         }
 
         function render() {
-            const db = JSON.parse(localStorage.getItem('fuel_final_db') || '[]');
+            const db = JSON.parse(localStorage.getItem('fuel_mobi_db') || '[]');
             const arcList = document.getElementById('arcList');
             const latest = document.getElementById('latestCard');
             arcList.innerHTML = ""; latest.innerHTML = "";
@@ -136,54 +155,50 @@
                 if(i.res === 'W') w++; if(i.res === 'L') l++;
                 const bC = i.res === 'W' ? 'win-border' : (i.res === 'L' ? 'loss-border' : '');
                 
-                const html = `<div class="mini-card relative ${bC} animate-in fade-in duration-500">
-                    <div class="flex justify-between items-center mb-3">
-                        <div class="flex flex-col">
-                            <span class="text-[9px] font-black text-green-500 tracking-widest uppercase">${i.l}</span>
-                            <span class="text-[11px] font-bold text-gray-200">${i.hN} vs ${i.aN}</span>
+                const html = `<div class="mini-card relative ${bC}">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-[8px] font-black text-zinc-600 uppercase tracking-widest">${i.l} | R: ${i.r}</span>
+                            <h3 class="text-xs font-black text-zinc-100 uppercase mt-0.5">${i.h} - ${i.a}</h3>
                         </div>
-                        <div class="flex gap-1 items-center">
-                            <span class="text-[8px] bg-white/5 px-1.5 py-0.5 rounded text-gray-400 font-bold mr-1 italic">RATIO: ${i.r}</span>
-                            <button onclick="setR('${i.id}','W')" class="w-6 h-6 rounded-lg text-[10px] font-black ${i.res==='W'?'bg-green-500 text-black shadow-lg shadow-green-500/40':'bg-white/5 text-green-500'}">W</button>
-                            <button onclick="setR('${i.id}','L')" class="w-6 h-6 rounded-lg text-[10px] font-black ${i.res==='L'?'bg-red-500 text-black shadow-lg shadow-red-500/40':'bg-white/5 text-red-500'}">L</button>
+                        <div class="flex gap-1">
+                            <button onclick="setR('${i.id}','W')" class="w-8 h-8 rounded-lg text-[10px] font-black ${i.res==='W'?'bg-green-500 text-black':'bg-zinc-800 text-green-500'}">W</button>
+                            <button onclick="setR('${i.id}','L')" class="w-8 h-8 rounded-lg text-[10px] font-black ${i.res==='L'?'bg-red-500 text-black':'bg-zinc-800 text-red-500'}">L</button>
                         </div>
                     </div>
                     <div class="grid grid-cols-3 gap-2">
-                        ${box("2 GOL", i.c[0], "#30d158")}
-                        ${box("3 GOL", i.c[1], "#007aff")}
-                        ${box("3.5 ÜST", i.c[2], "#ff3b30")}
+                        ${box("2 GOL", i.c[0], "#22c55e")}
+                        ${box("3 GOL", i.c[1], "#3b82f6")}
+                        ${box("3.5 ÜST", i.c[2], "#ef4444")}
                     </div>
-                    <button onclick="rm('${i.id}')" class="absolute -top-1 -right-1 p-2 text-[10px] opacity-20 font-bold text-white">×</button>
+                    <button onclick="rm('${i.id}')" class="absolute -bottom-1 -right-1 p-3 text-[10px] text-zinc-800 font-black">SİL</button>
                 </div>`;
                 
-                if(idx === db.length - 1) latest.innerHTML = `<p class="text-[8px] font-black text-gray-400 mb-2 px-1 uppercase tracking-widest">Analiz Raporu</p>` + html;
+                if(idx === db.length - 1) latest.innerHTML = `<p class="text-[9px] font-black text-green-500 mb-2 uppercase tracking-widest text-center">Analiz Sonucu</p>` + html;
                 const div = document.createElement('div'); div.innerHTML = html; arcList.prepend(div);
             });
             
-            document.getElementById('wCount').innerText = w;
-            document.getElementById('lCount').innerText = l;
-            const total = w + l;
-            document.getElementById('wr').innerText = total > 0 ? Math.round((w/total)*100) + "%" : "0%";
+            document.getElementById('wr').innerText = (w+l) > 0 ? Math.round((w/(w+l))*100) + "%" : "0%";
         }
 
         function box(l, v, c) {
-            const secure = v >= 78; // %78+ Altın Bölge (Kritik Hassasiyet)
-            return `<div class="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 border ${secure?'border-green-500/40':'border-transparent'}">
-                <span class="text-[7px] font-bold text-gray-500 mb-1 uppercase tracking-tighter">${l}</span>
-                <span class="text-[15px] font-black" style="color:${secure?c:(v>=60?'#fff':'#333')}">%${v}</span>
-                ${secure?'<div class="w-1 h-1 bg-green-500 rounded-full mt-1 animate-pulse"></div>':''}
+            const secure = v >= 78;
+            return `<div class="flex flex-col items-center justify-center py-3 rounded-xl ${secure?'bg-green-500/5 border border-green-500/20':'bg-zinc-900/50 border border-transparent'}">
+                <span class="text-[7px] font-black text-zinc-500 mb-1 tracking-tighter">${l}</span>
+                <span class="text-lg font-black" style="color:${secure?c:(v>=60?'#fff':'#3f3f46')}">${v}%</span>
+                ${secure?'<div class="w-1 h-1 bg-green-500 rounded-full mt-1 animate-ping"></div>':''}
             </div>`;
         }
 
         function setR(id, r) {
-            let db = JSON.parse(localStorage.getItem('fuel_final_db') || '[]');
+            let db = JSON.parse(localStorage.getItem('fuel_mobi_db') || '[]');
             db = db.map(i => i.id == id ? {...i, res: i.res === r ? null : r} : i);
-            localStorage.setItem('fuel_final_db', JSON.stringify(db));
+            localStorage.setItem('fuel_mobi_db', JSON.stringify(db));
             render();
         }
 
-        function rm(id) { if(confirm("Silinsin mi?")) { let db = JSON.parse(localStorage.getItem('fuel_final_db') || '[]'); db = db.filter(i => i.id != id); localStorage.setItem('fuel_final_db', JSON.stringify(db)); render(); } }
-        function clrAll() { if(confirm("Tüm veriler temizlensin mi?")) { localStorage.removeItem('fuel_final_db'); render(); } }
+        function rm(id) { if(confirm("Sil?")) { let db = JSON.parse(localStorage.getItem('fuel_mobi_db') || '[]'); db = db.filter(i => i.id != id); localStorage.setItem('fuel_mobi_db', JSON.stringify(db)); render(); } }
+        function clrAll() { if(confirm("Temizle?")) { localStorage.removeItem('fuel_mobi_db'); render(); } }
         window.onload = render;
     </script>
 </body>

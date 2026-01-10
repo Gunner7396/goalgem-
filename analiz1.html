@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>V51.0 COMPACT PRO</title>
+    <title>YAKIT MÜHENDİSLİĞİ V51.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background: #000; color: #fff; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -15,7 +15,6 @@
         .mini-card { background: #1c1c1e; border-radius: 12px; padding: 12px; border: 1.5px solid rgba(255,255,255,0.05); margin-bottom: 8px; transition: 0.2s; }
         .win-border { border-color: #30d158 !important; box-shadow: 0 0 10px rgba(48,209,88,0.1); }
         .loss-border { border-color: #ff3b30 !important; box-shadow: 0 0 10px rgba(255,59,48,0.1); }
-        .badge-secure { font-size: 8px; font-weight: 900; padding: 1px 4px; border-radius: 3px; margin-left: 4px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -23,7 +22,7 @@
 
     <div class="flex justify-between items-end mb-5 px-1">
         <div>
-            <h1 class="text-xl font-black italic tracking-tighter">V51<span class="text-green-500">.0</span></h1>
+            <h1 class="text-xl font-black italic tracking-tighter uppercase">FUEL <span class="text-green-500">ENGINE</span></h1>
             <div class="flex gap-3 mt-1">
                 <div class="text-[9px] font-bold text-gray-500 uppercase">BAŞARI: <span id="wr" class="text-green-500 text-xs">0%</span></div>
                 <div class="text-[9px] font-bold text-gray-500 uppercase">W: <span id="wCount" class="text-white">0</span></div>
@@ -37,11 +36,11 @@
     </div>
 
     <div class="flex gap-2 overflow-x-auto no-scrollbar mb-5">
-        <button onclick="sL('PL')" id="l-PL" class="btn-lig active">PL</button>
-        <button onclick="sL('LL')" id="l-LL" class="btn-lig">LL</button>
-        <button onclick="sL('SA')" id="l-SA" class="btn-lig">SA</button>
-        <button onclick="sL('BL')" id="l-BL" class="btn-lig">BL</button>
-        <button onclick="sL('L1')" id="l-L1" class="btn-lig">L1</button>
+        <button onclick="sL('PL')" id="l-PL" class="btn-lig active">PREMIER LIG</button>
+        <button onclick="sL('LL')" id="l-LL" class="btn-lig">LA LIGA</button>
+        <button onclick="sL('SA')" id="l-SA" class="btn-lig">SERIE A</button>
+        <button onclick="sL('BL')" id="l-BL" class="btn-lig">BUNDESLIGA</button>
+        <button onclick="sL('L1')" id="l-L1" class="btn-lig">LIGUE 1</button>
     </div>
 
     <div class="glass p-4 mb-6">
@@ -50,16 +49,16 @@
             <input id="aN" placeholder="DEPLASMAN" class="bg-transparent border-b border-gray-800 pb-1 text-[11px] font-black uppercase text-right outline-none focus:border-green-500">
         </div>
         <div class="grid grid-cols-2 gap-2">
-            <input type="number" step="0.001" inputmode="decimal" id="h_xg" class="in-box" placeholder="npxG/Sh">
-            <input type="number" step="0.001" inputmode="decimal" id="a_xg" class="in-box" placeholder="npxG/Sh">
-            <input type="number" inputmode="decimal" id="h_ppa" class="in-box" placeholder="PPA">
-            <input type="number" inputmode="decimal" id="a_ppa" class="in-box" placeholder="PPA">
-            <input type="number" inputmode="decimal" id="h_sca" class="in-box" placeholder="SCA">
-            <input type="number" inputmode="decimal" id="a_sca" class="in-box" placeholder="SCA">
-            <input type="number" inputmode="decimal" id="h_pr" class="in-box" placeholder="PrgR">
-            <input type="number" inputmode="decimal" id="a_pr" class="in-box" placeholder="PrgR">
+            <input type="number" step="0.001" inputmode="decimal" id="h_xg" class="in-box" placeholder="Ev npxG/Sh">
+            <input type="number" step="0.001" inputmode="decimal" id="a_xg" class="in-box" placeholder="Dep npxG/Sh">
+            <input type="number" inputmode="decimal" id="h_ppa" class="in-box" placeholder="Ev PPA">
+            <input type="number" inputmode="decimal" id="a_ppa" class="in-box" placeholder="Dep PPA">
+            <input type="number" inputmode="decimal" id="h_pr" class="in-box" placeholder="Ev PrgR">
+            <input type="number" inputmode="decimal" id="a_pr" class="in-box" placeholder="Dep PrgR">
+            <input type="number" inputmode="decimal" id="h_sca" class="in-box" placeholder="Ev SCA">
+            <input type="number" inputmode="decimal" id="a_sca" class="in-box" placeholder="Dep SCA">
         </div>
-        <button onclick="run()" class="w-full bg-[#30d158] text-black font-black py-3 rounded-lg mt-4 text-[11px] uppercase tracking-tighter shadow-lg shadow-green-500/10">ANALİZ ET VE KAYDET</button>
+        <button onclick="run()" class="w-full bg-[#30d158] text-black font-black py-3 rounded-lg mt-4 text-[11px] uppercase tracking-tighter shadow-lg shadow-green-500/10">YAKITI HESAPLA</button>
     </div>
 
     <div id="latestCard"></div>
@@ -68,33 +67,78 @@
     </div>
 
     <script>
-        const B = { PL:[.11,22,48,95], LL:[.09,16,38,75], SA:[.09,17,38,75], BL:[.13,24,50,105], L1:[.1,18,42,85] };
+        // ANA PLAN: Liglerin "Savunma Direnci" ve "Patron" Eşik değerleri
+        const CONFIG = {
+            PL: { resistance: 1.00, ppa_base: 22, sca_base: 45, xg_base: 0.12 },
+            LL: { resistance: 0.85, ppa_base: 18, sca_base: 40, xg_base: 0.10 },
+            SA: { resistance: 0.90, ppa_base: 19, sca_base: 42, xg_base: 0.11 },
+            BL: { resistance: 1.15, ppa_base: 24, sca_base: 48, xg_base: 0.14 },
+            L1: { resistance: 1.00, ppa_base: 20, sca_base: 42, xg_base: 0.12 }
+        };
+
         let cL = 'PL';
 
         function sL(l){ cL=l; document.querySelectorAll('.btn-lig').forEach(b=>b.classList.remove('active')); document.getElementById('l-'+l).classList.add('active'); }
         function toggleArchive() { document.getElementById('archiveContainer').classList.toggle('hidden'); }
 
         function run() {
-            const ids = ["h_xg","a_xg","h_ppa","a_ppa","h_sca","a_sca","h_pr","a_pr"];
+            const getVal = (id) => Number(document.getElementById(id).value);
+            const ids = ["h_xg","a_xg","h_ppa","a_ppa","h_pr","a_pr","h_sca","a_sca"];
             if (ids.some(id => document.getElementById(id).value.trim() === "")) { alert("Eksik veri!"); return; }
-            const n = ids.map(id => Number(document.getElementById(id).value));
-            const power = ((n[0]+n[1])/2/B[cL][0])*0.4 + ((n[2]+n[3])/B[cL][1])*0.3 + ((n[4]+n[5])/B[cL][2])*0.2 + ((n[6]+n[7])/B[cL][3])*0.1;
+
+            const h_xg = getVal("h_xg"), a_xg = getVal("a_xg");
+            const h_ppa = getVal("h_ppa"), a_ppa = getVal("a_ppa");
+            const h_pr = getVal("h_pr"), a_pr = getVal("a_pr");
+            const h_sca = getVal("h_sca"), a_sca = getVal("a_sca");
+
+            const league = CONFIG[cL];
+
+            // 1. Verimlilik Sensörü (PrgR/PPA) - Şanzıman Tıkanma Kontrolü
+            const totalPPA = h_ppa + a_ppa;
+            const totalPrgR = h_pr + a_pr;
+            const ratio = totalPrgR / (totalPPA || 1);
+            let gearboxMod = 1.0;
+            if (ratio > 6.0) gearboxMod = 0.85; // Tıkanma var
+            if (ratio < 3.0) gearboxMod = 1.15; // Akış mükemmel
+
+            // 2. Ağırlıklı Yakıt Puanı Hesaplama (GPP)
+            const xgScore = ((h_xg + a_xg) / 2 / league.xg_base) * 0.40;
+            const ppaScore = ((totalPPA / league.ppa_base) * league.resistance) * 0.30;
+            const ratioScore = (1 / (ratio / 4.5)) * 0.20; // 4.5 ortalama baz alındı
+            const scaScore = (((h_sca + a_sca) / league.sca_base) * league.resistance) * 0.10;
+
+            const finalPuan = (xgScore + ppaScore + ratioScore + scaScore) * gearboxMod * 50; // 0-100 aralığına normalize
+
+            // 3. Hassas Eşiklere Göre % Güven Hesaplama
+            // Sadece 2 Gol (Eşik: 40), Sadece 3 Gol (Eşik: 65), 3.5 Üst (Eşik: 85)
             const conf = [
-                Math.round(Math.max(0, 100 - Math.abs(power - 0.45) * 160)),
-                Math.round(Math.max(0, 100 - Math.abs(power - 0.80) * 160)),
-                Math.round(Math.max(0, 100 - Math.abs(power - 1.25) * 160))
+                Math.round(Math.max(0, 100 - Math.abs(finalPuan - 42) * 4)), // T2 (2 Gol)
+                Math.round(Math.max(0, 100 - Math.abs(finalPuan - 65) * 4)), // T3 (3 Gol)
+                Math.round(Math.max(0, 100 - Math.abs(finalPuan - 88) * 4))  // 3.5+
             ];
-            const item = { hN: document.getElementById('hN').value||"EV", aN: document.getElementById('aN').value||"DEP", conf, id: Date.now(), league: cL, sk: "", result: null };
-            let data = JSON.parse(localStorage.getItem('v51_db') || '[]');
+
+            const item = { 
+                hN: document.getElementById('hN').value||"EV", 
+                aN: document.getElementById('aN').value||"DEP", 
+                conf, 
+                id: Date.now(), 
+                league: cL, 
+                sk: "", 
+                result: null,
+                gearbox: ratio.toFixed(1)
+            };
+
+            let data = JSON.parse(localStorage.getItem('fuel_db') || '[]');
             data.push(item);
-            localStorage.setItem('v51_db', JSON.stringify(data));
+            localStorage.setItem('fuel_db', JSON.stringify(data));
+            
             ids.forEach(id => document.getElementById(id).value = "");
             document.getElementById('hN').value = ""; document.getElementById('aN').value = "";
             render();
         }
 
         function render() {
-            const data = JSON.parse(localStorage.getItem('v51_db') || '[]');
+            const data = JSON.parse(localStorage.getItem('fuel_db') || '[]');
             const arcList = document.getElementById('arcList');
             const latest = document.getElementById('latestCard');
             arcList.innerHTML = ""; latest.innerHTML = "";
@@ -106,22 +150,22 @@
                 
                 const cardHTML = `<div class="mini-card relative ${borderClass}">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-[8px] font-black opacity-40 uppercase">${i.league} | ${i.hN}-${i.aN}</span>
-                        <div class="flex gap-1">
+                        <span class="text-[8px] font-black opacity-60 uppercase tracking-widest">${i.league} | ${i.hN} vs ${i.aN}</span>
+                        <div class="flex gap-1 items-center">
+                            <span class="text-[7px] text-gray-500 font-bold mr-1">R: ${i.gearbox}</span>
                             <button onclick="setRes('${i.id}','W')" class="w-5 h-5 rounded text-[10px] font-black ${i.result==='W'?'bg-green-500 text-black':'bg-green-500/10 text-green-500'}">W</button>
                             <button onclick="setRes('${i.id}','L')" class="w-5 h-5 rounded text-[10px] font-black ${i.result==='L'?'bg-red-500 text-black':'bg-red-500/10 text-red-500'}">L</button>
-                            <input onchange="upSk('${i.id}',this.value)" value="${i.sk}" placeholder="0-0" class="w-10 bg-transparent text-[10px] text-right font-bold outline-none text-gray-400">
                         </div>
                     </div>
                     <div class="grid grid-cols-3 gap-2">
-                        ${miniBox("T1", i.conf[0], "#30d158")}
-                        ${miniBox("T2", i.conf[1], "#007aff")}
-                        ${miniBox("T3", i.conf[2], "#ff3b30")}
+                        ${miniBox("2 GOL", i.conf[0], "#30d158")}
+                        ${miniBox("3 GOL", i.conf[1], "#007aff")}
+                        ${miniBox("3.5 ÜST", i.conf[2], "#ff3b30")}
                     </div>
-                    <button onclick="rm('${i.id}')" class="absolute -bottom-1 -right-1 p-2 text-[10px] opacity-10">×</button>
+                    <button onclick="rm('${i.id}')" class="absolute -bottom-1 -left-1 p-2 text-[10px] opacity-10">×</button>
                 </div>`;
                 
-                if(idx === data.length - 1) latest.innerHTML = `<p class="text-[8px] font-black text-green-500 mb-2 tracking-widest uppercase">Son Analiz</p>` + cardHTML;
+                if(idx === data.length - 1) latest.innerHTML = `<p class="text-[8px] font-black text-green-500 mb-2 tracking-widest uppercase">Motor Analizi Tamamlandı</p>` + cardHTML;
                 const div = document.createElement('div'); div.innerHTML = cardHTML; arcList.prepend(div);
             });
             
@@ -132,28 +176,24 @@
         }
 
         function miniBox(lbl, val, clr) {
-            const secure = val >= 80;
-            return `<div class="flex flex-col items-center justify-center p-1 rounded bg-white/5 border ${secure?'border-white/20':'border-transparent'}">
-                <span class="text-[7px] font-bold text-gray-500 uppercase">${lbl} ${secure?'<b style="color:'+clr+'">SEC</b>':''}</span>
-                <span class="text-[14px] font-black" style="color:${secure?clr:'#333'}">%${val}</span>
+            const secure = val >= 75; // %75 ve üzeri Altın Bölge
+            const near = val >= 60 && val < 75; // Sınırda
+            return `<div class="flex flex-col items-center justify-center p-1 rounded bg-white/5 border ${secure?'border-green-500/50':'border-transparent'}">
+                <span class="text-[7px] font-bold text-gray-500 uppercase">${lbl}</span>
+                <span class="text-[14px] font-black" style="color:${secure?clr:(near?'#fff':'#333')}">%${val}</span>
+                ${secure?'<span class="text-[6px] font-black text-green-500 mt-0.5">ALTIN</span>':''}
             </div>`;
         }
 
         function setRes(id, res) {
-            let data = JSON.parse(localStorage.getItem('v51_db') || '[]');
+            let data = JSON.parse(localStorage.getItem('fuel_db') || '[]');
             data = data.map(i => i.id == id ? {...i, result: i.result === res ? null : res} : i);
-            localStorage.setItem('v51_db', JSON.stringify(data));
+            localStorage.setItem('fuel_db', JSON.stringify(data));
             render();
         }
 
-        function upSk(id, v) { 
-            let data = JSON.parse(localStorage.getItem('v51_db') || '[]');
-            data = data.map(i => i.id == id ? {...i, sk: v} : i);
-            localStorage.setItem('v51_db', JSON.stringify(data));
-        }
-
-        function rm(id) { if(confirm("Sil?")) { let data = JSON.parse(localStorage.getItem('v51_db') || '[]'); data = data.filter(i => i.id != id); localStorage.setItem('v51_db', JSON.stringify(data)); render(); } }
-        function clrAll() { if(confirm("Tüm arşiv?")) { localStorage.removeItem('v51_db'); render(); } }
+        function rm(id) { if(confirm("Analiz silinsin mi?")) { let data = JSON.parse(localStorage.getItem('fuel_db') || '[]'); data = data.filter(i => i.id != id); localStorage.setItem('fuel_db', JSON.stringify(data)); render(); } }
+        function clrAll() { if(confirm("Tüm arşivi temizle?")) { localStorage.removeItem('fuel_db'); render(); } }
         window.onload = render;
     </script>
 </body>

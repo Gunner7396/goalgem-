@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNA Match Analyzer v1.0</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a2e; color: white; display: flex; justify-content: center; padding: 20px; }
+        .container { background-color: #16213e; padding: 30px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); width: 100%; max-width: 450px; }
+        h2 { text-align: center; color: #0f3460; background: #e94560; padding: 10px; border-radius: 8px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 14px; color: #adb0bb; }
+        input { width: 100%; padding: 10px; border: none; border-radius: 5px; background: #0f3460; color: white; font-size: 16px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background-color: #e94560; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 10px; }
+        button:hover { background-color: #ff2e63; }
+        #result { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; line-height: 1.6; }
+        .low { border-left: 5px solid #e94560; background: rgba(233, 69, 96, 0.1); }
+        .mid { border-left: 5px solid #f9d423; background: rgba(249, 212, 35, 0.1); }
+        .high { border-left: 5px solid #4ecca3; background: rgba(78, 204, 163, 0.1); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>⚽ DNA ANALYZER</h2>
+    
+    <div class="input-group">
+        <label>10 Maçlık Toplam SCA:</label>
+        <input type="number" id="sca" placeholder="Örn: 188">
+    </div>
+    
+    <div class="input-group">
+        <label>10 Maçlık Toplam C.Saha Dokunuş:</label>
+        <input type="number" id="touches" placeholder="Örn: 166">
+    </div>
+    
+    <div class="input-group">
+        <label>10 Maçlık Toplam İsabetli Şut (SoT):</label>
+        <input type="number" id="sot" placeholder="Örn: 31">
+    </div>
+
+    <div class="input-group">
+        <label>Canlı Maç İçi Pas Arası (Interceptions):</label>
+        <input type="number" id="inter" placeholder="Örn: 15">
+    </div>
+
+    <div class="input-group">
+        <label>Canlı Toplam xG:</label>
+        <input type="number" step="0.01" id="xg" placeholder="Örn: 0.75">
+    </div>
+
+    <button onclick="analizEt()">DNA'YI ÇÖZ</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    function analizEt() {
+        const sca = document.getElementById('sca').value / 10;
+        const touches = document.getElementById('touches').value / 10;
+        const sot = document.getElementById('sot').value / 10;
+        const inter = document.getElementById('inter').value;
+        const xg = document.getElementById('xg').value;
+        
+        const resDiv = document.getElementById('result');
+        resDiv.style.display = 'block';
+        
+        let golMesaj = "";
+        let kornerMesaj = "";
+        let classType = "low";
+
+        // GOL ANALİZİ
+        if (sot < 4 && xg < 1.2) {
+            golMesaj = "🔴 <b>KISIR DÖNGÜ:</b> Üretim bandı bozuk. 0-1 Gol ihtimali çok yüksek.";
+            classType = "low";
+        } else if (sot >= 4 && sot < 6) {
+            golMesaj = "🟡 <b>ORTA ŞEKER:</b> Dengeli maç. Tek gol dengeleri bozabilir.";
+            classType = "mid";
+        } else {
+            golMesaj = "🟢 <b>GOL REZERVUARI:</b> Veriler patlama bekliyor. Üst baremi denenebilir.";
+            classType = "high";
+        }
+
+        // KORNER ANALİZİ
+        if (touches < 20 && sca < 20) {
+            kornerMesaj = "🚫 <b>KORNER ALARMI:</b> Ceza sahasına giriş yok. Korner beklemek riskli.";
+        } else {
+            kornerMesaj = "🚩 <b>KORNER POTANSİYELİ:</b> Kanatlar aktif, korner çıkabilir.";
+        }
+
+        // SAVUNMA
+        let savMesaj = inter > 12 ? "🛡️ <b>SAVUNMA DUVARI:</b> Pas arası çok yüksek, rakibi boğuyorlar." : "🔓 <b>SAVUNMA ZAYIF:</b> Yerleşim hataları gol getirebilir.";
+
+        resDiv.className = classType;
+        resDiv.innerHTML = `
+            <strong>SONUÇLAR:</strong><br>
+            ${golMesaj}<br><br>
+            ${kornerMesaj}<br><br>
+            ${savMesaj}<br><br>
+            <small><i>*Bu analiz senin 5'te 4 kuralına göre hazırlanmıştır.</i></small>
+        `;
+    }
+</script>
+
+</body>
+</html>

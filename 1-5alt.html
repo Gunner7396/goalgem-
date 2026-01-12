@@ -3,106 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DNA Analyzer Pro v2.0</title>
+    <title>1.5 Alt Analiz Motoru</title>
     <style>
-        :root { --primary: #e94560; --secondary: #0f3460; --bg: #1a1a2e; --card: #16213e; --text: #adb0bb; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: white; padding: 20px; display: flex; justify-content: center; }
-        .container { background-color: var(--card); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 600px; }
-        h2 { text-align: center; color: white; background: var(--primary); padding: 15px; border-radius: 12px; margin-top: 0; text-transform: uppercase; letter-spacing: 2px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-        .team-box { background: rgba(15, 52, 96, 0.5); padding: 15px; border-radius: 10px; border: 1px solid #1f2a44; }
-        h3 { font-size: 14px; text-align: center; color: var(--primary); margin-bottom: 15px; text-transform: uppercase; }
-        label { display: block; font-size: 11px; margin-bottom: 5px; color: var(--text); font-weight: bold; }
-        input { width: 100%; padding: 10px; margin-bottom: 12px; border: none; border-radius: 6px; background: var(--secondary); color: white; font-size: 14px; box-sizing: border-box; transition: 0.3s; }
-        input:focus { outline: 2px solid var(--primary); }
-        button { width: 100%; padding: 18px; background: var(--primary); border: none; border-radius: 10px; color: white; font-weight: 800; cursor: pointer; font-size: 16px; transition: 0.3s; box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3); }
-        button:hover { background: #ff2e63; transform: translateY(-2px); }
-        #result { margin-top: 25px; padding: 20px; border-radius: 12px; display: none; border-left: 8px solid; }
-        .low { border-color: #e94560; background: rgba(233, 69, 96, 0.1); }
-        .mid { border-color: #f9d423; background: rgba(249, 212, 35, 0.1); }
-        .high { border-color: #4ecca3; background: rgba(78, 204, 163, 0.1); }
-        .stats-summary { font-size: 13px; line-height: 1.6; }
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --primary: #38bdf8;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --text: #f8fafc;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        h2 { text-align: center; color: var(--primary); margin-bottom: 20px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 14px; color: #94a3b8; }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            color: var(--bg);
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+            text-align: center;
+        }
+        .percentage { font-size: 48px; font-weight: 800; margin: 10px 0; }
+        .reasoning { font-size: 14px; line-height: 1.5; color: #cbd5e1; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>⚽ DNA ANALYZER PRO</h2>
+    <h2>Analiz Motoru v1.0</h2>
     
-    <div class="grid">
-        <div class="team-box">
-            <h3>Ev Sahibi (Son 5 Maç)</h3>
-            <label>Toplam SCA:</label>
-            <input type="number" id="h_sca" placeholder="Toplam SCA">
-            <label>Toplam C.Saha Dokunuş:</label>
-            <input type="number" id="h_touches" placeholder="Toplam Touches">
-            <label>Toplam İsabetli Şut (SoT):</label>
-            <input type="number" id="h_sot" placeholder="Toplam SoT">
-            <label>Ort. Pas Arası (Inter.):</label>
-            <input type="number" id="h_inter" placeholder="Maç Başı Ort.">
-        </div>
-
-        <div class="team-box">
-            <h3>Deplasman (Son 5 Maç)</h3>
-            <label>Toplam SCA:</label>
-            <input type="number" id="a_sca" placeholder="Toplam SCA">
-            <label>Toplam C.Saha Dokunuş:</label>
-            <input type="number" id="a_touches" placeholder="Toplam Touches">
-            <label>Toplam İsabetli Şut (SoT):</label>
-            <input type="number" id="a_sot" placeholder="Toplam SoT">
-            <label>Ort. Pas Arası (Inter.):</label>
-            <input type="number" id="a_inter" placeholder="Maç Başı Ort.">
-        </div>
+    <div class="input-group">
+        <label>Lig Seçimi</label>
+        <select id="league">
+            <option value="italya">İtalya Serie A</option>
+            <option value="ispanya">İspanya La Liga</option>
+            <option value="almanya">Almanya Bundesliga</option>
+            <option value="ingiltere">İngiltere Premier Lig</option>
+        </select>
     </div>
 
-    <button onclick="analizEt()">DNA ÇATIŞMASINI ANALİZ ET</button>
+    <div class="input-group">
+        <label>Ortalama npxG / Sh (En Yüksek Olan)</label>
+        <input type="number" id="npxg" step="0.01" placeholder="Örn: 0.08">
+    </div>
 
-    <div id="result"></div>
+    <div class="input-group">
+        <label>Toplam PPA (Ceza Sahasına Pas)</label>
+        <input type="number" id="ppa" placeholder="Örn: 10">
+    </div>
+
+    <div class="input-group">
+        <label>Toplam PrgC (Top Taşıma)</label>
+        <input type="number" id="prgc" placeholder="Örn: 12">
+    </div>
+
+    <div class="input-group">
+        <label>Toplam Def 3rd Tkl+Int</label>
+        <input type="number" id="tkl" placeholder="Örn: 35">
+    </div>
+
+    <button onclick="calculate()">ANALİZ ET</button>
+
+    <div id="result">
+        <div id="resText">GÜVEN ORANI</div>
+        <div class="percentage" id="resPerc">%0</div>
+        <div class="reasoning" id="resDesc"></div>
+    </div>
 </div>
 
 <script>
-    function analizEt() {
-        // Değerleri Al ve 5'e bölerek ortalamayı bul
-        const h_sca = document.getElementById('h_sca').value / 5;
-        const h_tou = document.getElementById('h_touches').value / 5;
-        const h_sot = document.getElementById('h_sot').value / 5;
-        const h_int = parseFloat(document.getElementById('h_inter').value);
+function calculate() {
+    const league = document.getElementById('league').value;
+    const npxg = parseFloat(document.getElementById('npxg').value);
+    const ppa = parseFloat(document.getElementById('ppa').value);
+    const prgc = parseFloat(document.getElementById('prgc').value);
+    const tkl = parseFloat(document.getElementById('tkl').value);
 
-        const a_sca = document.getElementById('a_sca').value / 5;
-        const a_tou = document.getElementById('a_touches').value / 5;
-        const a_sot = document.getElementById('a_sot').value / 5;
-        const a_int = parseFloat(document.getElementById('a_inter').value);
+    let score = 50; // Baz puan
+    let reasons = [];
 
-        // Karma Analiz (Maçın Geneli)
-        const toplam_sot = h_sot + a_sot;
-        const toplam_tou = h_tou + a_tou;
-        const toplam_int = (h_int + a_int) / 2;
+    // LİG BAZLI EŞİKLER
+    const thresholds = {
+        italya: { npxg: 0.08, ppa: 10, prgc: 12, tkl: 40 },
+        ispanya: { npxg: 0.09, ppa: 12, prgc: 10, tkl: 35 },
+        almanya: { npxg: 0.10, ppa: 14, prgc: 15, tkl: 30 },
+        ingiltere: { npxg: 0.09, ppa: 13, prgc: 18, tkl: 32 }
+    };
 
-        const resDiv = document.getElementById('result');
-        resDiv.style.display = 'block';
-        
-        let riskClass = "low";
-        let sonucMetni = "";
+    const t = thresholds[league];
 
-        // Analiz Mantığı
-        if (toplam_sot < 7.5 && toplam_tou < 35) {
-            riskClass = "low";
-            sonucMetni = `📊 <b>KISIR MAÇ SİNYALİ:</b> İki takımın toplam isabetli şut beklentisi ${toplam_sot.toFixed(1)}. Ceza sahası hareketliliği çok düşük. 1.5 ALT ve 2.5 ALT için ideal DNA.`;
-        } else if (toplam_sot >= 7.5 && toplam_sot < 11) {
-            riskClass = "mid";
-            sonucMetni = `📊 <b>DENGELİ MAÇ:</b> Üretim orta seviyede (${toplam_sot.toFixed(1)} SoT). Taraf bahsi yerine canlı takibi önerilir.`;
-        } else {
-            riskClass = "high";
-            sonucMetni = `📊 <b>GOL REZERVUARI:</b> DNA'da yüksek üretim var! Toplam SoT: ${toplam_sot.toFixed(1)}. ÜST seçenekleri değerlendirilebilir.`;
-        }
+    // 1. VETO KONTROLÜ (npxG/Sh)
+    if (npxg <= t.npxg) { score += 15; } else { score -= 20; reasons.push("Şut kalitesi tehlikeli seviyede."); }
 
-        const savunmaNotu = toplam_int > 13 ? 
-            "<br><br>🛡️ <b>SAVUNMA DİRENCİ:</b> Pas arası verileri yüksek. Karşılıklı Gol Yok ihtimali artıyor." : 
-            "<br><br>🔓 <b>SAVUNMA ZAAFİYETİ:</b> İki takım da pas arası yapmakta zorlanıyor, bireysel hata riski yüksek.";
+    // 2. ÜRETİM KONTROLÜ (PPA)
+    if (ppa <= t.ppa) { score += 15; } else { score -= 15; reasons.push("Ceza sahasına giriş çok fazla."); }
 
-        resDiv.className = riskClass;
-        resDiv.innerHTML = `<div class="stats-summary">${sonucMetni} ${savunmaNotu}</div>`;
+    // 3. BİREYSEL TEHDİT (PrgC)
+    if (prgc <= t.prgc) { score += 10; } else { score -= 10; reasons.push("Topla dikine penetrasyon yüksek."); }
+
+    // 4. ZEKA/KOMPANSASYON (Tkl+Int vs PPA)
+    if (tkl >= t.tkl) {
+        score += 10;
+    } else if (ppa < (t.ppa * 0.7)) {
+        score += 8; // Zekice dokunuş: PPA çok düşükse Tkl düşüklüğü sorun değil
+        reasons.push("Savunma az müdahale ediyor çünkü rakip gelemiyor.");
+    } else {
+        score -= 10;
+        reasons.push("Savunma müdahale sayısı yetersiz.");
     }
+
+    // Skor Sınırlandırma
+    if (score > 92) score = 92; // %100 futbol için imkansızdır
+    if (score < 10) score = 15;
+
+    // Sonuç Ekranı
+    const resDiv = document.getElementById('result');
+    resDiv.style.display = 'block';
+    document.getElementById('resPerc').innerText = '%' + score;
+    
+    if (score >= 80) {
+        resDiv.style.background = '#064e3b';
+        document.getElementById('resDesc').innerText = "Mükemmel kilitlenme! " + reasons.join(" ");
+    } else if (score >= 65) {
+        resDiv.style.background = '#451a03';
+        document.getElementById('resDesc').innerText = "Orta risk. " + reasons.join(" ");
+    } else {
+        resDiv.style.background = '#450a0a';
+        document.getElementById('resDesc').innerText = "Uzak durulmalı. " + reasons.join(" ");
+    }
+}
 </script>
 
 </body>

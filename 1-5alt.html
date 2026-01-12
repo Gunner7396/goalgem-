@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>METRIC ENGINE | Titanium Edition</title>
+    <title>METRIC ENGINE | Professional</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
         :root {
             --accent: #00ff85;
             --bg-dark: #09090b;
-            --glass: rgba(24, 24, 27, 0.9);
+            --glass: rgba(24, 24, 27, 0.95);
             --border: rgba(255, 255, 255, 0.1);
             --text-main: #fafafa;
             --text-dim: #a1a1aa;
@@ -22,51 +22,54 @@
                               radial-gradient(circle at bottom left, #0f172a, transparent);
             color: var(--text-main);
             margin: 0;
-            padding: 20px;
-            min-height: 100vh;
+            padding: 15px;
             display: flex;
             justify-content: center;
+            overflow-x: hidden;
         }
 
-        .wrapper { width: 100%; max-width: 480px; }
+        .wrapper { width: 100%; max-width: 420px; }
 
         .brand-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
         }
 
         .brand-header h1 {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
-            letter-spacing: -1px;
+            margin: 0;
             background: linear-gradient(to right, #fff, #71717a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin: 0;
         }
 
         .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--border);
-            border-radius: 28px;
-            padding: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            margin-bottom: 20px;
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 12px;
         }
 
-        .input-box { margin-bottom: 20px; }
-        
+        /* Küçük Giriş Kartı */
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .full-width { grid-column: span 2; }
+
         label {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             color: var(--text-dim);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             display: block;
         }
 
@@ -74,19 +77,12 @@
             width: 100%;
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 14px 18px;
+            border-radius: 10px;
+            padding: 10px 12px;
             color: #fff;
-            font-size: 16px;
+            font-size: 14px;
             outline: none;
             box-sizing: border-box;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        input:focus {
-            border-color: var(--accent);
-            background: rgba(0, 255, 133, 0.05);
-            box-shadow: 0 0 20px rgba(0, 255, 133, 0.1);
         }
 
         .btn-analyze {
@@ -94,114 +90,139 @@
             background: var(--accent);
             color: #000;
             border: none;
-            border-radius: 18px;
-            padding: 18px;
+            border-radius: 12px;
+            padding: 14px;
             font-weight: 800;
-            font-size: 16px;
+            margin-top: 15px;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(0, 255, 133, 0.25);
-            transition: all 0.3s;
         }
 
-        .btn-analyze:active { transform: scale(0.96); }
+        /* Kendi İçinde Kayan Analiz Kartı */
+        #result-panel {
+            display: none;
+            max-height: 350px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) transparent;
+        }
 
-        #result-panel { display: none; }
+        #result-panel::-webkit-scrollbar { width: 4px; }
+        #result-panel::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+        .percentage-display {
+            text-align: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 15px;
+        }
 
         .percentage-text {
-            font-size: 72px;
+            font-size: 56px;
             font-weight: 900;
-            letter-spacing: -4px;
             margin: 0;
-            text-align: center;
             background: linear-gradient(to bottom, #fff, var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .status-badge {
-            display: block;
-            width: fit-content;
-            margin: 0 auto 15px;
-            padding: 6px 16px;
+            display: inline-block;
+            padding: 4px 12px;
             border-radius: 100px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .analysis-log {
-            margin-top: 20px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 16px;
-            padding: 5px;
+            margin-bottom: 5px;
         }
 
         .log-item {
-            padding: 12px 15px;
-            font-size: 13px;
+            padding: 10px;
+            font-size: 12px;
             color: #cbd5e1;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .log-item:last-child { border-bottom: none; }
-        .log-icon { color: var(--accent); }
+        .log-icon { color: var(--accent); font-weight: bold; }
+
     </style>
 </head>
 <body>
 
 <div class="wrapper">
     <div class="brand-header">
-        <h1>PREMIUM ENGINE</h1>
-        <div style="background: rgba(0,255,133,0.1); color: var(--accent); padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 800;">PRO v2.5</div>
+        <h1>TITANIUM ENGINE</h1>
+        <div style="color: var(--accent); font-size: 10px; font-weight: 800;">AUTO-SAVE ON</div>
     </div>
 
     <div class="glass-card">
-        <div class="input-box">
-            <label>Lig Seçimi</label>
-            <select id="league">
-                <option value="italya">Serie A (İtalya)</option>
-                <option value="ispanya">La Liga (İspanya)</option>
-                <option value="almanya">Bundesliga (Almanya)</option>
-                <option value="ingiltere">Premier Lig (İngiltere)</option>
-                <option value="fransa">Ligue 1 (Fransa)</option>
-            </select>
-        </div>
-
-        <div class="input-box">
-            <label>Maksimum npxG / Sh</label>
-            <input type="number" id="npxg" step="0.01" placeholder="0.08">
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-            <div class="input-box">
-                <label>Toplam PPA</label>
-                <input type="number" id="ppa" placeholder="10">
+        <div class="input-grid">
+            <div class="full-width">
+                <label>Lig</label>
+                <select id="league" onchange="saveData()">
+                    <option value="italya">Serie A (İtalya)</option>
+                    <option value="ispanya">La Liga (İspanya)</option>
+                    <option value="almanya">Bundesliga (Almanya)</option>
+                    <option value="ingiltere">Premier Lig (İngiltere)</option>
+                    <option value="fransa">Ligue 1 (Fransa)</option>
+                </select>
             </div>
-            <div class="input-box">
-                <label>Toplam PrgC</label>
-                <input type="number" id="prgc" placeholder="25">
+            <div class="full-width">
+                <label>Maks npxG/Sh</label>
+                <input type="number" id="npxg" step="0.01" oninput="saveData()">
+            </div>
+            <div>
+                <label>PPA</label>
+                <input type="number" id="ppa" oninput="saveData()">
+            </div>
+            <div>
+                <label>PrgC</label>
+                <input type="number" id="prgc" oninput="saveData()">
+            </div>
+            <div class="full-width">
+                <label>Savunma (Tkl+Int)</label>
+                <input type="number" id="tkl" oninput="saveData()">
             </div>
         </div>
-
-        <div class="input-box">
-            <label>Savunma (Tkl+Int)</label>
-            <input type="number" id="tkl" placeholder="38">
-        </div>
-
-        <button class="btn-analyze" onclick="runAnalysis()">ANALİZİ ÇALIŞTIR</button>
+        <button class="btn-analyze" onclick="runAnalysis()">ANALİZ ET</button>
     </div>
 
     <div id="result-panel" class="glass-card">
-        <div id="badge" class="status-badge"></div>
-        <h2 class="percentage-text" id="percDisplay">0%</h2>
-        <div class="analysis-log" id="logList"></div>
+        <div class="percentage-display">
+            <div id="badge" class="status-badge"></div>
+            <h2 class="percentage-text" id="percDisplay">0%</h2>
+        </div>
+        <div id="logList"></div>
     </div>
 </div>
 
 <script>
+// Sayfa yüklendiğinde hafızadan verileri çek
+window.onload = function() {
+    const saved = JSON.parse(localStorage.getItem('metricData'));
+    if (saved) {
+        document.getElementById('league').value = saved.league || 'italya';
+        document.getElementById('npxg').value = saved.npxg || '';
+        document.getElementById('ppa').value = saved.ppa || '';
+        document.getElementById('prgc').value = saved.prgc || '';
+        document.getElementById('tkl').value = saved.tkl || '';
+        if(saved.hasResult) runAnalysis(); // Eğer sonuç varsa otomatik hesapla
+    }
+};
+
+function saveData() {
+    const data = {
+        league: document.getElementById('league').value,
+        npxg: document.getElementById('npxg').value,
+        ppa: document.getElementById('ppa').value,
+        prgc: document.getElementById('prgc').value,
+        tkl: document.getElementById('tkl').value,
+        hasResult: document.getElementById('result-panel').style.display === 'block'
+    };
+    localStorage.setItem('metricData', JSON.stringify(data));
+}
+
 function runAnalysis() {
     const lg = document.getElementById('league').value;
     const npxg = parseFloat(document.getElementById('npxg').value);
@@ -211,7 +232,6 @@ function runAnalysis() {
 
     if(isNaN(npxg) || isNaN(ppa)) return;
 
-    // KALİBRE EDİLMİŞ TOPLAM EŞİKLER
     const thresholds = {
         italya: { npxg: 0.08, ppa: 11, prgc: 32, tkl: 40 },
         ispanya: { npxg: 0.09, ppa: 13, prgc: 30, tkl: 35 },
@@ -223,44 +243,19 @@ function runAnalysis() {
     let score = 55;
     let logs = [];
 
-    // 1. Bitiricilik Kalitesi
-    if (npxg <= thresholds.npxg) {
-        score += 15;
-        logs.push("Şut kalitesi düşük, bitiricilik zayıf.");
-    } else {
-        score -= 25;
-        logs.push("Hücum kalitesi yüksek, risk var.");
-    }
+    if (npxg <= thresholds.npxg) score += 15; else score -= 25;
+    if (ppa <= thresholds.ppa) score += 15; else score -= 20;
+    if (prgc <= thresholds.prgc) score += 10; else score -= 10;
 
-    // 2. Ceza Sahasına Erişim
-    if (ppa <= thresholds.ppa) {
-        score += 15;
-        logs.push("Ceza sahasına pas trafiği çok kısıtlı.");
-    } else {
-        score -= 20;
-        logs.push("Rakip ceza sahasına kolay sızıyor.");
-    }
-
-    // 3. Top Taşıma (PrgC)
-    if (prgc <= thresholds.prgc) {
-        score += 10;
-        logs.push("Dikey top taşıma hızı düşük.");
-    } else {
-        score -= 10;
-        logs.push("Bireysel yeteneklerle penetrasyon riski.");
-    }
-
-    // 4. SAVUNMA ZEKA KATMANI (Senin 1-0'lık maç kalibrasyonu)
     if (tkl >= thresholds.tkl) {
         score += 12;
-        logs.push("Savunma hattı çok aktif ve uyanık.");
+        logs.push("Savunma hattı dirençli.");
     } else if (ppa <= (thresholds.ppa * 0.8)) {
-        // ZEKA BURADA: PPA düşükse, savunma müdahale azlığına ceza yok, ödül var!
         score += 15;
-        logs.push("Üretim yolu tıkalı, savunma zorlanmıyor.");
+        logs.push("Üretim kilitli, savunma güvende.");
     } else {
         score -= 15;
-        logs.push("Savunma müdahale hızı yetersiz.");
+        logs.push("Savunma yerleşimi zayıf.");
     }
 
     score = Math.min(94, Math.max(15, score));
@@ -274,18 +269,19 @@ function runAnalysis() {
     logsDiv.innerHTML = "";
 
     if (score >= 80) {
-        badge.style.background = "rgba(0, 255, 133, 0.15)"; badge.style.color = "var(--accent)"; badge.innerText = "YÜKSEK GÜVEN (ALT)";
+        badge.style.background = "rgba(0, 255, 133, 0.2)"; badge.style.color = "var(--accent)"; badge.innerText = "YÜKSEK GÜVEN";
     } else if (score >= 65) {
-        badge.style.background = "rgba(255, 171, 0, 0.15)"; badge.style.color = "#ffab00"; badge.innerText = "ORTA RİSK";
+        badge.style.background = "rgba(255, 171, 0, 0.2)"; badge.style.color = "#ffab00"; badge.innerText = "ORTA RİSK";
     } else {
-        badge.style.background = "rgba(255, 69, 58, 0.15)"; badge.style.color = "#ff453a"; badge.innerText = "TEHLİKELİ (ÜST)";
+        badge.style.background = "rgba(255, 69, 58, 0.2)"; badge.style.color = "#ff453a"; badge.innerText = "YÜKSEK RİSK";
     }
 
+    logs.push(`Lig Standardı: ${lg.toUpperCase()}`);
     logs.forEach(msg => {
-        logsDiv.innerHTML += `<div class="log-item"><span class="log-icon">✓</span>${msg}</div>`;
+        logsDiv.innerHTML += `<div class="log-item"><span class="log-icon">→</span> ${msg}</div>`;
     });
 
-    gsap.from("#result-panel", { y: 30, opacity: 0, duration: 0.8, ease: "power4.out" });
+    saveData(); // Sonucu da hafızaya kaydet
 }
 </script>
 </body>

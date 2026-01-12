@@ -3,135 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Analiz Motoru | Fotmob Style</title>
+    <title>METRIC ENGINE | Premium Analytics</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
         :root {
-            --fotmob-bg: #121212;
-            --fotmob-card: #1c1c1e;
-            --fotmob-input: #2c2c2e;
-            --fotmob-accent: #00ff85; /* Fotmob yeşili */
-            --fotmob-text: #ffffff;
-            --fotmob-secondary: #8e8e93;
-            --fotmob-border: #3a3a3c;
+            --accent: #00ff85;
+            --bg-dark: #09090b;
+            --glass: rgba(24, 24, 27, 0.8);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-main: #fafafa;
+            --text-dim: #a1a1aa;
         }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--fotmob-bg);
-            color: var(--fotmob-text);
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: var(--bg-dark);
+            background-image: radial-gradient(circle at top right, #1a2e25, transparent), 
+                              radial-gradient(circle at bottom left, #0f172a, transparent);
+            color: var(--text-main);
             margin: 0;
-            padding: 16px;
+            padding: 20px;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
         }
-        .app-container {
-            width: 100%;
-            max-width: 450px;
-        }
-        .header {
-            text-align: left;
-            padding: 20px 0;
-            border-bottom: 1px solid var(--fotmob-border);
-            margin-bottom: 24px;
-        }
-        .header h1 { font-size: 24px; font-weight: 700; margin: 0; }
-        .header p { color: var(--fotmob-secondary); font-size: 14px; margin-top: 4px; }
 
-        .card {
-            background: var(--fotmob-card);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-            border: 1px solid var(--fotmob-border);
+        .wrapper { width: 100%; max-width: 480px; }
+
+        .brand-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 10px 0;
         }
 
-        .input-group { margin-bottom: 20px; }
-        label { 
-            display: block; 
-            font-size: 12px; 
-            text-transform: uppercase; 
-            font-weight: 600; 
-            color: var(--fotmob-secondary);
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
+        .brand-header h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(to right, #fff, #71717a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        select, input {
-            width: 100%;
-            padding: 14px;
-            border-radius: 8px;
-            border: 1px solid var(--fotmob-border);
-            background: var(--fotmob-input);
-            color: white;
-            font-size: 16px;
-            outline: none;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
-        select:focus, input:focus { border-color: var(--fotmob-accent); }
 
-        button {
-            width: 100%;
-            padding: 16px;
-            background: var(--fotmob-accent);
-            border: none;
-            border-radius: 8px;
-            color: #000;
+        .version-tag {
+            font-size: 10px;
+            background: rgba(0, 255, 133, 0.1);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 133, 0.2);
             font-weight: 700;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            margin-bottom: 20px;
+        }
+
+        .input-box { margin-bottom: 20px; position: relative; }
+        
+        label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input, select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            background: rgba(0, 255, 133, 0.05);
+            outline: none;
+            box-shadow: 0 0 20px rgba(0, 255, 133, 0.1);
+        }
+
+        .btn-analyze {
+            width: 100%;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 16px;
+            padding: 18px;
+            font-weight: 800;
             font-size: 16px;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 255, 133, 0.2);
         }
-        button:active { transform: scale(0.98); }
 
-        #result-container {
+        .btn-analyze:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(0, 255, 133, 0.3); }
+
+        /* Result Section */
+        #result-panel {
             display: none;
-            margin-top: 24px;
-            animation: fadeIn 0.4s ease;
+            margin-top: 20px;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .res-header { text-align: center; margin-bottom: 15px; }
-        .percentage-circle {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 6px solid var(--fotmob-accent);
+        .gauge-container {
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        .percentage-text {
+            font-size: 64px;
+            font-weight: 900;
+            letter-spacing: -3px;
+            margin: 0;
+            background: linear-gradient(to bottom, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 800;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+
+        .metric-badge {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 13px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 28px;
-            font-weight: 800;
+            gap: 10px;
         }
-        .status-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        .reason-item {
-            background: rgba(255,255,255,0.05);
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-bottom: 8px;
-            color: #ccc;
-            border-left: 3px solid var(--fotmob-accent);
-        }
+
+        .metric-icon { color: var(--accent); font-weight: bold; }
+
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="header">
-        <h1>Tahmin Motoru</h1>
-        <p>1.5 Alt Stratejik Analiz Sistemi</p>
+<div class="wrapper">
+    <div class="brand-header">
+        <h1>PREMIUM ENGINE</h1>
+        <span class="version-tag">STABLE v2.0</span>
     </div>
 
-    <div class="card">
-        <div class="input-group">
-            <label>Lig</label>
+    <div class="glass-card">
+        <div class="input-box">
+            <label>Lig Seçimi</label>
             <select id="league">
                 <option value="italya">Serie A (İtalya)</option>
                 <option value="ispanya">La Liga (İspanya)</option>
@@ -141,112 +183,97 @@
             </select>
         </div>
 
-        <div class="input-group">
-            <label>npxG / Sh (En Yüksek Takım)</label>
+        <div class="input-box">
+            <label>Maksimum npxG / Sh</label>
             <input type="number" id="npxg" step="0.01" placeholder="0.08">
         </div>
 
-        <div class="input-group">
-            <label>Toplam PPA</label>
-            <input type="number" id="ppa" placeholder="10">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="input-box">
+                <label>Toplam PPA</label>
+                <input type="number" id="ppa" placeholder="10">
+            </div>
+            <div class="input-box">
+                <label>Toplam PrgC</label>
+                <input type="number" id="prgc" placeholder="12">
+            </div>
         </div>
 
-        <div class="input-group">
-            <label>Toplam PrgC</label>
-            <input type="number" id="prgc" placeholder="12">
-        </div>
-
-        <div class="input-group">
-            <label>Toplam Def 3rd Tkl+Int</label>
+        <div class="input-box">
+            <label>Savunma (Tkl+Int)</label>
             <input type="number" id="tkl" placeholder="35">
         </div>
 
-        <button onclick="analyzeMatch()">ANALİZİ BAŞLAT</button>
+        <button class="btn-analyze" onclick="premiumAnalyze()">ANALİZİ ÇALIŞTIR</button>
     </div>
 
-    <div id="result-container" class="card">
-        <div class="res-header">
-            <div id="status" class="status-badge"></div>
-            <div class="percentage-circle" id="percDisplay">0%</div>
-            <div id="summary" style="font-weight: 600; font-size: 18px;"></div>
+    <div id="result-panel" class="glass-card">
+        <div class="gauge-container">
+            <div id="statusPill" class="status-pill">DÜŞÜK RİSK</div>
+            <h2 class="percentage-text" id="percVal">84%</h2>
+            <p id="summaryText" style="color: var(--text-dim); font-size: 14px; margin-top: -10px;"></p>
         </div>
-        <div id="reasons"></div>
+        <div id="reasonsList"></div>
     </div>
 </div>
 
 <script>
-function analyzeMatch() {
+function premiumAnalyze() {
     const lg = document.getElementById('league').value;
     const npxg = parseFloat(document.getElementById('npxg').value);
     const ppa = parseFloat(document.getElementById('ppa').value);
     const prgc = parseFloat(document.getElementById('prgc').value);
     const tkl = parseFloat(document.getElementById('tkl').value);
 
-    if(isNaN(npxg) || isNaN(ppa)) { alert("Lütfen tüm verileri girin."); return; }
+    if(isNaN(npxg) || isNaN(ppa)) return;
 
-    const thresholds = {
+    const t = {
         italya: { npxg: 0.08, ppa: 10, prgc: 12, tkl: 40 },
         ispanya: { npxg: 0.09, ppa: 12, prgc: 10, tkl: 35 },
         almanya: { npxg: 0.10, ppa: 14, prgc: 15, tkl: 30 },
         ingiltere: { npxg: 0.09, ppa: 13, prgc: 18, tkl: 32 },
         fransa: { npxg: 0.09, ppa: 11, prgc: 14, tkl: 38 }
-    };
+    }[lg];
 
-    const t = thresholds[lg];
-    let score = 55; 
-    let analysisNotes = [];
+    let score = 55;
+    let notes = [];
 
-    // npxG/Sh Veto & Bonus
-    if (npxg <= t.npxg) { score += 12; } else { score -= 25; analysisNotes.push("Hücum bitiricilik kalitesi lig ortalamasının üstünde."); }
-
-    // PPA Control
-    if (ppa <= t.ppa) { score += 10; } else { score -= 15; analysisNotes.push("Top ceza sahasına çok sık giriyor."); }
-
-    // PrgC Control
-    if (prgc <= t.prgc) { score += 8; } else { score -= 8; analysisNotes.push("Dikey topla kat etme oranı yüksek."); }
-
-    // Tkl+Int Intelligence (Zeka Katmanı)
+    if (npxg <= t.npxg) score += 12; else { score -= 25; notes.push("Bitiricilik kalitesi riskli."); }
+    if (ppa <= t.ppa) score += 10; else { score -= 15; notes.push("Ceza sahası pas trafiği yoğun."); }
+    if (prgc <= t.prgc) score += 8; else { score -= 8; notes.push("Dikey taşıma tehdidi yüksek."); }
+    
     if (tkl >= t.tkl) {
         score += 10;
-        analysisNotes.push("Savunma bloğu oldukça aktif ve yerleşik.");
+        notes.push("Savunma bloğu aşırı dirençli.");
     } else if (ppa < (t.ppa * 0.75)) {
-        score += 7; 
-        analysisNotes.push("Savunma hamlesi az ancak rakip kale önüne gelemiyor (Kilitlenmiş Oyun).");
+        score += 7;
+        notes.push("Hamle az ama üretim yolu kapalı.");
     } else {
         score -= 12;
-        analysisNotes.push("Savunma müdahale yoğunluğu tehlikeli seviyede düşük.");
+        notes.push("Savunma reaksiyonu zayıf.");
     }
 
-    if (score > 94) score = 94;
-    if (score < 15) score = 15;
+    score = Math.min(94, Math.max(15, score));
 
-    document.getElementById('result-container').style.display = 'block';
-    document.getElementById('percDisplay').innerText = '%' + score;
+    const panel = document.getElementById('result-panel');
+    panel.style.display = 'block';
+    document.getElementById('percVal').innerText = '%' + score;
     
-    const status = document.getElementById('status');
-    const summary = document.getElementById('summary');
-    const reasonsDiv = document.getElementById('reasons');
-    reasonsDiv.innerHTML = "";
+    const pill = document.getElementById('statusPill');
+    const reasons = document.getElementById('reasonsList');
+    reasons.innerHTML = "";
 
     if (score >= 80) {
-        status.style.background = "#00ff85"; status.style.color = "#000"; status.innerText = "YÜKSEK GÜVEN";
-        summary.innerText = "Kilitli Maç Senaryosu";
-    } else if (score >= 65) {
-        status.style.background = "#eab308"; status.style.color = "#000"; status.innerText = "ORTA RİSK";
-        summary.innerText = "İstatistiksel Sınırda";
+        pill.style.background = "rgba(0, 255, 133, 0.2)"; pill.style.color = "var(--accent)"; pill.innerText = "Yüksek Güven / Kilitli";
     } else {
-        status.style.background = "#ef4444"; status.style.color = "#fff"; status.innerText = "ZAYIF İHTİMAL";
-        summary.innerText = "Açık Oyun Riski";
+        pill.style.background = "rgba(239, 68, 68, 0.2)"; pill.style.color = "#ef4444"; pill.innerText = "Yüksek Risk / Açık";
     }
 
-    analysisNotes.forEach(note => {
-        let div = document.createElement('div');
-        div.className = "reason-item";
-        div.innerText = note;
-        reasonsDiv.appendChild(div);
+    notes.forEach(n => {
+        reasons.innerHTML += `<div class="metric-badge"><span class="metric-icon">→</span> ${n}</div>`;
     });
 
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    gsap.from("#result-panel", { y: 30, opacity: 0, duration: 0.6, ease: "power4.out" });
 }
 </script>
 </body>

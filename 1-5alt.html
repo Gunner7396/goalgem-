@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>METRIC ENGINE | Premium Analytics</title>
+    <title>METRIC ENGINE | Titanium Edition</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
         :root {
             --accent: #00ff85;
             --bg-dark: #09090b;
-            --glass: rgba(24, 24, 27, 0.8);
+            --glass: rgba(24, 24, 27, 0.9);
             --border: rgba(255, 255, 255, 0.1);
             --text-main: #fafafa;
             --text-dim: #a1a1aa;
         }
 
         body {
-            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             background: var(--bg-dark);
             background-image: radial-gradient(circle at top right, #1a2e25, transparent), 
                               radial-gradient(circle at bottom left, #0f172a, transparent);
@@ -35,7 +35,6 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            padding: 10px 0;
         }
 
         .brand-header h1 {
@@ -45,30 +44,21 @@
             background: linear-gradient(to right, #fff, #71717a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-        }
-
-        .version-tag {
-            font-size: 10px;
-            background: rgba(0, 255, 133, 0.1);
-            color: var(--accent);
-            padding: 4px 10px;
-            border-radius: 20px;
-            border: 1px solid rgba(0, 255, 133, 0.2);
-            font-weight: 700;
+            margin: 0;
         }
 
         .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--border);
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             margin-bottom: 20px;
         }
 
-        .input-box { margin-bottom: 20px; position: relative; }
+        .input-box { margin-bottom: 20px; }
         
         label {
             font-size: 11px;
@@ -76,26 +66,26 @@
             color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: block;
         }
 
         input, select {
             width: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px 16px;
+            border-radius: 14px;
+            padding: 14px 18px;
             color: #fff;
             font-size: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
             box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         input:focus {
             border-color: var(--accent);
             background: rgba(0, 255, 133, 0.05);
-            outline: none;
             box-shadow: 0 0 20px rgba(0, 255, 133, 0.1);
         }
 
@@ -104,63 +94,60 @@
             background: var(--accent);
             color: #000;
             border: none;
-            border-radius: 16px;
+            border-radius: 18px;
             padding: 18px;
             font-weight: 800;
             font-size: 16px;
             cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 255, 133, 0.25);
             transition: all 0.3s;
-            box-shadow: 0 10px 20px rgba(0, 255, 133, 0.2);
         }
 
-        .btn-analyze:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(0, 255, 133, 0.3); }
+        .btn-analyze:active { transform: scale(0.96); }
 
-        /* Result Section */
-        #result-panel {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .gauge-container {
-            text-align: center;
-            padding: 20px 0;
-            position: relative;
-        }
+        #result-panel { display: none; }
 
         .percentage-text {
-            font-size: 64px;
+            font-size: 72px;
             font-weight: 900;
-            letter-spacing: -3px;
+            letter-spacing: -4px;
             margin: 0;
+            text-align: center;
             background: linear-gradient(to bottom, #fff, var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .status-pill {
-            display: inline-block;
+        .status-badge {
+            display: block;
+            width: fit-content;
+            margin: 0 auto 15px;
             padding: 6px 16px;
             border-radius: 100px;
             font-size: 12px;
             font-weight: 800;
-            margin-top: 10px;
             text-transform: uppercase;
         }
 
-        .metric-badge {
+        .analysis-log {
+            margin-top: 20px;
             background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 10px;
+            border-radius: 16px;
+            padding: 5px;
+        }
+
+        .log-item {
+            padding: 12px 15px;
             font-size: 13px;
+            color: #cbd5e1;
             display: flex;
             align-items: center;
             gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .metric-icon { color: var(--accent); font-weight: bold; }
-
+        .log-item:last-child { border-bottom: none; }
+        .log-icon { color: var(--accent); }
     </style>
 </head>
 <body>
@@ -168,7 +155,7 @@
 <div class="wrapper">
     <div class="brand-header">
         <h1>PREMIUM ENGINE</h1>
-        <span class="version-tag">STABLE v2.0</span>
+        <div style="background: rgba(0,255,133,0.1); color: var(--accent); padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 800;">PRO v2.5</div>
     </div>
 
     <div class="glass-card">
@@ -195,30 +182,27 @@
             </div>
             <div class="input-box">
                 <label>Toplam PrgC</label>
-                <input type="number" id="prgc" placeholder="12">
+                <input type="number" id="prgc" placeholder="25">
             </div>
         </div>
 
         <div class="input-box">
             <label>Savunma (Tkl+Int)</label>
-            <input type="number" id="tkl" placeholder="35">
+            <input type="number" id="tkl" placeholder="38">
         </div>
 
-        <button class="btn-analyze" onclick="premiumAnalyze()">ANALİZİ ÇALIŞTIR</button>
+        <button class="btn-analyze" onclick="runAnalysis()">ANALİZİ ÇALIŞTIR</button>
     </div>
 
     <div id="result-panel" class="glass-card">
-        <div class="gauge-container">
-            <div id="statusPill" class="status-pill">DÜŞÜK RİSK</div>
-            <h2 class="percentage-text" id="percVal">84%</h2>
-            <p id="summaryText" style="color: var(--text-dim); font-size: 14px; margin-top: -10px;"></p>
-        </div>
-        <div id="reasonsList"></div>
+        <div id="badge" class="status-badge"></div>
+        <h2 class="percentage-text" id="percDisplay">0%</h2>
+        <div class="analysis-log" id="logList"></div>
     </div>
 </div>
 
 <script>
-function premiumAnalyze() {
+function runAnalysis() {
     const lg = document.getElementById('league').value;
     const npxg = parseFloat(document.getElementById('npxg').value);
     const ppa = parseFloat(document.getElementById('ppa').value);
@@ -227,53 +211,81 @@ function premiumAnalyze() {
 
     if(isNaN(npxg) || isNaN(ppa)) return;
 
-    const t = {
-        italya: { npxg: 0.08, ppa: 10, prgc: 12, tkl: 40 },
-        ispanya: { npxg: 0.09, ppa: 12, prgc: 10, tkl: 35 },
-        almanya: { npxg: 0.10, ppa: 14, prgc: 15, tkl: 30 },
-        ingiltere: { npxg: 0.09, ppa: 13, prgc: 18, tkl: 32 },
-        fransa: { npxg: 0.09, ppa: 11, prgc: 14, tkl: 38 }
+    // KALİBRE EDİLMİŞ TOPLAM EŞİKLER
+    const thresholds = {
+        italya: { npxg: 0.08, ppa: 11, prgc: 32, tkl: 40 },
+        ispanya: { npxg: 0.09, ppa: 13, prgc: 30, tkl: 35 },
+        almanya: { npxg: 0.10, ppa: 15, prgc: 38, tkl: 30 },
+        ingiltere: { npxg: 0.09, ppa: 14, prgc: 40, tkl: 32 },
+        fransa: { npxg: 0.09, ppa: 12, prgc: 34, tkl: 38 }
     }[lg];
 
     let score = 55;
-    let notes = [];
+    let logs = [];
 
-    if (npxg <= t.npxg) score += 12; else { score -= 25; notes.push("Bitiricilik kalitesi riskli."); }
-    if (ppa <= t.ppa) score += 10; else { score -= 15; notes.push("Ceza sahası pas trafiği yoğun."); }
-    if (prgc <= t.prgc) score += 8; else { score -= 8; notes.push("Dikey taşıma tehdidi yüksek."); }
-    
-    if (tkl >= t.tkl) {
-        score += 10;
-        notes.push("Savunma bloğu aşırı dirençli.");
-    } else if (ppa < (t.ppa * 0.75)) {
-        score += 7;
-        notes.push("Hamle az ama üretim yolu kapalı.");
+    // 1. Bitiricilik Kalitesi
+    if (npxg <= thresholds.npxg) {
+        score += 15;
+        logs.push("Şut kalitesi düşük, bitiricilik zayıf.");
     } else {
-        score -= 12;
-        notes.push("Savunma reaksiyonu zayıf.");
+        score -= 25;
+        logs.push("Hücum kalitesi yüksek, risk var.");
+    }
+
+    // 2. Ceza Sahasına Erişim
+    if (ppa <= thresholds.ppa) {
+        score += 15;
+        logs.push("Ceza sahasına pas trafiği çok kısıtlı.");
+    } else {
+        score -= 20;
+        logs.push("Rakip ceza sahasına kolay sızıyor.");
+    }
+
+    // 3. Top Taşıma (PrgC)
+    if (prgc <= thresholds.prgc) {
+        score += 10;
+        logs.push("Dikey top taşıma hızı düşük.");
+    } else {
+        score -= 10;
+        logs.push("Bireysel yeteneklerle penetrasyon riski.");
+    }
+
+    // 4. SAVUNMA ZEKA KATMANI (Senin 1-0'lık maç kalibrasyonu)
+    if (tkl >= thresholds.tkl) {
+        score += 12;
+        logs.push("Savunma hattı çok aktif ve uyanık.");
+    } else if (ppa <= (thresholds.ppa * 0.8)) {
+        // ZEKA BURADA: PPA düşükse, savunma müdahale azlığına ceza yok, ödül var!
+        score += 15;
+        logs.push("Üretim yolu tıkalı, savunma zorlanmıyor.");
+    } else {
+        score -= 15;
+        logs.push("Savunma müdahale hızı yetersiz.");
     }
 
     score = Math.min(94, Math.max(15, score));
 
     const panel = document.getElementById('result-panel');
     panel.style.display = 'block';
-    document.getElementById('percVal').innerText = '%' + score;
+    document.getElementById('percDisplay').innerText = '%' + score;
     
-    const pill = document.getElementById('statusPill');
-    const reasons = document.getElementById('reasonsList');
-    reasons.innerHTML = "";
+    const badge = document.getElementById('badge');
+    const logsDiv = document.getElementById('logList');
+    logsDiv.innerHTML = "";
 
     if (score >= 80) {
-        pill.style.background = "rgba(0, 255, 133, 0.2)"; pill.style.color = "var(--accent)"; pill.innerText = "Yüksek Güven / Kilitli";
+        badge.style.background = "rgba(0, 255, 133, 0.15)"; badge.style.color = "var(--accent)"; badge.innerText = "YÜKSEK GÜVEN (ALT)";
+    } else if (score >= 65) {
+        badge.style.background = "rgba(255, 171, 0, 0.15)"; badge.style.color = "#ffab00"; badge.innerText = "ORTA RİSK";
     } else {
-        pill.style.background = "rgba(239, 68, 68, 0.2)"; pill.style.color = "#ef4444"; pill.innerText = "Yüksek Risk / Açık";
+        badge.style.background = "rgba(255, 69, 58, 0.15)"; badge.style.color = "#ff453a"; badge.innerText = "TEHLİKELİ (ÜST)";
     }
 
-    notes.forEach(n => {
-        reasons.innerHTML += `<div class="metric-badge"><span class="metric-icon">→</span> ${n}</div>`;
+    logs.forEach(msg => {
+        logsDiv.innerHTML += `<div class="log-item"><span class="log-icon">✓</span>${msg}</div>`;
     });
 
-    gsap.from("#result-panel", { y: 30, opacity: 0, duration: 0.6, ease: "power4.out" });
+    gsap.from("#result-panel", { y: 30, opacity: 0, duration: 0.8, ease: "power4.out" });
 }
 </script>
 </body>

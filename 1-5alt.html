@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>METRIC ENGINE | Tactical Pro</title>
+    <title>METRIC ENGINE | History Edition</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
         :root {
@@ -23,161 +23,130 @@
                               radial-gradient(circle at bottom left, #0f172a, transparent);
             color: var(--text-main);
             margin: 0;
-            padding: 15px;
+            padding: 10px;
             display: flex;
             justify-content: center;
         }
 
-        .wrapper { width: 100%; max-width: 420px; }
+        .wrapper { width: 100%; max-width: 440px; }
 
         .brand-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin: 10px 5px;
         }
 
-        .brand-header h1 {
-            font-size: 16px;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: 1px;
-            color: var(--text-dim);
-        }
+        .brand-header h1 { font-size: 16px; font-weight: 800; margin: 0; color: var(--text-dim); }
 
         .glass-card {
             background: var(--glass);
             backdrop-filter: blur(25px);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 15px;
             margin-bottom: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .input-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .full-width { grid-column: span 2; }
 
-        label {
-            font-size: 9px;
-            font-weight: 800;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            margin-bottom: 6px;
-            display: block;
-            letter-spacing: 0.5px;
-        }
+        label { font-size: 9px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; margin-bottom: 4px; display: block; }
 
         input, select {
             width: 100%;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px;
+            border-radius: 10px;
+            padding: 10px;
             color: #fff;
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
             box-sizing: border-box;
-            transition: 0.3s;
         }
 
-        input:focus { border-color: var(--accent); background: rgba(0, 255, 133, 0.05); }
+        input:focus { border-color: var(--accent); }
 
         .btn-analyze {
             width: 100%;
             background: var(--accent);
             color: #000;
             border: none;
-            border-radius: 14px;
-            padding: 16px;
+            border-radius: 12px;
+            padding: 14px;
             font-weight: 900;
-            margin-top: 15px;
+            margin-top: 12px;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        /* Dahili Scroll Analiz Kartı */
-        #result-panel {
-            display: none;
-            max-height: 400px;
+        /* Geçmiş Listesi - Kendi İçinde Kayan Bölüm */
+        .history-container {
+            max-height: 450px;
             overflow-y: auto;
-            padding-top: 10px;
+            padding-right: 5px;
+            scrollbar-width: thin;
         }
 
-        #result-panel::-webkit-scrollbar { width: 3px; }
-        #result-panel::-webkit-scrollbar-thumb { background: var(--accent); }
+        .history-container::-webkit-scrollbar { width: 3px; }
+        .history-container::-webkit-scrollbar-thumb { background: var(--accent); }
 
-        .summary-box {
-            text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .percentage-text {
-            font-size: 64px;
-            font-weight: 900;
-            margin: 5px 0;
-            line-height: 1;
-            background: linear-gradient(to bottom, #fff, var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .tactical-report {
-            margin-top: 15px;
-        }
-
-        .report-title {
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--accent);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .log-item {
-            background: rgba(255,255,255,0.02);
+        .history-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 15px;
             padding: 12px;
-            border-radius: 12px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 8px;
-            border-left: 3px solid var(--accent);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 8px;
         }
 
-        .log-header {
-            font-size: 11px;
-            font-weight: 800;
-            margin-bottom: 4px;
-            color: var(--text-main);
-        }
+        .team-names { font-size: 13px; font-weight: 700; color: #fff; }
+        .perc-badge { font-size: 20px; font-weight: 900; color: var(--accent); }
 
-        .log-desc {
-            font-size: 12px;
-            color: var(--text-dim);
-            line-height: 1.4;
+        .item-details { font-size: 11px; color: var(--text-dim); line-height: 1.4; }
+        
+        .clear-history {
+            font-size: 10px;
+            color: var(--danger);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 5px;
+            font-weight: 700;
         }
-
-        .risk-high { border-left-color: var(--danger); }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
     <div class="brand-header">
-        <h1>TACTICAL ENGINE</h1>
-        <div id="saveIndicator" style="color: var(--accent); font-size: 9px; font-weight: 800; opacity: 0.5;">● CLOUD SYNC</div>
+        <h1>HISTORY ENGINE</h1>
+        <button class="clear-history" onclick="clearHistory()">LİSTEYİ TEMİZLE</button>
     </div>
 
     <div class="glass-card">
         <div class="input-grid">
+            <div>
+                <label>Ev Sahibi</label>
+                <input type="text" id="homeTeam" placeholder="A Takımı">
+            </div>
+            <div>
+                <label>Deplasman</label>
+                <input type="text" id="awayTeam" placeholder="B Takımı">
+            </div>
             <div class="full-width">
-                <label>Organizasyon / Lig</label>
-                <select id="league" onchange="saveAndRun()">
+                <label>Lig</label>
+                <select id="league">
                     <option value="italya">Serie A (İtalya)</option>
                     <option value="ispanya">La Liga (İspanya)</option>
                     <option value="almanya">Bundesliga (Almanya)</option>
@@ -186,67 +155,27 @@
                 </select>
             </div>
             <div class="full-width">
-                <label>Şut Kalitesi (npxG/Sh)</label>
-                <input type="number" id="npxg" step="0.01" oninput="saveData()">
+                <label>npxG/Sh</label>
+                <input type="number" id="npxg" step="0.01">
             </div>
-            <div>
-                <label>Ceza Sahası Pas (PPA)</label>
-                <input type="number" id="ppa" oninput="saveData()">
-            </div>
-            <div>
-                <label>Top Taşıma (PrgC)</label>
-                <input type="number" id="prgc" oninput="saveData()">
-            </div>
-            <div class="full-width">
-                <label>Savunma Aksiyonu (Tkl+Int)</label>
-                <input type="number" id="tkl" oninput="saveData()">
-            </div>
+            <div><label>PPA</label><input type="number" id="ppa"></div>
+            <div><label>PrgC</label><input type="number" id="prgc"></div>
+            <div class="full-width"><label>Tkl+Int</label><input type="number" id="tkl"></div>
         </div>
-        <button class="btn-analyze" onclick="runAnalysis()">Analizi Başlat</button>
+        <button class="btn-analyze" onclick="runAnalysis()">ANALİZİ KAYDET</button>
     </div>
 
-    <div id="result-panel" class="glass-card">
-        <div class="summary-box">
-            <div id="statusTag" style="font-size: 10px; font-weight: 900; letter-spacing: 1px;">SİSTEM ANALİZİ</div>
-            <h2 class="percentage-text" id="percDisplay">0%</h2>
-            <div id="verdict" style="font-size: 12px; font-weight: 600; color: var(--text-dim);"></div>
-        </div>
-        
-        <div class="tactical-report">
-            <div class="report-title">Taktiksel Saha Raporu</div>
-            <div id="logContainer"></div>
-        </div>
-    </div>
+    <div id="historyList" class="history-container"></div>
 </div>
 
 <script>
 window.onload = function() {
-    const saved = JSON.parse(localStorage.getItem('metricData_v3'));
-    if (saved) {
-        document.getElementById('league').value = saved.league;
-        document.getElementById('npxg').value = saved.npxg;
-        document.getElementById('ppa').value = saved.ppa;
-        document.getElementById('prgc').value = saved.prgc;
-        document.getElementById('tkl').value = saved.tkl;
-        if(saved.hasResult) runAnalysis();
-    }
+    renderHistory();
 };
 
-function saveData() {
-    const data = {
-        league: document.getElementById('league').value,
-        npxg: document.getElementById('npxg').value,
-        ppa: document.getElementById('ppa').value,
-        prgc: document.getElementById('prgc').value,
-        tkl: document.getElementById('tkl').value,
-        hasResult: document.getElementById('result-panel').style.display === 'block'
-    };
-    localStorage.setItem('metricData_v3', JSON.stringify(data));
-}
-
-function saveAndRun() { saveData(); runAnalysis(); }
-
 function runAnalysis() {
+    const home = document.getElementById('homeTeam').value || "Bilinmeyen";
+    const away = document.getElementById('awayTeam').value || "Bilinmeyen";
     const lg = document.getElementById('league').value;
     const npxg = parseFloat(document.getElementById('npxg').value);
     const ppa = parseFloat(document.getElementById('ppa').value);
@@ -256,71 +185,72 @@ function runAnalysis() {
     if(isNaN(npxg) || isNaN(ppa)) return;
 
     const thresholds = {
-        italya: { npxg: 0.08, ppa: 11, prgc: 32, tkl: 40, name: "İtalya Serie A" },
-        ispanya: { npxg: 0.09, ppa: 13, prgc: 30, tkl: 35, name: "İspanya La Liga" },
-        almanya: { npxg: 0.10, ppa: 15, prgc: 38, tkl: 30, name: "Almanya Bundesliga" },
-        ingiltere: { npxg: 0.09, ppa: 14, prgc: 40, tkl: 32, name: "İngiltere Premier Lig" },
-        fransa: { npxg: 0.09, ppa: 12, prgc: 34, tkl: 38, name: "Fransa Ligue 1" }
+        italya: { npxg: 0.08, ppa: 11, prgc: 32, tkl: 40 },
+        ispanya: { npxg: 0.09, ppa: 13, prgc: 30, tkl: 35 },
+        almanya: { npxg: 0.10, ppa: 15, prgc: 38, tkl: 30 },
+        ingiltere: { npxg: 0.09, ppa: 14, prgc: 40, tkl: 32 },
+        fransa: { npxg: 0.09, ppa: 12, prgc: 34, tkl: 38 }
     }[lg];
 
     let score = 55;
-    let reports = [];
+    let report = "";
 
-    // Detaylı Futbol Yorumu Algoritması
-    if (npxg <= thresholds.npxg) {
-        score += 15;
-        reports.push({h: "BİTİRİCİLİK KRİZİ", d: "Oyuncular kale önünde panik halinde. Net vuruş kalitesi lig ortalamasının altında.", r: false});
-    } else {
-        score -= 25;
-        reports.push({h: "KESKİN NİŞANCI RİSKİ", d: "Düşük pozisyon sayısına rağmen vuruş kalitesi çok yüksek. Tek şans golle sonuçlanabilir.", r: true});
-    }
-
-    if (ppa <= thresholds.ppa) {
-        score += 15;
-        reports.push({h: "BLOKE EDİLMİŞ BÖLGE", d: "Ceza sahası çevresinde 'etten duvar' örülmüş. Pas kanalları tamamen kapalı.", r: false});
-    } else {
-        score -= 20;
-        reports.push({h: "SAVUNMA SIZINTISI", d: "Rakip ceza sahasına sızmakta zorlanmıyor. Savunma arkası koşular risk yaratıyor.", r: true});
-    }
-
-    if (prgc <= thresholds.prgc) {
-        score += 10;
-        reports.push({h: "STATİK OYUN", d: "Dikey top taşıma yok denecek kadar az. Oyun orta sahada yana paslarla boğulmuş durumda.", r: false});
-    } else {
-        score -= 10;
-        reports.push({h: "DİNAMİK PENETRASYON", d: "Bireysel yetenekler topla mesafe katediyor. Kontra atak ihtimali kağıt üzerinde yüksek.", r: true});
-    }
-
-    if (tkl >= thresholds.tkl) {
-        score += 12;
-        reports.push({h: "AGRESİF MÜDAHALE", d: "Savunma hattı temastan kaçınmıyor. Rakip oyun kurucular sürekli baskı altında.", r: false});
-    } else if (ppa <= (thresholds.ppa * 0.8)) {
-        score += 15;
-        reports.push({h: "PASİF KONTROL", d: "Savunma hamle yapma gereği duymuyor çünkü top tehlikeli bölgeye hiç yaklaşmıyor.", r: false});
-    } else {
-        score -= 15;
-        reports.push({h: "YUMUŞAK SAVUNMA", d: "Müdahale sayısı yetersiz. Rakibe oyun kurması için çok fazla alan ve zaman tanınıyor.", r: true});
-    }
+    if (npxg <= thresholds.npxg) score += 15; else score -= 25;
+    if (ppa <= thresholds.ppa) { score += 15; report += "● Kilitli Bölge "; } else { score -= 20; report += "● Savunma Delindi "; }
+    if (prgc <= thresholds.prgc) score += 10; else score -= 10;
+    
+    if (tkl >= thresholds.tkl || ppa <= (thresholds.ppa * 0.8)) score += 15; else score -= 15;
 
     score = Math.min(94, Math.max(15, score));
-    
-    document.getElementById('result-panel').style.display = 'block';
-    document.getElementById('percDisplay').innerText = '%' + score;
-    document.getElementById('verdict').innerText = `${thresholds.name} Standartlarında Analiz Edildi`;
 
-    const logsDiv = document.getElementById('logContainer');
-    logsDiv.innerHTML = "";
-    reports.forEach(item => {
-        logsDiv.innerHTML += `
-            <div class="log-item ${item.r ? 'risk-high' : ''}">
-                <div class="log-header">${item.h}</div>
-                <div class="log-desc">${item.d}</div>
+    // Analizi Hafızaya Ekle
+    const newAnalysis = {
+        id: Date.now(),
+        teams: `${home} vs ${away}`,
+        league: lg.toUpperCase(),
+        score: score,
+        summary: report,
+        data: `xG: ${npxg} | PPA: ${ppa} | PrgC: ${prgc} | Tkl: ${tkl}`
+    };
+
+    let history = JSON.parse(localStorage.getItem('matchHistory')) || [];
+    history.unshift(newAnalysis); // En yeni en üste
+    localStorage.setItem('matchHistory', JSON.stringify(history));
+
+    renderHistory();
+    
+    // Girişleri temizle
+    document.getElementById('homeTeam').value = "";
+    document.getElementById('awayTeam').value = "";
+}
+
+function renderHistory() {
+    const history = JSON.parse(localStorage.getItem('matchHistory')) || [];
+    const container = document.getElementById('historyList');
+    container.innerHTML = history.length === 0 ? '<p style="text-align:center; color:var(--text-dim); font-size:12px;">Henüz analiz kaydedilmedi.</p>' : "";
+
+    history.forEach(item => {
+        const color = item.score >= 80 ? 'var(--accent)' : (item.score >= 65 ? '#ffab00' : 'var(--danger)');
+        container.innerHTML += `
+            <div class="history-item">
+                <div class="item-header">
+                    <div class="team-names">${item.teams}<br><span style="font-size:9px; color:var(--text-dim)">${item.league}</span></div>
+                    <div class="perc-badge" style="color: ${color}">%${item.score}</div>
+                </div>
+                <div class="item-details">
+                    <div style="color:var(--accent); font-weight:700; margin-bottom:4px;">${item.summary}</div>
+                    <div>${item.data}</div>
+                </div>
             </div>
         `;
     });
+}
 
-    saveData();
-    gsap.from("#result-panel", { opacity: 0, y: 20, duration: 0.5 });
+function clearHistory() {
+    if(confirm("Tüm analiz geçmişi silinecek. Emin misin?")) {
+        localStorage.removeItem('matchHistory');
+        renderHistory();
+    }
 }
 </script>
 </body>

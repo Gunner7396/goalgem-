@@ -2,172 +2,158 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Gemini Ultra-Hassas 1.5 Alt Analiz Paneli</title>
+    <title>Kuantum 1.5 Alt Analiz Paneli v2.0</title>
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9; --danger: #ef4444; --success: #22c55e; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; padding: 20px; }
-        .container { width: 900px; background: var(--card); padding: 30px; border-radius: 15px; shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        h1 { text-align: center; color: var(--accent); margin-bottom: 5px; }
-        p.subtitle { text-align: center; font-size: 0.9em; opacity: 0.7; margin-bottom: 25px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .league-select { grid-column: span 2; margin-bottom: 20px; }
-        select, input { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 5px; margin-top: 5px; }
-        label { font-size: 0.85em; font-weight: bold; color: var(--accent); }
-        .team-box { border: 1px solid #334155; padding: 15px; border-radius: 10px; }
-        .btn { grid-column: span 2; padding: 15px; background: var(--accent); color: #0f172a; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 1.1em; margin-top: 20px; }
-        #result { grid-column: span 2; margin-top: 25px; padding: 20px; border-radius: 10px; display: none; }
-        .warning { color: var(--danger); font-size: 0.85em; margin-top: 10px; display: block; }
-        .metric-group { margin-bottom: 15px; }
-        .gauge-container { text-align: center; margin-bottom: 20px; }
-        .gauge-value { font-size: 2.5em; font-weight: bold; }
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9; --danger: #ef4444; --success: #22c55e; --warning: #f59e0b; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; }
+        .container { width: 950px; background: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
+        h1 { text-align: center; color: var(--accent); margin-bottom: 5px; font-size: 2em; }
+        .subtitle { text-align: center; opacity: 0.6; margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .full-width { grid-column: span 2; }
+        .team-box { background: #1a2233; border: 1px solid #334155; padding: 20px; border-radius: 12px; }
+        h3 { border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-top: 0; }
+        label { display: block; font-size: 0.85em; font-weight: bold; margin-bottom: 5px; color: var(--accent); }
+        select, input { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 18px; background: var(--accent); color: #0f172a; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; font-size: 1.2em; transition: 0.3s; }
+        .btn:hover { background: #0ea5e9; transform: translateY(-2px); }
+        #result { margin-top: 30px; padding: 25px; border-radius: 12px; display: none; background: #1e293b; border: 2px solid #334155; }
+        .gauge-area { text-align: center; margin-bottom: 20px; }
+        .score { font-size: 4em; font-weight: 900; line-height: 1; }
+        .league-badge { display: inline-block; padding: 5px 15px; background: #334155; border-radius: 20px; font-size: 0.9em; margin-bottom: 10px; }
+        .detail-item { padding: 8px 0; border-bottom: 1px solid #334155; font-size: 0.95em; }
+        .status-success { color: var(--success); }
+        .status-warning { color: var(--warning); }
+        .status-danger { color: var(--danger); }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; font-size: 0.9em; }
+        input[type="checkbox"] { width: auto; margin: 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>Kuantum 1.5 Alt Analizörü</h1>
-    <p class="subtitle">5 Büyük Lig / Ultra-Hassas Eşik Algoritması</p>
+    <p class="subtitle">Dinamik Lig Eşikleri & Derin Blok Korumalı Akıllı Model</p>
 
     <div class="grid">
-        <div class="league-select">
-            <label>Lig Seçimi (Eşikleri Otomatik Yükler)</label>
+        <div class="full-width">
+            <label>Lig Analiz Modu</label>
             <select id="league">
-                <option value="ita">İtalya Serie A</option>
-                <option value="esp">İspanya La Liga</option>
-                <option value="fra">Fransa Ligue 1</option>
-                <option value="eng">İngiltere Premier League</option>
-                <option value="ger">Almanya Bundesliga</option>
+                <option value="ita">İtalya Serie A (Savunma Disiplini Odaklı)</option>
+                <option value="esp">İspanya La Liga (Pas Trafiği & Sızma Odaklı)</option>
+                <option value="fra">Fransa Ligue 1 (Fiziksel Direnç Odaklı)</option>
+                <option value="eng">İngiltere Premier League (Hızlı Geçiş & Kaos Odaklı)</option>
+                <option value="ger">Almanya Bundesliga (Yüksek Bitiricilik Toleransı)</option>
             </select>
         </div>
 
         <div class="team-box">
-            <h3>Ev Sahibi (A)</h3>
-            <div class="metric-group">
-                <label>npxG / Per Shot (Son 5 Maç)</label>
-                <input type="number" id="a_npxg" step="0.01" value="0.08">
+            <h3>Ev Sahibi</h3>
+            <label>npxG / Sh (Şut Kalitesi)</label>
+            <input type="number" id="a_npxg" step="0.001" placeholder="Örn: 0.075">
+            <label>PPA (Ceza Sahasına Sızma Pası)</label>
+            <input type="number" id="a_ppa" step="0.1" placeholder="Örn: 7.2">
+            <label>Mid-Tkl (Orta Saha Direnci)</label>
+            <input type="number" id="a_tkl" step="1" placeholder="Örn: 24">
+            <label>PrgC (Top Taşıma Temposu)</label>
+            <input type="number" id="a_prgc" step="1" placeholder="Örn: 11">
+            <div class="checkbox-group">
+                <input type="checkbox" id="a_sp"> <label>Duran Top Uzmanı mı?</label>
             </div>
-            <div class="metric-group">
-                <label>PPA (Sızma Pası)</label>
-                <input type="number" id="a_ppa" value="7">
-            </div>
-            <div class="metric-group">
-                <label>Mid-Tkl (Orta Saha Direnç)</label>
-                <input type="number" id="a_tkl" value="25">
-            </div>
-            <div class="metric-group">
-                <label>PrgC (Top Taşıma Temposu)</label>
-                <input type="number" id="a_prgc" value="12">
-            </div>
-            <label><input type="checkbox" id="a_setpiece"> Duran Top Uzmanı</label>
         </div>
 
         <div class="team-box">
-            <h3>Deplasman (B)</h3>
-            <div class="metric-group">
-                <label>npxG / Per Shot (Son 5 Maç)</label>
-                <input type="number" id="b_npxg" step="0.01" value="0.08">
+            <h3>Deplasman</h3>
+            <label>npxG / Sh (Şut Kalitesi)</label>
+            <input type="number" id="b_npxg" step="0.001" placeholder="Örn: 0.082">
+            <label>PPA (Ceza Sahasına Sızma Pası)</label>
+            <input type="number" id="b_ppa" step="0.1" placeholder="Örn: 6.8">
+            <label>Mid-Tkl (Orta Saha Direnci)</label>
+            <input type="number" id="b_tkl" step="1" placeholder="Örn: 22">
+            <label>PrgC (Top Taşıma Temposu)</label>
+            <input type="number" id="b_prgc" step="1" placeholder="Örn: 13">
+            <div class="checkbox-group">
+                <input type="checkbox" id="b_bad_sp"> <label>Duran Top Savunması Zayıf mı?</label>
             </div>
-            <div class="metric-group">
-                <label>PPA (Sızma Pası)</label>
-                <input type="number" id="b_ppa" value="7">
-            </div>
-            <div class="metric-group">
-                <label>Mid-Tkl (Orta Saha Direnç)</label>
-                <input type="number" id="b_tkl" value="25">
-            </div>
-            <div class="metric-group">
-                <label>PrgC (Top Taşıma Temposu)</label>
-                <input type="number" id="b_prgc" value="12">
-            </div>
-            <label><input type="checkbox" id="b_bad_def"> Duran Top Savunması Zayıf</label>
         </div>
 
-        <div class="metric-group" style="grid-column: span 2; text-align: center;">
-            <label>Field Tilt (Saha Baskı Dengesi %)</label>
-            <input type="number" id="field_tilt" value="50" style="width: 100px; text-align: center;">
+        <div class="full-width team-box" style="text-align: center;">
+            <label>Field Tilt (Topun Oynandığı Bölge %)</label>
+            <input type="number" id="tilt" value="50" style="width: 150px; font-size: 1.5em; text-align: center;">
+            <p style="font-size: 0.8em; opacity: 0.6;">(%50 = Tam Denge | %70 = Ezici Baskı)</p>
         </div>
 
-        <button class="btn" onclick="analizEt()">BETONLUK TESTİNİ BAŞLAT</button>
+        <button class="btn" onclick="analizEt()">STRATEJİK ANALİZİ ÇALIŞTIR</button>
 
-        <div id="result">
-            <div class="gauge-container">
-                <div id="gaugeText">BETONLUK SKORU</div>
-                <div id="gaugeValue" class="gauge-value">%0</div>
+        <div id="result" class="full-width">
+            <div class="gauge-area">
+                <div id="res_league" class="league-badge"></div>
+                <div id="res_score" class="score">0%</div>
+                <div id="res_label" style="font-weight: bold; margin-top: 10px;">BETONLUK SKORU</div>
             </div>
-            <div id="analysisDetails"></div>
-            <div id="sabotageWarning" class="warning"></div>
+            <div id="res_details"></div>
         </div>
     </div>
 </div>
 
 <script>
-const thresholds = {
-    ita: { npxg: 0.08, ppa: 8.0, tkl: 22, prgc: 12 },
-    esp: { npxg: 0.08, ppa: 7.5, tkl: 24, prgc: 11 },
-    fra: { npxg: 0.08, ppa: 7.5, tkl: 25, prgc: 12 },
-    eng: { npxg: 0.075, ppa: 8.5, tkl: 28, prgc: 14 },
-    ger: { npxg: 0.07, ppa: 6.5, tkl: 30, prgc: 10 }
+const configs = {
+    ita: { name: "İtalya Serie A", npxg: 0.08, ppa: 8.0, tkl: 22, prgc: 12 },
+    esp: { name: "İspanya La Liga", npxg: 0.08, ppa: 7.5, tkl: 24, prgc: 11 },
+    fra: { name: "Fransa Ligue 1", npxg: 0.08, ppa: 7.5, tkl: 25, prgc: 12 },
+    eng: { name: "İngiltere Premier League", npxg: 0.075, ppa: 8.5, tkl: 28, prgc: 14 },
+    ger: { name: "Almanya Bundesliga", npxg: 0.07, ppa: 6.5, tkl: 30, prgc: 10 }
 };
 
 function analizEt() {
-    const L = document.getElementById('league').value;
-    const t = thresholds[L];
+    const lKey = document.getElementById('league').value;
+    const cfg = configs[lKey];
     
-    const A = {
-        npxg: parseFloat(document.getElementById('a_npxg').value),
-        ppa: parseFloat(document.getElementById('a_ppa').value),
-        tkl: parseFloat(document.getElementById('a_tkl').value),
-        prgc: parseFloat(document.getElementById('a_prgc').value),
-        sp: document.getElementById('a_setpiece').checked
-    };
-    
-    const B = {
-        npxg: parseFloat(document.getElementById('b_npxg').value),
-        ppa: parseFloat(document.getElementById('b_ppa').value),
-        tkl: parseFloat(document.getElementById('b_tkl').value),
-        prgc: parseFloat(document.getElementById('b_prgc').value),
-        bad_sp: document.getElementById('b_bad_def').checked
-    };
+    const A = { npxg: Number(document.getElementById('a_npxg').value), ppa: Number(document.getElementById('a_ppa').value), tkl: Number(document.getElementById('a_tkl').value), prgc: Number(document.getElementById('a_prgc').value), sp: document.getElementById('a_sp').checked };
+    const B = { npxg: Number(document.getElementById('b_npxg').value), ppa: Number(document.getElementById('b_ppa').value), tkl: Number(document.getElementById('b_tkl').value), prgc: Number(document.getElementById('b_prgc').value), bad_sp: document.getElementById('b_bad_sp').checked };
+    const tilt = Number(document.getElementById('tilt').value);
 
-    const tilt = parseFloat(document.getElementById('field_tilt').value);
     let score = 0;
-    let details = "";
+    let logs = [];
 
-    // 1. npxG Kontrolü (Ağırlık: 30)
-    if (A.npxg <= t.npxg && B.npxg <= t.npxg) { score += 30; details += "✓ Her iki takım da bitiricilikte kısır.<br>"; }
-    else if (A.npxg <= t.npxg || B.npxg <= t.npxg) { score += 15; details += "⚠ Sadece bir takım bitiricilikte zayıf.<br>"; }
+    // 1. Bitiricilik (npxG) - Maks 30
+    if (A.npxg <= cfg.npxg && B.npxg <= cfg.npxg) { score += 30; logs.push("<span class='status-success'>✓ İki takım da lig kısırlık eşiğinin altında.</span>"); }
+    else if (A.npxg <= cfg.npxg || B.npxg <= cfg.npxg) { score += 15; logs.push("<span class='status-warning'>⚠ Takımlardan biri bitiricilikte riskli.</span>"); }
 
-    // 2. PPA vs Tkl Çarpışması (Ağırlık: 25)
-    if (A.ppa <= t.ppa && B.tkl >= t.tkl) { score += 25; details += "✓ A sızamıyor, B iyi direnç gösteriyor.<br>"; }
-    else { details += "⚠ Sızma pasları savunma direncini zorlayabilir.<br>"; }
+    // 2. Sızma vs Direnç (PPA vs Mid-Tkl) - Maks 25
+    const avgPPA = (A.ppa + B.ppa) / 2;
+    const avgTkl = (A.tkl + B.tkl) / 2;
+    if (avgPPA <= cfg.ppa && avgTkl >= (cfg.tkl * 0.9)) { score += 25; logs.push("<span class='status-success'>✓ Sızma pasları düşük, direnç yeterli.</span>"); }
+    else { logs.push("<span class='status-danger'>✖ Savunma blokları arası sızma riski yüksek.</span>"); }
 
-    // 3. PrgC Tempo (Ağırlık: 20)
-    if (A.prgc <= t.prgc && B.prgc <= t.prgc) { score += 20; details += "✓ Oyun temposu kilitli (Düşük PrgC).<br>"; }
+    // 3. Tempo (PrgC) - Maks 20
+    if (A.prgc <= cfg.prgc && B.prgc <= cfg.prgc) { score += 20; logs.push("<span class='status-success'>✓ Maç temposu kilitlenmeye uygun (Düşük PrgC).</span>"); }
 
-    // 4. Field Tilt Emniyet Kilidi (Ağırlık: 25)
-    if (tilt >= 45 && tilt <= 55) { score += 25; details += "✓ Saha dengesi mükemmel (Field Tilt %50 civarı).<br>"; }
-    else if (tilt > 65 || tilt < 35) { score -= 20; details += "✖ Yüksek baskı var (Field Tilt riskli)!<br>"; }
-
-    // 5. Duran Top Sabotaj Filtresi
-    let sabotage = "";
-    if (A.sp && B.bad_sp) {
-        score -= 30;
-        sabotage = "!!! KRİTİK UYARI: Duran top uzmanı vs Zayıf savunma çakışması! Skor düşürüldü.";
+    // 4. Akıllı Field Tilt & Derin Blok Filtresi - Maks 25
+    if (tilt >= 44 && tilt <= 56) {
+        score += 25;
+        logs.push("<span class='status-success'>✓ Saha dengesi ideal (%50 civarı).</span>");
+    } else if ((tilt > 65 || tilt < 35) && avgPPA <= cfg.ppa) {
+        score += 20;
+        logs.push("<span class='status-warning'>🛡️ Derin Blok Saptandı: Yüksek baskıya rağmen sızma yok. (Güvenli)</span>");
+    } else if (tilt > 65 || tilt < 35) {
+        score -= 15;
+        logs.push("<span class='status-danger'>✖ Tehlikeli Alan Hakimiyeti: Bir takım kaleyi ablukaya almış!</span>");
     }
 
-    // Sonuç Ekranı
-    const resDiv = document.getElementById('result');
-    const gVal = document.getElementById('gaugeValue');
-    const gDet = document.getElementById('analysisDetails');
-    const gSab = document.getElementById('sabotageWarning');
+    // 5. Duran Top Sabotajı
+    if (A.sp && B.bad_sp) { score -= 30; logs.push("<span class='status-danger'>🚩 SABOTAJ RİSKİ: Duran top uzmanı vs Zayıf savunma!</span>"); }
 
-    resDiv.style.display = "block";
+    // ÇIKTI
     score = Math.max(0, Math.min(100, score));
-    gVal.innerText = "%" + score;
-    gVal.style.color = score > 75 ? "#22c55e" : (score > 50 ? "#eab308" : "#ef4444");
-    gDet.innerHTML = details;
-    gSab.innerText = sabotage;
-    resDiv.style.border = `2px solid ${gVal.style.color}`;
+    document.getElementById('result').style.display = "block";
+    document.getElementById('res_league').innerText = "Analiz Edilen Lig: " + cfg.name;
+    const sEl = document.getElementById('res_score');
+    sEl.innerText = "%" + score;
+    sEl.className = "score " + (score > 75 ? "status-success" : (score > 50 ? "status-warning" : "status-danger"));
+    document.getElementById('res_details').innerHTML = logs.map(l => `<div class='detail-item'>${l}</div>`).join('');
+    
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 }
 </script>
 

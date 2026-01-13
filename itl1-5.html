@@ -3,136 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuantum Analiz v4 - Mühürlü</title>
+    <title>Kuantum Ekspres v4.1</title>
     <style>
         :root { --bg: #0b0f1a; --card: #161b2a; --accent: #38bdf8; --text: #e2e8f0; --danger: #ef4444; --success: #22c55e; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 800px; background: var(--card); padding: 15px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); padding: 10px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .full { grid-column: span 2; }
-        h3 { margin: 0 0 10px 0; font-size: 0.9rem; color: var(--accent); text-transform: uppercase; border-bottom: 1px solid #2d3748; }
-        label { display: block; font-size: 0.7rem; margin-bottom: 2px; opacity: 0.7; }
-        input, select { width: 100%; padding: 10px; background: #1a202e; border: 1px solid #2d3748; color: #fff; border-radius: 6px; box-sizing: border-box; font-size: 1rem; margin-bottom: 10px; }
-        .btn { width: 100%; padding: 15px; background: var(--accent); border: none; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 5px; color: #0b0f1a; }
+        h3 { margin: 5px 0; font-size: 0.8rem; color: var(--accent); text-align: center; border-bottom: 1px solid #2d3748; padding-bottom: 5px; }
+        label { display: block; font-size: 0.65rem; margin-top: 5px; opacity: 0.7; }
+        input, select { width: 100%; padding: 8px; background: #1a202e; border: 1px solid #2d3748; color: #fff; border-radius: 5px; font-size: 0.9rem; }
+        .btn { width: 100%; padding: 15px; background: var(--accent); border: none; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; color: #0b0f1a; font-size: 1rem; }
         #result { margin-top: 15px; padding: 15px; background: #0f172a; border-radius: 8px; display: none; border: 1px solid var(--accent); }
-        .scroll-area { max-height: 120px; overflow-y: auto; font-size: 0.8rem; padding-right: 5px; margin-top: 10px; border-top: 1px solid #2d3748; }
-        .score-box { text-align: center; font-size: 3rem; font-weight: 800; line-height: 1; margin: 10px 0; }
-        .league-tag { font-size: 0.7rem; opacity: 0.6; text-align: center; }
+        .score-box { text-align: center; font-size: 3rem; font-weight: 800; }
+        .scroll-area { max-height: 100px; overflow-y: auto; font-size: 0.75rem; margin-top: 10px; border-top: 1px solid #2d3748; padding-top: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="grid">
-        <div class="full">
-            <select id="league">
-                <option value="ita">İtalya Serie A</option>
-                <option value="esp">İspanya La Liga</option>
-                <option value="fra">Fransa Ligue 1</option>
-                <option value="eng">İngiltere Premier League</option>
-                <option value="ger">Almanya Bundesliga</option>
-            </select>
-        </div>
+    <select id="league" style="margin-bottom: 15px;">
+        <option value="ita">🇮🇹 İtalya Serie A</option>
+        <option value="esp">🇪🇸 İspanya La Liga</option>
+        <option value="fra">🇫🇷 Fransa Ligue 1</option>
+        <option value="eng">🇬🇧 İngiltere Premier League</option>
+        <option value="ger">🇩🇪 Almanya Bundesliga</option>
+    </select>
 
+    <div class="grid">
         <div class="team-box">
             <h3>EV SAHİBİ</h3>
-            <label>npxG/Sh</label><input type="number" id="a_npxg" inputmode="decimal" step="0.001">
-            <label>PPA</label><input type="number" id="a_ppa" inputmode="decimal" step="0.1">
-            <label>Mid-Tkl</label><input type="number" id="a_tkl" inputmode="decimal">
-            <label>PrgC</label><input type="number" id="a_prgc" inputmode="decimal">
-            <label>Duran Top xG (Atma)</label><input type="number" id="a_spx" inputmode="decimal" step="0.01">
-            <label>Duran Top xG (Yeme)</label><input type="number" id="a_spx_ag" inputmode="decimal" step="0.01">
+            <label>npxG/Sh</label><input type="number" id="a_npxg" inputmode="decimal" placeholder="0.08">
+            <label>PPA</label><input type="number" id="a_ppa" inputmode="decimal" placeholder="7.5">
+            <label>Duran Top (Atma)</label><input type="number" id="a_spA" inputmode="decimal" value="0.25">
         </div>
-
         <div class="team-box">
             <h3>DEPLASMAN</h3>
-            <label>npxG/Sh</label><input type="number" id="b_npxg" inputmode="decimal" step="0.001">
-            <label>PPA</label><input type="number" id="b_ppa" inputmode="decimal" step="0.1">
-            <label>Mid-Tkl</label><input type="number" id="b_tkl" inputmode="decimal">
-            <label>PrgC</label><input type="number" id="b_prgc" inputmode="decimal">
-            <label>Duran Top xG (Atma)</label><input type="number" id="b_spx" inputmode="decimal" step="0.01">
-            <label>Duran Top xG (Yeme)</label><input type="number" id="b_spx_ag" inputmode="decimal" step="0.01">
+            <label>npxG/Sh</label><input type="number" id="b_npxg" inputmode="decimal" placeholder="0.08">
+            <label>PPA</label><input type="number" id="b_ppa" inputmode="decimal" placeholder="7.5">
+            <label>Duran Top (Yeme)</label><input type="number" id="b_spY" inputmode="decimal" value="0.25">
         </div>
-
+        
         <div class="full">
-            <label>Field Tilt %</label>
+            <label>Field Tilt % (Baskı Gücü)</label>
             <input type="number" id="tilt" inputmode="decimal" value="50">
-            <button class="btn" onclick="analizEt()">ANALİZİ ÇALIŞTIR</button>
+            <button class="btn" onclick="analizEt()">HIZLI ANALİZ</button>
         </div>
+    </div>
 
-        <div id="result" class="full">
-            <div id="res_league" class="league-tag"></div>
-            <div id="res_score" class="score-box">%0</div>
-            <div id="res_details" class="scroll-area"></div>
-        </div>
+    <div id="result">
+        <div id="res_league" style="font-size: 0.7rem; text-align: center; opacity: 0.6;"></div>
+        <div id="res_score" class="score-box">%0</div>
+        <div id="res_details" class="scroll-area"></div>
     </div>
 </div>
 
 <script>
 const configs = {
-    ita: { n: "Serie A", npxg: 0.08, ppa: 8.0, tkl: 22, prgc: 12, sp: 0.30 },
-    esp: { n: "La Liga", npxg: 0.08, ppa: 7.5, tkl: 24, prgc: 11, sp: 0.28 },
-    fra: { n: "Ligue 1", npxg: 0.08, ppa: 7.5, tkl: 25, prgc: 12, sp: 0.25 },
-    eng: { n: "EPL", npxg: 0.075, ppa: 8.5, tkl: 28, prgc: 14, sp: 0.35 },
-    ger: { n: "Bundesliga", npxg: 0.07, ppa: 6.5, tkl: 30, prgc: 10, sp: 0.32 }
+    ita: { n: "Serie A", npxg: 0.08, ppa: 8.0, sp: 0.30 },
+    esp: { n: "La Liga", npxg: 0.08, ppa: 7.5, sp: 0.28 },
+    fra: { n: "Ligue 1", npxg: 0.08, ppa: 7.5, sp: 0.25 },
+    eng: { n: "EPL", npxg: 0.075, ppa: 8.5, sp: 0.35 },
+    ger: { n: "Bundesliga", npxg: 0.07, ppa: 6.5, sp: 0.32 }
 };
 
-const ids = ['a_npxg','a_ppa','a_tkl','a_prgc','a_spx','a_spx_ag','b_npxg','b_ppa','b_tkl','b_prgc','b_spx','b_spx_ag','tilt'];
-
 function analizEt() {
-    const lKey = document.getElementById('league').value;
-    const cfg = configs[lKey];
-    
-    for(let id of ids) {
-        if(!document.getElementById(id).value) { alert("Eksik veri!"); return; }
-    }
-
-    const A = { n:Number(document.getElementById('a_npxg').value), p:Number(document.getElementById('a_ppa').value), t:Number(document.getElementById('a_tkl').value), c:Number(document.getElementById('a_prgc').value), spA:Number(document.getElementById('a_spx').value), spY:Number(document.getElementById('a_spx_ag').value) };
-    const B = { n:Number(document.getElementById('b_npxg').value), p:Number(document.getElementById('b_ppa').value), t:Number(document.getElementById('b_tkl').value), c:Number(document.getElementById('b_prgc').value), spA:Number(document.getElementById('b_spx').value), spY:Number(document.getElementById('b_spx_ag').value) };
+    const cfg = configs[document.getElementById('league').value];
+    const A = { n:Number(document.getElementById('a_npxg').value), p:Number(document.getElementById('a_ppa').value), s:Number(document.getElementById('a_spA').value) };
+    const B = { n:Number(document.getElementById('b_npxg').value), p:Number(document.getElementById('b_ppa').value), s:Number(document.getElementById('b_spY').value) };
     const tilt = Number(document.getElementById('tilt').value);
 
+    if(!A.n || !B.n) { alert("Verileri girin!"); return; }
+
     let score = 0; let logs = [];
-
-    // Motor Çekirdeği
-    if (A.n <= cfg.npxg && B.n <= cfg.npxg) { score += 30; logs.push("✓ npxG: Kısır bitiricilik."); }
-    if (((A.p + B.p)/2) <= cfg.ppa) { score += 25; logs.push("✓ PPA: Sızma engelli."); }
-    if (A.c <= cfg.prgc && B.c <= cfg.prgc) { score += 20; logs.push("✓ Tempo: Düşük PrgC."); }
     
-    // Saha Hakimiyeti
-    if (tilt >= 44 && tilt <= 56) { score += 25; logs.push("✓ Tilt: Dengeli saha."); }
-    else if ((tilt > 65 || tilt < 35) && ((A.p + B.p)/2) <= cfg.ppa) { score += 20; logs.push("🛡️ Derin Blok onayı."); }
-    else { score -= 15; logs.push("✖ Riskli baskı hakimiyeti."); }
-
-    // Gelişmiş Duran Top Filtresi (Esnek)
-    let sp_risk = 0;
-    if (A.spA > cfg.sp * 1.5 && B.spY > cfg.sp * 1.5) sp_risk += 25;
-    if (B.spA > cfg.sp * 1.5 && A.spY > cfg.sp * 1.5) sp_risk += 25;
+    // Temel Filtreler
+    if (A.n <= cfg.npxg && B.n <= cfg.npxg) { score += 40; logs.push("✓ npxG: Kısırlık onayı."); }
+    if (((A.p + B.p)/2) <= cfg.ppa) { score += 30; logs.push("✓ PPA: Sızma engelli."); }
     
-    if (sp_risk > 0) {
-        score -= sp_risk;
-        logs.push("🚩 DURAN TOP RİSKİ: -" + sp_risk + " puan.");
-    } else {
-        logs.push("✓ Duran top tehdidi saptanmadı.");
+    // Saha Hakimiyeti & Derin Blok
+    if (tilt >= 44 && tilt <= 56) { score += 30; logs.push("✓ Tilt: Dengeli."); }
+    else if ((tilt > 65 || tilt < 35) && ((A.p + B.p)/2) <= cfg.ppa) { score += 25; logs.push("🛡️ Derin Blok onayı."); }
+    else { score -= 15; logs.push("✖ Riskli baskı."); }
+
+    // Çakışma Mantıklı Duran Top (Sadece uçlarda puan kırar)
+    if (A.s > (cfg.sp * 1.4) && B.s > (cfg.sp * 1.4)) {
+        score -= 25; logs.push("🚩 DURAN TOP SABOTAJI! (-25)");
     }
 
     score = Math.max(0, Math.min(100, score));
-    const finalData = { score, logs, league: cfg.n, time: new Date().toLocaleTimeString() };
-    localStorage.setItem('kuantum_v4', JSON.stringify(finalData));
-    display(finalData);
-}
-
-function display(data) {
     document.getElementById('result').style.display = "block";
-    document.getElementById('res_league').innerText = data.league + " | " + data.time;
-    const s = document.getElementById('res_score');
-    s.innerText = "%" + data.score;
-    s.style.color = data.score > 75 ? "#22c55e" : (data.score > 55 ? "#f59e0b" : "#ef4444");
-    document.getElementById('res_details').innerHTML = data.logs.map(l => `<div>${l}</div>`).join('');
+    document.getElementById('res_score').innerText = "%" + score;
+    document.getElementById('res_score').style.color = score > 75 ? "#22c55e" : (score > 55 ? "#f59e0b" : "#ef4444");
+    document.getElementById('res_details').innerHTML = logs.map(l => `<div>${l}</div>`).join('');
+    localStorage.setItem('kuantum_fast', JSON.stringify({score, logs, n: cfg.n}));
 }
 
 window.onload = () => {
-    const saved = localStorage.getItem('kuantum_v4');
-    if(saved) display(JSON.parse(saved));
+    const s = localStorage.getItem('kuantum_fast');
+    if(s) { 
+        const d = JSON.parse(s);
+        document.getElementById('result').style.display = "block";
+        document.getElementById('res_score').innerText = "%" + d.score;
+        document.getElementById('res_details').innerHTML = d.logs.map(l => `<div>${l}</div>`).join('');
+    }
 };
 </script>
 </body>

@@ -3,37 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kuantum Pro-Panel v5.0</title>
+    <title>Kuantum Pro-Panel v6.0</title>
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; --danger: #ef4444; --success: #22c55e; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; --danger: #ef4444; --success: #22c55e; --warning: #f59e0b; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         .app-container { width: 100%; max-width: 450px; }
         .input-card { background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 20px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         h3 { font-size: 0.75rem; color: var(--accent); margin: 10px 0 5px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; }
         label { display: block; font-size: 0.65rem; opacity: 0.7; margin-bottom: 2px; }
-        input, select { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; color: #fff; border-radius: 10px; font-size: 1rem; box-sizing: border-box; }
-        .btn-analyze { width: 100%; padding: 16px; background: var(--accent); border: none; font-weight: 800; border-radius: 12px; cursor: pointer; margin-top: 15px; color: #0f172a; font-size: 1.1rem; }
+        input, select { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; color: #fff; border-radius: 10px; font-size: 1rem; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--accent); }
+        .team-input { background: #334155; border: none; margin-bottom: 5px; font-weight: bold; }
+        .btn-group { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-top: 15px; }
+        .btn-analyze { padding: 16px; background: var(--accent); border: none; font-weight: 800; border-radius: 12px; cursor: pointer; color: #0f172a; font-size: 1rem; }
+        .btn-reset { padding: 16px; background: #334155; border: none; font-weight: bold; border-radius: 12px; cursor: pointer; color: #fff; font-size: 0.8rem; }
         
-        /* Analiz Listesi Alanı */
-        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .clear-all { color: var(--danger); font-size: 0.75rem; cursor: pointer; text-decoration: underline; }
-        .analysis-list { max-height: 400px; overflow-y: auto; padding-right: 5px; -webkit-overflow-scrolling: touch; }
-        .analysis-card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 10px; position: relative; border-left: 5px solid var(--accent); animation: slideIn 0.3s ease; }
-        .delete-single { position: absolute; top: 10px; right: 10px; background: #334155; color: #fff; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 0.7rem; }
-        .score-val { font-size: 1.8rem; font-weight: 800; margin-right: 10px; }
-        .meta-info { font-size: 0.7rem; opacity: 0.6; }
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 5px; }
+        .clear-all { color: var(--danger); font-size: 0.75rem; cursor: pointer; }
+        .analysis-list { max-height: 450px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .analysis-card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 10px; position: relative; border-left: 6px solid var(--accent); animation: slideIn 0.3s ease; }
+        .delete-single { position: absolute; top: 10px; right: 10px; background: #334155; color: #fff; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; }
+        .score-circle { font-size: 1.6rem; font-weight: 900; min-width: 65px; }
+        .meta-info { font-size: 0.7rem; opacity: 0.6; margin-top: 4px; line-height: 1.2; }
         
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div class="input-card">
-        <select id="league" style="margin-bottom: 10px;">
+        <select id="league" style="margin-bottom: 15px;">
             <option value="ita">🇮🇹 İtalya Serie A</option>
             <option value="esp">🇪🇸 İspanya La Liga</option>
             <option value="fra">🇫🇷 Fransa Ligue 1</option>
@@ -42,62 +43,83 @@
         </select>
 
         <div class="grid">
-            <div><h3>EV SAHİBİ</h3>
-                <label>npxG/Sh</label><input type="number" id="a_n" step="0.01" value="0.08">
-                <label>PPA</label><input type="number" id="a_p" step="0.5" value="8">
-                <label>SP-xG</label><input type="number" id="a_s" step="0.01" value="0.25">
+            <div id="home_side">
+                <input type="text" id="home_name" placeholder="Ev Sahibi" class="team-input">
+                <label>npxG/Sh</label><input type="number" id="a_n" inputmode="decimal" step="0.01" value="0.08">
+                <label>PPA</label><input type="number" id="a_p" inputmode="decimal" step="0.5" value="8">
+                <label>Çalım Yeme</label><input type="number" id="a_d" inputmode="decimal" step="1" value="10">
             </div>
-            <div><h3>DEPLASMAN</h3>
-                <label>npxG/Sh</label><input type="number" id="b_n" step="0.01" value="0.07">
-                <label>PPA</label><input type="number" id="b_p" step="0.5" value="6">
-                <label>SP-xG</label><input type="number" id="b_s" step="0.01" value="0.25">
+            <div id="away_side">
+                <input type="text" id="away_name" placeholder="Deplasman" class="team-input">
+                <label>npxG/Sh</label><input type="number" id="b_n" inputmode="decimal" step="0.01" value="0.07">
+                <label>PPA</label><input type="number" id="b_p" inputmode="decimal" step="0.5" value="6">
+                <label>Çalım Yeme</label><input type="number" id="b_d" inputmode="decimal" step="1" value="10">
             </div>
         </div>
         <label style="margin-top: 10px;">Field Tilt % (Baskı)</label>
-        <input type="number" id="tilt" value="50">
-        <button class="btn-analyze" onclick="analizEkle()">ANALİZ ET VE KAYDET</button>
+        <input type="number" id="tilt" inputmode="decimal" value="50">
+        
+        <div class="btn-group">
+            <button class="btn-analyze" onclick="analizEkle()">ANALİZ ET VE KAYDET</button>
+            <button class="btn-reset" onclick="formuTemizle()">TEMİZLE</button>
+        </div>
     </div>
 
     <div class="list-header">
-        <span style="font-weight: bold; font-size: 0.9rem;">Geçmiş Analizler</span>
+        <span style="font-weight: bold; font-size: 0.9rem;">Analiz Geçmişi</span>
         <span class="clear-all" onclick="tumunuSil()">Tümünü Temizle</span>
     </div>
 
-    <div id="analizListesi" class="analysis-list">
-        </div>
+    <div id="analizListesi" class="analysis-list"></div>
 </div>
 
 <script>
 const configs = {
-    ita: { n: "Serie A", npxg: 0.08, ppa: 8.0, sp: 0.30 },
-    esp: { n: "La Liga", npxg: 0.08, ppa: 7.5, sp: 0.28 },
-    fra: { n: "Ligue 1", npxg: 0.08, ppa: 7.5, sp: 0.25 },
-    eng: { n: "EPL", npxg: 0.075, ppa: 8.5, sp: 0.35 },
-    ger: { n: "Bundesliga", npxg: 0.07, ppa: 6.5, sp: 0.32 }
+    ita: { n: "Serie A", npxg: 0.08, ppa: 8.0, drib: 12 },
+    esp: { n: "La Liga", npxg: 0.08, ppa: 7.5, drib: 11 },
+    fra: { n: "Ligue 1", npxg: 0.08, ppa: 7.5, drib: 10 },
+    eng: { n: "EPL", npxg: 0.075, ppa: 8.5, drib: 13 },
+    ger: { n: "Bundesliga", npxg: 0.07, ppa: 6.5, drib: 10 }
 };
+
+function formuTemizle() {
+    document.querySelectorAll('input').forEach(input => {
+        if(input.type === 'number') input.value = "";
+        else input.value = "";
+    });
+}
 
 function analizEkle() {
     const leagueKey = document.getElementById('league').value;
     const cfg = configs[leagueKey];
     const data = {
-        an: Number(document.getElementById('a_n').value), ap: Number(document.getElementById('a_p').value), as: Number(document.getElementById('a_s').value),
-        bn: Number(document.getElementById('b_n').value), bp: Number(document.getElementById('b_p').value), bs: Number(document.getElementById('b_s').value),
+        hName: document.getElementById('home_name').value || "Ev",
+        aName: document.getElementById('away_name').value || "Dep",
+        an: Number(document.getElementById('a_n').value), ap: Number(document.getElementById('a_p').value), ad: Number(document.getElementById('a_d').value),
+        bn: Number(document.getElementById('b_n').value), bp: Number(document.getElementById('b_p').value), bd: Number(document.getElementById('b_d').value),
         tilt: Number(document.getElementById('tilt').value)
     };
 
     let score = 0;
     let logs = [];
 
-    // Lig bazlı değerlendirme
+    // Kısırlık Puanı (40 Puan)
     if (data.an <= cfg.npxg && data.bn <= cfg.npxg) { score += 40; logs.push("Kısırlık onayı"); }
-    if (((data.ap + data.bp)/2) <= cfg.ppa) { score += 30; logs.push("PPA Sızma engelli"); }
-    if (data.tilt >= 44 && data.tilt <= 56) { score += 30; logs.push("Dengeli baskı"); }
-    if (data.as > (cfg.sp * 1.4) && data.bs > (cfg.sp * 1.4)) { score -= 25; logs.push("🚩 DURAN TOP RİSKİ"); }
+    
+    // PPA Puanı (30 Puan)
+    if (((data.ap + data.bp)/2) <= cfg.ppa) { score += 30; logs.push("Sızma engelli"); }
+    
+    // YENİ: Çalım Yeme (Savunma Direnci) Puanı (10 Puan Ekstra Bonus)
+    if (data.ad <= cfg.drib && data.bd <= cfg.drib) { score += 10; logs.push("Savunma dirençli"); }
+
+    // Field Tilt Aralığı (%42 - %58) (20 Puan)
+    if (data.tilt >= 42 && data.tilt <= 58) { score += 20; logs.push("Oyun kilitli"); }
 
     score = Math.max(0, Math.min(100, score));
     
     const analiz = {
         id: Date.now(),
+        match: `${data.hName} vs ${data.aName}`,
         league: cfg.n,
         score: score,
         logs: logs,
@@ -114,13 +136,14 @@ function arayuzuGuncelle() {
     const liste = document.getElementById('analizListesi');
     const arsiv = JSON.parse(localStorage.getItem('analizler') || '[]');
     liste.innerHTML = arsiv.map(item => `
-        <div class="analysis-card" style="border-left-color: ${item.score > 70 ? 'var(--success)' : (item.score > 40 ? '#f59e0b' : 'var(--danger)')}">
-            <button class="delete-single" onclick="tekSil(${item.id})">X</button>
+        <div class="analysis-card" style="border-left-color: ${item.score >= 80 ? 'var(--success)' : (item.score >= 50 ? 'var(--warning)' : 'var(--danger)')}">
+            <button class="delete-single" onclick="tekSil(${item.id})">×</button>
             <div style="display: flex; align-items: center;">
-                <span class="score-val" style="color: ${item.score > 70 ? 'var(--success)' : (item.score > 40 ? '#f59e0b' : 'var(--danger)')}">%${item.score}</span>
-                <div>
-                    <div style="font-weight: bold; font-size: 0.9rem;">${item.league} Maçı</div>
-                    <div class="meta-info">${item.time} | ${item.logs.join(' • ')}</div>
+                <div class="score-circle" style="color: ${item.score >= 80 ? 'var(--success)' : (item.score >= 50 ? 'var(--warning)' : 'var(--danger)')}">%${item.score}</div>
+                <div style="flex:1">
+                    <div style="font-weight: 800; font-size: 0.95rem; color: #fff;">${item.match}</div>
+                    <div class="meta-info">${item.league} • ${item.time}</div>
+                    <div class="meta-info" style="color: var(--accent)">${item.logs.join(' • ')}</div>
                 </div>
             </div>
         </div>

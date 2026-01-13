@@ -17,7 +17,7 @@
         }
         .app-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; height: 100%; position: relative; }
 
-        /* FIXED HEADER (HER ZAMAN ÜSTTE) */
+        /* HEADER - SABİT PANEL */
         .header { 
             position: sticky; top: 0; 
             padding: 15px 20px; background: var(--bg); 
@@ -27,11 +27,11 @@
         .brand { font-size: 1rem; font-weight: 900; color: var(--accent); }
         .stats-badge { background: #1e2329; padding: 6px 12px; border-radius: 20px; font-size: 0.7rem; border: 1px solid var(--border); font-weight: 700; color: white; }
 
-        /* SCROLLABLE CONTENT */
+        /* İÇERİK ALANI */
         .scroll-area { flex-grow: 1; overflow-y: auto; padding: 15px; padding-bottom: 120px; scrollbar-width: none; }
         .scroll-area::-webkit-scrollbar { display: none; }
 
-        /* INPUT CARD */
+        /* VERİ GİRİŞ KARTI */
         .input-card { background: var(--card); border-radius: 16px; padding: 16px; border: 1px solid var(--border); margin-bottom: 20px; }
         .league-select { width: 100%; background: #1e2329; border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 10px; margin-bottom: 12px; font-weight: 700; appearance: none; text-align: center; }
 
@@ -43,21 +43,22 @@
         .field-row label { display: block; font-size: 0.5rem; color: var(--muted); margin-bottom: 2px; font-weight: 800; }
         .field-row input { width: 100%; background: #1e2329; border: 1px solid var(--border); color: #fff; padding: 6px; border-radius: 6px; font-size: 0.8rem; }
 
-        /* CARDS */
+        /* ANALİZ KARTLARI */
         .analysis-card { background: var(--card); border-radius: 18px; padding: 15px; margin-bottom: 12px; border: 1px solid var(--border); animation: slideUp 0.3s ease; }
         .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .score-circle { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 900; border: 3px solid var(--accent); }
         .match-info { flex: 1; text-align: center; }
-        .team-names { font-size: 0.8rem; font-weight: 800; }
+        .team-names { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }
 
         .outcome-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-top: 1px solid var(--border); padding-top: 12px; }
         .out-btn { background: #1e2329; border: 1px solid var(--border); color: var(--muted); padding: 10px; border-radius: 10px; font-size: 0.6rem; font-weight: 800; cursor: pointer; }
         .out-btn.win.active { background: var(--success); color: #000; box-shadow: 0 0 10px var(--success); }
         .out-btn.lose.active { background: var(--danger); color: #fff; box-shadow: 0 0 10px var(--danger); }
 
-        /* FOOTER */
+        /* ALT AKSİYON BUTONU */
         .footer { position: absolute; bottom: 0; width: 100%; padding: 15px; background: linear-gradient(0deg, var(--bg) 80%, transparent); }
-        .btn-main { width: 100%; background: var(--accent); color: #000; border: none; padding: 16px; border-radius: 14px; font-weight: 900; font-size: 1rem; box-shadow: 0 8px 20px rgba(0,255,136,0.3); }
+        .btn-main { width: 100%; background: var(--accent); color: #000; border: none; padding: 16px; border-radius: 14px; font-weight: 900; font-size: 1rem; box-shadow: 0 8px 20px rgba(0,255,136,0.3); cursor: pointer; }
+        .btn-main:active { transform: scale(0.98); }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -85,23 +86,23 @@
 
             <div class="grid">
                 <div class="team-box">
-                    <input type="text" id="h_name" class="name-input" placeholder="EV TAKIMI">
-                    <div class="field-row"><label>npxG/Sh</label><input type="text" id="h_n" inputmode="decimal"></div>
-                    <div class="field-row"><label>PPA</label><input type="text" id="h_p" inputmode="decimal"></div>
-                    <div class="field-row"><label>Drb Past</label><input type="text" id="h_d" inputmode="decimal"></div>
-                    <div class="field-row"><label>Att 3rd</label><input type="text" id="h_t" inputmode="decimal"></div>
+                    <input type="text" id="h_name" class="name-input" placeholder="EV TAKIMI" autocomplete="off">
+                    <div class="field-row"><label>npxG/Sh</label><input type="text" id="h_n" inputmode="decimal" placeholder="0.00"></div>
+                    <div class="field-row"><label>PPA</label><input type="text" id="h_p" inputmode="decimal" placeholder="0.0"></div>
+                    <div class="field-row"><label>Drb Past</label><input type="text" id="h_d" inputmode="decimal" placeholder="0"></div>
+                    <div class="field-row"><label>Att 3rd</label><input type="text" id="h_t" inputmode="decimal" placeholder="0"></div>
                 </div>
                 <div class="team-box">
-                    <input type="text" id="a_name" class="name-input" placeholder="DEP TAKIMI">
-                    <div class="field-row"><label>npxG/Sh</label><input type="text" id="a_n" inputmode="decimal"></div>
-                    <div class="field-row"><label>PPA</label><input type="text" id="a_p" inputmode="decimal"></div>
-                    <div class="field-row"><label>Drb Past</label><input type="text" id="a_d" inputmode="decimal"></div>
-                    <div class="field-row"><label>Att 3rd</label><input type="text" id="a_t" inputmode="decimal"></div>
+                    <input type="text" id="a_name" class="name-input" placeholder="DEP TAKIMI" autocomplete="off">
+                    <div class="field-row"><label>npxG/Sh</label><input type="text" id="a_n" inputmode="decimal" placeholder="0.00"></div>
+                    <div class="field-row"><label>PPA</label><input type="text" id="a_p" inputmode="decimal" placeholder="0.0"></div>
+                    <div class="field-row"><label>Drb Past</label><input type="text" id="a_d" inputmode="decimal" placeholder="0"></div>
+                    <div class="field-row"><label>Att 3rd</label><input type="text" id="a_t" inputmode="decimal" placeholder="0"></div>
                 </div>
             </div>
             <div style="display:flex; justify-content:space-between; margin-top:10px;">
-                <button onclick="inputTemizle()" style="background:none; border:none; color:var(--muted); font-size:0.6rem; font-weight:700;">TEMİZLE</button>
-                <button onclick="fullReset()" style="background:none; border:none; color:var(--danger); font-size:0.6rem; font-weight:700;">SIFIRLA</button>
+                <button onclick="inputTemizle()" style="background:none; border:none; color:var(--muted); font-size:0.6rem; font-weight:700; cursor:pointer;">TEMİZLE</button>
+                <button onclick="fullReset()" style="background:none; border:none; color:var(--danger); font-size:0.6rem; font-weight:700; cursor:pointer;">SIFIRLA</button>
             </div>
         </div>
         <div id="results"></div>
@@ -113,7 +114,7 @@
 </div>
 
 <script>
-    const STORAGE_KEY = 'beton_pro_v10_2';
+    const STORAGE_KEY = 'beton_pro_v10_2_final';
     let brain;
     try { brain = JSON.parse(localStorage.getItem(STORAGE_KEY)) || getDefaultBrain(); } catch(e) { brain = getDefaultBrain(); }
 
@@ -130,7 +131,7 @@
     function saveBrain() { localStorage.setItem(STORAGE_KEY, JSON.stringify(brain)); }
     function cleanNum(val) { return parseFloat(String(val).replace(',', '.').replace(/\s/g, '')) || 0; }
     function inputTemizle() { document.querySelectorAll('input').forEach(i => i.value = ""); }
-    function fullReset() { if(confirm("Tüm veriler sıfırlansın mı?")) { brain = getDefaultBrain(); saveBrain(); location.reload(); } }
+    function fullReset() { if(confirm("Tüm hafıza sıfırlansın mı?")) { brain = getDefaultBrain(); saveBrain(); location.reload(); } }
 
     function updateStatsDisplay() {
         const lKey = document.getElementById('league').value;
@@ -144,15 +145,15 @@
         const lKey = document.getElementById('league').value;
         const cfg = brain[lKey];
         const d = {
-            h: document.getElementById('h_name').value || "EV",
-            a: document.getElementById('a_name').value || "DEP",
+            h: document.getElementById('h_name').value.toUpperCase() || "EV",
+            a: document.getElementById('a_name').value.toUpperCase() || "DEP",
             hn: cleanNum(document.getElementById('h_n').value), an: cleanNum(document.getElementById('a_n').value),
             hp: cleanNum(document.getElementById('h_p').value), ap: cleanNum(document.getElementById('a_p').value),
             hd: cleanNum(document.getElementById('h_d').value), ad: cleanNum(document.getElementById('a_d').value),
             ht: cleanNum(document.getElementById('h_t').value), at: cleanNum(document.getElementById('a_t').value)
         };
 
-        if(!d.hn || !d.an) { alert("Verileri eksiksiz girin!"); return; }
+        if(!document.getElementById('h_n').value || !document.getElementById('a_n').value) { alert("Lütfen verileri girin!"); return; }
 
         let score = 0;
         if (d.hn <= cfg.npxg && d.an <= cfg.npxg) score += 40;
@@ -162,6 +163,7 @@
         if (totalT > 0 && (d.ht/totalT)*100 >= 42 && (d.ht/totalT)*100 <= 58) score += 20;
 
         renderCard(Date.now() + Math.random(), d.h, d.a, score, lKey);
+        document.getElementById('main-scroll').scrollTo({top: 400, behavior: 'smooth'});
     }
 
     function renderCard(id, h, a, score, lKey) {
@@ -176,7 +178,7 @@
                     <div class="league-tag">${lKey.toUpperCase()}</div>
                     <div class="team-names">${h} vs ${a}</div>
                 </div>
-                <button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:var(--border); font-size:1.5rem;">&times;</button>
+                <button onclick="this.parentElement.parentElement.remove()" style="background:none; border:none; color:var(--border); font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
             <div class="outcome-bar">
                 <button class="out-btn win" onclick="setOutcome('${lKey}', '${id}', 'win')">ALT BİTTİ ✅</button>
@@ -198,7 +200,10 @@
 
         if(hist.length >= 100) {
             const wr = hist.filter(h => h.status === 'win').length / 100;
-            if(wr < 0.80) { brain[lKey].npxg *= 0.95; brain[lKey].ppa *= 0.95; alert("⚠️ OTOMATİK ÖĞRENME: Başarı düşük, kriterler %5 daraltıldı."); }
+            if(wr < 0.80) { 
+                brain[lKey].npxg *= 0.95; brain[lKey].ppa *= 0.95; 
+                alert("⚠️ OTOMATİK ÖĞRENME: Başarı %80 altında kaldığı için kriterler %5 sıkılaştırıldı."); 
+            }
             brain[lKey].history = []; saveBrain(); updateStatsDisplay();
         }
     }

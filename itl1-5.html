@@ -2,179 +2,228 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini | İtalya 1.5 Alt Analiz Motoru</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gemini | Italia Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-color: #38bdf8;
-            --text-main: #f8fafc;
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --bg: #0b0e14;
+            --accent: #00d2ff;
+            --secondary: #3a7bd5;
+            --card: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --success: #00ffa3;
+            --warning: #ffb800;
+            --danger: #ff4b4b;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at top right, #1e293b, #0b0e14);
+            color: white;
+            margin: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            margin: 0;
-            padding: 20px;
         }
 
-        .container {
-            background-color: var(--card-bg);
+        .app-container {
             width: 100%;
-            max-width: 800px;
-            padding: 40px;
+            max-width: 430px; /* iPhone 15 Pro Max Genişliği */
+            padding: 24px;
+            padding-bottom: 100px;
+        }
+
+        header {
+            text-align: left;
+            margin-bottom: 32px;
+            margin-top: 20px;
+        }
+
+        header h1 { font-size: 28px; margin: 0; font-weight: 800; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        header p { color: #94a3b8; font-size: 14px; margin-top: 4px; }
+
+        .input-card {
+            background: var(--card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
             border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
+            padding: 24px;
+            margin-bottom: 20px;
         }
 
-        h1 { font-weight: 800; text-align: center; margin-bottom: 30px; letter-spacing: -1px; color: var(--accent-color); }
-        
-        .grid {
+        .input-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
         }
 
-        .input-group { display: flex; flex-direction: column; }
-        label { font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: #94a3b8; }
+        .field { display: flex; flex-direction: column; margin-bottom: 16px; }
+        .field label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #64748b; margin-bottom: 8px; letter-spacing: 0.5px; }
         
         input {
-            background: #334155;
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 12px;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        input:focus { outline: none; border-color: var(--accent-color); background: #475569; }
-
-        button {
-            width: 100%;
-            background: var(--accent-color);
-            color: var(--bg-color);
-            border: none;
-            padding: 16px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
             border-radius: 14px;
+            padding: 14px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        input:focus { outline: none; border-color: var(--accent); background: rgba(0,210,255,0.05); }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 18px;
+            font-size: 16px;
             font-weight: 800;
-            font-size: 1.1rem;
             cursor: pointer;
-            transition: transform 0.2s ease;
+            box-shadow: 0 10px 25px -5px rgba(0, 210, 255, 0.3);
+            transition: 0.3s;
         }
 
-        button:hover { transform: translateY(-2px); opacity: 0.9; }
+        .analyze-btn:active { transform: scale(0.96); opacity: 0.9; }
 
-        #result {
-            margin-top: 30px;
-            padding: 25px;
-            border-radius: 16px;
-            background: rgba(15, 23, 42, 0.5);
+        #resultArea {
             display: none;
-            border-left: 6px solid var(--accent-color);
+            margin-top: 24px;
+            animation: slideUp 0.5s ease-out;
         }
 
-        .score-box { font-size: 2.5rem; font-weight: 800; margin: 10px 0; }
-        .character-tag { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-top: 10px; }
-        .success-tag { background: var(--success); color: white; }
-        .danger-tag { background: var(--danger); color: white; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .score-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 100%);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .percentage { font-size: 56px; font-weight: 800; margin: 0; line-height: 1; color: var(--accent); }
+        .status-badge { display: inline-block; padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 700; margin-top: 15px; }
+
+        .analysis-text {
+            color: #cbd5e1;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 20px;
+            text-align: left;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 14px;
+        }
+
+        .metric-badge {
+            background: rgba(255, 43, 43, 0.1);
+            color: var(--danger);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 4px;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>ITALIA 1.5 ALT ANALYZER</h1>
-    
-    <div class="grid">
-        <div class="input-group">
-            <label>npxG / Per Shot (Eşik: 0.08)</label>
-            <input type="number" id="npxg" step="0.01" placeholder="0.07">
+<div class="app-container">
+    <header>
+        <h1>Italia Intelligence</h1>
+        <p>1.5 Alt Durgunluk Analiz Motoru</p>
+    </header>
+
+    <div class="input-card">
+        <div class="input-grid">
+            <div class="field">
+                <label>npxG/Sh</label>
+                <input type="number" id="npxg" step="0.01" placeholder="0.07">
+            </div>
+            <div class="field">
+                <label>Field Tilt %</label>
+                <input type="number" id="tilt" placeholder="52">
+            </div>
+            <div class="field">
+                <label>PPA</label>
+                <input type="number" id="ppa" placeholder="6">
+            </div>
+            <div class="field">
+                <label>Mid-Tkl</label>
+                <input type="number" id="tkl" placeholder="28">
+            </div>
+            <div class="field">
+                <label>PrgC</label>
+                <input type="number" id="prgc" placeholder="12">
+            </div>
+            <div class="field">
+                <label>Set-Piece xG</label>
+                <input type="number" id="setp" step="0.01" placeholder="0.02">
+            </div>
         </div>
-        <div class="input-group">
-            <label>Field Tilt % (Eşik: 60)</label>
-            <input type="number" id="tilt" placeholder="52">
-        </div>
-        <div class="input-group">
-            <label>PPA (Eşik: 10)</label>
-            <input type="number" id="ppa" placeholder="6">
-        </div>
-        <div class="input-group">
-            <label>Mid-Tkl (Eşik: 20+)</label>
-            <input type="number" id="tkl" placeholder="28">
-        </div>
-        <div class="input-group">
-            <label>PrgC (Eşik: 15)</label>
-            <input type="number" id="prgc" placeholder="12">
-        </div>
-        <div class="input-group">
-            <label>Set-Piece xG (Eşik: 0.04)</label>
-            <input type="number" id="setpiece" step="0.01" placeholder="0.02">
-        </div>
+        <button class="analyze-btn" onclick="runAnalysis()">ANALİZ ET</button>
     </div>
 
-    <button onclick="analyzeMatch()">ANALİZİ ÇALIŞTIR</button>
-
-    <div id="result">
-        <div id="decisionText" style="font-weight: 600; color: var(--accent-color);">ANALİZ SONUCU:</div>
-        <div class="score-box" id="scoreDisplay">0%</div>
-        <div id="characterTag" class="character-tag">DURGUNLUK ANALİZİ BEKLENİYOR</div>
-        <p id="description" style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6; color: #cbd5e1;"></p>
+    <div id="resultArea">
+        <div class="score-card">
+            <p style="font-size: 12px; color: #94a3b8; margin-bottom: 10px; font-weight: 600;">DURGUNLUK GÜVEN SKORU</p>
+            <h2 class="percentage" id="scorePct">0%</h2>
+            <div id="status" class="status-badge">BELİRSİZ</div>
+            <div class="analysis-text" id="analysisDesc"></div>
+        </div>
     </div>
 </div>
 
 <script>
-    function analyzeMatch() {
-        const npxg = parseFloat(document.getElementById('npxg').value);
-        const tilt = parseFloat(document.getElementById('tilt').value);
-        const ppa = parseFloat(document.getElementById('ppa').value);
-        const tkl = parseFloat(document.getElementById('tkl').value);
-        const prgc = parseFloat(document.getElementById('prgc').value);
-        const setpiece = parseFloat(document.getElementById('setpiece').value);
+    function runAnalysis() {
+        const v = {
+            npxg: parseFloat(document.getElementById('npxg').value || 0),
+            tilt: parseFloat(document.getElementById('tilt').value || 0),
+            ppa: parseFloat(document.getElementById('ppa').value || 0),
+            tkl: parseFloat(document.getElementById('tkl').value || 0),
+            prgc: parseFloat(document.getElementById('prgc').value || 0),
+            setp: parseFloat(document.getElementById('setp').value || 0)
+        };
 
         let score = 0;
-        let reasons = [];
+        let warnings = [];
 
-        // Algoritma Puanlama (Ağırlıklı)
-        if (npxg <= 0.08) score += 25; else reasons.push("Şut kalitesi yüksek");
-        if (tilt <= 60) score += 15; else reasons.push("Saha baskısı fazla");
-        if (ppa <= 10) score += 20; else reasons.push("Ceza sahasına sızma var");
-        if (tkl >= 20) score += 15; else reasons.push("Orta saha direnci zayıf");
-        if (prgc <= 15) score += 15; else reasons.push("Tempo yüksek");
-        if (setpiece <= 0.04) score += 10; else reasons.push("Duran top tehlikesi");
+        if(v.npxg <= 0.08) score += 25; else warnings.push("Yüksek Bitiricilik");
+        if(v.tilt <= 60) score += 15; else warnings.push("Aşırı Baskı");
+        if(v.ppa <= 10) score += 20; else warnings.push("Ceza Sahası Sızma");
+        if(v.tkl >= 20) score += 15; else warnings.push("Zayıf Defans");
+        if(v.prgc <= 15) score += 15; else warnings.push("Yüksek Tempo");
+        if(v.setp <= 0.04) score += 10; else warnings.push("Duran Top Riski");
 
-        const resDiv = document.getElementById('result');
-        const scoreDisp = document.getElementById('scoreDisplay');
-        const charTag = document.getElementById('characterTag');
-        const desc = document.getElementById('description');
+        document.getElementById('resultArea').style.display = 'block';
+        document.getElementById('scorePct').innerText = score + "%";
+        
+        const status = document.getElementById('status');
+        const desc = document.getElementById('analysisDesc');
 
-        resDiv.style.display = 'block';
-        scoreDisp.innerText = score + "%";
-
-        if (score >= 80) {
-            charTag.innerText = "BETON KİLİT - ANALİZ BAŞARILI";
-            charTag.className = "character-tag success-tag";
-            desc.innerText = "Bu maç İtalyan karakterine tam uyum sağlıyor. Oyunun büyük bölümü orta sahada, düşük tempoda geçmeye aday. Erken gol olsa bile oyunun karakterinin durgun kalması beklenir. 1.5 Alt için yüksek güven.";
-        } else if (score >= 50) {
-            charTag.innerText = "DURGUN OYUN - RİSKLİ";
-            charTag.className = "character-tag";
-            charTag.style.background = "#f59e0b";
-            desc.innerText = "Maç durgunluk sinyalleri veriyor ancak bazı metrikler ( " + reasons.join(", ") + " ) eşik değerlerini zorluyor. Oyun 2 gole açık olabilir. Sezgilerine güven.";
+        if(score >= 80) {
+            status.innerText = "BETON KİLİT";
+            status.style.background = "rgba(0, 255, 163, 0.1)";
+            status.style.color = "var(--success)";
+            desc.innerHTML = "Maç İtalyan karakterine tam uyumlu. Oyun durgunluğa hapsolmuş durumda. Erken gol olsa dahi sistemin kilitlenmesi beklenir.";
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#00d2ff', '#00ffa3'] });
+        } else if(score >= 50) {
+            status.innerText = "DURGUN AMA RİSKLİ";
+            status.style.background = "rgba(255, 184, 0, 0.1)";
+            status.style.color = "var(--warning)";
+            desc.innerHTML = "Oyun durgun ancak <br>" + warnings.map(w => `<span class="metric-badge">${w}</span>`).join(' ') + " nedeniyle kilit her an esneyebilir.";
         } else {
-            charTag.innerText = "HAREKETLİ MAÇ - UZAK DUR";
-            charTag.className = "character-tag danger-tag";
-            desc.innerText = "Metrikler kilitlenmenin kırıldığını gösteriyor. " + reasons.join(", ") + " nedeniyle maçta yüksek enerji ve gol potansiyeli mevcut. 1.5 Alt için uygun değil.";
+            status.innerText = "HAREKETLİ OYUN";
+            status.style.background = "rgba(255, 75, 75, 0.1)";
+            status.style.color = "var(--danger)";
+            desc.innerHTML = "Sistem bu maçı 1.5 Alt için uygun görmüyor. " + warnings.join(", ") + " potansiyeli çok yüksek.";
         }
     }
 </script>

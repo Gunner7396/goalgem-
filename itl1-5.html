@@ -3,25 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Beton Analiz v8.0</title>
+    <title>Beton Analiz v8.1</title>
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; --danger: #ef4444; --success: #22c55e; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 10px; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; --danger: #ef4444; --success: #22c55e; --warning: #f59e0b; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 10px; margin: 0; display: flex; flex-direction: column; align-items: center; }
         .app-container { width: 100%; max-width: 480px; }
-        .input-card { background: var(--card); padding: 15px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-bottom: 15px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .input-card { background: var(--card); padding: 15px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); margin-bottom: 15px; border: 1px solid #334155; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .team-box { background: #0f172a; padding: 12px; border-radius: 12px; border: 1px solid #334155; }
-        label { display: block; font-size: 0.65rem; opacity: 0.8; margin: 8px 0 2px; text-transform: uppercase; }
-        input { width: 100%; padding: 10px; background: #1e293b; border: 1px solid #475569; color: #fff; border-radius: 8px; font-size: 1rem; box-sizing: border-box; outline: none; }
-        input:focus { border-color: var(--accent); }
-        .name-input { border: none; border-bottom: 2px solid var(--accent); margin-bottom: 10px; font-weight: bold; background: transparent; border-radius: 0; }
-        .btn-group { display: grid; grid-template-columns: 3fr 1fr; gap: 10px; margin-top: 15px; }
-        button { padding: 16px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; }
-        .btn-calc { background: var(--accent); color: #0f172a; }
-        .btn-reset { background: #334155; color: #fff; font-size: 0.8rem; }
-        .analysis-card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 6px solid var(--accent); animation: slideIn 0.3s ease; position: relative; }
-        .score-display { font-size: 1.8rem; font-weight: 900; margin-right: 15px; }
+        label { display: block; font-size: 0.65rem; color: #94a3b8; margin: 8px 0 2px; text-transform: uppercase; font-weight: bold; }
+        input, select { width: 100%; padding: 12px; background: #1e293b; border: 1px solid #475569; color: #fff; border-radius: 8px; font-size: 1rem; box-sizing: border-box; outline: none; transition: 0.2s; }
+        input:focus { border-color: var(--accent); background: #233149; }
+        .name-input { border: none !important; border-bottom: 2px solid var(--accent) !important; margin-bottom: 10px; font-weight: bold; background: transparent !important; border-radius: 0 !important; text-align: center; }
+        .btn-group { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-top: 15px; }
+        button { padding: 16px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; active { transform: scale(0.98); } }
+        .btn-calc { background: var(--accent); color: #0f172a; text-transform: uppercase; }
+        .btn-reset { background: #334155; color: #fff; font-size: 0.75rem; }
+        .analysis-card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 6px solid var(--accent); position: relative; animation: slideIn 0.3s ease-out; }
+        .score-display { font-size: 1.8rem; font-weight: 900; margin-right: 15px; font-variant-numeric: tabular-nums; }
         .meta { font-size: 0.75rem; color: #94a3b8; line-height: 1.4; }
+        .tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+        .tag { font-size: 0.65rem; padding: 3px 7px; border-radius: 4px; background: #334155; color: var(--accent); font-weight: bold; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -29,7 +31,8 @@
 
 <div class="app-container">
     <div class="input-card">
-        <select id="league" style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; background:#0f172a; color:#fff; border:1px solid #334155;">
+        <label>Hedef Lig</label>
+        <select id="league" style="margin-bottom:15px;">
             <option value="ita">🇮🇹 İtalya Serie A</option>
             <option value="esp">🇪🇸 İspanya La Liga</option>
             <option value="fra">🇫🇷 Fransa Ligue 1</option>
@@ -39,24 +42,24 @@
 
         <div class="grid">
             <div class="team-box">
-                <input type="text" id="h_name" class="name-input" placeholder="EV TAKIMI">
-                <label>npxG/Sh</label><input type="number" id="h_n" inputmode="decimal" step="0.01">
-                <label>PPA</label><input type="number" id="h_p" inputmode="decimal" step="0.5">
-                <label>Çalım Yeme</label><input type="number" id="h_d" inputmode="decimal">
-                <label>3. Bölge Temas</label><input type="number" id="h_t" inputmode="decimal" placeholder="Örn: 120">
+                <input type="text" id="h_name" class="name-input" placeholder="EV SAHİBİ">
+                <label>npxG/Sh</label><input type="number" id="h_n" inputmode="decimal" step="any" placeholder="0.08">
+                <label>PPA</label><input type="number" id="h_p" inputmode="decimal" step="any" placeholder="8.0">
+                <label>Çalım Yeme</label><input type="number" id="h_d" inputmode="decimal" step="any">
+                <label>3. Bölge Temas</label><input type="number" id="h_t" inputmode="decimal" step="any">
             </div>
             <div class="team-box">
-                <input type="text" id="a_name" class="name-input" placeholder="DEP TAKIMI">
-                <label>npxG/Sh</label><input type="number" id="a_n" inputmode="decimal" step="0.01">
-                <label>PPA</label><input type="number" id="a_p" inputmode="decimal" step="0.5">
-                <label>Çalım Yeme</label><input type="number" id="a_d" inputmode="decimal">
-                <label>3. Bölge Temas</label><input type="number" id="a_t" inputmode="decimal" placeholder="Örn: 110">
+                <input type="text" id="a_name" class="name-input" placeholder="DEPLASMAN">
+                <label>npxG/Sh</label><input type="number" id="a_n" inputmode="decimal" step="any" placeholder="0.07">
+                <label>PPA</label><input type="number" id="a_p" inputmode="decimal" step="any" placeholder="7.5">
+                <label>Çalım Yeme</label><input type="number" id="a_d" inputmode="decimal" step="any">
+                <label>3. Bölge Temas</label><input type="number" id="a_t" inputmode="decimal" step="any">
             </div>
         </div>
 
         <div class="btn-group">
-            <button class="btn-calc" onclick="hesapla()">ANALİZİ KAYDET</button>
-            <button class="btn-reset" onclick="temizle()">SİL</button>
+            <button class="btn-calc" onclick="hesapla()">Analiz Et</button>
+            <button class="btn-reset" onclick="temizle()">Temizle</button>
         </div>
     </div>
 
@@ -73,56 +76,71 @@ const leagueConfigs = {
 };
 
 function temizle() {
-    document.querySelectorAll('input').forEach(i => i.value = "");
+    if(confirm("Tüm kutular temizlensin mi?")) {
+        document.querySelectorAll('input').forEach(i => i.value = "");
+    }
 }
 
 function hesapla() {
     const lKey = document.getElementById('league').value;
     const cfg = leagueConfigs[lKey];
+    
+    // Veri toplama ve Hata Kontrolü
+    const inputs = ['h_n', 'a_n', 'h_p', 'a_p', 'h_d', 'a_d', 'h_t', 'a_t'];
+    for(let id of inputs) {
+        if(document.getElementById(id).value === "") {
+            alert("Lütfen tüm sayısal verileri girin!");
+            return;
+        }
+    }
+
     const d = {
         h: document.getElementById('h_name').value || "Ev",
         a: document.getElementById('a_name').value || "Dep",
-        hn: Number(document.getElementById('h_n').value), hp: Number(document.getElementById('h_p').value), hd: Number(document.getElementById('h_d').value), ht: Number(document.getElementById('h_t').value),
-        an: Number(document.getElementById('a_n').value), ap: Number(document.getElementById('a_p').value), ad: Number(document.getElementById('a_d').value), at: Number(document.getElementById('a_t').value)
+        hn: parseFloat(document.getElementById('h_n').value), hp: parseFloat(document.getElementById('h_p').value), 
+        hd: parseFloat(document.getElementById('h_d').value), ht: parseFloat(document.getElementById('h_t').value),
+        an: parseFloat(document.getElementById('a_n').value), ap: parseFloat(document.getElementById('a_p').value), 
+        ad: parseFloat(document.getElementById('a_d').value), at: parseFloat(document.getElementById('a_t').value)
     };
 
     let score = 0;
-    let details = [];
+    let tags = [];
 
-    // 1. Kısırlık Kontrolü (40 Puan)
-    if (d.hn <= cfg.npxg && d.an <= cfg.npxg) { score += 40; details.push("Düşük xG ✅"); }
+    // 1. Kısırlık (40 Puan)
+    if (d.hn <= cfg.npxg && d.an <= cfg.npxg) { score += 40; tags.push("Kısırlık ✅"); }
     
-    // 2. PPA Kontrolü (30 Puan)
-    if (d.hp <= cfg.ppa && d.ap <= cfg.ppa) { score += 30; details.push("PPA Sınırda ✅"); }
+    // 2. Sızma (30 Puan)
+    if (d.hp <= cfg.ppa && d.ap <= cfg.ppa) { score += 30; tags.push("Geçit Vermez ✅"); }
 
-    // 3. Savunma (Çalım) Kontrolü (10 Puan)
-    if (d.hd <= cfg.drib && d.ad <= cfg.drib) { score += 10; details.push("Savunma Sert ✅"); }
+    // 3. Savunma (10 Puan)
+    if (d.hd <= cfg.drib && d.ad <= cfg.drib) { score += 10; tags.push("Sert Savunma ✅"); }
 
-    // 4. AKILLI DENGE HESABI (20 Puan)
-    // FBRef 'Touches (Att 3rd)' verisi üzerinden Tilt simülasyonu
-    const totalTouches = d.ht + d.at;
-    const hRatio = (d.ht / totalTouches) * 100;
+    // 4. Akıllı Denge (20 Puan)
+    const totalT = d.ht + d.at;
+    const hRatio = totalT > 0 ? (d.ht / totalT) * 100 : 0;
     if (hRatio >= 42 && hRatio <= 58) { 
         score += 20; 
-        details.push("Dengeli Baskı ✅"); 
+        tags.push("Kilitli Oyun ✅"); 
     } else {
-        details.push("Dengesiz Baskı ⚠️");
+        tags.push("Dengesiz Baskı ⚠️");
     }
 
+    // Arayüz Çıktısı
     const resDiv = document.getElementById('results');
     const card = document.createElement('div');
     card.className = "analysis-card";
-    const color = score >= 80 ? 'var(--success)' : (score >= 60 ? '#f59e0b' : 'var(--danger)');
-    card.style.borderLeftColor = color;
+    const statusColor = score >= 80 ? 'var(--success)' : (score >= 60 ? 'var(--warning)' : 'var(--danger)');
+    card.style.borderLeftColor = statusColor;
     
     card.innerHTML = `
         <div style="display:flex; align-items:center;">
-            <div class="score-display" style="color:${color}">%${score}</div>
+            <div class="score-display" style="color:${statusColor}">%${score}</div>
             <div style="flex:1">
                 <div style="font-weight:bold; font-size:1.1rem; color:#fff;">${d.h} - ${d.a}</div>
                 <div class="meta">${cfg.n} • ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
-                <div class="meta" style="color:var(--accent); margin-top:4px; font-weight:600;">${details.join(' • ')}</div>
+                <div class="tag-row">${tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
             </div>
+            <button onclick="this.parentElement.parentElement.remove()" style="background:none; color:#475569; font-size:1.2rem; border:none; padding:0 5px;">×</button>
         </div>
     `;
     resDiv.prepend(card);

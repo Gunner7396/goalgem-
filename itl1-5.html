@@ -2,60 +2,69 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuantum Ekspres v4.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kuantum Pro-Panel v5.0</title>
     <style>
-        :root { --bg: #0b0f1a; --card: #161b2a; --accent: #38bdf8; --text: #e2e8f0; --danger: #ef4444; --success: #22c55e; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); padding: 10px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 500px; background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .full { grid-column: span 2; }
-        h3 { margin: 5px 0; font-size: 0.8rem; color: var(--accent); text-align: center; border-bottom: 1px solid #2d3748; padding-bottom: 5px; }
-        label { display: block; font-size: 0.65rem; margin-top: 5px; opacity: 0.7; }
-        input, select { width: 100%; padding: 8px; background: #1a202e; border: 1px solid #2d3748; color: #fff; border-radius: 5px; font-size: 0.9rem; }
-        .btn { width: 100%; padding: 15px; background: var(--accent); border: none; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; color: #0b0f1a; font-size: 1rem; }
-        #result { margin-top: 15px; padding: 15px; background: #0f172a; border-radius: 8px; display: none; border: 1px solid var(--accent); }
-        .score-box { text-align: center; font-size: 3rem; font-weight: 800; }
-        .scroll-area { max-height: 100px; overflow-y: auto; font-size: 0.75rem; margin-top: 10px; border-top: 1px solid #2d3748; padding-top: 5px; }
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; --danger: #ef4444; --success: #22c55e; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        .app-container { width: 100%; max-width: 450px; }
+        .input-card { background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        h3 { font-size: 0.75rem; color: var(--accent); margin: 10px 0 5px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; }
+        label { display: block; font-size: 0.65rem; opacity: 0.7; margin-bottom: 2px; }
+        input, select { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; color: #fff; border-radius: 10px; font-size: 1rem; box-sizing: border-box; }
+        .btn-analyze { width: 100%; padding: 16px; background: var(--accent); border: none; font-weight: 800; border-radius: 12px; cursor: pointer; margin-top: 15px; color: #0f172a; font-size: 1.1rem; }
+        
+        /* Analiz Listesi Alanı */
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .clear-all { color: var(--danger); font-size: 0.75rem; cursor: pointer; text-decoration: underline; }
+        .analysis-list { max-height: 400px; overflow-y: auto; padding-right: 5px; -webkit-overflow-scrolling: touch; }
+        .analysis-card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 10px; position: relative; border-left: 5px solid var(--accent); animation: slideIn 0.3s ease; }
+        .delete-single { position: absolute; top: 10px; right: 10px; background: #334155; color: #fff; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 0.7rem; }
+        .score-val { font-size: 1.8rem; font-weight: 800; margin-right: 10px; }
+        .meta-info { font-size: 0.7rem; opacity: 0.6; }
+        
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <select id="league" style="margin-bottom: 15px;">
-        <option value="ita">🇮🇹 İtalya Serie A</option>
-        <option value="esp">🇪🇸 İspanya La Liga</option>
-        <option value="fra">🇫🇷 Fransa Ligue 1</option>
-        <option value="eng">🇬🇧 İngiltere Premier League</option>
-        <option value="ger">🇩🇪 Almanya Bundesliga</option>
-    </select>
+<div class="app-container">
+    <div class="input-card">
+        <select id="league" style="margin-bottom: 10px;">
+            <option value="ita">🇮🇹 İtalya Serie A</option>
+            <option value="esp">🇪🇸 İspanya La Liga</option>
+            <option value="fra">🇫🇷 Fransa Ligue 1</option>
+            <option value="eng">🇬🇧 İngiltere Premier League</option>
+            <option value="ger">🇩🇪 Almanya Bundesliga</option>
+        </select>
 
-    <div class="grid">
-        <div class="team-box">
-            <h3>EV SAHİBİ</h3>
-            <label>npxG/Sh</label><input type="number" id="a_npxg" inputmode="decimal" placeholder="0.08">
-            <label>PPA</label><input type="number" id="a_ppa" inputmode="decimal" placeholder="7.5">
-            <label>Duran Top (Atma)</label><input type="number" id="a_spA" inputmode="decimal" value="0.25">
+        <div class="grid">
+            <div><h3>EV SAHİBİ</h3>
+                <label>npxG/Sh</label><input type="number" id="a_n" step="0.01" value="0.08">
+                <label>PPA</label><input type="number" id="a_p" step="0.5" value="8">
+                <label>SP-xG</label><input type="number" id="a_s" step="0.01" value="0.25">
+            </div>
+            <div><h3>DEPLASMAN</h3>
+                <label>npxG/Sh</label><input type="number" id="b_n" step="0.01" value="0.07">
+                <label>PPA</label><input type="number" id="b_p" step="0.5" value="6">
+                <label>SP-xG</label><input type="number" id="b_s" step="0.01" value="0.25">
+            </div>
         </div>
-        <div class="team-box">
-            <h3>DEPLASMAN</h3>
-            <label>npxG/Sh</label><input type="number" id="b_npxg" inputmode="decimal" placeholder="0.08">
-            <label>PPA</label><input type="number" id="b_ppa" inputmode="decimal" placeholder="7.5">
-            <label>Duran Top (Yeme)</label><input type="number" id="b_spY" inputmode="decimal" value="0.25">
-        </div>
-        
-        <div class="full">
-            <label>Field Tilt % (Baskı Gücü)</label>
-            <input type="number" id="tilt" inputmode="decimal" value="50">
-            <button class="btn" onclick="analizEt()">HIZLI ANALİZ</button>
-        </div>
+        <label style="margin-top: 10px;">Field Tilt % (Baskı)</label>
+        <input type="number" id="tilt" value="50">
+        <button class="btn-analyze" onclick="analizEkle()">ANALİZ ET VE KAYDET</button>
     </div>
 
-    <div id="result">
-        <div id="res_league" style="font-size: 0.7rem; text-align: center; opacity: 0.6;"></div>
-        <div id="res_score" class="score-box">%0</div>
-        <div id="res_details" class="scroll-area"></div>
+    <div class="list-header">
+        <span style="font-weight: bold; font-size: 0.9rem;">Geçmiş Analizler</span>
+        <span class="clear-all" onclick="tumunuSil()">Tümünü Temizle</span>
     </div>
+
+    <div id="analizListesi" class="analysis-list">
+        </div>
 </div>
 
 <script>
@@ -67,47 +76,72 @@ const configs = {
     ger: { n: "Bundesliga", npxg: 0.07, ppa: 6.5, sp: 0.32 }
 };
 
-function analizEt() {
-    const cfg = configs[document.getElementById('league').value];
-    const A = { n:Number(document.getElementById('a_npxg').value), p:Number(document.getElementById('a_ppa').value), s:Number(document.getElementById('a_spA').value) };
-    const B = { n:Number(document.getElementById('b_npxg').value), p:Number(document.getElementById('b_ppa').value), s:Number(document.getElementById('b_spY').value) };
-    const tilt = Number(document.getElementById('tilt').value);
+function analizEkle() {
+    const leagueKey = document.getElementById('league').value;
+    const cfg = configs[leagueKey];
+    const data = {
+        an: Number(document.getElementById('a_n').value), ap: Number(document.getElementById('a_p').value), as: Number(document.getElementById('a_s').value),
+        bn: Number(document.getElementById('b_n').value), bp: Number(document.getElementById('b_p').value), bs: Number(document.getElementById('b_s').value),
+        tilt: Number(document.getElementById('tilt').value)
+    };
 
-    if(!A.n || !B.n) { alert("Verileri girin!"); return; }
+    let score = 0;
+    let logs = [];
 
-    let score = 0; let logs = [];
-    
-    // Temel Filtreler
-    if (A.n <= cfg.npxg && B.n <= cfg.npxg) { score += 40; logs.push("✓ npxG: Kısırlık onayı."); }
-    if (((A.p + B.p)/2) <= cfg.ppa) { score += 30; logs.push("✓ PPA: Sızma engelli."); }
-    
-    // Saha Hakimiyeti & Derin Blok
-    if (tilt >= 44 && tilt <= 56) { score += 30; logs.push("✓ Tilt: Dengeli."); }
-    else if ((tilt > 65 || tilt < 35) && ((A.p + B.p)/2) <= cfg.ppa) { score += 25; logs.push("🛡️ Derin Blok onayı."); }
-    else { score -= 15; logs.push("✖ Riskli baskı."); }
-
-    // Çakışma Mantıklı Duran Top (Sadece uçlarda puan kırar)
-    if (A.s > (cfg.sp * 1.4) && B.s > (cfg.sp * 1.4)) {
-        score -= 25; logs.push("🚩 DURAN TOP SABOTAJI! (-25)");
-    }
+    // Lig bazlı değerlendirme
+    if (data.an <= cfg.npxg && data.bn <= cfg.npxg) { score += 40; logs.push("Kısırlık onayı"); }
+    if (((data.ap + data.bp)/2) <= cfg.ppa) { score += 30; logs.push("PPA Sızma engelli"); }
+    if (data.tilt >= 44 && data.tilt <= 56) { score += 30; logs.push("Dengeli baskı"); }
+    if (data.as > (cfg.sp * 1.4) && data.bs > (cfg.sp * 1.4)) { score -= 25; logs.push("🚩 DURAN TOP RİSKİ"); }
 
     score = Math.max(0, Math.min(100, score));
-    document.getElementById('result').style.display = "block";
-    document.getElementById('res_score').innerText = "%" + score;
-    document.getElementById('res_score').style.color = score > 75 ? "#22c55e" : (score > 55 ? "#f59e0b" : "#ef4444");
-    document.getElementById('res_details').innerHTML = logs.map(l => `<div>${l}</div>`).join('');
-    localStorage.setItem('kuantum_fast', JSON.stringify({score, logs, n: cfg.n}));
+    
+    const analiz = {
+        id: Date.now(),
+        league: cfg.n,
+        score: score,
+        logs: logs,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    let arsiv = JSON.parse(localStorage.getItem('analizler') || '[]');
+    arsiv.unshift(analiz);
+    localStorage.setItem('analizler', JSON.stringify(arsiv));
+    arayuzuGuncelle();
 }
 
-window.onload = () => {
-    const s = localStorage.getItem('kuantum_fast');
-    if(s) { 
-        const d = JSON.parse(s);
-        document.getElementById('result').style.display = "block";
-        document.getElementById('res_score').innerText = "%" + d.score;
-        document.getElementById('res_details').innerHTML = d.logs.map(l => `<div>${l}</div>`).join('');
+function arayuzuGuncelle() {
+    const liste = document.getElementById('analizListesi');
+    const arsiv = JSON.parse(localStorage.getItem('analizler') || '[]');
+    liste.innerHTML = arsiv.map(item => `
+        <div class="analysis-card" style="border-left-color: ${item.score > 70 ? 'var(--success)' : (item.score > 40 ? '#f59e0b' : 'var(--danger)')}">
+            <button class="delete-single" onclick="tekSil(${item.id})">X</button>
+            <div style="display: flex; align-items: center;">
+                <span class="score-val" style="color: ${item.score > 70 ? 'var(--success)' : (item.score > 40 ? '#f59e0b' : 'var(--danger)')}">%${item.score}</span>
+                <div>
+                    <div style="font-weight: bold; font-size: 0.9rem;">${item.league} Maçı</div>
+                    <div class="meta-info">${item.time} | ${item.logs.join(' • ')}</div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function tekSil(id) {
+    let arsiv = JSON.parse(localStorage.getItem('analizler') || '[]');
+    arsiv = arsiv.filter(a => a.id !== id);
+    localStorage.setItem('analizler', JSON.stringify(arsiv));
+    arayuzuGuncelle();
+}
+
+function tumunuSil() {
+    if(confirm("Tüm geçmiş silinsin mi?")) {
+        localStorage.removeItem('analizler');
+        arayuzuGuncelle();
     }
-};
+}
+
+window.onload = arayuzuGuncelle;
 </script>
 </body>
 </html>

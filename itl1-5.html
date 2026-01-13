@@ -3,78 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kuantum Pro-Panel v6.0</title>
+    <title>Beton Analiz v8.0</title>
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; --danger: #ef4444; --success: #22c55e; --warning: #f59e0b; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
-        .app-container { width: 100%; max-width: 450px; }
-        .input-card { background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; --danger: #ef4444; --success: #22c55e; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 10px; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        .app-container { width: 100%; max-width: 480px; }
+        .input-card { background: var(--card); padding: 15px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-bottom: 15px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        h3 { font-size: 0.75rem; color: var(--accent); margin: 10px 0 5px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; }
-        label { display: block; font-size: 0.65rem; opacity: 0.7; margin-bottom: 2px; }
-        input, select { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; color: #fff; border-radius: 10px; font-size: 1rem; box-sizing: border-box; outline: none; }
+        .team-box { background: #0f172a; padding: 12px; border-radius: 12px; border: 1px solid #334155; }
+        label { display: block; font-size: 0.65rem; opacity: 0.8; margin: 8px 0 2px; text-transform: uppercase; }
+        input { width: 100%; padding: 10px; background: #1e293b; border: 1px solid #475569; color: #fff; border-radius: 8px; font-size: 1rem; box-sizing: border-box; outline: none; }
         input:focus { border-color: var(--accent); }
-        .team-input { background: #334155; border: none; margin-bottom: 5px; font-weight: bold; }
-        .btn-group { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-top: 15px; }
-        .btn-analyze { padding: 16px; background: var(--accent); border: none; font-weight: 800; border-radius: 12px; cursor: pointer; color: #0f172a; font-size: 1rem; }
-        .btn-reset { padding: 16px; background: #334155; border: none; font-weight: bold; border-radius: 12px; cursor: pointer; color: #fff; font-size: 0.8rem; }
-        
-        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 5px; }
-        .clear-all { color: var(--danger); font-size: 0.75rem; cursor: pointer; }
-        .analysis-list { max-height: 450px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-        .analysis-card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 10px; position: relative; border-left: 6px solid var(--accent); animation: slideIn 0.3s ease; }
-        .delete-single { position: absolute; top: 10px; right: 10px; background: #334155; color: #fff; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; }
-        .score-circle { font-size: 1.6rem; font-weight: 900; min-width: 65px; }
-        .meta-info { font-size: 0.7rem; opacity: 0.6; margin-top: 4px; line-height: 1.2; }
-        
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .name-input { border: none; border-bottom: 2px solid var(--accent); margin-bottom: 10px; font-weight: bold; background: transparent; border-radius: 0; }
+        .btn-group { display: grid; grid-template-columns: 3fr 1fr; gap: 10px; margin-top: 15px; }
+        button { padding: 16px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .btn-calc { background: var(--accent); color: #0f172a; }
+        .btn-reset { background: #334155; color: #fff; font-size: 0.8rem; }
+        .analysis-card { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 6px solid var(--accent); animation: slideIn 0.3s ease; position: relative; }
+        .score-display { font-size: 1.8rem; font-weight: 900; margin-right: 15px; }
+        .meta { font-size: 0.75rem; color: #94a3b8; line-height: 1.4; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div class="input-card">
-        <select id="league" style="margin-bottom: 15px;">
+        <select id="league" style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; background:#0f172a; color:#fff; border:1px solid #334155;">
             <option value="ita">🇮🇹 İtalya Serie A</option>
             <option value="esp">🇪🇸 İspanya La Liga</option>
             <option value="fra">🇫🇷 Fransa Ligue 1</option>
-            <option value="eng">🇬🇧 İngiltere Premier League</option>
+            <option value="eng">🇬🇧 İngiltere Premier Lig</option>
             <option value="ger">🇩🇪 Almanya Bundesliga</option>
         </select>
 
         <div class="grid">
-            <div id="home_side">
-                <input type="text" id="home_name" placeholder="Ev Sahibi" class="team-input">
-                <label>npxG/Sh</label><input type="number" id="a_n" inputmode="decimal" step="0.01" value="0.08">
-                <label>PPA</label><input type="number" id="a_p" inputmode="decimal" step="0.5" value="8">
-                <label>Çalım Yeme</label><input type="number" id="a_d" inputmode="decimal" step="1" value="10">
+            <div class="team-box">
+                <input type="text" id="h_name" class="name-input" placeholder="EV TAKIMI">
+                <label>npxG/Sh</label><input type="number" id="h_n" inputmode="decimal" step="0.01">
+                <label>PPA</label><input type="number" id="h_p" inputmode="decimal" step="0.5">
+                <label>Çalım Yeme</label><input type="number" id="h_d" inputmode="decimal">
+                <label>3. Bölge Temas</label><input type="number" id="h_t" inputmode="decimal" placeholder="Örn: 120">
             </div>
-            <div id="away_side">
-                <input type="text" id="away_name" placeholder="Deplasman" class="team-input">
-                <label>npxG/Sh</label><input type="number" id="b_n" inputmode="decimal" step="0.01" value="0.07">
-                <label>PPA</label><input type="number" id="b_p" inputmode="decimal" step="0.5" value="6">
-                <label>Çalım Yeme</label><input type="number" id="b_d" inputmode="decimal" step="1" value="10">
+            <div class="team-box">
+                <input type="text" id="a_name" class="name-input" placeholder="DEP TAKIMI">
+                <label>npxG/Sh</label><input type="number" id="a_n" inputmode="decimal" step="0.01">
+                <label>PPA</label><input type="number" id="a_p" inputmode="decimal" step="0.5">
+                <label>Çalım Yeme</label><input type="number" id="a_d" inputmode="decimal">
+                <label>3. Bölge Temas</label><input type="number" id="a_t" inputmode="decimal" placeholder="Örn: 110">
             </div>
         </div>
-        <label style="margin-top: 10px;">Field Tilt % (Baskı)</label>
-        <input type="number" id="tilt" inputmode="decimal" value="50">
-        
+
         <div class="btn-group">
-            <button class="btn-analyze" onclick="analizEkle()">ANALİZ ET VE KAYDET</button>
-            <button class="btn-reset" onclick="formuTemizle()">TEMİZLE</button>
+            <button class="btn-calc" onclick="hesapla()">ANALİZİ KAYDET</button>
+            <button class="btn-reset" onclick="temizle()">SİL</button>
         </div>
     </div>
 
-    <div class="list-header">
-        <span style="font-weight: bold; font-size: 0.9rem;">Analiz Geçmişi</span>
-        <span class="clear-all" onclick="tumunuSil()">Tümünü Temizle</span>
-    </div>
-
-    <div id="analizListesi" class="analysis-list"></div>
+    <div id="results"></div>
 </div>
 
 <script>
-const configs = {
+const leagueConfigs = {
     ita: { n: "Serie A", npxg: 0.08, ppa: 8.0, drib: 12 },
     esp: { n: "La Liga", npxg: 0.08, ppa: 7.5, drib: 11 },
     fra: { n: "Ligue 1", npxg: 0.08, ppa: 7.5, drib: 10 },
@@ -82,89 +72,61 @@ const configs = {
     ger: { n: "Bundesliga", npxg: 0.07, ppa: 6.5, drib: 10 }
 };
 
-function formuTemizle() {
-    document.querySelectorAll('input').forEach(input => {
-        if(input.type === 'number') input.value = "";
-        else input.value = "";
-    });
+function temizle() {
+    document.querySelectorAll('input').forEach(i => i.value = "");
 }
 
-function analizEkle() {
-    const leagueKey = document.getElementById('league').value;
-    const cfg = configs[leagueKey];
-    const data = {
-        hName: document.getElementById('home_name').value || "Ev",
-        aName: document.getElementById('away_name').value || "Dep",
-        an: Number(document.getElementById('a_n').value), ap: Number(document.getElementById('a_p').value), ad: Number(document.getElementById('a_d').value),
-        bn: Number(document.getElementById('b_n').value), bp: Number(document.getElementById('b_p').value), bd: Number(document.getElementById('b_d').value),
-        tilt: Number(document.getElementById('tilt').value)
+function hesapla() {
+    const lKey = document.getElementById('league').value;
+    const cfg = leagueConfigs[lKey];
+    const d = {
+        h: document.getElementById('h_name').value || "Ev",
+        a: document.getElementById('a_name').value || "Dep",
+        hn: Number(document.getElementById('h_n').value), hp: Number(document.getElementById('h_p').value), hd: Number(document.getElementById('h_d').value), ht: Number(document.getElementById('h_t').value),
+        an: Number(document.getElementById('a_n').value), ap: Number(document.getElementById('a_p').value), ad: Number(document.getElementById('a_d').value), at: Number(document.getElementById('a_t').value)
     };
 
     let score = 0;
-    let logs = [];
+    let details = [];
 
-    // Kısırlık Puanı (40 Puan)
-    if (data.an <= cfg.npxg && data.bn <= cfg.npxg) { score += 40; logs.push("Kısırlık onayı"); }
+    // 1. Kısırlık Kontrolü (40 Puan)
+    if (d.hn <= cfg.npxg && d.an <= cfg.npxg) { score += 40; details.push("Düşük xG ✅"); }
     
-    // PPA Puanı (30 Puan)
-    if (((data.ap + data.bp)/2) <= cfg.ppa) { score += 30; logs.push("Sızma engelli"); }
+    // 2. PPA Kontrolü (30 Puan)
+    if (d.hp <= cfg.ppa && d.ap <= cfg.ppa) { score += 30; details.push("PPA Sınırda ✅"); }
+
+    // 3. Savunma (Çalım) Kontrolü (10 Puan)
+    if (d.hd <= cfg.drib && d.ad <= cfg.drib) { score += 10; details.push("Savunma Sert ✅"); }
+
+    // 4. AKILLI DENGE HESABI (20 Puan)
+    // FBRef 'Touches (Att 3rd)' verisi üzerinden Tilt simülasyonu
+    const totalTouches = d.ht + d.at;
+    const hRatio = (d.ht / totalTouches) * 100;
+    if (hRatio >= 42 && hRatio <= 58) { 
+        score += 20; 
+        details.push("Dengeli Baskı ✅"); 
+    } else {
+        details.push("Dengesiz Baskı ⚠️");
+    }
+
+    const resDiv = document.getElementById('results');
+    const card = document.createElement('div');
+    card.className = "analysis-card";
+    const color = score >= 80 ? 'var(--success)' : (score >= 60 ? '#f59e0b' : 'var(--danger)');
+    card.style.borderLeftColor = color;
     
-    // YENİ: Çalım Yeme (Savunma Direnci) Puanı (10 Puan Ekstra Bonus)
-    if (data.ad <= cfg.drib && data.bd <= cfg.drib) { score += 10; logs.push("Savunma dirençli"); }
-
-    // Field Tilt Aralığı (%42 - %58) (20 Puan)
-    if (data.tilt >= 42 && data.tilt <= 58) { score += 20; logs.push("Oyun kilitli"); }
-
-    score = Math.max(0, Math.min(100, score));
-    
-    const analiz = {
-        id: Date.now(),
-        match: `${data.hName} vs ${data.aName}`,
-        league: cfg.n,
-        score: score,
-        logs: logs,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    let arsiv = JSON.parse(localStorage.getItem('analizler') || '[]');
-    arsiv.unshift(analiz);
-    localStorage.setItem('analizler', JSON.stringify(arsiv));
-    arayuzuGuncelle();
-}
-
-function arayuzuGuncelle() {
-    const liste = document.getElementById('analizListesi');
-    const arsiv = JSON.parse(localStorage.getItem('analizler') || '[]');
-    liste.innerHTML = arsiv.map(item => `
-        <div class="analysis-card" style="border-left-color: ${item.score >= 80 ? 'var(--success)' : (item.score >= 50 ? 'var(--warning)' : 'var(--danger)')}">
-            <button class="delete-single" onclick="tekSil(${item.id})">×</button>
-            <div style="display: flex; align-items: center;">
-                <div class="score-circle" style="color: ${item.score >= 80 ? 'var(--success)' : (item.score >= 50 ? 'var(--warning)' : 'var(--danger)')}">%${item.score}</div>
-                <div style="flex:1">
-                    <div style="font-weight: 800; font-size: 0.95rem; color: #fff;">${item.match}</div>
-                    <div class="meta-info">${item.league} • ${item.time}</div>
-                    <div class="meta-info" style="color: var(--accent)">${item.logs.join(' • ')}</div>
-                </div>
+    card.innerHTML = `
+        <div style="display:flex; align-items:center;">
+            <div class="score-display" style="color:${color}">%${score}</div>
+            <div style="flex:1">
+                <div style="font-weight:bold; font-size:1.1rem; color:#fff;">${d.h} - ${d.a}</div>
+                <div class="meta">${cfg.n} • ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+                <div class="meta" style="color:var(--accent); margin-top:4px; font-weight:600;">${details.join(' • ')}</div>
             </div>
         </div>
-    `).join('');
+    `;
+    resDiv.prepend(card);
 }
-
-function tekSil(id) {
-    let arsiv = JSON.parse(localStorage.getItem('analizler') || '[]');
-    arsiv = arsiv.filter(a => a.id !== id);
-    localStorage.setItem('analizler', JSON.stringify(arsiv));
-    arayuzuGuncelle();
-}
-
-function tumunuSil() {
-    if(confirm("Tüm geçmiş silinsin mi?")) {
-        localStorage.removeItem('analizler');
-        arayuzuGuncelle();
-    }
-}
-
-window.onload = arayuzuGuncelle;
 </script>
 </body>
 </html>

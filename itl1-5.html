@@ -3,133 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gemini | Italia Analytics</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>FotMob Analytics | Italia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0b0e14;
-            --accent: #00d2ff;
-            --secondary: #3a7bd5;
-            --card: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-            --success: #00ffa3;
-            --warning: #ffb800;
-            --danger: #ff4b4b;
+            --fotmob-bg: #121212;
+            --fotmob-card: #1c1c1e;
+            --fotmob-green: #00e676;
+            --fotmob-text-main: #ffffff;
+            --fotmob-text-secondary: #9e9e9e;
+            --fotmob-border: #2c2c2e;
+            --fotmob-input: #262628;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: radial-gradient(circle at top right, #1e293b, #0b0e14);
-            color: white;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--fotmob-bg);
+            color: var(--fotmob-text-main);
             margin: 0;
             display: flex;
             justify-content: center;
-            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
         .app-container {
             width: 100%;
-            max-width: 430px; /* iPhone 15 Pro Max Genişliği */
-            padding: 24px;
-            padding-bottom: 100px;
+            max-width: 480px;
+            min-height: 100vh;
+            padding: 16px;
         }
 
+        /* FotMob Tab Stili Header */
         header {
-            text-align: left;
-            margin-bottom: 32px;
-            margin-top: 20px;
-        }
-
-        header h1 { font-size: 28px; margin: 0; font-weight: 800; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        header p { color: #94a3b8; font-size: 14px; margin-top: 4px; }
-
-        .input-card {
-            background: var(--card);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 24px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--fotmob-border);
             margin-bottom: 20px;
         }
 
-        .input-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+        .header-title {
+            font-size: 22px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .field { display: flex; flex-direction: column; margin-bottom: 16px; }
-        .field label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #64748b; margin-bottom: 8px; letter-spacing: 0.5px; }
-        
-        input {
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 14px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            transition: 0.3s;
-        }
-
-        input:focus { outline: none; border-color: var(--accent); background: rgba(0,210,255,0.05); }
-
-        .analyze-btn {
-            background: linear-gradient(135deg, var(--secondary), var(--accent));
-            color: #000;
-            border: none;
-            width: 100%;
-            padding: 18px;
-            border-radius: 18px;
-            font-size: 16px;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 10px 25px -5px rgba(0, 210, 255, 0.3);
-            transition: 0.3s;
-        }
-
-        .analyze-btn:active { transform: scale(0.96); opacity: 0.9; }
-
-        #resultArea {
-            display: none;
-            margin-top: 24px;
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .score-card {
-            background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 100%);
-            border-radius: 24px;
-            padding: 30px;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-
-        .percentage { font-size: 56px; font-weight: 800; margin: 0; line-height: 1; color: var(--accent); }
-        .status-badge { display: inline-block; padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 700; margin-top: 15px; }
-
-        .analysis-text {
-            color: #cbd5e1;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-top: 20px;
-            text-align: left;
-            padding: 15px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 14px;
-        }
-
-        .metric-badge {
-            background: rgba(255, 43, 43, 0.1);
-            color: var(--danger);
+        .header-title span {
+            background: var(--fotmob-green);
+            color: black;
             padding: 2px 6px;
             border-radius: 4px;
             font-size: 12px;
-            margin-right: 4px;
+            vertical-align: middle;
+        }
+
+        /* Giriş Kartları */
+        .card {
+            background: var(--fotmob-card);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--fotmob-text-secondary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--fotmob-border);
+        }
+
+        .input-row:last-child { border-bottom: none; }
+
+        .input-label { font-size: 15px; font-weight: 500; }
+        
+        input {
+            background: var(--fotmob-input);
+            border: 1px solid var(--fotmob-border);
+            border-radius: 6px;
+            color: white;
+            padding: 8px 12px;
+            width: 80px;
+            text-align: center;
+            font-weight: 700;
+            font-family: 'Roboto';
+        }
+
+        input:focus { outline: none; border-color: var(--fotmob-green); }
+
+        /* Analiz Butonu */
+        .analyze-btn {
+            background: var(--fotmob-green);
+            color: #000;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* Sonuç Bölümü - FotMob Momentum Grafiği Tarzı */
+        #resultContainer {
+            display: none;
+            margin-top: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .momentum-bar {
+            height: 60px;
+            background: var(--fotmob-border);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .momentum-fill {
+            height: 100%;
+            background: var(--fotmob-green);
+            transition: width 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            padding-left: 15px;
+            font-weight: 900;
+            color: black;
+            font-size: 20px;
+        }
+
+        .insight-box {
+            background: #262628;
+            border-left: 4px solid var(--fotmob-green);
+            padding: 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .warning-tag {
+            color: #ff5252;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 5px;
+            display: block;
         }
     </style>
 </head>
@@ -137,93 +167,98 @@
 
 <div class="app-container">
     <header>
-        <h1>Italia Intelligence</h1>
-        <p>1.5 Alt Durgunluk Analiz Motoru</p>
+        <div class="header-title">Analiz Motoru <span>PRO</span></div>
+        <p style="color: var(--fotmob-text-secondary); font-size: 13px;">İtalya Serie A Durgunluk Verileri</p>
     </header>
 
-    <div class="input-card">
-        <div class="input-grid">
-            <div class="field">
-                <label>npxG/Sh</label>
-                <input type="number" id="npxg" step="0.01" placeholder="0.07">
-            </div>
-            <div class="field">
-                <label>Field Tilt %</label>
-                <input type="number" id="tilt" placeholder="52">
-            </div>
-            <div class="field">
-                <label>PPA</label>
-                <input type="number" id="ppa" placeholder="6">
-            </div>
-            <div class="field">
-                <label>Mid-Tkl</label>
-                <input type="number" id="tkl" placeholder="28">
-            </div>
-            <div class="field">
-                <label>PrgC</label>
-                <input type="number" id="prgc" placeholder="12">
-            </div>
-            <div class="field">
-                <label>Set-Piece xG</label>
-                <input type="number" id="setp" step="0.01" placeholder="0.02">
-            </div>
+    <div class="card">
+        <div class="card-title">Hücum & Tempo</div>
+        <div class="input-row">
+            <div class="input-label">npxG / Per Shot</div>
+            <input type="number" id="npxg" step="0.01" value="0.07">
         </div>
-        <button class="analyze-btn" onclick="runAnalysis()">ANALİZ ET</button>
+        <div class="input-row">
+            <div class="input-label">Field Tilt %</div>
+            <input type="number" id="tilt" value="52">
+        </div>
+        <div class="input-row">
+            <div class="input-label">Progressive Carries</div>
+            <input type="number" id="prgc" value="12">
+        </div>
     </div>
 
-    <div id="resultArea">
-        <div class="score-card">
-            <p style="font-size: 12px; color: #94a3b8; margin-bottom: 10px; font-weight: 600;">DURGUNLUK GÜVEN SKORU</p>
-            <h2 class="percentage" id="scorePct">0%</h2>
-            <div id="status" class="status-badge">BELİRSİZ</div>
-            <div class="analysis-text" id="analysisDesc"></div>
+    <div class="card">
+        <div class="card-title">Savunma & Kilit</div>
+        <div class="input-row">
+            <div class="input-label">PPA (İçeri Sızma)</div>
+            <input type="number" id="ppa" value="6">
+        </div>
+        <div class="input-row">
+            <div class="input-label">Mid-Tkl (Direnç)</div>
+            <input type="number" id="tkl" value="28">
+        </div>
+        <div class="input-row">
+            <div class="input-label">Set-Piece xG</div>
+            <input type="number" id="setp" step="0.01" value="0.02">
+        </div>
+    </div>
+
+    <button class="analyze-btn" onclick="fotmobAnalyze()">ANALİZİ GÖSTER</button>
+
+    <div id="resultContainer">
+        <div class="card">
+            <div class="card-title">Durgunluk İndeksi</div>
+            <div class="momentum-bar">
+                <div id="bar" class="momentum-fill" style="width: 0%">0%</div>
+            </div>
+            <div class="insight-box" id="insightText"></div>
+            <div id="warnings" style="margin-top:10px;"></div>
         </div>
     </div>
 </div>
 
 <script>
-    function runAnalysis() {
+    function fotmobAnalyze() {
         const v = {
-            npxg: parseFloat(document.getElementById('npxg').value || 0),
-            tilt: parseFloat(document.getElementById('tilt').value || 0),
-            ppa: parseFloat(document.getElementById('ppa').value || 0),
-            tkl: parseFloat(document.getElementById('tkl').value || 0),
-            prgc: parseFloat(document.getElementById('prgc').value || 0),
-            setp: parseFloat(document.getElementById('setp').value || 0)
+            npxg: parseFloat(document.getElementById('npxg').value),
+            tilt: parseFloat(document.getElementById('tilt').value),
+            prgc: parseFloat(document.getElementById('prgc').value),
+            ppa: parseFloat(document.getElementById('ppa').value),
+            tkl: parseFloat(document.getElementById('tkl').value),
+            setp: parseFloat(document.getElementById('setp').value)
         };
 
         let score = 0;
-        let warnings = [];
+        let badMetrix = [];
 
-        if(v.npxg <= 0.08) score += 25; else warnings.push("Yüksek Bitiricilik");
-        if(v.tilt <= 60) score += 15; else warnings.push("Aşırı Baskı");
-        if(v.ppa <= 10) score += 20; else warnings.push("Ceza Sahası Sızma");
-        if(v.tkl >= 20) score += 15; else warnings.push("Zayıf Defans");
-        if(v.prgc <= 15) score += 15; else warnings.push("Yüksek Tempo");
-        if(v.setp <= 0.04) score += 10; else warnings.push("Duran Top Riski");
+        if(v.npxg <= 0.08) score += 25; else badMetrix.push("Bitiricilik Yüksek");
+        if(v.tilt <= 60) score += 15; else badMetrix.push("Baskı Fazla");
+        if(v.ppa <= 10) score += 20; else badMetrix.push("Sızma Tehlikesi");
+        if(v.tkl >= 20) score += 15; else badMetrix.push("Zayıf Orta Saha");
+        if(v.prgc <= 15) score += 15; else badMetrix.push("Tempo Hızlı");
+        if(v.setp <= 0.04) score += 10; else badMetrix.push("Duran Top Riski");
 
-        document.getElementById('resultArea').style.display = 'block';
-        document.getElementById('scorePct').innerText = score + "%";
-        
-        const status = document.getElementById('status');
-        const desc = document.getElementById('analysisDesc');
+        document.getElementById('resultContainer').style.display = 'block';
+        const bar = document.getElementById('bar');
+        bar.style.width = score + "%";
+        bar.innerText = score + "%";
+
+        const insight = document.getElementById('insightText');
+        const warnDiv = document.getElementById('warnings');
+        warnDiv.innerHTML = "";
 
         if(score >= 80) {
-            status.innerText = "BETON KİLİT";
-            status.style.background = "rgba(0, 255, 163, 0.1)";
-            status.style.color = "var(--success)";
-            desc.innerHTML = "Maç İtalyan karakterine tam uyumlu. Oyun durgunluğa hapsolmuş durumda. Erken gol olsa dahi sistemin kilitlenmesi beklenir.";
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#00d2ff', '#00ffa3'] });
+            insight.innerHTML = "<strong>BETON KİLİT:</strong> Bu maç tam bir İtalyan durgunluğunda. Takımların üretim kapasitesi eşiklerin çok altında. Erken gol gelse bile oyunun 2. gole gitme enerjisi çok zayıf.";
+            bar.style.background = "#00e676";
         } else if(score >= 50) {
-            status.innerText = "DURGUN AMA RİSKLİ";
-            status.style.background = "rgba(255, 184, 0, 0.1)";
-            status.style.color = "var(--warning)";
-            desc.innerHTML = "Oyun durgun ancak <br>" + warnings.map(w => `<span class="metric-badge">${w}</span>`).join(' ') + " nedeniyle kilit her an esneyebilir.";
+            insight.innerHTML = "<strong>ORTA ŞEKER:</strong> Maç durgun karakterde ama bazı sızıntılar var. Analiz başarılı olabilir ancak hata payı mevcut.";
+            bar.style.background = "#ffb300";
+            badMetrix.forEach(m => {
+                warnDiv.innerHTML += `<span class="warning-tag">⚠️ ${m}</span>`;
+            });
         } else {
-            status.innerText = "HAREKETLİ OYUN";
-            status.style.background = "rgba(255, 75, 75, 0.1)";
-            status.style.color = "var(--danger)";
-            desc.innerHTML = "Sistem bu maçı 1.5 Alt için uygun görmüyor. " + warnings.join(", ") + " potansiyeli çok yüksek.";
+            insight.innerHTML = "<strong>HAREKETLİ:</strong> FotMob verileri bu maçta yüksek enerji saptadı. 1.5 Alt için uygun olmayan bir tempo söz konusu.";
+            bar.style.background = "#ff5252";
         }
     }
 </script>

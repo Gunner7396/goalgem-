@@ -1,97 +1,56 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masanaliz v4.5 - Final Logic</title>
-    <style>
-        :root { --bg: #0a0a0a; --card: #141414; --accent: #00ff88; --dim: #888; --home: #00d2ff; --away: #ff4081; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
-        .panel { background: var(--card); width: 100%; max-width: 450px; border-radius: 16px; padding: 15px; border: 1px solid #222; box-sizing: border-box; margin-bottom: 15px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        input, select { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; font-size: 12px; outline: none; }
-        .btn-main { background: var(--accent); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 800; width: 100%; margin-top: 12px; cursor: pointer; }
-        .card { background: var(--card); border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #222; width: 100%; max-width: 450px; box-sizing: border-box; }
-        .goal-probs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 15px 0; }
-        .prob-box { background: #1a1a1a; padding: 10px 2px; border-radius: 12px; text-align: center; border: 1px solid #222; }
-        .p-val { display: block; font-size: 14px; font-weight: 800; color: var(--accent); }
-        .p-lbl { font-size: 7px; color: var(--dim); font-weight: bold; }
-        .ai-text { font-size: 12px; line-height: 1.4; color: #ccc; background: #000; padding: 12px; border-radius: 10px; border-left: 3px solid var(--accent); }
-    </style>
-</head>
-<body>
+// 1. LİG BAZLI ORİJİNAL EŞİKLER (Anayasa)
+const thresholds = {
+    'Premier League': { npxg: 0.14, ppa: 12, third: 55, prgc: 18, dist: 16.8, coeff: 1.03 },
+    'Bundesliga':     { npxg: 0.12, ppa: 10, third: 48, prgc: 15, dist: 17.2, coeff: 1.05 },
+    'Serie A':        { npxg: 0.16, ppa: 14, third: 62, prgc: 16, dist: 16.5, coeff: 0.95 },
+    'La Liga':        { npxg: 0.15, ppa: 13, third: 58, prgc: 14, dist: 16.8, coeff: 0.97 },
+    'Ligue 1':        { npxg: 0.13, ppa: 11, third: 52, prgc: 16, dist: 17.5, coeff: 1.00 }
+};
 
-<div class="panel">
-    <select id="league" style="width: 100%;">
-        <option value="Bundesliga">Bundesliga</option>
-        <option value="Premier League">Premier League</option>
-        <option value="Serie A">Serie A</option>
-        <option value="La Liga">La Liga</option>
-        <option value="Ligue 1">Ligue 1</option>
-    </select>
-    <div class="grid">
-        <input type="text" id="hName" placeholder="Ev Takımı"> <input type="text" id="aName" placeholder="Dep Takımı">
-        <input type="text" id="h_npxg" placeholder="npxG/Sh" inputmode="decimal"> <input type="text" id="a_npxg" placeholder="npxG/Sh" inputmode="decimal">
-        <input type="text" id="h_ppa" placeholder="PPA" inputmode="decimal"> <input type="text" id="a_ppa" placeholder="PPA" inputmode="decimal">
-        <input type="text" id="h_prgc" placeholder="PrgC" inputmode="decimal"> <input type="text" id="a_prgc" placeholder="PrgC" inputmode="decimal">
-        <input type="text" id="h_dist" placeholder="Dist" inputmode="decimal"> <input type="text" id="a_dist" placeholder="Dist" inputmode="decimal">
-    </div>
-    <button class="btn-main" onclick="startAnalysis()">BAŞLAT</button>
-</div>
+function analyzeMatch(league, data) {
+    const thr = thresholds[league];
+    let scores = {};
 
-<div id="container" style="width: 100%; max-width: 450px;"></div>
+    // 2. HASSAS METRİK HESAPLAMA (Eşiğe Uzaklık & Logaritmik Artış)
+    const calculateMetricScore = (val, target, weight, isDist = false) => {
+        let ratio = isDist ? (target / val) : (val / target);
+        
+        // Azalan Verimler Yasası: Eşiğin 1.3 katından sonrası daha az puan verir (Absürt skor koruması)
+        if (ratio > 1.3) {
+            ratio = 1.3 + Math.log10(ratio - 0.2); 
+        }
+        
+        // Sınırda Olma Çözümü: %90 altı çok sert düşer, %90-110 arası lineerdir
+        let score = ratio * weight;
+        return Math.min(score, weight * 1.5); // Maksimum tavan puanı
+    };
 
-<script>
-    function fix(v) { return parseFloat(String(v).replace(',', '.')) || 0; }
+    // 5 Temel Metrik Ağırlıklandırması
+    scores.npxg = calculateMetricScore(data.npxg, thr.npxg, 35);
+    scores.ppa  = calculateMetricScore(data.ppa,  thr.ppa,  25);
+    scores.third = calculateMetricScore(data.third, thr.third, 15);
+    scores.prgc = calculateMetricScore(data.prgc, thr.prgc, 15);
+    scores.dist = calculateMetricScore(data.dist, thr.dist, 10, true);
 
-    function startAnalysis() {
-        const league = document.getElementById('league').value;
-        const thresholds = {
-            "Premier League": { npxg: 0.14, ppa: 12, prgc: 18 },
-            "Bundesliga":     { npxg: 0.12, ppa: 10, prgc: 15 },
-            "Serie A":        { npxg: 0.16, ppa: 14, prgc: 16 },
-            "La Liga":        { npxg: 0.15, ppa: 13, prgc: 14 },
-            "Ligue 1":        { npxg: 0.13, ppa: 11, prgc: 16 }
-        };
-
-        const thr = thresholds[league];
-        const h = { npxg: fix(document.getElementById('h_npxg').value), ppa: fix(document.getElementById('h_ppa').value), prgc: fix(document.getElementById('h_prgc').value), dist: fix(document.getElementById('h_dist').value) };
-        const a = { npxg: fix(document.getElementById('a_npxg').value), ppa: fix(document.getElementById('a_ppa').value), prgc: fix(document.getElementById('a_prgc').value), dist: fix(document.getElementById('a_dist').value) };
-
-        if (!h.npxg || !a.npxg) { alert("Eksik veri!"); return; }
-
-        // Eşik Bazlı Puanlama
-        let points = 0;
-        points += ((h.npxg + a.npxg) / 2 >= thr.npxg) ? 40 : ((h.npxg + a.npxg) / (2 * thr.npxg)) * 25;
-        points += ((h.ppa + a.ppa) / 2 >= thr.ppa) ? 35 : ((h.ppa + a.ppa) / (2 * thr.ppa)) * 20;
-        points += ((h.prgc + a.prgc) / 2 >= thr.prgc) ? 25 : ((h.prgc + a.prgc) / (2 * thr.prgc)) * 15;
-
-        const avgDist = (h.dist + a.dist) / 2;
-        if (avgDist > 19) points *= 0.8; if (avgDist < 16.5) points *= 1.1;
-
-        const tension = Math.min(Math.round(points), 98);
-        const report = tension > 75 ? "B NOKTASI: Eşikler aşıldı, tempo yüksek." : "A NOKTASI: Lig standartlarının altında üretim.";
-
-        const cardHtml = `
-            <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:10px; color:var(--accent); font-weight:bold;">${league}</span>
-                    <span style="font-size:24px; font-weight:900; color:var(--accent);">%${tension}</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; margin:10px 0;">
-                    <b style="color:var(--home);">${document.getElementById('hName').value}</b>
-                    <b style="color:var(--away);">${document.getElementById('aName').value}</b>
-                </div>
-                <div class="goal-probs">
-                    <div class="prob-box"><span class="p-lbl">0.5 ÜST</span><span class="p-val">%${Math.min(tension+15, 99)}</span></div>
-                    <div class="prob-box"><span class="p-lbl">1.5 ÜST</span><span class="p-val">%${Math.round(tension*0.85)}</span></div>
-                    <div class="prob-box"><span class="p-lbl">2.5 ÜST</span><span class="p-val">%${Math.round(tension*0.6)}</span></div>
-                    <div class="prob-box"><span class="p-lbl">3.5 ÜST</span><span class="p-val">%${Math.round(tension*0.35)}</span></div>
-                </div>
-                <div class="ai-text">${report}</div>
-            </div>`;
-        document.getElementById('container').innerHTML = cardHtml + document.getElementById('container').innerHTML;
+    // 3. ZEKA KATMANI: YALANCI BASKI FİLTRESİ
+    // Mesafe uzak ama sızma (PPA) çoksa puanı kır
+    if (data.dist > thr.dist + 2 && data.ppa > thr.ppa) {
+        scores.ppa *= 0.7; 
     }
-</script>
-</body>
-</html>
+    // Baskı (1/3) var ama kalite (npxG) yoksa puanı kır
+    if (data.third > thr.third && data.npxg < thr.npxg * 0.8) {
+        scores.third *= 0.6;
+    }
+
+    // 4. TOPLAM TANSİYON VE LİG KATSAYISI (±%5)
+    let totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
+    let finalTension = Math.min(totalScore * thr.coeff, 98); // %98 Tavan Sınırı
+
+    // 5. KADEMELİ GOL TEŞHİSİ
+    let report = "";
+    if (finalTension < 45) report = "KİLİT (A): Veriler kısırlığa işaret ediyor. 2.5 Alt güçlü.";
+    else if (finalTension >= 78) report = "PATLAMA (B): Lig eşikleri geçildi, kaos hakim. 2.5 Üst radarında.";
+    else report = "GRİ ALAN: Metrikler çelişkili veya tam sınırda. Canlı takip önerilir.";
+
+    return { tension: finalTension.toFixed(1), diagnostic: report };
+}

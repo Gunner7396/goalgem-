@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>B-Point Pro Analyst</title>
+    <style>
+        :root {
+            --bg-color: #0c0c0c;
+            --card-bg: #181818;
+            --accent: #00e676;
+            --text-main: #ffffff;
+            --text-dim: #9e9e9e;
+            --border: #2a2a2a;
+            --win: #00c853;
+            --loss: #ff5252;
+            --home: #00d2ff;
+            --away: #ff4081;
+        }
+
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
+        
+        /* Input Panel */
+        .input-section { background: var(--card-bg); width: 100%; max-width: 450px; padding: 15px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .grid-input { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        input, select { background: #252525; border: 1px solid var(--border); color: white; padding: 12px; border-radius: 8px; font-size: 14px; width: 100%; box-sizing: border-box; }
+        input:focus { border-color: var(--accent); outline: none; }
+        
+        .start-btn { background: var(--accent); color: #000; border: none; padding: 15px; border-radius: 8px; font-weight: 800; cursor: pointer; width: 100%; font-size: 16px; letter-spacing: 1px; transition: transform 0.1s; }
+        .start-btn:active { transform: scale(0.98); }
+        
+        /* Scrollable Container */
+        #analysis-container { width: 100%; max-width: 450px; height: calc(100vh - 380px); overflow-y: auto; padding-bottom: 100px; }
+        #analysis-container::-webkit-scrollbar { width: 0px; }
+
+        /* Card Design - Fotmob Style */
+        .card { background: var(--card-bg); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); position: relative; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .league-label { font-size: 11px; font-weight: bold; color: var(--accent); text-transform: uppercase; background: rgba(0,230,118,0.1); padding: 2px 6px; border-radius: 4px; }
+        .confidence-box { text-align: right; }
+        .conf-pct { font-size: 20px; font-weight: 900; color: #fff; display: block; }
+        .conf-lbl { font-size: 9px; color: var(--text-dim); }
+
+        .match-row { display: grid; grid-template-columns: 1fr 60px 1fr; align-items: center; margin: 15px 0; }
+        .t-name { font-size: 14px; font-weight: 700; }
+        .home-color { color: var(--home); }
+        .away-color { color: var(--away); }
+        .score-box { display: flex; gap: 4px; justify-content: center; }
+        .s-in { width: 24px; background: #000; border: 1px solid var(--border); color: white; text-align: center; border-radius: 4px; font-weight: bold; padding: 4px 0; }
+
+        .metrics-table { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; margin-bottom: 12px; }
+        .m-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-dim); margin-bottom: 4px; }
+        .m-val { color: #fff; font-weight: 600; }
+
+        .analyst-msg { font-size: 12px; line-height: 1.5; color: #ccc; border-top: 1px solid var(--border); padding-top: 10px; font-style: italic; }
+        
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+        .wl-group button { width: 32px; height: 32px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; margin-left: 5px; }
+        .w-btn { background: #333; color: var(--win); border: 1px solid var(--win) !important; }
+        .l-btn { background: #333; color: var(--loss); border: 1px solid var(--loss) !important; }
+        .w-btn.active { background: var(--win); color: #000; }
+        .l-btn.active { background: var(--loss); color: #000; }
+        
+        .del-btn { background: none; border: none; color: #555; font-size: 11px; cursor: pointer; text-decoration: underline; }
+        .clear-history { font-size: 10px; color: #555; background: none; border: none; margin-top: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="input-section">
+    <input type="text" id="league" placeholder="Ligue (Premier League, Serie A...)" style="margin-bottom: 8px;">
+    <div class="grid-input">
+        <input type="text" id="homeTeam" placeholder="HOME Team">
+        <input type="text" id="awayTeam" placeholder="AWAY Team">
+    </div>
+    <div class="grid-input">
+        <input type="text" id="h_npxg" placeholder="Home npxG/Sh">
+        <input type="text" id="a_npxg" placeholder="Away npxG/Sh">
+        <input type="text" id="h_ppa" placeholder="Home PPA">
+        <input type="text" id="a_ppa" placeholder="Away PPA">
+        <input type="text" id="h_1_3" placeholder="Home 1/3">
+        <input type="text" id="a_1_3" placeholder="Away 1/3">
+    </div>
+    <button class="start-btn" onclick="calculateAnalysis()">START ANALYSIS</button>
+    <center><button class="clear-history" onclick="clearAll()">Clear All History</button></center>
+</div>
+
+<div id="analysis-container"></div>
+
+<script>
+    window.onload = function() { loadHistory(); };
+
+    function fixVal(val) {
+        if(!val) return 0;
+        let clean = val.toString().replace(',', '.');
+        return parseFloat(clean);
+    }
+
+    function calculateAnalysis() {
+        const lName = document.getElementById('league').value;
+        const hName = document.getElementById('homeTeam').value;
+        const aName = document.getElementById('awayTeam').value;
+
+        if(!hName || !aName) return alert("Lütfen takım isimlerini girin.");
+
+        const data = {
+            id: Date.now(),
+            league: lName || 'Global',
+            home: hName,
+            away: aName,
+            h_npxg: fixVal(document.getElementById('h_npxg').value),
+            a_npxg: fixVal(document.getElementById('a_npxg').value),
+            h_ppa: fixVal(document.getElementById('h_ppa').value),
+            a_ppa: fixVal(document.getElementById('a_ppa').value),
+            h_1_3: fixVal(document.getElementById('h_1_3').value),
+            a_1_3: fixVal(document.getElementById('a_1_3').value),
+            hScore: '',
+            aScore: '',
+            status: 'neutral'
+        };
+
+        // Analiz Algoritması
+        let h_score = (data.h_npxg * 350) + (data.h_ppa * 2.5) + (data.h_1_3 * 0.8);
+        let a_score = (data.a_npxg * 350) + (data.a_ppa * 2.5) + (data.a_1_3 * 0.8);
+        data.confidence = Math.min(Math.round((h_score + a_score) / 2), 98);
+        
+        // Yorum Üretme
+        if(data.confidence > 80) data.comment = "Ekstrem B Noktası. Tüm metrikler kaosu destekliyor. Yüksek güvenli pusu alanı.";
+        else if(data.confidence > 60) data.comment = "Güçlü B Noktası. Üretim barajların üzerinde, 2-3 gol baremi aşılabilir.";
+        else data.comment = "Sınırda veya düşük yoğunluk. Gri alan analizi gerekiyor.";
+
+        let history = JSON.parse(localStorage.getItem('bpoint_pro_history') || '[]');
+        history.unshift(data);
+        localStorage.setItem('bpoint_pro_history', JSON.stringify(history));
+        
+        loadHistory();
+        clearInputs();
+    }
+
+    function loadHistory() {
+        const container = document.getElementById('analysis-container');
+        const history = JSON.parse(localStorage.getItem('bpoint_pro_history') || '[]');
+        container.innerHTML = '';
+
+        history.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="league-label">${item.league}</span>
+                    <div class="confidence-box">
+                        <span class="conf-pct">%${item.confidence}</span>
+                        <span class="conf-lbl">CONFIDENCE</span>
+                    </div>
+                </div>
+                <div class="match-row">
+                    <div class="t-name home-color">${item.home}</div>
+                    <div class="score-box">
+                        <input type="text" class="s-in" value="${item.hScore}" onchange="updateScore(${item.id}, 'h', this.value)">
+                        <input type="text" class="s-in" value="${item.aScore}" onchange="updateScore(${item.id}, 'a', this.value)">
+                    </div>
+                    <div class="t-name away-color" style="text-align:right">${item.away}</div>
+                </div>
+                <div class="metrics-table">
+                    <div>
+                        <div class="m-row">npxG/Sh <span class="m-val">${item.h_npxg}</span></div>
+                        <div class="m-row">PPA <span class="m-val">${item.h_ppa}</span></div>
+                        <div class="m-row">1/3 <span class="m-val">${item.h_1_3}</span></div>
+                    </div>
+                    <div>
+                        <div class="m-row">npxG/Sh <span class="m-val">${item.a_npxg}</span></div>
+                        <div class="m-row">PPA <span class="m-val">${item.a_ppa}</span></div>
+                        <div class="m-row">1/3 <span class="m-val">${item.a_1_3}</span></div>
+                    </div>
+                </div>
+                <div class="analyst-msg">"${item.comment}"</div>
+                <div class="card-footer">
+                    <button class="del-btn" onclick="deleteEntry(${item.id})">Remove Analysis</button>
+                    <div class="wl-group">
+                        <button class="w-btn ${item.status === 'win' ? 'active' : ''}" onclick="setStatus(${item.id}, 'win')">W</button>
+                        <button class="l-btn ${item.status === 'loss' ? 'active' : ''}" onclick="setStatus(${item.id}, 'loss')">L</button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function updateScore(id, type, val) {
+        let history = JSON.parse(localStorage.getItem('bpoint_pro_history'));
+        let idx = history.findIndex(x => x.id === id);
+        if(type === 'h') history[idx].hScore = val;
+        else history[idx].aScore = val;
+        localStorage.setItem('bpoint_pro_history', JSON.stringify(history));
+    }
+
+    function setStatus(id, status) {
+        let history = JSON.parse(localStorage.getItem('bpoint_pro_history'));
+        let idx = history.findIndex(x => x.id === id);
+        history[idx].status = (history[idx].status === status) ? 'neutral' : status;
+        localStorage.setItem('bpoint_pro_history', JSON.stringify(history));
+        loadHistory();
+    }
+
+    function deleteEntry(id) {
+        let history = JSON.parse(localStorage.getItem('bpoint_pro_history'));
+        history = history.filter(x => x.id !== id);
+        localStorage.setItem('bpoint_pro_history', JSON.stringify(history));
+        loadHistory();
+    }
+
+    function clearAll() {
+        if(confirm('Tüm veriler silinecek. Emin misin?')) {
+            localStorage.removeItem('bpoint_pro_history');
+            loadHistory();
+        }
+    }
+
+    function clearInputs() {
+        ['homeTeam', 'awayTeam', 'h_npxg', 'a_npxg', 'h_ppa', 'a_ppa', 'h_1_3', 'a_1_3'].forEach(id => {
+            document.getElementById(id).value = '';
+        });
+    }
+</script>
+
+</body>
+</html>

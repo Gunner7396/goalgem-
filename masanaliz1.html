@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masanaliz v3.0 - Kesin Sonuç</title>
+    <title>Masanaliz v3.3 - Debugged</title>
     <style>
         :root {
             --bg-color: #0c0c0c; --card-bg: #181818; --accent: #00e676;
@@ -11,160 +11,133 @@
             --win: #00c853; --loss: #ff5252; --home: #00d2ff; --away: #ff4081;
         }
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        
-        .dashboard { background: var(--card-bg); width: 100%; max-width: 500px; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 10px; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        .stat-val { display: block; font-size: 22px; font-weight: 900; color: var(--accent); }
-        .stat-lbl { font-size: 10px; color: var(--text-dim); }
-
+        .dashboard { background: var(--card-bg); width: 100%; max-width: 500px; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 10px; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
         .input-section { background: var(--card-bg); width: 100%; max-width: 500px; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; box-sizing: border-box; }
         select, input { background: #222; border: 1px solid var(--border); color: white; padding: 12px; border-radius: 8px; font-size: 14px; width: 100%; box-sizing: border-box; margin-bottom: 10px; }
-        
-        .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .t-lbl { font-size: 11px; font-weight: bold; text-align: center; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-        
-        .start-btn { background: var(--accent); color: #000; border: none; padding: 16px; border-radius: 8px; font-weight: 900; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px; transition: 0.2s; }
-        .start-btn:active { transform: scale(0.98); }
-
-        #analysis-container { width: 100%; max-width: 500px; }
-        .card { background: var(--card-bg); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); border-top: 5px solid var(--accent); animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .m-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; }
-        .conf-val { font-size: 28px; font-weight: 900; color: var(--accent); }
-
-        .vs-box { display: grid; grid-template-columns: 1fr 70px 1fr; align-items: center; text-align: center; margin-bottom: 15px; }
-        .score-box { display: flex; gap: 5px; justify-content: center; align-items: center; }
-        .s-in { width: 28px; background: #000; border: 1px solid #333; color: #fff; text-align: center; border-radius: 5px; padding: 5px 0; font-weight: bold; font-size: 16px; }
-
-        .metrics-grid { display: grid; grid-template-columns: 1fr 80px 1fr; font-size: 12px; gap: 8px; text-align: center; }
-        .m-name { color: #555; font-size: 10px; font-weight: bold; align-self: center; }
-        .m-val { color: #fff; font-weight: 700; background: rgba(255,255,255,0.03); padding: 4px; border-radius: 4px; }
-
-        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 10px; border-top: 1px solid #222; }
-        .wl-btns button { width: 40px; height: 40px; border-radius: 8px; border: 1px solid #333; background: #222; font-weight: bold; cursor: pointer; color: #777; transition: 0.2s; }
-        .btn-w.active { background: var(--win); color: #000; border-color: var(--win); }
-        .btn-l.active { background: var(--loss); color: #000; border-color: var(--loss); }
-        .del-btn { background: none; border: none; color: #ff5252; text-decoration: underline; font-size: 12px; cursor: pointer; opacity: 0.7; }
+        .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .start-btn { background: var(--accent); color: #000; border: none; padding: 16px; border-radius: 8px; font-weight: 900; cursor: pointer; width: 100%; font-size: 16px; }
+        .card { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); border-top: 5px solid var(--accent); width: 100%; max-width: 500px; box-sizing: border-box; }
+        .intelligence-report { background: #111; border-left: 4px solid var(--accent); padding: 12px; border-radius: 6px; margin: 15px 0; font-size: 13px; line-height: 1.5; }
+        .report-item { margin-bottom: 5px; color: #ccc; }
+        .conf-val { font-size: 32px; font-weight: 900; color: var(--accent); }
+        .vs-box { display: grid; grid-template-columns: 1fr 80px 1fr; align-items: center; text-align: center; margin-bottom: 15px; }
+        .s-in { width: 30px; background: #000; border: 1px solid #333; color: #fff; text-align: center; border-radius: 5px; padding: 5px; font-weight: bold; }
+        .metrics-grid { display: grid; grid-template-columns: 1fr 80px 1fr; font-size: 11px; gap: 5px; text-align: center; color: var(--text-dim); }
+        .wl-btns button { width: 40px; height: 40px; border-radius: 8px; border: 1px solid #333; background: #222; color: #777; font-weight: bold; cursor: pointer; }
+        .btn-w.active { background: var(--win); color: #000; }
+        .btn-l.active { background: var(--loss); color: #000; }
     </style>
 </head>
 <body>
 
 <div class="dashboard">
-    <div class="stat-box"><span class="stat-val" id="win-rate">0%</span><span class="stat-lbl">BAŞARI</span></div>
-    <div style="text-align:center;"><div style="font-weight: 900; color: var(--accent); font-size: 20px;">MASANALİZ v3.0</div><div style="font-size:8px; color:var(--text-dim); letter-spacing:2px;">PRO TERMINAL</div></div>
-    <div class="stat-box"><span class="stat-val" id="total-count">0</span><span class="stat-lbl">TOPLAM</span></div>
+    <div><span style="display:block; font-size:22px; font-weight:900; color:var(--accent);" id="win-rate">0%</span><span style="font-size:9px;">BAŞARI</span></div>
+    <div style="font-weight:900; color:var(--accent);">MASANALİZ v3.3</div>
+    <div><span style="display:block; font-size:22px; font-weight:900; color:var(--accent);" id="total-count">0</span><span style="font-size:9px;">TOPLAM</span></div>
 </div>
 
 <div class="input-section">
     <select id="league">
-        <option value="Ligue 1">Ligue 1 (Katsayı: 1.00)</option>
-        <option value="Bundesliga">Bundesliga (Katsayı: 1.05)</option>
-        <option value="Premier League">Premier League (Katsayı: 1.03)</option>
-        <option value="La Liga">La Liga (Katsayı: 0.97)</option>
-        <option value="Serie A">Serie A (Katsayı: 0.95)</option>
+        <option value="Bundesliga">Bundesliga (x1.05)</option>
+        <option value="Premier League">Premier League (x1.03)</option>
+        <option value="Ligue 1">Ligue 1 (x1.00)</option>
+        <option value="La Liga">La Liga (x0.97)</option>
+        <option value="Serie A">Serie A (x0.95)</option>
     </select>
-    
     <div class="team-grid">
-        <div class="t-lbl" style="color:var(--home)">Home Team</div><div class="t-lbl" style="color:var(--away)">Away Team</div>
-        <input type="text" id="hName" placeholder="Takım Adı"> <input type="text" id="aName" placeholder="Takım Adı">
+        <input type="text" id="hName" placeholder="Ev"> <input type="text" id="aName" placeholder="Dep">
         <input type="text" id="h_npxg" placeholder="npxG/Sh" inputmode="decimal"> <input type="text" id="a_npxg" placeholder="npxG/Sh" inputmode="decimal">
         <input type="text" id="h_ppa" placeholder="PPA" inputmode="decimal"> <input type="text" id="a_ppa" placeholder="PPA" inputmode="decimal">
         <input type="text" id="h_1_3" placeholder="1/3" inputmode="decimal"> <input type="text" id="a_1_3" placeholder="1/3" inputmode="decimal">
         <input type="text" id="h_prgc" placeholder="PrgC" inputmode="decimal"> <input type="text" id="a_prgc" placeholder="PrgC" inputmode="decimal">
         <input type="text" id="h_dist" placeholder="Dist" inputmode="decimal"> <input type="text" id="a_dist" placeholder="Dist" inputmode="decimal">
     </div>
-    <button class="start-btn" onclick="startAnalysis()">ANALİZİ BAŞLAT</button>
+    <button class="start-btn" onclick="startAnalysis()">ANALİZ ET</button>
 </div>
 
 <div id="analysis-container"></div>
 
 <script>
-    let history = JSON.parse(localStorage.getItem('masanaliz_v3_data') || '[]');
+    let history = JSON.parse(localStorage.getItem('masanaliz_v33_data') || '[]');
     window.onload = () => { renderCards(); updateDashboard(); };
 
-    function fixVal(val) { return parseFloat(String(val).replace(',', '.')) || 0; }
+    function fixVal(v) { return parseFloat(String(v).replace(',', '.')) || 0; }
 
     function startAnalysis() {
         const league = document.getElementById('league').value;
-        
-        // LİG KATSAYI MOTORU (Birebir Uygulama)
-        let l_coeff = 1.00;
-        if(league === 'Bundesliga') l_coeff = 1.05;
-        if(league === 'Premier League') l_coeff = 1.03;
-        if(league === 'La Liga') l_coeff = 0.97;
-        if(league === 'Serie A') l_coeff = 0.95;
+        const coeffs = {"Bundesliga": 1.05, "Premier League": 1.03, "Ligue 1": 1.00, "La Liga": 0.97, "Serie A": 0.95};
+        const l_coeff = coeffs[league];
 
         const data = {
-            id: Date.now(), league: league, coeff: l_coeff,
-            home: document.getElementById('hName').value || 'Ev Sahibi',
-            away: document.getElementById('aName').value || 'Deplasman',
+            id: Date.now(), league, coeff: l_coeff,
+            home: document.getElementById('hName').value || 'Ev',
+            away: document.getElementById('aName').value || 'Dep',
             h: { npxg: fixVal(document.getElementById('h_npxg').value), ppa: fixVal(document.getElementById('h_ppa').value), f13: fixVal(document.getElementById('h_1_3').value), prgc: fixVal(document.getElementById('h_prgc').value), dist: fixVal(document.getElementById('h_dist').value) },
             a: { npxg: fixVal(document.getElementById('a_npxg').value), ppa: fixVal(document.getElementById('a_ppa').value), f13: fixVal(document.getElementById('a_1_3').value), prgc: fixVal(document.getElementById('a_prgc').value), dist: fixVal(document.getElementById('a_dist').value) },
             status: 'neutral', hScore: '', aScore: ''
         };
 
-        // GÜÇ HESAPLAMA (Eskisi gibi sağlam ağırlıklar)
-        function calcPower(t) {
-            let p = (t.npxg * 420) + (t.ppa * 3.5) + (t.f13 * 0.8) + (t.prgc * 0.5);
-            // Dist Cezası
-            if(t.dist > 18.5) p *= 0.85; 
-            if(t.dist < 15.5) p *= 1.10;
+        const calc = (t) => {
+            let p = (t.npxg * 400) + (t.ppa * 3) + (t.f13 * 0.7) + (t.prgc * 0.4);
+            if(t.dist > 19) p *= 0.90; else if(t.dist < 16.5) p *= 1.05;
             return p;
-        }
+        };
 
-        let totalPower = (calcPower(data.h) + calcPower(data.a)) / 2;
+        data.conf = Math.min(Math.round(((calc(data.h) + calc(data.a)) / 2) * l_coeff), 98);
         
-        // Final Güven Skoru = Güç * Lig Katsayısı
-        data.conf = Math.min(Math.round(totalPower * l_coeff), 98);
-        
-        history.unshift(data);
-        save(); renderCards(); updateDashboard();
+        // Zeka Raporu
+        let rep = [];
+        if(data.h.npxg > 0.14 || data.a.npxg > 0.14) rep.push("Kritik bitiricilik eşiği aşıldı.");
+        if((data.h.ppa + data.a.ppa) < 12) rep.push("Dikkat: Ceza sahası girişleri çok kısır.");
+        if(data.h.dist > 20 || data.a.dist > 20) rep.push("Uzaktan şut uyarısı: Yalancı istatistik riski.");
+        rep.push(data.conf > 78 ? "<b>KARAR:</b> B Noktası aktif. Kaos bekleniyor." : "<b>KARAR:</b> A Noktası hakim. Skor kilitlenebilir.");
+        data.report = rep;
+
+        history.unshift(data); save(); renderCards(); updateDashboard();
     }
 
     function renderCards() {
-        const container = document.getElementById('analysis-container');
-        container.innerHTML = history.map(item => `
-            <div class="card" style="border-top-color: ${item.status === 'win' ? 'var(--win)' : (item.status === 'loss' ? 'var(--loss)' : 'var(--accent)')}">
-                <div class="m-header">
-                    <div style="font-size:11px; font-weight:bold; color:var(--text-dim);">${item.league.toUpperCase()} <span style="color:var(--accent); font-size:9px;">(x${item.coeff})</span></div>
-                    <div class="conf-val">%${item.conf}</div>
+        document.getElementById('analysis-container').innerHTML = history.map(item => `
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <span style="font-size:11px; color:var(--accent); font-weight:bold;">${item.league}</span>
+                    <span class="conf-val">%${item.conf}</span>
                 </div>
                 <div class="vs-box">
-                    <div style="color:var(--home); font-weight:bold; font-size:15px;">${item.home}</div>
-                    <div class="score-box">
-                        <input type="text" class="s-in" value="${item.hScore}" onchange="updateItem(${item.id}, 'hScore', this.value)">
-                        <span style="font-weight:bold; color:#444;">-</span>
-                        <input type="text" class="s-in" value="${item.aScore}" onchange="updateItem(${item.id}, 'aScore', this.value)">
+                    <div style="font-weight:bold; color:var(--home);">${item.home}</div>
+                    <div style="display:flex; gap:3px;">
+                        <input type="text" class="s-in" value="${item.hScore}" onchange="updateItem(${item.id},'hScore',this.value)">
+                        <input type="text" class="s-in" value="${item.aScore}" onchange="updateItem(${item.id},'aScore',this.value)">
                     </div>
-                    <div style="color:var(--away); font-weight:bold; font-size:15px;">${item.away}</div>
+                    <div style="font-weight:bold; color:var(--away);">${item.away}</div>
                 </div>
+                <div class="intelligence-report">${item.report.map(r => `<div class="report-item">• ${r}</div>`).join('')}</div>
                 <div class="metrics-grid">
-                    <div class="m-val">${item.h.npxg}</div><div class="m-name">npxG/Sh</div><div class="m-val">${item.a.npxg}</div>
-                    <div class="m-val">${item.h.ppa}</div><div class="m-name">PPA</div><div class="m-val">${item.a.ppa}</div>
-                    <div class="m-val">${item.h.f13}</div><div class="m-name">1/3</div><div class="m-val">${item.a.f13}</div>
-                    <div class="m-val">${item.h.dist}</div><div class="m-name">Dist</div><div class="m-val">${item.a.dist}</div>
+                    <div>${item.h.npxg} <span style="font-size:8px;">NPXG</span> ${item.a.npxg}</div>
+                    <div>${item.h.ppa} <span style="font-size:8px;">PPA</span> ${item.a.ppa}</div>
+                    <div>${item.h.dist} <span style="font-size:8px;">DIST</span> ${item.a.dist}</div>
                 </div>
-                <div class="card-footer">
-                    <button class="del-btn" onclick="remove(${item.id})">Analizi Kaldır</button>
+                <div style="display:flex; justify-content:space-between; margin-top:15px;">
+                    <button style="background:none; border:none; color:red; cursor:pointer; font-size:11px;" onclick="remove(${item.id})">Sil</button>
                     <div class="wl-btns">
-                        <button class="btn-w ${item.status === 'win' ? 'active' : ''}" onclick="setStatus(${item.id}, 'win')">W</button>
-                        <button class="btn-l ${item.status === 'loss' ? 'active' : ''}" onclick="setStatus(${item.id}, 'loss')">L</button>
+                        <button class="btn-w ${item.status==='win'?'active':''}" onclick="setStatus(${item.id},'win')">W</button>
+                        <button class="btn-l ${item.status==='loss'?'active':''}" onclick="setStatus(${item.id},'loss')">L</button>
                     </div>
                 </div>
             </div>
         `).join('');
     }
 
-    function updateItem(id, key, val) { let obj = history.find(x => x.id === id); if(obj) { obj[key] = val; save(); } }
-    function setStatus(id, status) { let obj = history.find(x => x.id === id); if(obj) { obj.status = obj.status === status ? 'neutral' : status; save(); renderCards(); updateDashboard(); } }
-    function remove(id) { if(confirm('Bu analizi silmek istiyor musun?')) { history = history.filter(x => x.id !== id); save(); renderCards(); updateDashboard(); } }
+    function updateItem(id, k, v) { let o = history.find(x => x.id === id); if(o) { o[k] = v; save(); } }
+    function setStatus(id, s) { let o = history.find(x => x.id === id); if(o) { o.status = o.status === s ? 'neutral' : s; save(); renderCards(); updateDashboard(); } }
+    function remove(id) { history = history.filter(x => x.id !== id); save(); renderCards(); updateDashboard(); }
     function updateDashboard() { 
-        const total = history.length;
-        const wins = history.filter(x => x.status === 'win').length;
-        document.getElementById('win-rate').innerText = (total > 0 ? Math.round((wins / total) * 100) : 0) + '%';
-        document.getElementById('total-count').innerText = total;
+        const t = history.length;
+        const w = history.filter(x => x.status === 'win').length;
+        document.getElementById('win-rate').innerText = (t > 0 ? Math.round((w / t) * 100) : 0) + '%';
+        document.getElementById('total-count').innerText = t;
     }
-    function save() { localStorage.setItem('masanaliz_v3_data', JSON.stringify(history)); }
+    function save() { localStorage.setItem('masanaliz_v33_data', JSON.stringify(history)); }
 </script>
 </body>
 </html>

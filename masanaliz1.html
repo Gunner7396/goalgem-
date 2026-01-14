@@ -3,45 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masanaliz v5.0 | Cognitive Engine</title>
+    <title>Masanaliz v5.0 | Cognitive Precision</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; --danger: #ef4444; --success: #22c55e; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; padding: 20px; }
-        .container { width: 100%; max-width: 450px; background: var(--card); padding: 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h1 { font-size: 1.5rem; text-align: center; color: var(--accent); margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
-        .input-group { margin-bottom: 12px; }
-        label { display: block; font-size: 0.8rem; margin-bottom: 4px; color: #94a3b8; }
-        input, select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 10px; }
-        #result { margin-top: 20px; padding: 15px; border-radius: 10px; background: #070e1e; display: none; border: 1px solid var(--accent); }
-        .tension-val { font-size: 2.2rem; font-weight: 800; text-align: center; color: var(--accent); margin: 5px 0; }
-        .diagnostic { font-size: 0.9rem; text-align: center; color: #cbd5e1; margin-top: 10px; line-height: 1.4; }
-        .badge { display: block; text-align: center; padding: 5px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-bottom: 10px; }
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #38bdf8;
+            --text: #f8fafc;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); display: flex; justify-content: center; padding: 20px; margin: 0; }
+        
+        .container { width: 100%; max-width: 480px; background: var(--card); padding: 30px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.05); }
+        
+        h1 { font-size: 1.8rem; font-weight: 900; text-align: center; color: var(--accent); margin: 0 0 10px 0; letter-spacing: -1px; }
+        .version { text-align: center; font-size: 0.7rem; color: #64748b; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; }
+
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .full-width { grid-column: span 2; }
+
+        .input-group { margin-bottom: 5px; }
+        label { display: block; font-size: 0.75rem; margin-bottom: 6px; color: #94a3b8; font-weight: 600; }
+        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 1rem; transition: 0.3s; }
+        input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
+
+        button { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 12px; color: #000; font-weight: 800; font-size: 1.1rem; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4); }
+
+        #result { margin-top: 30px; padding: 25px; border-radius: 18px; background: #070e1e; display: none; border: 1px solid rgba(56, 189, 248, 0.3); animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tension-val { font-size: 3.5rem; font-weight: 900; text-align: center; color: var(--accent); margin: 5px 0; line-height: 1; }
+        .diagnostic { font-size: 0.95rem; text-align: center; color: #cbd5e1; margin-top: 15px; line-height: 1.6; border-top: 1px solid #1e293b; pt: 15px; padding-top: 15px; }
+        
+        .badge { display: table; margin: 0 auto 10px auto; padding: 6px 14px; border-radius: 6px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
+        .badge-b { background: var(--success); color: #000; }
+        .badge-a { background: var(--danger); color: #fff; }
+        .badge-gray { background: #475569; color: #fff; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>MASANALİZ v5.0</h1>
+    <h1>MASANALİZ</h1>
+    <div class="version">Cognitive Precision Engine v5.0</div>
     
-    <div class="input-group">
-        <label>Hedef Lig</label>
-        <select id="league">
-            <option value="Premier League">Premier League</option>
-            <option value="Bundesliga">Bundesliga</option>
-            <option value="Serie A">Serie A</option>
-            <option value="La Liga">La Liga</option>
-            <option value="Ligue 1">Ligue 1</option>
-        </select>
+    <div class="input-grid">
+        <div class="input-group full-width">
+            <label>Hedef Lig</label>
+            <select id="league">
+                <option value="Premier League">Premier League</option>
+                <option value="Bundesliga">Bundesliga</option>
+                <option value="Serie A">Serie A</option>
+                <option value="La Liga">La Liga</option>
+                <option value="Ligue 1">Ligue 1</option>
+            </select>
+        </div>
+
+        <div class="input-group"><label>npxG/Sh (Kalite)</label><input type="number" id="npxg" step="0.01" placeholder="0.14"></div>
+        <div class="input-group"><label>PPA (Sızma)</label><input type="number" id="ppa" placeholder="12"></div>
+        <div class="input-group"><label>1/3 Baskı (Alan)</label><input type="number" id="third" placeholder="55"></div>
+        <div class="input-group"><label>PrgC (Hız)</label><input type="number" id="prgc" placeholder="18"></div>
+        <div class="input-group full-width"><label>Avg Dist (Ort. Mesafe)</label><input type="number" id="dist" step="0.1" placeholder="16.8"></div>
     </div>
 
-    <div class="input-group"><label>npxG/Sh (Örn: 0.14)</label><input type="number" id="npxg" step="0.01"></div>
-    <div class="input-group"><label>PPA (Örn: 12)</label><input type="number" id="ppa"></div>
-    <div class="input-group"><label>1/3 Baskı (Örn: 55)</label><input type="number" id="third"></div>
-    <div class="input-group"><label>PrgC (Örn: 18)</label><input type="number" id="prgc"></div>
-    <div class="input-group"><label>Avg Dist (Örn: 16.8)</label><input type="number" id="dist" step="0.1"></div>
-
-    <button onclick="calculate()">HESAPLA</button>
+    <button onclick="runAnalysis()">ANALİZ ET</button>
 
     <div id="result">
         <div id="badge" class="badge"></div>
@@ -51,6 +81,7 @@
 </div>
 
 <script>
+// v5.0 ÇEKİRDEK LİG ANAYASASI
 const thresholds = {
     'Premier League': { npxg: 0.14, ppa: 12, third: 55, prgc: 18, dist: 16.8, coeff: 1.03 },
     'Bundesliga':     { npxg: 0.12, ppa: 10, third: 48, prgc: 15, dist: 17.2, coeff: 1.05 },
@@ -59,65 +90,72 @@ const thresholds = {
     'Ligue 1':        { npxg: 0.13, ppa: 11, third: 52, prgc: 16, dist: 17.5, coeff: 1.00 }
 };
 
-function calculate() {
-    const league = document.getElementById('league').value;
-    const thr = thresholds[league];
+function runAnalysis() {
+    const lg = document.getElementById('league').value;
+    const thr = thresholds[lg];
     
-    // Verileri al ve kontrol et
-    const v_npxg = parseFloat(document.getElementById('npxg').value);
-    const v_ppa = parseFloat(document.getElementById('ppa').value);
-    const v_third = parseFloat(document.getElementById('third').value);
-    const v_prgc = parseFloat(document.getElementById('prgc').value);
-    const v_dist = parseFloat(document.getElementById('dist').value);
+    const v = {
+        npxg: parseFloat(document.getElementById('npxg').value),
+        ppa:  parseFloat(document.getElementById('ppa').value),
+        third: parseFloat(document.getElementById('third').value),
+        prgc: parseFloat(document.getElementById('prgc').value),
+        dist: parseFloat(document.getElementById('dist').value)
+    };
 
-    if (isNaN(v_npxg) || isNaN(v_ppa) || isNaN(v_third) || isNaN(v_prgc) || isNaN(v_dist)) {
-        alert("Lütfen tüm alanları doldurun!");
-        return;
-    }
+    if (Object.values(v).some(isNaN)) { alert("Hata: Eksik veri!"); return; }
 
-    const calcMetric = (val, target, weight, isDist) => {
+    // v5.0 BİLİŞSEL PUANLAMA (Logaritmik Fren Entegre)
+    const calc = (val, target, weight, isDist) => {
         let ratio = isDist ? (target / val) : (val / target);
+        
+        // AZALAN VERİMLER YASASI: Sınırı çok aşınca puan artışı yavaşlar
         if (ratio > 1.25) ratio = 1.25 + Math.log10(ratio - 0.25);
+        
+        // SINIRDA KALMA CEZASI
         if (ratio < 0.85) ratio *= 0.6;
+        
         return Math.min(ratio * weight, weight * 1.4);
     };
 
-    let s = {
-        npxg: calcMetric(v_npxg, thr.npxg, 35, false),
-        ppa:  calcMetric(v_ppa,  thr.ppa,  25, false),
-        third: calcMetric(v_third, thr.third, 15, false),
-        prgc: calcMetric(v_prgc, thr.prgc, 15, false),
-        dist: calcMetric(v_dist, thr.dist, 10, true)
+    let scores = {
+        npxg: calc(v.npxg, thr.npxg, 35, false),
+        ppa:  calc(v.ppa,  thr.ppa,  25, false),
+        third: calc(v.third, thr.third, 15, false),
+        prgc: calc(v.prgc, thr.prgc, 15, false),
+        dist: calc(v.dist, thr.dist, 10, true)
     };
 
-    // Yalancı Baskı Filtresi
-    if (v_dist > thr.dist + 1.5 && v_ppa > thr.ppa) s.ppa *= 0.7;
-    if (v_third > thr.third && v_npxg < thr.npxg * 0.9) s.third *= 0.5;
+    // v5.0 ZEKA KATMANI: YALANCI BASKI SÜZGECİ
+    if (v.dist > thr.dist + 1.5 && v.ppa > thr.ppa) scores.ppa *= 0.65;
+    if (v.third > thr.third && v.npxg < thr.npxg * 0.9) scores.third *= 0.50;
 
-    let final = (Object.values(s).reduce((a, b) => a + b, 0)) * thr.coeff;
-    final = Math.min(final, 98);
+    let final = (Object.values(scores).reduce((a, b) => a + b, 0)) * thr.coeff;
+    final = Math.min(final, 98); // ABSÜRT SKOR KORUMASI (TAVAN %98)
 
-    // Sonuçları göster
-    document.getElementById('result').style.display = 'block';
-    document.getElementById('tensionDisplay').innerText = final.toFixed(1) + "%";
-    
+    // GÖRSEL SONUÇ MOTORU
+    const resDiv = document.getElementById('result');
+    const tensionDisp = document.getElementById('tensionDisplay');
     const diag = document.getElementById('diagnosticText');
     const badge = document.getElementById('badge');
 
+    resDiv.style.display = 'block';
+    tensionDisp.innerText = final.toFixed(1) + "%";
+
     if (final >= 78) {
         badge.innerText = "B NOKTASI (PATLAMA)";
-        badge.style.background = "#22c55e";
-        diag.innerText = "Eşikler aşıldı. Yüksek kalite ve baskı senkronize. Skor potansiyeli çok güçlü.";
+        badge.className = "badge badge-b";
+        diag.innerText = "Üretim kalitesi lig eşiklerini parçaladı. Kaos hakim. Skor (2.5 Üst) ihtimali en üst seviyede.";
     } else if (final < 48) {
         badge.innerText = "A NOKTASI (KİLİT)";
-        badge.style.background = "#ef4444";
-        diag.innerText = "Lig eşiklerinin çok altı. Kısır üretim, savunma baskın. 2.5 Alt beklentisi.";
+        badge.className = "badge badge-a";
+        diag.innerText = "Veriler kısırlığa işaret ediyor. Savunma disiplini baskın. Maçın 2.5 Alt bitme olasılığı çok yüksek.";
     } else {
         badge.innerText = "GRİ ALAN";
-        badge.style.background = "#64748b";
-        diag.innerText = "Sınırda veya çelişkili veriler. Yalancı baskı riski var.";
+        badge.className = "badge badge-gray";
+        diag.innerText = "Metrikler sınırda veya çelişkili. Yalancı baskı tespit edildi. Canlıda oyunun kırılmasını beklemek en güvenlisi.";
     }
 }
 </script>
+
 </body>
 </html>

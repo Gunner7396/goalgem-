@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masanaliz v4.1 - Clean Pro</title>
+    <title>Masanaliz v4.2 - Final Build</title>
     <style>
         :root {
             --bg: #0a0a0a; --card: #141414; --accent: #00ff88; --dim: #888;
             --home: #00d2ff; --away: #ff4081; --win: #00c853; --loss: #ff5252;
         }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         .header { width: 100%; max-width: 450px; display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 10px; }
         .h-stat { text-align: center; }
         .h-val { display: block; font-size: 18px; font-weight: 900; color: var(--accent); }
@@ -17,28 +17,30 @@
 
         .panel { background: var(--card); width: 100%; max-width: 450px; border-radius: 16px; padding: 15px; border: 1px solid #222; box-sizing: border-box; margin-bottom: 15px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        input, select { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; font-size: 12px; outline: none; }
+        input, select { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; font-size: 12px; outline: none; transition: 0.2s; }
+        input:focus { border-color: var(--accent); }
         
-        .btn-main { background: var(--accent); color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 800; width: 100%; margin-top: 12px; cursor: pointer; transition: 0.2s; letter-spacing: 1px; }
-        .btn-main:active { transform: scale(0.97); opacity: 0.8; }
+        .btn-main { background: var(--accent); color: #000; border: none; padding: 14px; border-radius: 10px; font-weight: 800; width: 100%; margin-top: 12px; cursor: pointer; transition: 0.2s; letter-spacing: 1px; }
+        .btn-main:active { transform: scale(0.97); }
 
-        .card { background: var(--card); border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #222; width: 100%; max-width: 450px; box-sizing: border-box; animation: pop 0.3s ease-out; }
+        .card { background: var(--card); border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #222; width: 100%; max-width: 450px; box-sizing: border-box; animation: pop 0.3s ease-out; }
         @keyframes pop { from { opacity: 0; transform: scale(0.95); } }
+        
         .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .l-tag { background: rgba(0,255,136,0.1); color: var(--accent); padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 700; }
         
-        .goal-probs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin: 15px 0; }
-        .prob-box { background: #1a1a1a; padding: 8px 2px; border-radius: 10px; text-align: center; border: 1px solid #222; }
+        .goal-probs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 15px 0; }
+        .prob-box { background: #1a1a1a; padding: 10px 2px; border-radius: 12px; text-align: center; border: 1px solid #222; }
         .p-val { display: block; font-size: 14px; font-weight: 800; color: var(--accent); }
         .p-lbl { font-size: 7px; color: var(--dim); font-weight: bold; }
 
-        .ai-text { font-size: 12px; line-height: 1.4; color: #ccc; background: #000; padding: 10px; border-radius: 10px; margin-bottom: 12px; border-left: 3px solid var(--accent); }
-        .compact-metrics { display: flex; justify-content: space-between; font-size: 10px; color: var(--dim); border-top: 1px solid #222; padding-top: 10px; }
-        .compact-metrics b { color: #fff; }
+        .ai-text { font-size: 12px; line-height: 1.4; color: #ccc; background: #000; padding: 12px; border-radius: 10px; margin-bottom: 12px; border-left: 3px solid var(--accent); }
+        
+        .compact-metrics { display: flex; justify-content: space-between; font-size: 9px; color: var(--dim); border-top: 1px solid #222; padding-top: 12px; text-transform: uppercase; }
+        .compact-metrics b { color: #fff; margin-left: 2px; }
 
         .footer-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
-        .status-btns { display: flex; gap: 8px; }
-        .s-btn { width: 35px; height: 35px; border-radius: 50%; border: 1px solid #333; background: #1a1a1a; color: var(--dim); font-weight: 900; cursor: pointer; font-size: 10px; }
+        .s-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid #333; background: #1a1a1a; color: var(--dim); font-weight: 900; cursor: pointer; font-size: 11px; }
         .s-btn.w.active { background: var(--win); color: #000; border-color: var(--win); }
         .s-btn.l.active { background: var(--loss); color: #000; border-color: var(--loss); }
     </style>
@@ -47,7 +49,7 @@
 
 <div class="header">
     <div class="h-stat"><span class="h-val" id="win-rate">0%</span><span class="h-lbl">BAŞARI</span></div>
-    <div style="font-weight: 900; font-size: 16px; letter-spacing: 2px;">MASANALİZ <span style="color:var(--accent)">v4.1</span></div>
+    <div style="font-weight: 900; font-size: 16px; letter-spacing: 2px;">MASANALİZ <span style="color:var(--accent)">v4.2</span></div>
     <div class="h-stat"><span class="h-val" id="total-count">0</span><span class="h-lbl">TOPLAM</span></div>
 </div>
 
@@ -66,6 +68,8 @@
         <input type="text" id="a_npxg" placeholder="npxG/Sh" inputmode="decimal">
         <input type="text" id="h_ppa" placeholder="PPA" inputmode="decimal">
         <input type="text" id="a_ppa" placeholder="PPA" inputmode="decimal">
+        <input type="text" id="h_prgc" placeholder="PrgC" inputmode="decimal">
+        <input type="text" id="a_prgc" placeholder="PrgC" inputmode="decimal">
         <input type="text" id="h_dist" placeholder="Dist" inputmode="decimal">
         <input type="text" id="a_dist" placeholder="Dist" inputmode="decimal">
     </div>
@@ -75,53 +79,44 @@
 <div id="container" style="width: 100%; max-width: 450px;"></div>
 
 <script>
-    let history = JSON.parse(localStorage.getItem('masanaliz_v4_data') || '[]');
+    let history = JSON.parse(localStorage.getItem('masanaliz_v42_data') || '[]');
     window.onload = () => { render(); updateDash(); };
 
     function fix(v) { return parseFloat(String(v).replace(',', '.')) || 0; }
 
     function startAnalysis() {
-        const fields = ['hName', 'aName', 'h_npxg', 'a_npxg', 'h_ppa', 'a_ppa', 'h_dist', 'a_dist'];
-        const isEmpty = fields.some(id => !document.getElementById(id).value.trim());
-
-        if (isEmpty) {
-            alert("Lütfen tüm metrikleri eksiksiz girin!");
+        const ids = ['hName', 'aName', 'h_npxg', 'a_npxg', 'h_ppa', 'a_ppa', 'h_prgc', 'a_prgc', 'h_dist', 'a_dist'];
+        if (ids.some(id => !document.getElementById(id).value.trim())) {
+            alert("Eksik veri bıraktınız!");
             return;
         }
 
         const league = document.getElementById('league').value;
         const coeffs = {"Bundesliga": 1.05, "Premier League": 1.03, "Ligue 1": 1.00, "La Liga": 0.97, "Serie A": 0.95};
-        const l_coeff = coeffs[league];
-
-        const h = { npxg: fix(document.getElementById('h_npxg').value), ppa: fix(document.getElementById('h_ppa').value), dist: fix(document.getElementById('h_dist').value) };
-        const a = { npxg: fix(document.getElementById('a_npxg').value), ppa: fix(document.getElementById('a_ppa').value), dist: fix(document.getElementById('a_dist').value) };
+        
+        const h = { npxg: fix(document.getElementById('h_npxg').value), ppa: fix(document.getElementById('h_ppa').value), prgc: fix(document.getElementById('h_prgc').value), dist: fix(document.getElementById('h_dist').value) };
+        const a = { npxg: fix(document.getElementById('a_npxg').value), ppa: fix(document.getElementById('a_ppa').value), prgc: fix(document.getElementById('a_prgc').value), dist: fix(document.getElementById('a_dist').value) };
 
         const calc = (t) => {
-            let p = (t.npxg * 400) + (t.ppa * 3);
+            let p = (t.npxg * 400) + (t.ppa * 3) + (t.prgc * 0.4);
             if(t.dist > 19) p *= 0.9; else if(t.dist < 16.5) p *= 1.05;
             return p;
         };
 
-        const raw = ((calc(h) + calc(a)) / 2) * l_coeff;
-        const conf = Math.min(Math.round(raw), 98);
-
-        const g05 = Math.min(conf + 15, 99);
-        const g15 = Math.min(conf, 95);
-        const g25 = Math.max(conf - 15, 5);
-        const g35 = Math.max(conf - 35, 2);
+        const conf = Math.min(Math.round(((calc(h) + calc(a)) / 2) * coeffs[league]), 98);
 
         const data = {
             id: Date.now(), league, conf,
-            home: document.getElementById('hName').value,
-            away: document.getElementById('aName').value,
-            h, a, g05, g15, g25, g35,
-            report: conf > 75 ? "B Noktası: Kaos ve baskı hakim. Gol potansiyeli yüksek." : "A Noktası: Oyun kilitli, üretim düşük.",
+            home: document.getElementById('hName').value, away: document.getElementById('aName').value,
+            h, a, 
+            g05: Math.min(conf + 15, 99), g15: Math.min(conf, 95), g25: Math.max(conf - 15, 5), g35: Math.max(conf - 35, 2),
+            report: conf > 78 ? "B NOKTASI: Kaos aktif, pusuya girilebilir." : "A NOKTASI: Kilitli oyun, riskli alan.",
             status: 'neutral'
         };
 
         history.unshift(data);
         save(); render(); updateDash();
-        fields.forEach(id => { if(id !== 'league') document.getElementById(id).value = ''; });
+        ids.forEach(id => { if(id.includes('Name') === false) document.getElementById(id).value = ''; });
     }
 
     function render() {
@@ -131,10 +126,9 @@
                     <span class="l-tag">${i.league}</span>
                     <span style="font-size: 24px; font-weight: 900; color: var(--accent);">%${i.conf}</span>
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <b style="color:var(--home); font-size:14px;">${i.home}</b>
-                    <span style="color:#333; font-weight:900;">VS</span>
-                    <b style="color:var(--away); font-size:14px; text-align:right;">${i.away}</b>
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                    <b style="color:var(--home);">${i.home}</b>
+                    <b style="color:var(--away);">${i.away}</b>
                 </div>
                 <div class="goal-probs">
                     <div class="prob-box"><span class="p-lbl">0.5 ÜST</span><span class="p-val">%${i.g05}</span></div>
@@ -144,13 +138,13 @@
                 </div>
                 <div class="ai-text">${i.report}</div>
                 <div class="compact-metrics">
-                    <span>npxG: <b>${i.h.npxg}</b> / <b>${i.a.npxg}</b></span>
-                    <span>PPA: <b>${i.h.ppa}</b> / <b>${i.a.ppa}</b></span>
-                    <span>Dist: <b>${i.h.dist}</b> / <b>${i.a.dist}</b></span>
+                    <span>G:<b>${i.h.npxg}</b>/<b>${i.a.npxg}</b></span>
+                    <span>P:<b>${i.h.ppa}</b>/<b>${i.a.ppa}</b></span>
+                    <span>D:<b>${i.h.dist}</b>/<b>${i.a.dist}</b></span>
                 </div>
                 <div class="footer-btns">
-                    <span style="color:#ff5252; font-size:10px; cursor:pointer; font-weight:bold; opacity:0.6;" onclick="del(${i.id})">SİL</span>
-                    <div class="status-btns">
+                    <span style="color:red; font-size:10px; cursor:pointer;" onclick="del(${i.id})">SİL</span>
+                    <div style="display:flex; gap:8px;">
                         <button class="s-btn w ${i.status==='win'?'active':''}" onclick="setS(${i.id},'win')">W</button>
                         <button class="s-btn l ${i.status==='loss'?'active':''}" onclick="setS(${i.id},'loss')">L</button>
                     </div>
@@ -161,7 +155,7 @@
 
     function setS(id, s) { let o = history.find(x => x.id === id); o.status = o.status === s ? 'neutral' : s; save(); render(); updateDash(); }
     function del(id) { history = history.filter(x => x.id !== id); save(); render(); updateDash(); }
-    function save() { localStorage.setItem('masanaliz_v4_data', JSON.stringify(history)); }
+    function save() { localStorage.setItem('masanaliz_v42_data', JSON.stringify(history)); }
     function updateDash() {
         const t = history.length;
         const w = history.filter(x => x.status === 'win').length;

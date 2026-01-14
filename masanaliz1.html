@@ -3,44 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masanaliz v4.0 - Ultra Modern</title>
+    <title>Masanaliz v4.1 - Clean Pro</title>
     <style>
         :root {
             --bg: #0a0a0a; --card: #141414; --accent: #00ff88; --dim: #888;
             --home: #00d2ff; --away: #ff4081; --win: #00c853; --loss: #ff5252;
         }
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
-        
-        /* Dashboard Header */
         .header { width: 100%; max-width: 450px; display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 10px; }
         .h-stat { text-align: center; }
         .h-val { display: block; font-size: 18px; font-weight: 900; color: var(--accent); }
         .h-lbl { font-size: 8px; color: var(--dim); letter-spacing: 1px; }
 
-        /* Input Section - Daha İnce ve Kompakt */
         .panel { background: var(--card); width: 100%; max-width: 450px; border-radius: 16px; padding: 15px; border: 1px solid #222; box-sizing: border-box; margin-bottom: 15px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
         input, select { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; font-size: 12px; outline: none; }
-        .btn-main { background: var(--accent); color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 800; width: 100%; margin-top: 12px; cursor: pointer; transition: 0.2s; }
+        
+        .btn-main { background: var(--accent); color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 800; width: 100%; margin-top: 12px; cursor: pointer; transition: 0.2s; letter-spacing: 1px; }
         .btn-main:active { transform: scale(0.97); opacity: 0.8; }
 
-        /* Modern Analiz Kartı */
         .card { background: var(--card); border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #222; width: 100%; max-width: 450px; box-sizing: border-box; animation: pop 0.3s ease-out; }
         @keyframes pop { from { opacity: 0; transform: scale(0.95); } }
-
         .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .l-tag { background: rgba(0,255,136,0.1); color: var(--accent); padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 700; }
-        .score-display { display: flex; align-items: center; gap: 10px; }
-        .score-display span { font-weight: 900; color: var(--dim); }
-
-        /* Gol Olasılık Barı */
+        
         .goal-probs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin: 15px 0; }
         .prob-box { background: #1a1a1a; padding: 8px 2px; border-radius: 10px; text-align: center; border: 1px solid #222; }
         .p-val { display: block; font-size: 14px; font-weight: 800; color: var(--accent); }
         .p-lbl { font-size: 7px; color: var(--dim); font-weight: bold; }
 
         .ai-text { font-size: 12px; line-height: 1.4; color: #ccc; background: #000; padding: 10px; border-radius: 10px; margin-bottom: 12px; border-left: 3px solid var(--accent); }
-        
         .compact-metrics { display: flex; justify-content: space-between; font-size: 10px; color: var(--dim); border-top: 1px solid #222; padding-top: 10px; }
         .compact-metrics b { color: #fff; }
 
@@ -55,7 +47,7 @@
 
 <div class="header">
     <div class="h-stat"><span class="h-val" id="win-rate">0%</span><span class="h-lbl">BAŞARI</span></div>
-    <div style="font-weight: 900; font-size: 16px; letter-spacing: 2px;">MASANALİZ <span style="color:var(--accent)">v4.0</span></div>
+    <div style="font-weight: 900; font-size: 16px; letter-spacing: 2px;">MASANALİZ <span style="color:var(--accent)">v4.1</span></div>
     <div class="h-stat"><span class="h-val" id="total-count">0</span><span class="h-lbl">TOPLAM</span></div>
 </div>
 
@@ -68,16 +60,16 @@
         <option value="Serie A">Serie A (x0.95)</option>
     </select>
     <div class="grid">
-        <input type="text" id="hName" placeholder="Ev Takımı">
-        <input type="text" id="aName" placeholder="Dep Takımı">
-        <input type="text" id="h_npxg" placeholder="Ev npxG/Sh" inputmode="decimal">
-        <input type="text" id="a_npxg" placeholder="Dep npxG/Sh" inputmode="decimal">
-        <input type="text" id="h_ppa" placeholder="Ev PPA" inputmode="decimal">
-        <input type="text" id="a_ppa" placeholder="Dep PPA" inputmode="decimal">
-        <input type="text" id="h_dist" placeholder="Ev Dist" inputmode="decimal">
-        <input type="text" id="a_dist" placeholder="Dep Dist" inputmode="decimal">
+        <input type="text" id="hName" placeholder="Takım Adı">
+        <input type="text" id="aName" placeholder="Takım Adı">
+        <input type="text" id="h_npxg" placeholder="npxG/Sh" inputmode="decimal">
+        <input type="text" id="a_npxg" placeholder="npxG/Sh" inputmode="decimal">
+        <input type="text" id="h_ppa" placeholder="PPA" inputmode="decimal">
+        <input type="text" id="a_ppa" placeholder="PPA" inputmode="decimal">
+        <input type="text" id="h_dist" placeholder="Dist" inputmode="decimal">
+        <input type="text" id="a_dist" placeholder="Dist" inputmode="decimal">
     </div>
-    <button class="btn-main" onclick="startAnalysis()">ANALİZİ OLUŞTUR</button>
+    <button class="btn-main" onclick="startAnalysis()">BAŞLAT</button>
 </div>
 
 <div id="container" style="width: 100%; max-width: 450px;"></div>
@@ -89,6 +81,14 @@
     function fix(v) { return parseFloat(String(v).replace(',', '.')) || 0; }
 
     function startAnalysis() {
+        const fields = ['hName', 'aName', 'h_npxg', 'a_npxg', 'h_ppa', 'a_ppa', 'h_dist', 'a_dist'];
+        const isEmpty = fields.some(id => !document.getElementById(id).value.trim());
+
+        if (isEmpty) {
+            alert("Lütfen tüm metrikleri eksiksiz girin!");
+            return;
+        }
+
         const league = document.getElementById('league').value;
         const coeffs = {"Bundesliga": 1.05, "Premier League": 1.03, "Ligue 1": 1.00, "La Liga": 0.97, "Serie A": 0.95};
         const l_coeff = coeffs[league];
@@ -96,7 +96,6 @@
         const h = { npxg: fix(document.getElementById('h_npxg').value), ppa: fix(document.getElementById('h_ppa').value), dist: fix(document.getElementById('h_dist').value) };
         const a = { npxg: fix(document.getElementById('a_npxg').value), ppa: fix(document.getElementById('a_ppa').value), dist: fix(document.getElementById('a_dist').value) };
 
-        // Güç Hesaplama
         const calc = (t) => {
             let p = (t.npxg * 400) + (t.ppa * 3);
             if(t.dist > 19) p *= 0.9; else if(t.dist < 16.5) p *= 1.05;
@@ -106,7 +105,6 @@
         const raw = ((calc(h) + calc(a)) / 2) * l_coeff;
         const conf = Math.min(Math.round(raw), 98);
 
-        // Gol Olasılıkları (Poission Yakınsaması Modeli)
         const g05 = Math.min(conf + 15, 99);
         const g15 = Math.min(conf, 95);
         const g25 = Math.max(conf - 15, 5);
@@ -114,16 +112,16 @@
 
         const data = {
             id: Date.now(), league, conf,
-            home: document.getElementById('hName').value || 'Ev',
-            away: document.getElementById('aName').value || 'Dep',
+            home: document.getElementById('hName').value,
+            away: document.getElementById('aName').value,
             h, a, g05, g15, g25, g35,
-            report: conf > 75 ? "B Noktası: Yüksek tempo ve kaos beklentisi." : "A Noktası: Kısır döngü ve savunma disiplini.",
+            report: conf > 75 ? "B Noktası: Kaos ve baskı hakim. Gol potansiyeli yüksek." : "A Noktası: Oyun kilitli, üretim düşük.",
             status: 'neutral'
         };
 
         history.unshift(data);
-        localStorage.setItem('masanaliz_v4_data', JSON.stringify(history));
-        render(); updateDash();
+        save(); render(); updateDash();
+        fields.forEach(id => { if(id !== 'league') document.getElementById(id).value = ''; });
     }
 
     function render() {
@@ -133,30 +131,25 @@
                     <span class="l-tag">${i.league}</span>
                     <span style="font-size: 24px; font-weight: 900; color: var(--accent);">%${i.conf}</span>
                 </div>
-                
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <b style="color:var(--home); font-size:14px;">${i.home}</b>
                     <span style="color:#333; font-weight:900;">VS</span>
                     <b style="color:var(--away); font-size:14px; text-align:right;">${i.away}</b>
                 </div>
-
                 <div class="goal-probs">
                     <div class="prob-box"><span class="p-lbl">0.5 ÜST</span><span class="p-val">%${i.g05}</span></div>
                     <div class="prob-box"><span class="p-lbl">1.5 ÜST</span><span class="p-val">%${i.g15}</span></div>
                     <div class="prob-box"><span class="p-lbl">2.5 ÜST</span><span class="p-val">%${i.g25}</span></div>
                     <div class="prob-box"><span class="p-lbl">3.5 ÜST</span><span class="p-val">%${i.g35}</span></div>
                 </div>
-
                 <div class="ai-text">${i.report}</div>
-
                 <div class="compact-metrics">
                     <span>npxG: <b>${i.h.npxg}</b> / <b>${i.a.npxg}</b></span>
                     <span>PPA: <b>${i.h.ppa}</b> / <b>${i.a.ppa}</b></span>
                     <span>Dist: <b>${i.h.dist}</b> / <b>${i.a.dist}</b></span>
                 </div>
-
                 <div class="footer-btns">
-                    <span style="color:#ff5252; font-size:10px; cursor:pointer; font-weight:bold;" onclick="del(${i.id})">SİL</span>
+                    <span style="color:#ff5252; font-size:10px; cursor:pointer; font-weight:bold; opacity:0.6;" onclick="del(${i.id})">SİL</span>
                     <div class="status-btns">
                         <button class="s-btn w ${i.status==='win'?'active':''}" onclick="setS(${i.id},'win')">W</button>
                         <button class="s-btn l ${i.status==='loss'?'active':''}" onclick="setS(${i.id},'loss')">L</button>

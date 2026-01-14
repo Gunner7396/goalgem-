@@ -3,42 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Masanaliz v2.5 - Akıllı Lig Uzmanı</title>
+    <title>Masanaliz v2.6 - Seri Analiz Terminali</title>
     <style>
         :root {
             --bg-color: #0c0c0c; --card-bg: #181818; --accent: #00e676;
             --text-main: #ffffff; --text-dim: #9e9e9e; --border: #2a2a2a;
             --win: #00c853; --loss: #ff5252; --home: #00d2ff; --away: #ff4081;
         }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
         
-        .dashboard { background: var(--card-bg); width: 100%; max-width: 450px; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        /* Dashboard */
+        .dashboard { background: var(--card-bg); width: 100%; max-width: 450px; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .stat-box { text-align: center; flex: 1; }
         .stat-val { display: block; font-size: 20px; font-weight: 900; color: var(--accent); }
         .stat-lbl { font-size: 10px; color: var(--text-dim); }
-        .reset-btn { background: none; border: 1px solid #444; color: #666; font-size: 9px; padding: 2px 5px; cursor: pointer; margin-top: 5px; border-radius: 4px; }
+        .reset-btn { background: none; border: 1px solid #444; color: #666; font-size: 9px; padding: 4px 8px; cursor: pointer; border-radius: 4px; }
 
-        .input-section { background: var(--card-bg); width: 100%; max-width: 450px; padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px; box-sizing: border-box; }
+        /* Input Section */
+        .input-section { background: var(--card-bg); width: 100%; max-width: 450px; padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 10px; box-sizing: border-box; flex-shrink: 0; }
         select, input { background: #252525; border: 1px solid var(--border); color: white; padding: 12px; border-radius: 8px; font-size: 14px; width: 100%; box-sizing: border-box; margin-bottom: 8px; }
         .grid-5 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
-        .start-btn { background: var(--accent); color: #000; border: none; padding: 15px; border-radius: 8px; font-weight: 800; cursor: pointer; width: 100%; font-size: 16px; transition: 0.2s; }
-        .start-btn:active { transform: scale(0.98); }
+        .start-btn { background: var(--accent); color: #000; border: none; padding: 15px; border-radius: 8px; font-weight: 800; cursor: pointer; width: 100%; font-size: 16px; transition: 0.1s; }
+        .start-btn:active { transform: scale(0.96); opacity: 0.8; }
 
-        #analysis-container { width: 100%; max-width: 450px; height: 50vh; overflow-y: auto; scrollbar-width: none; }
-        .card { background: var(--card-bg); border-radius: 12px; padding: 15px; margin-bottom: 10px; border: 1px solid var(--border); border-left-width: 6px; }
+        /* Scrollable Container */
+        #analysis-container { width: 100%; max-width: 450px; overflow-y: auto; flex-grow: 1; padding-bottom: 20px; scrollbar-width: none; -ms-overflow-style: none; }
+        #analysis-container::-webkit-scrollbar { display: none; }
+
+        .card { background: var(--card-bg); border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid var(--border); border-left: 6px solid var(--border); animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .match-row { display: grid; grid-template-columns: 1fr 60px 1fr; align-items: center; text-align: center; margin-bottom: 10px; }
+        .match-row { display: grid; grid-template-columns: 1fr 60px 1fr; align-items: center; text-align: center; margin-bottom: 12px; }
         .score-box { display: flex; gap: 3px; justify-content: center; }
-        .s-in { width: 22px; background: #000; border: 1px solid #333; color: #fff; text-align: center; border-radius: 3px; font-weight: bold; }
+        .s-in { width: 24px; background: #000; border: 1px solid #333; color: #fff; text-align: center; border-radius: 4px; font-weight: bold; padding: 4px 0; }
 
-        .metrics-table { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 6px; font-size: 11px; }
-        .m-row { display: flex; justify-content: space-between; margin-bottom: 2px; color: var(--text-dim); }
+        .metrics-table { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px; font-size: 11px; }
+        .m-row { display: flex; justify-content: space-between; margin-bottom: 3px; color: var(--text-dim); }
         .m-val { color: #fff; font-weight: bold; }
 
-        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .wl-btns button { width: 32px; height: 32px; border-radius: 6px; border: 1px solid #444; background: #222; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+        .wl-btns button { width: 35px; height: 35px; border-radius: 6px; border: 1px solid #444; background: #222; font-weight: bold; cursor: pointer; font-size: 14px; }
         .btn-w.active { background: var(--win); color: #000; border-color: var(--win); }
         .btn-l.active { background: var(--loss); color: #000; border-color: var(--loss); }
+        
+        .delete-card { background: none; border: none; color: #ff5252; cursor: pointer; font-size: 11px; text-decoration: underline; opacity: 0.6; }
+        .delete-card:hover { opacity: 1; }
     </style>
 </head>
 <body>
@@ -47,18 +57,18 @@
     <div class="stat-box">
         <span class="stat-val" id="win-rate">0%</span>
         <span class="stat-lbl">BAŞARI</span>
-        <button class="reset-btn" onclick="resetStats()">Sıfırla</button>
+        <button class="reset-btn" onclick="resetStats()">Tümünü Sil</button>
     </div>
-    <div style="font-weight: 900; color: var(--accent); font-size: 20px; letter-spacing: 1px;">MASANALİZ</div>
+    <div style="font-weight: 900; color: var(--accent); font-size: 22px;">MASANALİZ</div>
     <div class="stat-box">
         <span class="stat-val" id="total-count">0</span>
-        <span class="stat-lbl">TOPLAM</span>
+        <span class="stat-lbl">ANALİZ</span>
     </div>
 </div>
 
 <div class="input-section">
     <select id="league">
-        <option value="">LİG SEÇİN</option>
+        <option value="Global">LİG SEÇİN</option>
         <option value="Premier League">Premier League</option>
         <option value="Bundesliga">Bundesliga</option>
         <option value="Serie A">Serie A</option>
@@ -70,16 +80,16 @@
         <input type="text" id="aName" placeholder="Away Team">
     </div>
     <div class="grid-5">
-        <input type="text" id="h_npxg" placeholder="npxG/Sh">
-        <input type="text" id="a_npxg" placeholder="npxG/Sh">
-        <input type="text" id="h_ppa" placeholder="PPA">
-        <input type="text" id="a_ppa" placeholder="PPA">
-        <input type="text" id="h_1_3" placeholder="1/3">
-        <input type="text" id="a_1_3" placeholder="1/3">
-        <input type="text" id="h_prgc" placeholder="PrgC">
-        <input type="text" id="a_prgc" placeholder="PrgC">
-        <input type="text" id="h_dist" placeholder="Dist">
-        <input type="text" id="a_dist" placeholder="Dist">
+        <input type="text" id="h_npxg" placeholder="npxG/Sh" inputmode="decimal">
+        <input type="text" id="a_npxg" placeholder="npxG/Sh" inputmode="decimal">
+        <input type="text" id="h_ppa" placeholder="PPA" inputmode="decimal">
+        <input type="text" id="a_ppa" placeholder="PPA" inputmode="decimal">
+        <input type="text" id="h_1_3" placeholder="1/3" inputmode="decimal">
+        <input type="text" id="a_1_3" placeholder="1/3" inputmode="decimal">
+        <input type="text" id="h_prgc" placeholder="PrgC" inputmode="decimal">
+        <input type="text" id="a_prgc" placeholder="PrgC" inputmode="decimal">
+        <input type="text" id="h_dist" placeholder="Dist" inputmode="decimal">
+        <input type="text" id="a_dist" placeholder="Dist" inputmode="decimal">
     </div>
     <button class="start-btn" onclick="startAnalysis()">START ANALYSIS</button>
 </div>
@@ -91,15 +101,20 @@
 
     window.onload = () => { renderCards(); updateDashboard(); };
 
-    function fixVal(val) { return parseFloat(String(val).replace(',', '.')) || 0; }
+    // Nokta/Virgül düzeltici ve sayısal çevirici
+    function fixVal(val) {
+        if(!val) return 0;
+        let clean = String(val).replace(',', '.');
+        return parseFloat(clean) || 0;
+    }
 
     function startAnalysis() {
-        const leagueName = document.getElementById('league').value;
-        if(!leagueName) return alert("Lütfen önce lig seçin!");
-
+        // Formu temizlemiyoruz, böylece seri START basılabilir
         const data = {
-            id: Date.now(), league: leagueName,
-            home: document.getElementById('hName').value, away: document.getElementById('aName').value,
+            id: Date.now() + Math.random(), // Aynı saniyede birden fazla kart için random ekledik
+            league: document.getElementById('league').value,
+            home: document.getElementById('hName').value || 'Home',
+            away: document.getElementById('aName').value || 'Away',
             h_npxg: fixVal(document.getElementById('h_npxg').value), a_npxg: fixVal(document.getElementById('a_npxg').value),
             h_ppa: fixVal(document.getElementById('h_ppa').value), a_ppa: fixVal(document.getElementById('a_ppa').value),
             h_1_3: fixVal(document.getElementById('h_1_3').value), a_1_3: fixVal(document.getElementById('a_1_3').value),
@@ -108,36 +123,17 @@
             status: 'neutral', hScore: '', aScore: ''
         };
 
-        // Lig Katsayı Ayarları (İç Algoritma)
-        let katsayi = 1.0;
-        if(data.league === 'Serie A') katsayi = 0.95;
-        if(data.league === 'Bundesliga') katsayi = 1.05;
-
-        let weight = ((data.h_npxg * 350) + (data.h_ppa * 2.5) + (data.h_1_3 * 0.8)) * katsayi;
+        // Algoritma
+        let weight = (data.h_npxg * 350) + (data.h_ppa * 2.5) + (data.h_1_3 * 0.8) + (data.h_prgc * 0.4);
         data.conf = Math.min(Math.round(weight), 98);
         
         history.unshift(data);
-        save(); renderCards(); updateDashboard();
-        checkLeagueIntelligence(data.league);
-    }
-
-    function checkLeagueIntelligence(selectedLeague) {
-        const leagueMatches = history.filter(x => x.league === selectedLeague);
+        save();
+        renderCards();
+        updateDashboard();
         
-        if (leagueMatches.length > 0 && leagueMatches.length % 100 === 0) {
-            const fails = leagueMatches.filter(x => x.status === 'loss');
-            const avgNpxG = fails.length > 0 ? (fails.reduce((acc, curr) => acc + curr.h_npxg, 0) / fails.length).toFixed(2) : 0;
-            
-            alert(`
-🚨 AKILLI LİG RAPORU: ${selectedLeague}
----------------------------------------
-• Bu ligde 100. maça ulaşıldı.
-• Başarısız (L) maç sayısı: ${fails.length}
-• Kaybedilen maçların npxG/Sh ortalaması: ${avgNpxG}
-
-ÖNERİ: ${selectedLeague} liginde kaybettiğin maçlarda şut kalitesi düşüktü. Analizlerinde npxG/Sh eşiğini bu lig için %10 artırmalısın.
-            `);
-        }
+        // Kaydırma (Yeni analiz en üste gelir)
+        document.getElementById('analysis-container').scrollTop = 0;
     }
 
     function updateDashboard() {
@@ -153,16 +149,16 @@
         container.innerHTML = history.map(item => `
             <div class="card" style="border-left-color: ${item.status === 'win' ? 'var(--win)' : (item.status === 'loss' ? 'var(--loss)' : 'var(--border)')}">
                 <div class="card-header">
-                    <span style="font-size:10px; color:var(--accent); font-weight:bold;">${item.league}</span>
-                    <span style="font-weight:900; font-size:14px;">%${item.conf} <small style="font-size:8px; color:var(--text-dim)">GÜVEN</small></span>
+                    <span style="font-size:11px; color:var(--accent); font-weight:bold;">${item.league}</span>
+                    <span style="font-weight:900; font-size:16px;">%${item.conf} <small style="font-size:9px; color:var(--text-dim)">GÜVEN</small></span>
                 </div>
                 <div class="match-row">
-                    <div style="color:var(--home); font-size:13px; font-weight:bold;">${item.home || 'Home'}</div>
+                    <div style="color:var(--home); font-size:13px; font-weight:bold;">${item.home}</div>
                     <div class="score-box">
-                        <input type="text" class="s-in" value="${item.hScore}" placeholder="-" onchange="updateItem(${item.id}, 'hScore', this.value)">
-                        <input type="text" class="s-in" value="${item.aScore}" placeholder="-" onchange="updateItem(${item.id}, 'aScore', this.value)">
+                        <input type="text" class="s-in" value="${item.hScore}" inputmode="numeric" onchange="updateItem(${item.id}, 'hScore', this.value)">
+                        <input type="text" class="s-in" value="${item.aScore}" inputmode="numeric" onchange="updateItem(${item.id}, 'aScore', this.value)">
                     </div>
-                    <div style="color:var(--away); font-size:13px; font-weight:bold;">${item.away || 'Away'}</div>
+                    <div style="color:var(--away); font-size:13px; font-weight:bold;">${item.away}</div>
                 </div>
                 <div class="metrics-table">
                     <div>
@@ -176,7 +172,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button style="font-size:10px; color:#666; background:none; border:none; text-decoration:underline; cursor:pointer;" onclick="remove(${item.id})">Kaldır</button>
+                    <button class="delete-card" onclick="remove(${item.id})">Analizi Sil</button>
                     <div class="wl-btns">
                         <button class="btn-w ${item.status === 'win' ? 'active' : ''}" onclick="setStatus(${item.id}, 'win')">W</button>
                         <button class="btn-l ${item.status === 'loss' ? 'active' : ''}" onclick="setStatus(${item.id}, 'loss')">L</button>
@@ -188,7 +184,7 @@
 
     function updateItem(id, key, val) {
         let obj = history.find(x => x.id === id);
-        if(obj) { obj[key] = val; save(); }
+        if(obj) { obj[key] = val; save(); updateDashboard(); }
     }
 
     function setStatus(id, status) {
@@ -199,8 +195,20 @@
         }
     }
 
-    function resetStats() { if(confirm('Tüm geçmiş ve başarı oranı sıfırlansın mı?')) { history = []; save(); location.reload(); } }
-    function remove(id) { if(confirm('Bu analizi silmek istiyor musun?')) { history = history.filter(x => x.id !== id); save(); renderCards(); updateDashboard(); } }
+    function remove(id) {
+        history = history.filter(x => x.id !== id);
+        save(); renderCards(); updateDashboard();
+    }
+
+    function resetStats() {
+        if(confirm('TÜM GEÇMİŞ SİLİNECEK! Emin misin?')) {
+            history = [];
+            save();
+            renderCards();
+            updateDashboard();
+        }
+    }
+
     function save() { localStorage.setItem('masanaliz_data', JSON.stringify(history)); }
 </script>
 </body>

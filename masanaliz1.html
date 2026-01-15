@@ -1,62 +1,263 @@
-// ... (CSS kısımları aynı kalabilir, sadece script içindeki calculate fonksiyonunu güncelliyoruz)
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Big 5 Analiz Terminali v2</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --primary: #00ff88;
+            --secondary: #38bdf8;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
 
-function calculate() {
-    const hName = document.getElementById('h_name').value;
-    const aName = document.getElementById('a_name').value;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 10px;
+            padding-bottom: 50px;
+        }
+
+        .container { max-width: 500px; margin: auto; }
+        h2 { text-align: center; color: var(--primary); font-size: 1.4rem; margin-bottom: 20px; text-transform: uppercase; }
+
+        .config-card, .team-card, .history-item {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 1px solid #334155;
+        }
+
+        label { display: block; font-size: 0.75rem; margin-bottom: 4px; color: #94a3b8; font-weight: bold; }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .btn-analyze { background: var(--primary); color: #000; font-weight: 800; font-size: 1.1rem; height: 55px; border: none; border-radius: 8px; width: 100%; margin-top: 10px; box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3); }
+        .btn-clear { background: #475569; color: white; font-weight: bold; padding: 12px; border: none; border-radius: 8px; width: 100%; margin-top: 10px; }
+        .btn-delete-all { background: var(--danger); color: white; font-weight: bold; padding: 12px; border: none; border-radius: 8px; width: 100%; margin-top: 30px; }
+
+        .history-item { border-left: 6px solid var(--secondary); position: relative; }
+        .score-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px; }
+        .score-val { font-size: 1.4rem; font-weight: 900; }
+        
+        .result-btns { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-win { background: #16a34a; color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; }
+        .btn-loss { background: var(--danger); color: white; flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; }
+        .del-btn { position: absolute; top: 12px; right: 12px; color: #64748b; background: none; border: none; font-size: 1.5rem; }
+
+        #leagueStats { background: rgba(56, 189, 248, 0.1); padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.85rem; border: 1px dashed var(--secondary); text-align: center; color: var(--secondary); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>BIG 5 TERMINAL v2</h2>
+
+    <div class="config-card">
+        <label>LİG SEÇİMİ (KATSAYI)</label>
+        <select id="leagueSelect" onchange="updateUI()">
+            <option value="0.85">Premier League (0.85)</option>
+            <option value="1.10">La Liga (1.10)</option>
+            <option value="1.00">Serie A (1.00)</option>
+            <option value="0.75">Bundesliga (0.75)</option>
+            <option value="0.95">Ligue 1 (0.95)</option>
+        </select>
+        <div id="leagueStats">Veri bekleniyor...</div>
+    </div>
+
+    <div class="grid-2">
+        <div class="team-card">
+            <input type="text" id="h_name" placeholder="Ev Sahibi" style="border-bottom: 2px solid var(--primary);">
+            <div style="margin-top:10px;">
+                <label>npxG/Sh</label><input type="text" inputmode="decimal" id="h_npxG" class="v-input" placeholder="0.00">
+                <label>Touches (Att Pen)</label><input type="text" inputmode="numeric" id="h_att" class="v-input" placeholder="0">
+                <label>SCA</label><input type="text" inputmode="numeric" id="h_sca" class="v-input" placeholder="0">
+                <label>PrgC into Pen</label><input type="text" inputmode="decimal" id="h_prg" class="v-input" placeholder="0.0">
+                <label>Opp Touches</label><input type="text" inputmode="numeric" id="h_opp" class="v-input" placeholder="0">
+                <label>Tkl+Int</label><input type="text" inputmode="numeric" id="h_tkl" class="v-input" placeholder="0">
+            </div>
+        </div>
+        <div class="team-card">
+            <input type="text" id="a_name" placeholder="Deplasman" style="border-bottom: 2px solid var(--secondary);">
+            <div style="margin-top:10px;">
+                <label>npxG/Sh</label><input type="text" inputmode="decimal" id="a_npxG" class="v-input" placeholder="0.00">
+                <label>Touches (Att Pen)</label><input type="text" inputmode="numeric" id="a_att" class="v-input" placeholder="0">
+                <label>SCA</label><input type="text" inputmode="numeric" id="a_sca" class="v-input" placeholder="0">
+                <label>PrgC into Pen</label><input type="text" inputmode="decimal" id="a_prg" class="v-input" placeholder="0.0">
+                <label>Opp Touches</label><input type="text" inputmode="numeric" id="a_opp" class="v-input" placeholder="0">
+                <label>Tkl+Int</label><input type="text" inputmode="numeric" id="a_tkl" class="v-input" placeholder="0">
+            </div>
+        </div>
+    </div>
+
+    <button class="btn-analyze" onclick="calculate()">ANALİZ ET VE ARŞİVLE</button>
+    <button class="btn-clear" onclick="resetInputs()">FORMU TEMİZLE (YENİ MAÇ)</button>
+
+    <div id="historyContainer" style="margin-top:20px;"></div>
     
-    // BOŞ VERİ KONTROLÜ: Eğer isimler veya kritik veriler girilmemişse durdur.
-    if (!hName || !aName || document.getElementById('h_npxG').value === "") {
-        alert("Lütfen önce takımları ve metrikleri giriniz!");
-        return;
+    <button class="btn-delete-all" onclick="clearAll()">TÜM HAFIZAYI SİL</button>
+</div>
+
+<script>
+    const LIMITS = { npxG: 0.09, att: 18, sca: 22, prg: 2.5, opp: 18, tkl: 12 };
+
+    function calculate() {
+        const hName = document.getElementById('h_name').value.trim();
+        const aName = document.getElementById('a_name').value.trim();
+        
+        // HATA GİDERME 1: Boş veri girişi kontrolü
+        const inputs = document.querySelectorAll('.v-input');
+        let emptyFields = 0;
+        inputs.forEach(i => { if(i.value === "") emptyFields++; });
+
+        if (!hName || !aName || emptyFields > 0) {
+            alert("Lütfen takımları ve tüm metrikleri eksiksiz doldurunuz!");
+            return;
+        }
+
+        const K = parseFloat(document.getElementById('leagueSelect').value);
+        const league = document.getElementById('leagueSelect').options[document.getElementById('leagueSelect').selectedIndex].text;
+
+        const h = { 
+            npxG: parseV('h_npxG'), att: parseV('h_att'), sca: parseV('h_sca'), 
+            prg: parseV('h_prg'), opp: parseV('h_opp'), tkl: parseV('h_tkl') 
+        };
+        const a = { 
+            npxG: parseV('a_npxG'), att: parseV('a_att'), sca: parseV('a_sca'), 
+            prg: parseV('a_prg'), opp: parseV('a_opp'), tkl: parseV('a_tkl') 
+        };
+
+        // HATA GİDERME 2: Daha dengeli bir başlangıç skoru
+        let baseProb = 80; 
+        let riskCounter = 0;
+
+        [h, a].forEach(t => {
+            // Analiz Mantığı: Limitleri aşan her metrik güveni düşürür
+            if (t.npxG > (LIMITS.npxG * K)) { baseProb -= 15; riskCounter += 2; }
+            if (t.att > (LIMITS.att * K)) { baseProb -= 10; riskCounter += 1.5; }
+            if (t.sca > (LIMITS.sca * K)) { baseProb -= 7; riskCounter++; }
+            if (t.prg > (LIMITS.prg * K)) { baseProb -= 5; riskCounter++; }
+            
+            // SINIRDA VERİ KONTROLÜ (Senin uyarın: %15 yakınlık bandı)
+            if (t.npxG > (LIMITS.npxG * K * 0.85) && t.npxG <= (LIMITS.npxG * K)) riskCounter++;
+            if (t.att > (LIMITS.att * K * 0.85) && t.att <= (LIMITS.att * K)) riskCounter++;
+        });
+
+        // Kaos Faktörü: Eğer risk çok fazlaysa Alt ihtimalini sert düşür
+        if(riskCounter >= 4) baseProb -= 15;
+
+        const result = {
+            id: Date.now(),
+            league, hName, aName,
+            p25: Math.max(Math.min(baseProb, 95), 5),
+            p35: Math.min(baseProb + 18, 99),
+            risk: riskCounter,
+            status: 'pending'
+        };
+
+        const history = JSON.parse(localStorage.getItem('big5_data') || '[]');
+        history.unshift(result);
+        localStorage.setItem('big5_data', JSON.stringify(history));
+        render();
+        resetInputs(); // Formu temizle
     }
 
-    const K = parseFloat(document.getElementById('leagueSelect').value);
-    const league = document.getElementById('leagueSelect').options[document.getElementById('leagueSelect').selectedIndex].text;
+    // HATA GİDERME 3: Nokta/Virgül ve NaN hataları için güvenli parse
+    function parseV(id) {
+        let val = document.getElementById(id).value.replace(',', '.');
+        let num = parseFloat(val);
+        return isNaN(num) ? 0 : num;
+    }
 
-    const h = { 
-        npxG: parseV('h_npxG'), att: parseV('h_att'), sca: parseV('h_sca'), 
-        prg: parseV('h_prg'), opp: parseV('h_opp'), tkl: parseV('h_tkl') 
-    };
-    const a = { 
-        npxG: parseV('a_npxG'), att: parseV('a_att'), sca: parseV('a_sca'), 
-        prg: parseV('a_prg'), opp: parseV('a_opp'), tkl: parseV('a_tkl') 
-    };
+    function resetInputs() {
+        document.querySelectorAll('.v-input').forEach(i => i.value = "");
+        document.getElementById('h_name').value = "";
+        document.getElementById('a_name').value = "";
+    }
 
-    // Makine artık daha temkinli başlıyor
-    let baseProb = 80; 
-    let riskCounter = 0;
+    function render() {
+        const history = JSON.parse(localStorage.getItem('big5_data') || '[]');
+        const container = document.getElementById('historyContainer');
+        container.innerHTML = "";
 
-    // CEZA PUANLARI (Üst ihtimalini daha hızlı tetikler)
-    [h, a].forEach(t => {
-        // npxG/Sh çok kritik, aşılırsa büyük ceza
-        if (t.npxG > (LIMITS.npxG * K)) { baseProb -= 20; riskCounter += 2; }
-        // Ceza sahası dokunuşu fazlaysa tehlike
-        if (t.att > (LIMITS.att * K)) { baseProb -= 15; riskCounter++; }
-        // SCA (Pozisyon üretimi) fazlaysa ceza
-        if (t.sca > (LIMITS.sca * K)) { baseProb -= 10; riskCounter++; }
+        history.forEach(m => {
+            const card = document.createElement('div');
+            card.className = 'history-item';
+            card.innerHTML = `
+                <button class="del-btn" onclick="deleteItem(${m.id})">×</button>
+                <div style="font-size:0.75rem; color:var(--secondary); font-weight:bold;">${m.league}</div>
+                <div style="font-weight:bold; margin:8px 0; font-size:1.1rem;">${m.hName} vs ${m.aName}</div>
+                <div class="score-row">
+                    <div style="text-align:center;"><div style="font-size:0.7rem; opacity:0.8;">2.5 ALT</div><div class="score-val" style="color:var(--primary)">%${m.p25}</div></div>
+                    <div style="text-align:center;"><div style="font-size:0.7rem; opacity:0.8;">3.5 ALT</div><div class="score-val" style="color:var(--secondary)">%${m.p35}</div></div>
+                </div>
+                ${m.risk >= 4 ? `<div style="color:var(--warning); font-size:0.75rem; margin-top:10px; font-weight:bold;">⚠️ Veriler sınırda! 3.5 Alt daha güvenli.</div>` : ''}
+                <div class="result-btns">
+                    ${m.status === 'pending' ? `
+                        <button class="btn-win" onclick="updateStatus(${m.id}, 'win')">ALT BİTTİ ✅</button>
+                        <button class="btn-loss" onclick="updateStatus(${m.id}, 'loss')">ÜST BİTTİ ❌</button>
+                    ` : `<div style="width:100%; text-align:center; font-weight:bold; padding:10px; border-radius:8px; background:rgba(0,0,0,0.2); color:${m.status === 'win' ? 'var(--primary)' : 'var(--danger)'}">
+                            SONUÇ: ${m.status === 'win' ? 'BAŞARILI' : 'BAŞARISIZ'}
+                         </div>`}
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        updateUI();
+    }
+
+    function updateStatus(id, stat) {
+        let history = JSON.parse(localStorage.getItem('big5_data') || '[]');
+        let m = history.find(x => x.id === id);
+        if(m) m.status = stat;
+        localStorage.setItem('big5_data', JSON.stringify(history));
+        render();
+    }
+
+    function deleteItem(id) {
+        let history = JSON.parse(localStorage.getItem('big5_data') || '[]');
+        history = history.filter(x => x.id !== id);
+        localStorage.setItem('big5_data', JSON.stringify(history));
+        render();
+    }
+
+    function clearAll() { if(confirm("Tüm hafıza silinsin mi?")) { localStorage.removeItem('big5_data'); render(); } }
+
+    function updateUI() {
+        const history = JSON.parse(localStorage.getItem('big5_data') || '[]');
+        const league = document.getElementById('leagueSelect').options[document.getElementById('leagueSelect').selectedIndex].text;
+        const stats = history.filter(x => x.league === league && x.status !== 'pending');
+        const wins = stats.filter(x => x.status === 'win').length;
+        const info = document.getElementById('leagueStats');
         
-        // Senin "Sınırda" uyarın: Eşiğe çok yakınsa (0.9 - 1.0 arası)
-        if (t.npxG > (LIMITS.npxG * K * 0.85) && t.npxG <= (LIMITS.npxG * K)) {
-            riskCounter += 1.5; 
-            baseProb -= 5;
+        if(stats.length > 0) {
+            info.innerHTML = `📊 <b>${league}:</b> ${stats.length} Analiz / %${((wins/stats.length)*100).toFixed(0)} Başarı`;
+        } else {
+            info.innerHTML = `📊 <b>${league}:</b> Henüz tamamlanmış analiz yok.`;
         }
-    });
+    }
 
-    // Eğer risk faktörleri çok biriktiyse (Örn: 4 ve üzeri) Alt ihtimalini çökert
-    if(riskCounter >= 4) baseProb -= 15;
-
-    const result = {
-        id: Date.now(),
-        league, hName, aName,
-        p25: Math.max(Math.min(baseProb, 95), 5), // Min %5, Max %95
-        p35: Math.max(Math.min(baseProb + 15, 99), 10),
-        risk: riskCounter,
-        status: 'pending'
-    };
-
-    const history = JSON.parse(localStorage.getItem('big5_data') || '[]');
-    history.unshift(result);
-    localStorage.setItem('big5_data', JSON.stringify(history));
-    render();
-    resetInputs(); // Analizden sonra formu temizle ki karışmasın
-}
+    window.onload = render;
+</script>
+</body>
+</html>

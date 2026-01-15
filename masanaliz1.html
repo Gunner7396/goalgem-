@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Akıllı Analiz Terminali</title>
+    <title>5 Büyük Lig Analiz Terminali</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -24,247 +24,228 @@
             padding-bottom: 50px;
         }
 
-        h2 { text-align: center; color: var(--primary); margin-bottom: 15px; }
-
         .container { max-width: 500px; margin: auto; }
+        h2 { text-align: center; color: var(--primary); font-size: 1.4rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .config-card, .team-card, .analysis-card {
+        .config-card, .team-card, .history-item {
             background: var(--card-bg);
             padding: 15px;
             border-radius: 12px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            margin-bottom: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 1px solid #334155;
         }
 
-        .input-group { margin-bottom: 10px; }
-        label { display: block; font-size: 0.85rem; margin-bottom: 4px; color: #94a3b8; }
+        label { display: block; font-size: 0.75rem; margin-bottom: 4px; color: #94a3b8; font-weight: bold; }
         
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid #334155;
             background: #0f172a;
             color: white;
             font-size: 1rem;
             box-sizing: border-box;
+            outline: none;
         }
+
+        input:focus { border-color: var(--secondary); }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 5px;
-        }
+        .btn-analyze { background: var(--primary); color: #000; font-weight: 800; font-size: 1rem; height: 50px; border: none; border-radius: 8px; width: 100%; margin-top: 10px; }
+        .btn-clear { background: #475569; color: white; font-weight: bold; padding: 10px; border: none; border-radius: 8px; width: 100%; margin-top: 8px; }
+        .btn-delete-all { background: var(--danger); color: white; font-weight: bold; padding: 12px; border: none; border-radius: 8px; width: 100%; margin-top: 30px; opacity: 0.8; }
 
-        .btn-analyze { background: var(--primary); color: #000; font-size: 1.1rem; }
-        .btn-clear { background: #475569; color: white; margin-top: 10px; }
-        .btn-delete-all { background: var(--danger); color: white; margin-top: 20px; }
+        /* Analiz Sonuç Kartları */
+        .history-item { border-left: 6px solid var(--secondary); position: relative; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Analiz Kartları */
-        .history-item {
-            background: var(--card-bg);
-            border-left: 5px solid var(--secondary);
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            position: relative;
-        }
-
-        .score-box { font-size: 1.2rem; font-weight: bold; margin: 10px 0; }
-        .tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; background: #334155; }
+        .score-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px; }
+        .score-val { font-size: 1.3rem; font-weight: 900; }
         
-        .result-actions { display: flex; gap: 5px; margin-top: 10px; }
-        .btn-win { background: #22c55e; color: white; flex: 1; padding: 5px; font-size: 0.8rem; }
-        .btn-loss { background: var(--danger); color: white; flex: 1; padding: 5px; font-size: 0.8rem; }
-        .btn-del-single { position: absolute; top: 10px; right: 10px; background: none; color: #64748b; width: auto; padding: 0; }
+        .result-btns { display: flex; gap: 8px; margin-top: 15px; }
+        .btn-win { background: #16a34a; color: white; flex: 1; padding: 8px; border: none; border-radius: 6px; font-weight: bold; }
+        .btn-loss { background: var(--danger); color: white; flex: 1; padding: 8px; border: none; border-radius: 6px; font-weight: bold; }
+        .del-btn { position: absolute; top: 12px; right: 12px; color: #64748b; background: none; border: none; font-size: 1.2rem; cursor: pointer; }
 
-        .report-section { background: #1e293b; border: 1px solid var(--secondary); padding: 10px; border-radius: 8px; margin-bottom: 15px; }
+        #leagueStats { background: rgba(56, 189, 248, 0.1); padding: 8px; border-radius: 6px; margin-top: 10px; font-size: 0.85rem; border: 1px dashed var(--secondary); text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>AKILLI ANALİZ v1.0</h2>
+    <h2>BIG 5 TERMINAL</h2>
 
     <div class="config-card">
-        <label>LİG SEÇİMİ</label>
-        <select id="leagueSelect" onchange="updateLeagueStats()">
-            <option value="1.00">İtalya Serie A (1.00)</option>
-            <option value="1.10">İspanya La Liga (1.10)</option>
-            <option value="0.75">Almanya Bundesliga (0.75)</option>
-            <option value="0.85">İngiltere Premier Lig (0.85)</option>
-            <option value="1.20">Türkiye Süper Lig (1.20)</option>
-            <option value="1.00">Diğer (1.00)</option>
+        <label>LİG SEÇİMİ (KATSAYI)</label>
+        <select id="leagueSelect" onchange="updateUI()">
+            <option value="0.85">Premier League (0.85)</option>
+            <option value="1.10">La Liga (1.10)</option>
+            <option value="1.00">Serie A (1.00)</option>
+            <option value="0.75">Bundesliga (0.75)</option>
+            <option value="0.95">Ligue 1 (0.95)</option>
         </select>
-        <div id="leagueReport" style="margin-top:10px; font-size:0.85rem; color: var(--secondary);"></div>
+        <div id="leagueStats">Veri bekleniyor...</div>
     </div>
 
     <div class="grid-2">
         <div class="team-card">
-            <input type="text" id="homeName" placeholder="Ev Takımı" style="margin-bottom:10px; border-color: var(--primary);">
-            <div class="input-group"><label>npxG/Sh</label><input type="number" step="0.01" class="m-input" id="h_npxG"></div>
-            <div class="input-group"><label>Touches (Att Pen)</label><input type="number" class="m-input" id="h_attPen"></div>
-            <div class="input-group"><label>SCA</label><input type="number" class="m-input" id="h_sca"></div>
-            <div class="input-group"><label>PrgC into Pen</label><input type="number" class="m-input" id="h_prgC"></div>
-            <div class="input-group"><label>Opp Touches</label><input type="number" class="m-input" id="h_opp"></div>
-            <div class="input-group"><label>Tkl+Int</label><input type="number" class="m-input" id="h_tkl"></div>
+            <input type="text" id="h_name" placeholder="Ev Sahibi" style="border-bottom: 2px solid var(--primary);">
+            <div style="margin-top:10px;">
+                <label>npxG/Sh</label><input type="number" step="0.01" id="h_npxG" class="v-input">
+                <label>Touches (Att Pen)</label><input type="number" id="h_att" class="v-input">
+                <label>SCA</label><input type="number" id="h_sca" class="v-input">
+                <label>PrgC into Pen</label><input type="number" step="0.1" id="h_prg" class="v-input">
+                <label>Opp Touches</label><input type="number" id="h_opp" class="v-input">
+                <label>Tkl+Int</label><input type="number" id="h_tkl" class="v-input">
+            </div>
         </div>
         <div class="team-card">
-            <input type="text" id="awayName" placeholder="Dep Takımı" style="margin-bottom:10px; border-color: var(--secondary);">
-            <div class="input-group"><label>npxG/Sh</label><input type="number" step="0.01" class="m-input" id="a_npxG"></div>
-            <div class="input-group"><label>Touches (Att Pen)</label><input type="number" class="m-input" id="a_attPen"></div>
-            <div class="input-group"><label>SCA</label><input type="number" class="m-input" id="a_sca"></div>
-            <div class="input-group"><label>PrgC into Pen</label><input type="number" class="m-input" id="a_prgC"></div>
-            <div class="input-group"><label>Opp Touches</label><input type="number" class="m-input" id="a_opp"></div>
-            <div class="input-group"><label>Tkl+Int</label><input type="number" class="m-input" id="a_tkl"></div>
+            <input type="text" id="a_name" placeholder="Deplasman" style="border-bottom: 2px solid var(--secondary);">
+            <div style="margin-top:10px;">
+                <label>npxG/Sh</label><input type="number" step="0.01" id="a_npxG" class="v-input">
+                <label>Touches (Att Pen)</label><input type="number" id="a_att" class="v-input">
+                <label>SCA</label><input type="number" id="a_sca" class="v-input">
+                <label>PrgC into Pen</label><input type="number" step="0.1" id="a_prg" class="v-input">
+                <label>Opp Touches</label><input type="number" id="a_opp" class="v-input">
+                <label>Tkl+Int</label><input type="number" id="a_tkl" class="v-input">
+            </div>
         </div>
     </div>
 
-    <button class="btn-analyze" onclick="runAnalysis()">ANALİZ ET VE KAYDET</button>
-    <button class="btn-clear" onclick="clearForm()">FORMU TEMİZLE (YENİ MAÇ)</button>
+    <button class="btn-analyze" onclick="calculate()">ANALİZ ET VE ARŞİVLE</button>
+    <button class="btn-clear" onclick="resetInputs()">FORMU SIFIRLA</button>
 
-    <div id="historyList">
-        </div>
-
-    <button class="btn-delete-all" onclick="deleteAllHistory()">TÜM GEÇMİŞİ SİL</button>
+    <div id="historyContainer" style="margin-top:20px;"></div>
+    
+    <button class="btn-delete-all" onclick="clearAll()">TÜM HAFIZAYI SİL</button>
 </div>
 
 <script>
-    // EŞİKLER
-    const THRESHOLDS = { npxG: 0.09, attPen: 18, sca: 22, prgC: 2.5, opp: 18, tkl: 12 };
+    const LIMITS = { npxG: 0.09, att: 18, sca: 22, prg: 2.5, opp: 18, tkl: 12 };
 
-    function runAnalysis() {
-        const leagueK = parseFloat(document.getElementById('leagueSelect').value);
-        const leagueName = document.getElementById('leagueSelect').options[document.getElementById('leagueSelect').selectedIndex].text;
-        const hName = document.getElementById('homeName').value || "Ev";
-        const aName = document.getElementById('awayName').value || "Dep";
+    function calculate() {
+        const K = parseFloat(document.getElementById('leagueSelect').value);
+        const league = document.getElementById('leagueSelect').options[document.getElementById('leagueSelect').selectedIndex].text;
+        const hName = document.getElementById('h_name').value || "Ev";
+        const aName = document.getElementById('a_name').value || "Deplasman";
 
-        // Verileri Topla
-        const data = {
-            h: { npxG: getVal('h_npxG'), attPen: getVal('h_attPen'), sca: getVal('h_sca'), prgC: getVal('h_prgC'), opp: getVal('h_opp'), tkl: getVal('h_tkl') },
-            a: { npxG: getVal('a_npxG'), attPen: getVal('a_attPen'), sca: getVal('a_sca'), prgC: getVal('a_prgC'), opp: getVal('a_opp'), tkl: getVal('a_tkl') }
+        const h = { 
+            npxG: parseV('h_npxG'), att: parseV('h_att'), sca: parseV('h_sca'), 
+            prg: parseV('h_prg'), opp: parseV('h_opp'), tkl: parseV('h_tkl') 
+        };
+        const a = { 
+            npxG: parseV('a_npxG'), att: parseV('a_att'), sca: parseV('a_sca'), 
+            prg: parseV('a_prg'), opp: parseV('a_opp'), tkl: parseV('a_tkl') 
         };
 
-        // Hesaplama Mantığı
-        let score25 = 85; 
-        let riskFactors = 0;
+        let baseProb = 85; 
+        let riskCounter = 0;
 
-        // Basit Sınır Kontrolü
-        [data.h, data.a].forEach(team => {
-            if (team.npxG > THRESHOLDS.npxG * leagueK) { score25 -= 15; riskFactors++; }
-            if (team.attPen > THRESHOLDS.attPen * leagueK) { score25 -= 10; riskFactors++; }
-            // Sınırda kalma cezası (%10 yakınlık)
-            if (team.npxG > (THRESHOLDS.npxG * leagueK * 0.9)) riskFactors++;
+        // Akıllı Algoritma (Sınırda Kalma Kontrolü Dahil)
+        [h, a].forEach(t => {
+            if (t.npxG > (LIMITS.npxG * K)) baseProb -= 12;
+            if (t.att > (LIMITS.att * K)) baseProb -= 8;
+            if (t.sca > (LIMITS.sca * K)) baseProb -= 5;
+            // Sınırda veri kontrolü (%10 yakınlık)
+            if (t.npxG > (LIMITS.npxG * K * 0.9) && t.npxG <= (LIMITS.npxG * K)) riskCounter++;
+            if (t.att > (LIMITS.att * K * 0.9) && t.att <= (LIMITS.att * K)) riskCounter++;
         });
 
-        const id = Date.now();
-        const analysis = {
-            id, leagueName, hName, aName,
-            score25: Math.max(score25, 10),
-            score35: Math.min(score25 + 20, 98),
-            status: 'pending' // pending, win, loss
+        // Sınırda veri çoksa 2.5 Alt ihtimalini düşür
+        if(riskCounter >= 3) baseProb -= 10;
+
+        const result = {
+            id: Date.now(),
+            league, hName, aName,
+            p25: Math.max(baseProb, 5),
+            p35: Math.min(baseProb + 18, 99),
+            risk: riskCounter,
+            status: 'pending'
         };
 
-        saveToHistory(analysis);
-        renderHistory();
+        const history = JSON.parse(localStorage.getItem('big5_data') || '[]');
+        history.unshift(result);
+        localStorage.setItem('big5_data', JSON.stringify(history));
+        render();
     }
 
-    function getVal(id) {
-        let val = document.getElementById(id).value;
-        return parseFloat(val.replace(',', '.')) || 0;
+    function parseV(id) {
+        let v = document.getElementById(id).value.replace(',', '.');
+        return parseFloat(v) || 0;
     }
 
-    function clearForm() {
-        document.querySelectorAll('.m-input').forEach(input => input.value = "");
-        document.getElementById('homeName').value = "";
-        document.getElementById('awayName').value = "";
+    function resetInputs() {
+        document.querySelectorAll('.v-input').forEach(i => i.value = "");
+        document.getElementById('h_name').value = "";
+        document.getElementById('a_name').value = "";
     }
 
-    // HAFIZA SİSTEMİ
-    function saveToHistory(obj) {
-        let history = JSON.parse(localStorage.getItem('bet_history') || '[]');
-        history.unshift(obj);
-        localStorage.setItem('bet_history', JSON.stringify(history));
-    }
+    function render() {
+        const history = JSON.parse(localStorage.getItem('big5_data') || '[]');
+        const container = document.getElementById('historyContainer');
+        container.innerHTML = "";
 
-    function renderHistory() {
-        const history = JSON.parse(localStorage.getItem('bet_history') || '[]');
-        const list = document.getElementById('historyList');
-        list.innerHTML = "";
-
-        history.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'history-item';
-            div.innerHTML = `
-                <button class="btn-del-single" onclick="deleteSingle('${item.id}')">✕</button>
-                <div class="tag">${item.leagueName}</div>
-                <div style="font-weight:bold; margin-top:5px;">${item.hName} - ${item.aName}</div>
-                <div class="score-box">
-                    <span style="color:var(--primary)">%${item.score25} (2.5 ALT)</span><br>
-                    <span style="color:var(--secondary); font-size:0.9rem;">%${item.score35} (3.5 ALT)</span>
+        history.forEach(m => {
+            const card = document.createElement('div');
+            card.className = 'history-item';
+            card.innerHTML = `
+                <button class="del-btn" onclick="deleteItem(${m.id})">×</button>
+                <div style="font-size:0.7rem; opacity:0.7">${m.league}</div>
+                <div style="font-weight:bold; margin:5px 0;">${m.hName} vs ${m.aName}</div>
+                <div class="score-row">
+                    <div><div style="font-size:0.6rem">2.5 ALT</div><div class="score-val" style="color:var(--primary)">%${m.p25}</div></div>
+                    <div><div style="font-size:0.6rem">3.5 ALT</div><div class="score-val" style="color:var(--secondary)">%${m.p35}</div></div>
                 </div>
-                <div class="result-actions" id="actions-${item.id}">
-                    ${item.status === 'pending' ? `
-                        <button class="btn-win" onclick="setResult('${item.id}', 'win')">ALT BİTTİ ✅</button>
-                        <button class="btn-loss" onclick="setResult('${item.id}', 'loss')">ÜST BİTTİ ❌</button>
-                    ` : `<div style="color:${item.status === 'win' ? 'var(--primary)' : 'var(--danger)'}">
-                            Sonuç: ${item.status === 'win' ? 'BAŞARILI' : 'BAŞARISIZ'}
+                ${m.risk > 3 ? `<div style="color:var(--warning); font-size:0.7rem; margin-top:5px;">⚠️ Sınırda veri yoğunluğu! 3.5 Alt önerilir.</div>` : ''}
+                <div class="result-btns" id="res-${m.id}">
+                    ${m.status === 'pending' ? `
+                        <button class="btn-win" onclick="updateStatus(${m.id}, 'win')">ALT ✅</button>
+                        <button class="btn-loss" onclick="updateStatus(${m.id}, 'loss')">ÜST ❌</button>
+                    ` : `<div style="width:100%; text-align:center; font-weight:bold; color:${m.status === 'win' ? 'var(--primary)' : 'var(--danger)'}">
+                            ${m.status === 'win' ? 'BAŞARILI' : 'BAŞARISIZ'}
                          </div>`}
                 </div>
             `;
-            list.appendChild(div);
+            container.appendChild(card);
         });
-        updateLeagueStats();
+        updateUI();
     }
 
-    function setResult(id, res) {
-        let history = JSON.parse(localStorage.getItem('bet_history') || '[]');
-        let item = history.find(x => x.id == id);
-        if(item) item.status = res;
-        localStorage.setItem('bet_history', JSON.stringify(history));
-        renderHistory();
+    function updateStatus(id, stat) {
+        let history = JSON.parse(localStorage.getItem('big5_data') || '[]');
+        let m = history.find(x => x.id === id);
+        if(m) m.status = stat;
+        localStorage.setItem('big5_data', JSON.stringify(history));
+        render();
     }
 
-    function deleteSingle(id) {
-        let history = JSON.parse(localStorage.getItem('bet_history') || '[]');
-        history = history.filter(x => x.id != id);
-        localStorage.setItem('bet_history', JSON.stringify(history));
-        renderHistory();
+    function deleteItem(id) {
+        let history = JSON.parse(localStorage.getItem('big5_data') || '[]');
+        history = history.filter(x => x.id !== id);
+        localStorage.setItem('big5_data', JSON.stringify(history));
+        render();
     }
 
-    function deleteAllHistory() {
-        if(confirm("Tüm geçmiş silinsin mi?")) {
-            localStorage.removeItem('bet_history');
-            renderHistory();
-        }
-    }
+    function clearAll() { if(confirm("Tüm veriler silinsin mi?")) { localStorage.removeItem('big5_data'); render(); } }
 
-    function updateLeagueStats() {
-        const history = JSON.parse(localStorage.getItem('bet_history') || '[]');
-        const currentLeague = document.getElementById('leagueSelect').options[document.getElementById('leagueSelect').selectedIndex].text;
+    function updateUI() {
+        const history = JSON.parse(localStorage.getItem('big5_data') || '[]');
+        const league = document.getElementById('leagueSelect').options[document.getElementById('leagueSelect').selectedIndex].text;
+        const stats = history.filter(x => x.league === league && x.status !== 'pending');
+        const wins = stats.filter(x => x.status === 'win').length;
+        const info = document.getElementById('leagueStats');
         
-        const leagueMatches = history.filter(x => x.leagueName === currentLeague && x.status !== 'pending');
-        const wins = leagueMatches.filter(x => x.status === 'win').length;
-        
-        const report = document.getElementById('leagueReport');
-        if(leagueMatches.length > 0) {
-            const perc = ((wins / leagueMatches.length) * 100).toFixed(0);
-            report.innerHTML = `📊 Bu Lig Performansı: ${leagueMatches.length} Maç / %${perc} Başarı`;
+        if(stats.length > 0) {
+            info.innerHTML = `<b>${league}:</b> ${stats.length} Maçta %${((wins/stats.length)*100).toFixed(0)} Başarı`;
         } else {
-            report.innerHTML = "📊 Bu lig için henüz tamamlanmış analiz yok.";
+            info.innerHTML = `<b>${league}:</b> Henüz sonuçlanmış analiz yok.`;
         }
     }
 
-    // Başlangıçta Geçmişi Yükle
-    window.onload = renderHistory;
+    window.onload = render;
 </script>
-
 </body>
 </html>

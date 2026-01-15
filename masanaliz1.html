@@ -3,63 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Big 5 Terminal v3 - Hassas Analiz</title>
+    <title>FBref Entegre Analiz v4</title>
     <style>
         :root {
             --bg: #0f172a; --card: #1e293b; --txt: #f8fafc;
-            --prim: #00ff88; --sec: #38bdf8; --err: #ef4444; --warn: #f59e0b;
+            --prim: #00ff88; --sec: #38bdf8; --err: #ef4444;
         }
-        body { font-family: sans-serif; background: var(--bg); color: var(--txt); margin: 0; padding: 10px; font-size: 14px; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--txt); margin: 0; padding: 10px; font-size: 13px; }
         .container { max-width: 480px; margin: auto; }
-        h2 { text-align: center; color: var(--prim); margin: 10px 0; font-size: 1.2rem; }
         
-        .card { background: var(--card); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #334155; }
-        label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 2px; }
+        .card { background: var(--card); padding: 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #334155; }
+        label { display: block; font-size: 10px; color: var(--sec); margin-bottom: 2px; font-weight: bold; text-transform: uppercase; }
         input, select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 14px; box-sizing: border-box; }
         
         .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .btn-main { background: var(--prim); color: #000; font-weight: 800; padding: 12px; border: none; border-radius: 8px; width: 100%; margin-top: 5px; cursor: pointer; }
-        .btn-sub { background: #475569; color: white; padding: 8px; border: none; border-radius: 6px; width: 100%; margin-top: 5px; font-size: 12px; }
-
-        /* Kompakt Analiz Kartı */
-        .hist-item { background: var(--card); border-left: 4px solid var(--sec); padding: 8px; border-radius: 6px; margin-top: 8px; position: relative; font-size: 12px; }
-        .hist-header { display: flex; justify-content: space-between; font-weight: bold; border-bottom: 1px solid #334155; padding-bottom: 4px; margin-bottom: 5px; }
-        .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; text-align: center; margin: 5px 0; }
-        .prob-box { background: rgba(0,0,0,0.2); padding: 4px; border-radius: 4px; }
-        .prob-val { color: var(--prim); font-weight: 900; font-size: 14px; }
+        .btn-main { background: var(--prim); color: #000; font-weight: 800; padding: 15px; border: none; border-radius: 8px; width: 100%; margin: 10px 0; cursor: pointer; font-size: 1rem; }
         
-        .range-grid { display: flex; justify-content: space-around; font-size: 10px; color: #94a3b8; margin-top: 5px; border-top: 1px dashed #334155; padding-top: 4px; }
-        .range-box b { color: var(--sec); display: block; font-size: 12px; }
-
-        .skor-input { width: 50px; text-align: center; padding: 2px; height: 20px; font-size: 12px; margin-left: 5px; }
-        .del-btn { position: absolute; right: 5px; top: 5px; color: #64748b; background: none; border: none; font-size: 16px; }
-        .status-badge { font-size: 10px; padding: 2px 5px; border-radius: 4px; margin-top: 5px; display: inline-block; }
+        .fb-tab { font-size: 9px; color: #94a3b8; margin-bottom: 4px; font-style: italic; }
+        
+        /* Analiz Kartı */
+        .hist-item { background: var(--card); border-left: 4px solid var(--sec); padding: 10px; border-radius: 6px; margin-top: 8px; position: relative; }
+        .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; text-align: center; margin: 8px 0; }
+        .prob-val { color: var(--prim); font-weight: 900; font-size: 16px; }
+        .range-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; font-size: 10px; border-top: 1px solid #334155; padding-top: 6px; }
+        
+        .skor-in { width: 45px; text-align: center; background: #0f172a; border: 1px solid var(--sec); color: white; border-radius: 4px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>BIG 5 TERMINAL v3</h2>
+    <h3 style="text-align:center; color:var(--prim)">FBREF ANALİZ TERMİNALİ</h3>
 
     <div class="card">
-        <select id="lSel" onchange="updUI()"><option value="0.85">Premier League</option><option value="1.10">La Liga</option><option value="1.00">Serie A</option><option value="0.75">Bundesliga</option><option value="0.95">Ligue 1</option></select>
-        <div id="lStat" style="font-size:11px; text-align:center; margin-top:5px; color:var(--sec)"></div>
+        <label>LİG (KATSAYI)</label>
+        <select id="lSel"><option value="0.85">Premier League (0.85)</option><option value="1.10">La Liga (1.10)</option><option value="1.00">Serie A (1.00)</option><option value="0.75">Bundesliga (0.75)</option><option value="0.95">Ligue 1 (0.95)</option></select>
     </div>
 
     <div class="grid-inputs">
-        <div class="card"><input type="text" id="hN" placeholder="Ev"><br><br>
-            <label>npxG/Sh</label><input type="text" id="h1" class="v"><label>AttPen</label><input type="text" id="h2" class="v"><label>SCA</label><input type="text" id="h3" class="v"><label>PrgC</label><input type="text" id="h4" class="v"><label>Opp</label><input type="text" id="h5" class="v"><label>Tkl</label><input type="text" id="h6" class="v">
+        <div class="card">
+            <input type="text" id="hN" placeholder="EV TAKIMI" style="margin-bottom:10px; border-bottom:2px solid var(--prim)">
+            
+            <div class="fb-tab">Tablo: Standard Stats</div>
+            <label>npxG/Sh</label><input type="text" id="h1" class="v" placeholder="0.00">
+            
+            <div class="fb-tab">Tablo: Possession</div>
+            <label>Touches (Att Pen)</label><input type="text" id="h2" class="v" placeholder="0">
+            <label>PrgC (into Pen)</label><input type="text" id="h4" class="v" placeholder="0">
+            
+            <div class="fb-tab">Tablo: Shot Creation</div>
+            <label>SCA</label><input type="text" id="h3" class="v" placeholder="0">
+            
+            <div class="fb-tab">Tablo: Defense / Opp.</div>
+            <label>Opp. Touches</label><input type="text" id="h5" class="v" placeholder="0">
+            <label>Tkl+Int</label><input type="text" id="h6" class="v" placeholder="0">
         </div>
-        <div class="card"><input type="text" id="aN" placeholder="Dep"><br><br>
-            <label>npxG/Sh</label><input type="text" id="a1" class="v"><label>AttPen</label><input type="text" id="a2" class="v"><label>SCA</label><input type="text" id="a3" class="v"><label>PrgC</label><input type="text" id="a4" class="v"><label>Opp</label><input type="text" id="a5" class="v"><label>Tkl</label><input type="text" id="a6" class="v">
+
+        <div class="card">
+            <input type="text" id="aN" placeholder="DEPLASMAN" style="margin-bottom:10px; border-bottom:2px solid var(--sec)">
+            
+            <div class="fb-tab">Tablo: Standard Stats</div>
+            <label>npxG/Sh</label><input type="text" id="a1" class="v" placeholder="0.00">
+            
+            <div class="fb-tab">Tablo: Possession</div>
+            <label>Touches (Att Pen)</label><input type="text" id="a2" class="v" placeholder="0">
+            <label>PrgC (into Pen)</label><input type="text" id="a4" class="v" placeholder="0">
+            
+            <div class="fb-tab">Tablo: Shot Creation</div>
+            <label>SCA</label><input type="text" id="a3" class="v" placeholder="0">
+            
+            <div class="fb-tab">Tablo: Defense / Opp.</div>
+            <label>Opp. Touches</label><input type="text" id="a5" class="v" placeholder="0">
+            <label>Tkl+Int</label><input type="text" id="a6" class="v" placeholder="0">
         </div>
     </div>
 
-    <button class="btn-main" onclick="calc()">ANALİZ ET VE ARŞİVLE</button>
-    <button class="btn-sub" onclick="res()">TEMİZLE</button>
+    <button class="btn-main" onclick="calc()">HASSAS ANALİZ YAP</button>
 
     <div id="hist"></div>
-    <button class="btn-sub" style="background:var(--err); margin-top:20px;" onclick="clrAll()">HAFIZAYI SIFIRLA</button>
 </div>
 
 <script>
@@ -67,7 +88,7 @@
 
     function calc() {
         const hN = document.getElementById('hN').value; const aN = document.getElementById('aN').value;
-        if(!hN || !aN || document.getElementById('h1').value==="") return alert("Veri eksik!");
+        if(!hN || !aN || document.getElementById('h1').value==="") return alert("Verileri girin!");
 
         const K = parseFloat(document.getElementById('lSel').value);
         const lN = document.getElementById('lSel').options[document.getElementById('lSel').selectedIndex].text;
@@ -75,7 +96,7 @@
         const h = { n: pV('h1'), a: pV('h2'), s: pV('h3'), p: pV('h4'), o: pV('h5'), t: pV('h6') };
         const a = { n: pV('a1'), a: pV('a2'), s: pV('a3'), p: pV('a4'), o: pV('a5'), t: pV('a6') };
 
-        // LINEER HASSASİYET MOTORU
+        // Lineer Motor
         let penalty = 0;
         [h, a].forEach(t => {
             penalty += (t.n / (LIM.npxG * K)) * 18;
@@ -83,64 +104,46 @@
             penalty += (t.s / (LIM.sca * K)) * 6;
         });
 
-        let p25 = Math.round(100 - penalty);
-        p25 = Math.max(Math.min(p25, 95), 5);
-        
-        // GOL ARALIKLARI (Temsili Dağılım Modeli)
+        let p25 = Math.max(Math.min(Math.round(100 - penalty), 95), 5);
         let g01 = Math.round(p25 * 0.45);
         let g23 = Math.round(p25 * 0.40 + (100-p25)*0.3);
         let g4p = 100 - (g01 + g23);
 
-        const resObj = { id: Date.now(), lN, hN, aN, p25, p35: Math.min(p25+18, 99), g01, g23, g4p, status: 'pending', realScore: '' };
-        const db = JSON.parse(localStorage.getItem('b5_v3') || '[]');
+        const resObj = { id: Date.now(), lN, hN, aN, p25, p35: Math.min(p25+18, 99), g01, g23, g4p, score: '' };
+        const db = JSON.parse(localStorage.getItem('b5_v4') || '[]');
         db.unshift(resObj);
-        localStorage.setItem('b5_v3', JSON.stringify(db));
-        render(); res();
+        localStorage.setItem('b5_v4', JSON.stringify(db));
+        render(); resInputs();
     }
 
-    function pV(id) { let v = document.getElementById(id).value.replace(',','.'); return parseFloat(v) || 0; }
-    function res() { document.querySelectorAll('.v').forEach(i=>i.value=""); document.getElementById('hN').value=""; document.getElementById('aN').value=""; }
+    function pV(id) { return parseFloat(document.getElementById(id).value.replace(',','.')) || 0; }
+    function resInputs() { document.querySelectorAll('.v').forEach(i=>i.value=""); }
 
     function render() {
-        const db = JSON.parse(localStorage.getItem('b5_v3') || '[]');
+        const db = JSON.parse(localStorage.getItem('b5_v4') || '[]');
         const cont = document.getElementById('hist'); cont.innerHTML = "";
         db.forEach(m => {
             const div = document.createElement('div'); div.className = 'hist-item';
             div.innerHTML = `
-                <button class="del-btn" onclick="del(${m.id})">×</button>
-                <div class="hist-header"><span>${m.lN}</span> <span>${m.hN} - ${m.aN}</span></div>
+                <div style="font-size:10px; color:var(--sec)">${m.lN}</div>
+                <div style="font-weight:bold; margin-bottom:5px;">${m.hN} - ${m.aN}</div>
                 <div class="score-grid">
-                    <div class="prob-box">ALT <div class="prob-val">%${m.p25}</div></div>
-                    <div class="prob-box">3.5A <div class="prob-val" style="color:var(--sec)">%${m.p35}</div></div>
-                    <div class="prob-box">SKOR <input type="text" class="skor-input" placeholder="0-0" value="${m.realScore}" onchange="setSkor(${m.id}, this.value)"></div>
+                    <div>2.5 ALT<div class="prob-val">%${m.p25}</div></div>
+                    <div>3.5 ALT<div class="prob-val" style="color:var(--sec)">%${m.p35}</div></div>
+                    <div>SKOR<br><input type="text" class="skor-in" value="${m.score}" onchange="sSkor(${m.id},this.value)"></div>
                 </div>
                 <div class="range-grid">
-                    <div class="range-box">0-1 Gol: <b>%${m.g01}</b></div>
-                    <div class="range-box">2-3 Gol: <b>%${m.g23}</b></div>
-                    <div class="range-box">4+ Gol: <b>%${m.g4p}</b></div>
+                    <div>0-1: <b>%${m.g01}</b></div>
+                    <div>2-3: <b>%${m.g23}</b></div>
+                    <div>4+: <b>%${m.g4p}</b></div>
                 </div>
-                <div style="margin-top:8px;">
-                    <button onclick="setStat(${m.id},'win')" style="background:#16a34a; border:none; color:white; padding:4px 8px; border-radius:4px; font-size:10px;">✅ BAŞARILI</button>
-                    <button onclick="setStat(${m.id},'loss')" style="background:var(--err); border:none; color:white; padding:4px 8px; border-radius:4px; font-size:10px;">❌ BAŞARISIZ</button>
-                    <span class="status-badge" style="background:${m.status==='win'?'#16a34a':'#475569'}">${m.status.toUpperCase()}</span>
-                </div>
+                <button onclick="del(${m.id})" style="position:absolute; top:5px; right:5px; background:none; border:none; color:#64748b;">×</button>
             `;
             cont.appendChild(div);
         });
-        updUI();
     }
-
-    function setSkor(id, val) { let db = JSON.parse(localStorage.getItem('b5_v3')); let m = db.find(x=>x.id===id); m.realScore = val; localStorage.setItem('b5_v3', JSON.stringify(db)); }
-    function setStat(id, s) { let db = JSON.parse(localStorage.getItem('b5_v3')); let m = db.find(x=>x.id===id); m.status = s; localStorage.setItem('b5_v3', JSON.stringify(db)); render(); }
-    function del(id) { let db = JSON.parse(localStorage.getItem('b5_v3')); db = db.filter(x=>x.id!==id); localStorage.setItem('b5_v3', JSON.stringify(db)); render(); }
-    function clrAll() { if(confirm("Silinsin mi?")) { localStorage.removeItem('b5_v3'); render(); } }
-    function updUI() {
-        const db = JSON.parse(localStorage.getItem('b5_v3') || '[]');
-        const l = document.getElementById('lSel').options[document.getElementById('lSel').selectedIndex].text;
-        const st = db.filter(x => x.lN === l && x.status !== 'pending');
-        const w = st.filter(x => x.status === 'win').length;
-        document.getElementById('lStat').innerHTML = st.length > 0 ? `${l}: %${((w/st.length)*100).toFixed(0)} Başarı` : "Veri bekleniyor...";
-    }
+    function sSkor(id, v) { let db = JSON.parse(localStorage.getItem('b5_v4')); db.find(x=>x.id===id).score = v; localStorage.setItem('b5_v4', JSON.stringify(db)); }
+    function del(id) { let db = JSON.parse(localStorage.getItem('b5_v4')); db = db.filter(x=>x.id!==id); localStorage.setItem('b5_v4', JSON.stringify(db)); render(); }
     window.onload = render;
 </script>
 </body>

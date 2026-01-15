@@ -3,60 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FBref Analiz Terminali v4</title>
+    <title>FBref Analiz Terminali v4.1 - 5 Büyük Lig</title>
     <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; display: flex; justify-content: center; padding: 20px; }
-        .terminal { background-color: #1e293b; padding: 20px; border-radius: 12px; width: 100%; max-width: 500px; border: 1px solid #334155; }
-        h2 { color: #22c55e; text-align: center; font-size: 1.2rem; margin-bottom: 20px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .team-box { background: #0f172a; padding: 10px; border-radius: 8px; }
-        label { display: block; font-size: 0.7rem; color: #94a3b8; margin-top: 8px; }
-        input { width: 90%; background: #1e293b; border: 1px solid #334155; color: white; padding: 5px; border-radius: 4px; margin-top: 2px; }
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #22c55e; --text: #f8fafc; --danger: #ef4444; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; padding: 20px; margin: 0; }
+        .terminal { background-color: var(--card); padding: 25px; border-radius: 16px; width: 100%; max-width: 600px; border: 1px solid #334155; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        h2 { color: var(--accent); text-align: center; font-size: 1.4rem; margin-bottom: 20px; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .team-box { background: rgba(15, 23, 42, 0.5); padding: 15px; border-radius: 10px; border: 1px solid #475569; }
+        .team-name { width: 100%; background: #0f172a; border: 1px solid var(--accent); color: var(--accent); padding: 8px; border-radius: 5px; margin-bottom: 10px; font-weight: bold; text-align: center; }
+        label { display: block; font-size: 0.75rem; color: #94a3b8; margin-top: 10px; font-weight: 600; }
+        input { width: 100%; background: #1e293b; border: 1px solid #334155; color: white; padding: 8px; border-radius: 5px; margin-top: 4px; box-sizing: border-box; transition: 0.3s; }
+        input:focus { border-color: var(--accent); outline: none; background: #2d3748; }
         
-        .button-group { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-analyze { flex: 2; background: #22c55e; color: #0f172a; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .btn-clear { flex: 1; background: transparent; color: #ef4444; border: 1px solid #ef4444; padding: 12px; border-radius: 6px; cursor: pointer; transition: 0.3s; }
-        .btn-clear:hover { background: #ef4444; color: white; }
+        .button-group { display: flex; gap: 12px; margin-top: 25px; }
+        .btn-analyze { flex: 2; background: var(--accent); color: #0f172a; border: none; padding: 14px; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .btn-analyze:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-clear { flex: 1; background: transparent; color: var(--danger); border: 2px solid var(--danger); padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-clear:hover { background: var(--danger); color: white; }
 
-        #result { margin-top: 20px; padding: 15px; background: #334155; border-radius: 8px; display: none; }
-        .alt-highlight { color: #4ade80; font-size: 1.5rem; font-weight: bold; }
+        #result { margin-top: 25px; padding: 20px; background: #0f172a; border-left: 4px solid var(--accent); border-radius: 8px; display: none; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .res-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; }
+        .res-val { font-weight: bold; color: var(--accent); }
+        .alt-main { text-align: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid #334155; }
+        .alt-percent { font-size: 2.2rem; font-weight: 900; color: var(--accent); }
     </style>
 </head>
 <body>
 
 <div class="terminal">
-    <h2>FBREF ANALİZ TERMİNALİ</h2>
+    <h2>FBREF ANALİZ TERMİNALİ v4.1</h2>
     
     <label>LİG KATSAYISI ($K$)</label>
-    <select id="katsayi" style="width:100%; padding:8px; background:#0f172a; color:white; border-radius:5px;">
+    <select id="katsayi" style="width:100%; padding:10px; background:#0f172a; color:white; border: 1px solid #334155; border-radius:8px; margin-bottom: 15px;">
         <option value="1.00">Serie A (1.00)</option>
         <option value="0.85">Premier League (0.85)</option>
         <option value="1.10">La Liga (1.10)</option>
         <option value="0.75">Bundesliga (0.75)</option>
+        <option value="0.95">Ligue 1 (0.95)</option>
     </select>
 
     <div class="grid">
         <div class="team-box">
-            <input type="text" placeholder="Ev Sahibi" id="teamA">
-            <label>NPXG/SH</label><input type="text" class="v" id="npxgA">
-            <label>ATT PEN</label><input type="text" class="v" id="attA">
-            <label>CPA</label><input type="text" class="v" id="cpaA">
-            <label>SCA</label><input type="text" class="v" id="scaA">
-            <label>TKL+INT</label><input type="text" class="v" id="tklA">
+            <input type="text" placeholder="Ev Sahibi" id="teamA" class="team-name">
+            <label>NPXG/SH</label><input type="number" step="0.001" class="v" id="npxgA" placeholder="0.090">
+            <label>ATT PEN</label><input type="number" step="0.1" class="v" id="attA" placeholder="18.5">
+            <label>CPA (INTO PEN)</label><input type="number" step="0.1" class="v" id="cpaA" placeholder="2.1">
+            <label>SCA</label><input type="number" step="0.1" class="v" id="scaA" placeholder="15.2">
+            <label>TKL+INT</label><input type="number" step="0.1" class="v" id="tklA" placeholder="18.0">
         </div>
 
         <div class="team-box">
-            <input type="text" placeholder="Deplasman" id="teamB">
-            <label>NPXG/SH</label><input type="text" class="v" id="npxgB">
-            <label>ATT PEN</label><input type="text" class="v" id="attB">
-            <label>CPA</label><input type="text" class="v" id="cpaB">
-            <label>SCA</label><input type="text" class="v" id="scaB">
-            <label>TKL+INT</label><input type="text" class="v" id="tklB">
+            <input type="text" placeholder="Deplasman" id="teamB" class="team-name">
+            <label>NPXG/SH</label><input type="number" step="0.001" class="v" id="npxgB" placeholder="0.090">
+            <label>ATT PEN</label><input type="number" step="0.1" class="v" id="attB" placeholder="18.5">
+            <label>CPA (INTO PEN)</label><input type="number" step="0.1" class="v" id="cpaB" placeholder="2.1">
+            <label>SCA</label><input type="number" step="0.1" class="v" id="scaB" placeholder="15.2">
+            <label>TKL+INT</label><input type="number" step="0.1" class="v" id="tklB" placeholder="18.0">
         </div>
     </div>
 
     <div class="button-group">
-        <button type="button" class="btn-analyze" onclick="calculate()">HASSAS ANALİZ YAP</button>
+        <button type="button" class="btn-analyze" onclick="runEngine()">HASSAS ANALİZ YAP</button>
         <button type="button" class="btn-clear" onclick="resetForm()">TEMİZLE</button>
     </div>
 
@@ -64,30 +73,60 @@
 </div>
 
 <script>
-    function calculate() {
-        // Formu temizlemeden verileri al
-        const k = parseFloat(document.getElementById('katsayi').value);
-        const cpaB = parseFloat(document.getElementById('cpaB').value) || 0;
-        const npxgA = parseFloat(document.getElementById('npxgA').value) || 0;
+    function runEngine() {
+        const K = parseFloat(document.getElementById('katsayi').value);
+        
+        // Verileri Çek
+        const data = {
+            npxgA: parseFloat(document.getElementById('npxgA').value) || 0,
+            npxgB: parseFloat(document.getElementById('npxgB').value) || 0,
+            cpaA: parseFloat(document.getElementById('cpaA').value) || 0,
+            cpaB: parseFloat(document.getElementById('cpaB').value) || 0,
+            tklA: parseFloat(document.getElementById('tklA').value) || 0,
+            tklB: parseFloat(document.getElementById('tklB').value) || 0,
+            scaA: parseFloat(document.getElementById('scaA').value) || 0,
+            scaB: parseFloat(document.getElementById('scaB').value) || 0
+        };
 
-        // Basit bir örnek hesaplama (Senin v4 mantığın burada çalışacak)
-        let score = 50; 
-        if(cpaB > 2.5) score -= (cpaB * 5); // CPA tehlikesi
-        if(npxgA < 0.09) score += 20; // Düşük kalite Alt ihtimalini artırır
+        // Algoritma (v4 Lineer Motor)
+        let altPuan = 50;
 
-        const resultDiv = document.getElementById('result');
-        resultDiv.style.display = 'block';
-        resultDiv.innerHTML = `
-            <div>2.5 ALT İHTİMALİ</div>
-            <div class="alt-highlight">%${Math.max(0, Math.min(99, score.toFixed(0)))}</div>
-            <p style="font-size:0.8rem; color:#94a3b8;">Veriler korundu. Yeni analiz yapabilir veya temizleyebilirsin.</p>
+        // 1. Bitiricilik Etkisi (npxG/Sh) - Eşik 0.09
+        altPuan += (0.09 - data.npxgA) * 150;
+        altPuan += (0.09 - data.npxgB) * 150;
+
+        // 2. Savunma Direnci (Tkl+Int) - Eşik 16
+        altPuan += (data.tklA - 16) * 1.2;
+        altPuan += (data.tklB - 16) * 1.2;
+
+        // 3. CPA Tehlikesi (Ceza Sahasına Sızma) - Eşik 2.5
+        altPuan -= (data.cpaA - 2.5) * 6;
+        altPuan -= (data.cpaB - 2.5) * 6;
+
+        // 4. Yaratıcılık (SCA) - Eşik 15
+        altPuan -= (data.scaA + data.scaB - 30) * 0.8;
+
+        // Lig Katsayısı Uygulaması
+        let finalAlt = altPuan * K;
+        finalAlt = Math.max(5, Math.min(96, finalAlt)); // Sınırlandırma
+
+        // Sonuç Ekranı
+        const resDiv = document.getElementById('result');
+        resDiv.style.display = 'block';
+        resDiv.innerHTML = `
+            <div class="res-row"><span>Lig Dinamiği:</span><span class="res-val">x${K.toFixed(2)}</span></div>
+            <div class="res-row"><span>Hücum Baskısı:</span><span class="res-val">${(data.cpaA + data.cpaB).toFixed(1)} CPA</span></div>
+            <div class="res-row"><span>Savunma Sertliği:</span><span class="res-val">${(data.tklA + data.tklB).toFixed(1)} Müdahale</span></div>
+            <div class="alt-main">
+                <div style="font-size: 0.8rem; color: #94a3b8;">2.5 ALT OLASILIĞI</div>
+                <div class="alt-percent">%${finalAlt.toFixed(0)}</div>
+            </div>
         `;
     }
 
     function resetForm() {
-        // 2026-01-15 tarihli kullanıcı isteği: Giriş kutularını isteğe bağlı temizle
-        const inputs = document.querySelectorAll('.v, #teamA, #teamB');
-        inputs.forEach(input => input.value = '');
+        // [cite: 2026-01-15] Kullanıcı isteği üzerine tüm alanları temizle
+        document.querySelectorAll('input').forEach(i => i.value = '');
         document.getElementById('result').style.display = 'none';
     }
 </script>

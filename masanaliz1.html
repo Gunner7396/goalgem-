@@ -2,159 +2,268 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masanaliz v5.0 | Cognitive Precision</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Akıllı Analiz Terminali</title>
     <style>
         :root {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --accent: #38bdf8;
-            --text: #f8fafc;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --primary: #00ff88;
+            --secondary: #38bdf8;
             --danger: #ef4444;
-            --success: #22c55e;
             --warning: #f59e0b;
         }
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); display: flex; justify-content: center; padding: 20px; margin: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 10px;
+            padding-bottom: 50px;
+        }
+
+        h2 { text-align: center; color: var(--primary); margin-bottom: 15px; }
+
+        .container { max-width: 500px; margin: auto; }
+
+        .config-card, .team-card, .analysis-card {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .input-group { margin-bottom: 10px; }
+        label { display: block; font-size: 0.85rem; margin-bottom: 4px; color: #94a3b8; }
         
-        .container { width: 100%; max-width: 480px; background: var(--card); padding: 30px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.05); }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 5px;
+        }
+
+        .btn-analyze { background: var(--primary); color: #000; font-size: 1.1rem; }
+        .btn-clear { background: #475569; color: white; margin-top: 10px; }
+        .btn-delete-all { background: var(--danger); color: white; margin-top: 20px; }
+
+        /* Analiz Kartları */
+        .history-item {
+            background: var(--card-bg);
+            border-left: 5px solid var(--secondary);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .score-box { font-size: 1.2rem; font-weight: bold; margin: 10px 0; }
+        .tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; background: #334155; }
         
-        h1 { font-size: 1.8rem; font-weight: 900; text-align: center; color: var(--accent); margin: 0 0 10px 0; letter-spacing: -1px; }
-        .version { text-align: center; font-size: 0.7rem; color: #64748b; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; }
+        .result-actions { display: flex; gap: 5px; margin-top: 10px; }
+        .btn-win { background: #22c55e; color: white; flex: 1; padding: 5px; font-size: 0.8rem; }
+        .btn-loss { background: var(--danger); color: white; flex: 1; padding: 5px; font-size: 0.8rem; }
+        .btn-del-single { position: absolute; top: 10px; right: 10px; background: none; color: #64748b; width: auto; padding: 0; }
 
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .full-width { grid-column: span 2; }
-
-        .input-group { margin-bottom: 5px; }
-        label { display: block; font-size: 0.75rem; margin-bottom: 6px; color: #94a3b8; font-weight: 600; }
-        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 1rem; transition: 0.3s; }
-        input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
-
-        button { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 12px; color: #000; font-weight: 800; font-size: 1.1rem; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4); }
-
-        #result { margin-top: 30px; padding: 25px; border-radius: 18px; background: #070e1e; display: none; border: 1px solid rgba(56, 189, 248, 0.3); animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .tension-val { font-size: 3.5rem; font-weight: 900; text-align: center; color: var(--accent); margin: 5px 0; line-height: 1; }
-        .diagnostic { font-size: 0.95rem; text-align: center; color: #cbd5e1; margin-top: 15px; line-height: 1.6; border-top: 1px solid #1e293b; pt: 15px; padding-top: 15px; }
-        
-        .badge { display: table; margin: 0 auto 10px auto; padding: 6px 14px; border-radius: 6px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
-        .badge-b { background: var(--success); color: #000; }
-        .badge-a { background: var(--danger); color: #fff; }
-        .badge-gray { background: #475569; color: #fff; }
+        .report-section { background: #1e293b; border: 1px solid var(--secondary); padding: 10px; border-radius: 8px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>MASANALİZ</h1>
-    <div class="version">Cognitive Precision Engine v5.0</div>
-    
-    <div class="input-grid">
-        <div class="input-group full-width">
-            <label>Hedef Lig</label>
-            <select id="league">
-                <option value="Premier League">Premier League</option>
-                <option value="Bundesliga">Bundesliga</option>
-                <option value="Serie A">Serie A</option>
-                <option value="La Liga">La Liga</option>
-                <option value="Ligue 1">Ligue 1</option>
-            </select>
+    <h2>AKILLI ANALİZ v1.0</h2>
+
+    <div class="config-card">
+        <label>LİG SEÇİMİ</label>
+        <select id="leagueSelect" onchange="updateLeagueStats()">
+            <option value="1.00">İtalya Serie A (1.00)</option>
+            <option value="1.10">İspanya La Liga (1.10)</option>
+            <option value="0.75">Almanya Bundesliga (0.75)</option>
+            <option value="0.85">İngiltere Premier Lig (0.85)</option>
+            <option value="1.20">Türkiye Süper Lig (1.20)</option>
+            <option value="1.00">Diğer (1.00)</option>
+        </select>
+        <div id="leagueReport" style="margin-top:10px; font-size:0.85rem; color: var(--secondary);"></div>
+    </div>
+
+    <div class="grid-2">
+        <div class="team-card">
+            <input type="text" id="homeName" placeholder="Ev Takımı" style="margin-bottom:10px; border-color: var(--primary);">
+            <div class="input-group"><label>npxG/Sh</label><input type="number" step="0.01" class="m-input" id="h_npxG"></div>
+            <div class="input-group"><label>Touches (Att Pen)</label><input type="number" class="m-input" id="h_attPen"></div>
+            <div class="input-group"><label>SCA</label><input type="number" class="m-input" id="h_sca"></div>
+            <div class="input-group"><label>PrgC into Pen</label><input type="number" class="m-input" id="h_prgC"></div>
+            <div class="input-group"><label>Opp Touches</label><input type="number" class="m-input" id="h_opp"></div>
+            <div class="input-group"><label>Tkl+Int</label><input type="number" class="m-input" id="h_tkl"></div>
+        </div>
+        <div class="team-card">
+            <input type="text" id="awayName" placeholder="Dep Takımı" style="margin-bottom:10px; border-color: var(--secondary);">
+            <div class="input-group"><label>npxG/Sh</label><input type="number" step="0.01" class="m-input" id="a_npxG"></div>
+            <div class="input-group"><label>Touches (Att Pen)</label><input type="number" class="m-input" id="a_attPen"></div>
+            <div class="input-group"><label>SCA</label><input type="number" class="m-input" id="a_sca"></div>
+            <div class="input-group"><label>PrgC into Pen</label><input type="number" class="m-input" id="a_prgC"></div>
+            <div class="input-group"><label>Opp Touches</label><input type="number" class="m-input" id="a_opp"></div>
+            <div class="input-group"><label>Tkl+Int</label><input type="number" class="m-input" id="a_tkl"></div>
+        </div>
+    </div>
+
+    <button class="btn-analyze" onclick="runAnalysis()">ANALİZ ET VE KAYDET</button>
+    <button class="btn-clear" onclick="clearForm()">FORMU TEMİZLE (YENİ MAÇ)</button>
+
+    <div id="historyList">
         </div>
 
-        <div class="input-group"><label>npxG/Sh (Kalite)</label><input type="number" id="npxg" step="0.01" placeholder="0.14"></div>
-        <div class="input-group"><label>PPA (Sızma)</label><input type="number" id="ppa" placeholder="12"></div>
-        <div class="input-group"><label>1/3 Baskı (Alan)</label><input type="number" id="third" placeholder="55"></div>
-        <div class="input-group"><label>PrgC (Hız)</label><input type="number" id="prgc" placeholder="18"></div>
-        <div class="input-group full-width"><label>Avg Dist (Ort. Mesafe)</label><input type="number" id="dist" step="0.1" placeholder="16.8"></div>
-    </div>
-
-    <button onclick="runAnalysis()">ANALİZ ET</button>
-
-    <div id="result">
-        <div id="badge" class="badge"></div>
-        <div class="tension-val" id="tensionDisplay">0%</div>
-        <div class="diagnostic" id="diagnosticText"></div>
-    </div>
+    <button class="btn-delete-all" onclick="deleteAllHistory()">TÜM GEÇMİŞİ SİL</button>
 </div>
 
 <script>
-// v5.0 ÇEKİRDEK LİG ANAYASASI
-const thresholds = {
-    'Premier League': { npxg: 0.14, ppa: 12, third: 55, prgc: 18, dist: 16.8, coeff: 1.03 },
-    'Bundesliga':     { npxg: 0.12, ppa: 10, third: 48, prgc: 15, dist: 17.2, coeff: 1.05 },
-    'Serie A':        { npxg: 0.16, ppa: 14, third: 62, prgc: 16, dist: 16.5, coeff: 0.95 },
-    'La Liga':        { npxg: 0.15, ppa: 13, third: 58, prgc: 14, dist: 16.8, coeff: 0.97 },
-    'Ligue 1':        { npxg: 0.13, ppa: 11, third: 52, prgc: 16, dist: 17.5, coeff: 1.00 }
-};
+    // EŞİKLER
+    const THRESHOLDS = { npxG: 0.09, attPen: 18, sca: 22, prgC: 2.5, opp: 18, tkl: 12 };
 
-function runAnalysis() {
-    const lg = document.getElementById('league').value;
-    const thr = thresholds[lg];
-    
-    const v = {
-        npxg: parseFloat(document.getElementById('npxg').value),
-        ppa:  parseFloat(document.getElementById('ppa').value),
-        third: parseFloat(document.getElementById('third').value),
-        prgc: parseFloat(document.getElementById('prgc').value),
-        dist: parseFloat(document.getElementById('dist').value)
-    };
+    function runAnalysis() {
+        const leagueK = parseFloat(document.getElementById('leagueSelect').value);
+        const leagueName = document.getElementById('leagueSelect').options[document.getElementById('leagueSelect').selectedIndex].text;
+        const hName = document.getElementById('homeName').value || "Ev";
+        const aName = document.getElementById('awayName').value || "Dep";
 
-    if (Object.values(v).some(isNaN)) { alert("Hata: Eksik veri!"); return; }
+        // Verileri Topla
+        const data = {
+            h: { npxG: getVal('h_npxG'), attPen: getVal('h_attPen'), sca: getVal('h_sca'), prgC: getVal('h_prgC'), opp: getVal('h_opp'), tkl: getVal('h_tkl') },
+            a: { npxG: getVal('a_npxG'), attPen: getVal('a_attPen'), sca: getVal('a_sca'), prgC: getVal('a_prgC'), opp: getVal('a_opp'), tkl: getVal('a_tkl') }
+        };
 
-    // v5.0 BİLİŞSEL PUANLAMA (Logaritmik Fren Entegre)
-    const calc = (val, target, weight, isDist) => {
-        let ratio = isDist ? (target / val) : (val / target);
-        
-        // AZALAN VERİMLER YASASI: Sınırı çok aşınca puan artışı yavaşlar
-        if (ratio > 1.25) ratio = 1.25 + Math.log10(ratio - 0.25);
-        
-        // SINIRDA KALMA CEZASI
-        if (ratio < 0.85) ratio *= 0.6;
-        
-        return Math.min(ratio * weight, weight * 1.4);
-    };
+        // Hesaplama Mantığı
+        let score25 = 85; 
+        let riskFactors = 0;
 
-    let scores = {
-        npxg: calc(v.npxg, thr.npxg, 35, false),
-        ppa:  calc(v.ppa,  thr.ppa,  25, false),
-        third: calc(v.third, thr.third, 15, false),
-        prgc: calc(v.prgc, thr.prgc, 15, false),
-        dist: calc(v.dist, thr.dist, 10, true)
-    };
+        // Basit Sınır Kontrolü
+        [data.h, data.a].forEach(team => {
+            if (team.npxG > THRESHOLDS.npxG * leagueK) { score25 -= 15; riskFactors++; }
+            if (team.attPen > THRESHOLDS.attPen * leagueK) { score25 -= 10; riskFactors++; }
+            // Sınırda kalma cezası (%10 yakınlık)
+            if (team.npxG > (THRESHOLDS.npxG * leagueK * 0.9)) riskFactors++;
+        });
 
-    // v5.0 ZEKA KATMANI: YALANCI BASKI SÜZGECİ
-    if (v.dist > thr.dist + 1.5 && v.ppa > thr.ppa) scores.ppa *= 0.65;
-    if (v.third > thr.third && v.npxg < thr.npxg * 0.9) scores.third *= 0.50;
+        const id = Date.now();
+        const analysis = {
+            id, leagueName, hName, aName,
+            score25: Math.max(score25, 10),
+            score35: Math.min(score25 + 20, 98),
+            status: 'pending' // pending, win, loss
+        };
 
-    let final = (Object.values(scores).reduce((a, b) => a + b, 0)) * thr.coeff;
-    final = Math.min(final, 98); // ABSÜRT SKOR KORUMASI (TAVAN %98)
-
-    // GÖRSEL SONUÇ MOTORU
-    const resDiv = document.getElementById('result');
-    const tensionDisp = document.getElementById('tensionDisplay');
-    const diag = document.getElementById('diagnosticText');
-    const badge = document.getElementById('badge');
-
-    resDiv.style.display = 'block';
-    tensionDisp.innerText = final.toFixed(1) + "%";
-
-    if (final >= 78) {
-        badge.innerText = "B NOKTASI (PATLAMA)";
-        badge.className = "badge badge-b";
-        diag.innerText = "Üretim kalitesi lig eşiklerini parçaladı. Kaos hakim. Skor (2.5 Üst) ihtimali en üst seviyede.";
-    } else if (final < 48) {
-        badge.innerText = "A NOKTASI (KİLİT)";
-        badge.className = "badge badge-a";
-        diag.innerText = "Veriler kısırlığa işaret ediyor. Savunma disiplini baskın. Maçın 2.5 Alt bitme olasılığı çok yüksek.";
-    } else {
-        badge.innerText = "GRİ ALAN";
-        badge.className = "badge badge-gray";
-        diag.innerText = "Metrikler sınırda veya çelişkili. Yalancı baskı tespit edildi. Canlıda oyunun kırılmasını beklemek en güvenlisi.";
+        saveToHistory(analysis);
+        renderHistory();
     }
-}
+
+    function getVal(id) {
+        let val = document.getElementById(id).value;
+        return parseFloat(val.replace(',', '.')) || 0;
+    }
+
+    function clearForm() {
+        document.querySelectorAll('.m-input').forEach(input => input.value = "");
+        document.getElementById('homeName').value = "";
+        document.getElementById('awayName').value = "";
+    }
+
+    // HAFIZA SİSTEMİ
+    function saveToHistory(obj) {
+        let history = JSON.parse(localStorage.getItem('bet_history') || '[]');
+        history.unshift(obj);
+        localStorage.setItem('bet_history', JSON.stringify(history));
+    }
+
+    function renderHistory() {
+        const history = JSON.parse(localStorage.getItem('bet_history') || '[]');
+        const list = document.getElementById('historyList');
+        list.innerHTML = "";
+
+        history.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            div.innerHTML = `
+                <button class="btn-del-single" onclick="deleteSingle('${item.id}')">✕</button>
+                <div class="tag">${item.leagueName}</div>
+                <div style="font-weight:bold; margin-top:5px;">${item.hName} - ${item.aName}</div>
+                <div class="score-box">
+                    <span style="color:var(--primary)">%${item.score25} (2.5 ALT)</span><br>
+                    <span style="color:var(--secondary); font-size:0.9rem;">%${item.score35} (3.5 ALT)</span>
+                </div>
+                <div class="result-actions" id="actions-${item.id}">
+                    ${item.status === 'pending' ? `
+                        <button class="btn-win" onclick="setResult('${item.id}', 'win')">ALT BİTTİ ✅</button>
+                        <button class="btn-loss" onclick="setResult('${item.id}', 'loss')">ÜST BİTTİ ❌</button>
+                    ` : `<div style="color:${item.status === 'win' ? 'var(--primary)' : 'var(--danger)'}">
+                            Sonuç: ${item.status === 'win' ? 'BAŞARILI' : 'BAŞARISIZ'}
+                         </div>`}
+                </div>
+            `;
+            list.appendChild(div);
+        });
+        updateLeagueStats();
+    }
+
+    function setResult(id, res) {
+        let history = JSON.parse(localStorage.getItem('bet_history') || '[]');
+        let item = history.find(x => x.id == id);
+        if(item) item.status = res;
+        localStorage.setItem('bet_history', JSON.stringify(history));
+        renderHistory();
+    }
+
+    function deleteSingle(id) {
+        let history = JSON.parse(localStorage.getItem('bet_history') || '[]');
+        history = history.filter(x => x.id != id);
+        localStorage.setItem('bet_history', JSON.stringify(history));
+        renderHistory();
+    }
+
+    function deleteAllHistory() {
+        if(confirm("Tüm geçmiş silinsin mi?")) {
+            localStorage.removeItem('bet_history');
+            renderHistory();
+        }
+    }
+
+    function updateLeagueStats() {
+        const history = JSON.parse(localStorage.getItem('bet_history') || '[]');
+        const currentLeague = document.getElementById('leagueSelect').options[document.getElementById('leagueSelect').selectedIndex].text;
+        
+        const leagueMatches = history.filter(x => x.leagueName === currentLeague && x.status !== 'pending');
+        const wins = leagueMatches.filter(x => x.status === 'win').length;
+        
+        const report = document.getElementById('leagueReport');
+        if(leagueMatches.length > 0) {
+            const perc = ((wins / leagueMatches.length) * 100).toFixed(0);
+            report.innerHTML = `📊 Bu Lig Performansı: ${leagueMatches.length} Maç / %${perc} Başarı`;
+        } else {
+            report.innerHTML = "📊 Bu lig için henüz tamamlanmış analiz yok.";
+        }
+    }
+
+    // Başlangıçta Geçmişi Yükle
+    window.onload = renderHistory;
 </script>
 
 </body>

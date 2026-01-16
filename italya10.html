@@ -3,54 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Serie A Pro v13 - Baseline</title>
+    <title>Serie A Pro v14 - Physics</title>
     <style>
         :root { --bg: #0b0b0b; --card: #181818; --accent: #00df5d; --sub: #909090; --border: #282828; --gold: #ffd60a; --loss: #ff453a; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; padding: 12px; }
         .dashboard { display: flex; gap: 10px; margin-bottom: 15px; }
-        .kpi { flex: 1; background: var(--card); padding: 12px; border-radius: 12px; border: 1px solid var(--border); text-align: center; position: relative; }
+        .kpi { flex: 1; background: var(--card); padding: 12px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
         .kpi-val { display: block; font-size: 1.4rem; font-weight: 800; color: var(--accent); }
         .kpi-label { font-size: 0.6rem; color: var(--sub); font-weight: bold; }
-        .reset-btn { position: absolute; top: 6px; right: 8px; font-size: 0.6rem; color: var(--loss); cursor: pointer; }
         .input-card { background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
         .team-h { border: none; background: transparent; color: var(--accent); font-size: 1.1rem; font-weight: 800; width: 100%; margin-bottom: 10px; outline: none; border-bottom: 1px solid var(--border); }
-        .m-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .m-row { display: flex; flex-direction: column; border-bottom: 1px solid #222; padding: 6px 0; }
-        .m-row label { font-size: 0.7rem; color: var(--sub); margin-bottom: 4px; }
-        .m-row input { background: #222; border: 1px solid #333; border-radius: 6px; color: white; padding: 8px; text-align: center; font-size: 0.9rem; }
-        .btn-run { width: 100%; background: var(--accent); color: black; padding: 18px; border-radius: 12px; border: none; font-weight: 900; margin: 15px 0; font-size: 1rem; }
-        .btn-clear { width: 100%; background: #282828; color: white; padding: 10px; border-radius: 8px; border: none; font-size: 0.8rem; margin-bottom: 20px;}
-        .res-card { background: var(--card); border-radius: 14px; padding: 15px; margin-bottom: 12px; border: 1px solid var(--border); }
-        .prob-val { font-size: 1.8rem; font-weight: 900; color: var(--accent); }
+        .m-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .m-row { display: flex; flex-direction: column; border-bottom: 1px solid #222; padding: 4px 0; }
+        .m-row label { font-size: 0.65rem; color: var(--sub); margin-bottom: 2px; }
+        .m-row input { background: #222; border: 1px solid #333; border-radius: 4px; color: white; padding: 6px; text-align: center; font-size: 0.85rem; }
+        .btn-run { width: 100%; background: var(--accent); color: black; padding: 16px; border-radius: 12px; border: none; font-weight: 900; margin: 10px 0; }
+        .btn-clear { width: 100%; background: #222; color: #777; padding: 8px; border: none; border-radius: 8px; font-size: 0.75rem; margin-bottom: 10px; }
+        .res-card { background: var(--card); border-radius: 14px; padding: 12px; margin-bottom: 10px; border: 1px solid var(--border); }
+        .prob-val { font-size: 1.6rem; font-weight: 900; color: var(--accent); }
     </style>
 </head>
 <body>
 
     <div class="dashboard">
-        <div class="kpi" onclick="resetStats()"><span class="kpi-val" id="r1">%0</span><span class="kpi-label">BAŞARI</span></div>
+        <div class="kpi"><span class="kpi-val" id="r1">%0</span><span class="kpi-label">BAŞARI</span></div>
         <div class="kpi"><span class="kpi-val" id="r2" style="color:var(--gold)">%0</span><span class="kpi-label">MASTER ⭐</span></div>
     </div>
 
     <div id="form">
-        <div class="input-card">
-            <input type="text" id="tA" class="team-h" placeholder="Ev Sahibi">
-            <div id="mA" class="m-grid"></div>
-        </div>
-        <div class="input-card">
-            <input type="text" id="tB" class="team-h" placeholder="Deplasman">
-            <div id="mB" class="m-grid"></div>
-        </div>
+        <div class="input-card"><input type="text" id="tA" class="team-h" placeholder="Ev Takımı"><div id="mA" class="m-grid"></div></div>
+        <div class="input-card"><input type="text" id="tB" class="team-h" placeholder="Dep Takımı"><div id="mB" class="m-grid"></div></div>
     </div>
 
     <button class="btn-run" onclick="analyze()">ANALİZ ET</button>
-    <button class="btn-clear" onclick="clearFields()">VERİLERİ TEMİZLE</button>
-    
+    <button class="btn-clear" onclick="clearFields()">YENİ ANALİZ İÇİN TEMİZLE</button>
     <div id="history"></div>
 
 <script>
     const fields = ["SCA", "CPA", "npxG/S", "Dist", "Err", "Blocks", "Poss 3rd", "PrgP"];
-    let data = JSON.parse(localStorage.getItem('sa_v13_d')) || [];
-    let stats = JSON.parse(localStorage.getItem('sa_v13_s')) || { t: 0, w: 0, mt: 0, mw: 0 };
+    let data = JSON.parse(localStorage.getItem('sa_v14_d')) || [];
+    let stats = JSON.parse(localStorage.getItem('sa_v14_s')) || { t: 0, w: 0, mt: 0, mw: 0 };
 
     function init() {
         ['A', 'B'].forEach(t => {
@@ -65,35 +57,37 @@
     function analyze() {
         const getV = (id) => parseFloat(document.getElementById(id).value) || 0;
         
-        // SABİT AĞIRLIKLI HESAPLAMA
-        const calcImpact = (t, opp) => {
-            let p = 0;
-            p += getV('SCA_'+t) * 0.6;      // Şut üretimi etkisi
-            p += getV('CPA_'+t) * 1.1;      // Ceza sahası giriş etkisi
-            p += getV('npxG/S_'+t) * 25;    // Bitiricilik kalitesi
-            p += getV('Err_'+opp) * 4;      // Rakip hatası
+        const calcQualityPower = (t, opp) => {
+            const sca = getV('SCA_'+t), cpa = getV('CPA_'+t), dist = getV('Dist_'+t) || 17;
+            const npx = getV('npxG/S_'+t), errOpp = getV('Err_'+opp), blocksOpp = getV('Blocks_'+opp);
             
-            // Mesafe düzeltmesi (17m baz alınır)
-            const dist = getV('Dist_'+t) || 17;
-            p += (17 - dist) * 1.5;
+            // 1. Şut Kalitesi (Mesafe artık öldürücü bir filtre)
+            // 20 metreden sonra her metre %15 güç kaybettirir. 27 metrede güç sıfırlanır.
+            let distMult = Math.max(0, 1 - (Math.max(0, dist - 16) * 0.12)); 
+            
+            let power = (sca * 0.8 * distMult); // Mesafe kötü ise SCA'nın önemi kalmaz
+            power += (cpa * 1.5 * distMult);   // Ceza sahası girişi anlamlı olmalı
+            
+            // 2. Savunma Direnci (Doğrudan güçten düşer)
+            power = Math.max(0, power - (blocksOpp * 0.9));
 
-            // Savunma direnci düşümü
-            p -= getV('Blocks_'+opp) * 0.5;
+            // 3. Bitiricilik ve Hata (Mesafe iyiyse anlamlıdır)
+            power += (npx * 30 * distMult) + (errOpp * 6);
 
-            return p;
+            return power;
         };
 
-        const totalImpact = calcImpact('A', 'B') + calcImpact('B', 'A');
+        const totalImpact = calcQualityPower('A', 'B') + calcQualityPower('B', 'A');
         
-        // Serie A ortalama üst bitme ihtimali (~%48) üzerine inşa et
-        let finalProb = 48 + totalImpact;
+        // Temel lig ortalaması %45, üzerine ekle
+        let finalProb = 45 + (totalImpact * 0.8);
         
-        // Gerçekçi Sınırlandırma (Cap)
-        finalProb = Math.min(88, Math.max(12, finalProb));
+        // Limitler: Fiziksel olarak imkansıza yakın sonuçları engelle
+        finalProb = Math.min(85, Math.max(10, finalProb));
 
         data.unshift({
             id: Date.now(),
-            t: (document.getElementById('tA').value || "Ev") + " - " + (document.getElementById('tB').value || "Dep"),
+            t: (document.getElementById('tA').value || "T1") + " - " + (document.getElementById('tB').value || "T2"),
             pred: finalProb > 52 ? "ÜST" : "ALT",
             prob: Math.round(finalProb),
             st: 'p'
@@ -104,18 +98,17 @@
     function updateUI() {
         const hist = document.getElementById('history'); hist.innerHTML = '';
         data.forEach(x => {
-            hist.innerHTML += `
-                <div class="res-card" style="border-left: 5px solid ${x.st==='w'?'var(--accent)':x.st==='l'?'var(--loss)':'#333'}">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <div><b>${x.t}</b><br><small style="color:var(--sub)">Tahmin: ${x.pred}</small></div>
-                        <div class="prob-val">%${x.prob}</div>
-                    </div>
-                    <div style="margin-top:15px; display:flex; gap:10px">
-                        <input type="number" id="sA_${x.id}" class="s-inp" style="width:40px; text-align:center" placeholder="0">
-                        <input type="number" id="sB_${x.id}" class="s-inp" style="width:40px; text-align:center" placeholder="0">
-                        <button onclick="saveS(${x.id})" style="flex:1; background:white; border:none; border-radius:4px; font-weight:bold">SKORU KAYDET</button>
-                    </div>
-                </div>`;
+            hist.innerHTML += `<div class="res-card" style="border-left: 5px solid ${x.st==='w'?'var(--accent)':x.st==='l'?'var(--loss)':'#333'}">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div><b>${x.t}</b><br><small>Tahmin: ${x.pred}</small></div>
+                    <div class="prob-val">%${x.prob}</div>
+                </div>
+                <div style="margin-top:10px; display:flex; gap:8px">
+                    <input type="number" id="sA_${x.id}" class="s-inp" style="width:35px;background:#000;color:#fff;border:1px solid #333;text-align:center" placeholder="H">
+                    <input type="number" id="sB_${x.id}" class="s-inp" style="width:35px;background:#000;color:#fff;border:1px solid #333;text-align:center" placeholder="A">
+                    <button onclick="saveS(${x.id})" style="flex:1; background:white; border:none; border-radius:4px; font-weight:bold; font-size:0.75rem">KAYDET</button>
+                </div>
+            </div>`;
         });
         document.getElementById('r1').innerText = `%${stats.t===0?0:Math.round((stats.w/stats.t)*100)}`;
         document.getElementById('r2').innerText = `%${stats.mt===0?0:Math.round((stats.mw/stats.mt)*100)}`;
@@ -130,13 +123,12 @@
         const win = (item.pred === "ÜST" && total >= 3) || (item.pred === "ALT" && total < 3);
         item.st = win ? 'w' : 'l';
         stats.t++; if(win) stats.w++;
-        if(item.prob >= 75 || item.prob <= 35) { stats.mt++; if(win) stats.mw++; }
+        if(item.prob >= 78 || item.prob <= 35) { stats.mt++; if(win) stats.mw++; }
         save(); updateUI();
     }
-
     function clearFields() { document.querySelectorAll('input').forEach(i => i.value = ''); window.scrollTo(0,0); }
-    function resetStats() { if(confirm("Tüm veriler silinsin mi?")) { stats={t:0,w:0,mt:0,mw:0}; data=[]; save(); updateUI(); } }
-    function save() { localStorage.setItem('sa_v13_d', JSON.stringify(data)); localStorage.setItem('sa_v13_s', JSON.stringify(stats)); }
+    function resetStats() { if(confirm("Sıfırla?")) { stats={t:0,w:0,mt:0,mw:0}; data=[]; save(); updateUI(); } }
+    function save() { localStorage.setItem('sa_v14_d', JSON.stringify(data)); localStorage.setItem('sa_v14_s', JSON.stringify(stats)); }
     init();
 </script>
 </body>

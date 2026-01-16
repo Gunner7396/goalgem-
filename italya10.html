@@ -3,31 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Serie A Pro v10 - Efficiency</title>
+    <title>Serie A Pro v11 - Grand Master</title>
     <style>
         :root { --bg: #0b0b0b; --card: #181818; --accent: #00df5d; --sub: #909090; --border: #282828; --gold: #ffd60a; --loss: #ff453a; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; padding: 12px; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; padding: 12px; overflow-x: hidden; }
         .dashboard { display: flex; gap: 10px; margin-bottom: 15px; }
         .kpi { flex: 1; background: var(--card); padding: 12px; border-radius: 12px; border: 1px solid var(--border); text-align: center; position: relative; }
-        .kpi-val { display: block; font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+        .kpi-val { display: block; font-size: 1.4rem; font-weight: 800; color: var(--accent); }
         .kpi-label { font-size: 0.6rem; color: var(--sub); font-weight: bold; }
         .reset-btn { position: absolute; top: 6px; right: 8px; font-size: 0.6rem; color: var(--loss); cursor: pointer; }
         .input-card { background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
-        .team-h { border: none; background: transparent; color: var(--accent); font-size: 1.1rem; font-weight: 800; width: 100%; margin-bottom: 15px; outline: none; border-bottom: 1px solid var(--border); }
-        .m-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #202020; padding: 8px 0; }
+        .team-h { border: none; background: transparent; color: var(--accent); font-size: 1.1rem; font-weight: 800; width: 100%; margin-bottom: 15px; outline: none; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+        .m-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding: 8px 0; }
         .m-row label { font-size: 0.85rem; color: var(--sub); }
-        .m-row input { width: 65px; background: #222; border: 1px solid #333; border-radius: 6px; color: white; padding: 6px; text-align: center; }
+        .m-row input { width: 65px; background: #222; border: 1px solid #333; border-radius: 6px; color: white; padding: 6px; text-align: center; font-size: 0.9rem; }
         .action-area { display: flex; gap: 10px; margin: 20px 0; }
-        .btn { flex: 1; padding: 16px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; }
+        .btn { flex: 1; padding: 16px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; font-size: 1rem; }
         .btn-clear { background: #282828; color: white; }
         .btn-run { background: var(--accent); color: black; flex: 2; }
         .res-card { background: var(--card); border-radius: 14px; padding: 15px; margin-bottom: 12px; border: 1px solid var(--border); }
         .bar-wrap { margin-bottom: 8px; font-size: 0.75rem; color: var(--sub); }
-        .bar-bg { height: 6px; background: #252525; border-radius: 3px; margin: 5px 0 10px; overflow: hidden; }
-        .bar-in { height: 100%; background: var(--accent); }
+        .bar-bg { height: 6px; background: #252525; border-radius: 3px; margin: 4px 0 8px; overflow: hidden; }
+        .bar-in { height: 100%; background: var(--accent); transition: width 0.6s ease-in-out; }
         .score-box { display: flex; align-items: center; gap: 10px; margin-top: 15px; padding-top: 12px; border-top: 1px solid var(--border); }
-        .s-inp { width: 45px; height: 35px; background: #000; border: 1px solid var(--border); border-radius: 6px; color: white; text-align: center; }
-        .s-ok { flex: 1; background: white; color: black; border-radius: 6px; font-weight: bold; border:none; height: 35px;}
+        .s-inp { width: 45px; height: 35px; background: #000; border: 1px solid var(--border); border-radius: 6px; color: white; text-align: center; font-weight: bold; }
+        .s-ok { flex: 1; background: white; color: black; border-radius: 6px; font-weight: bold; border:none; height: 35px; }
     </style>
 </head>
 <body>
@@ -40,7 +40,7 @@
         </div>
         <div class="kpi" style="border-color: var(--gold)">
             <span class="kpi-val" id="r2" style="color:var(--gold)">%0</span>
-            <span class="kpi-label" style="color:var(--gold)">MASTER</span>
+            <span class="kpi-label" style="color:var(--gold)">MASTER ⭐</span>
         </div>
     </div>
 
@@ -56,15 +56,15 @@
     <div id="history"></div>
 
 <script>
-    const fields = ["SCA", "CPA", "npxG/S", "Poss 3rd", "Err", "Dist", "PrgP", "Blocks", "Interc", "Recovery"];
-    let data = JSON.parse(localStorage.getItem('sa_v10_d')) || [];
-    let stats = JSON.parse(localStorage.getItem('sa_v10_s')) || { t: 0, w: 0, mt: 0, mw: 0 };
+    const fields = ["SCA", "CPA", "npxG/S", "Dist", "Err", "Blocks", "Interc", "Poss 3rd", "PrgP", "Recovery"];
+    let data = JSON.parse(localStorage.getItem('sa_v11_d')) || [];
+    let stats = JSON.parse(localStorage.getItem('sa_v11_s')) || { t: 0, w: 0, mt: 0, mw: 0 };
 
     function init() {
         ['A', 'B'].forEach(t => {
             const container = document.getElementById('m' + t);
             fields.forEach(f => {
-                container.innerHTML += `<div class="m-row"><label>${f}</label><input type="number" id="${f}_${t}" step="any" inputmode="decimal"></div>`;
+                container.innerHTML += `<div class="m-row"><label>${f}</label><input type="number" id="${f}_${t}" step="any" inputmode="decimal" placeholder="0"></div>`;
             });
         });
         updateUI();
@@ -73,42 +73,41 @@
     function analyze() {
         const getV = (id) => parseFloat(document.getElementById(id).value) || 0;
         
-        // Takım bazlı verimlilik kontrolü
-        const calcEff = (t) => {
-            const sca = getV('SCA_'+t), cpa = getV('CPA_'+t), p3 = getV('Poss 3rd_'+t);
-            if(p3 === 0) return 0;
-            // Verimlilik: 3. bölge girişinin ne kadarı şut ve ceza sahasına dönüşüyor?
-            return (sca + (cpa * 1.5)) / p3; 
+        const calcPower = (t, opp) => {
+            const sca = getV('SCA_'+t), cpa = getV('CPA_'+t), dist = getV('Dist_'+t) || 20;
+            const npx = getV('npxG/S_'+t), errOpp = getV('Err_'+opp);
+            const blocksOpp = getV('Blocks_'+opp), intercOpp = getV('Interc_'+opp);
+            
+            // 1. Hücum Verimliliği: CPA ve Dist uyumu (Kaleye yaklaşma bonusu)
+            let hPower = (sca * 0.8) + (cpa * 1.5);
+            if(dist < 17) hPower *= 1.2; else if(dist > 21) hPower *= 0.8;
+
+            // 2. Savunma Direnci: Rakip blokları hücum gücünü kırıyor mu?
+            const defResistance = (blocksOpp * 0.5) + (intercOpp * 0.3);
+            hPower = Math.max(0, hPower - defResistance);
+
+            // 3. Hata Cezalandırma: Hata * Bitiricilik
+            const punish = errOpp * (npx * 10);
+            
+            return hPower + punish;
         };
 
-        const effA = calcEff('A'), effB = calcEff('B');
-        const totalSCA = getV('SCA_A') + getV('SCA_B');
-        const totalCPA = getV('CPA_A') + getV('CPA_B');
-        const totalErr = getV('Err_A') + getV('Err_B');
-        const avgDist = (getV('Dist_A') + getV('Dist_B')) / 2 || 20;
-
-        // ANA FORMÜL: Poss 3rd artık sadece bir çarpan. SCA ve CPA temel motor.
-        let upProb = 10 + (totalSCA * 1.2) + (totalCPA * 2.0) + (totalErr * 10);
+        const powerA = calcPower('A', 'B');
+        const powerB = calcPower('B', 'A');
         
-        // Mesafe Uzaksa (Şutlar uzaktansa) ihtimali düşür
-        if(avgDist > 20) upProb -= (avgDist - 20) * 3;
+        let upProb = 15 + (powerA + powerB) * 1.5;
         
-        // Verimlilik Süzgeci: Eğer takımlar 3. bölgeye girip iş yapamıyorsa ihtimali kır
-        const totalEff = (effA + effB) / 2;
-        if(totalEff < 0.15) upProb *= 0.8; // "Boş pas" cezası
-        if(totalEff > 0.30) upProb *= 1.15; // "Yüksek verim" ödülü
-
+        // Final Dengeleme
         upProb = Math.min(98, Math.max(2, upProb));
 
         let r01, r23, r4p;
-        if (upProb >= 75) { r4p = Math.round(upProb * 0.4); r01 = Math.round((100 - upProb) * 0.4); r23 = 100-r4p-r01; }
-        else if (upProb <= 35) { r01 = Math.round((100 - upProb) * 0.6); r4p = 10; r23 = 100-r01-r4p; }
-        else { r23 = 60; r01 = Math.round(40 * (1-(upProb/100))); r4p = 100-23-r01; }
+        if (upProb >= 75) { r4p = Math.round(upProb * 0.45); r01 = Math.round((100 - upProb) * 0.4); r23 = 100-r4p-r01; }
+        else if (upProb <= 35) { r01 = Math.round((100 - upProb) * 0.65); r4p = 8; r23 = 100-r01-r4p; }
+        else { r23 = 62; r01 = Math.round(38 * (1-(upProb/100))); r4p = 100-62-r01; }
 
         data.unshift({
             id: Date.now(), t: (document.getElementById('tA').value || "T1") + " - " + (document.getElementById('tB').value || "T2"),
-            pred: upProb > 55 ? "ÜST" : "ALT", prob: upProb.toFixed(0),
-            r01, r23, r4p, sA: null, sB: null, st: 'p'
+            pred: upProb > 55 ? "ÜST" : "ALT", prob: upProb.toFixed(0), r01, r23, r4p, sA: null, sB: null, st: 'p'
         });
         save(); updateUI();
     }
@@ -120,13 +119,13 @@
             hist.innerHTML += `
                 <div class="res-card" style="border-left: 4px solid ${x.st==='w'?'var(--accent)':x.st==='l'?'var(--loss)':'#333'}">
                     <div style="display:flex;justify-content:space-between;margin-bottom:10px">
-                        <span>${isM ? '⭐ ' : ''}<b>${x.t}</b></span>
+                        <span>${isM ? '<span style="color:var(--gold)">⭐</span> ' : ''}<b>${x.t}</b></span>
                         <span style="color:var(--accent);font-weight:900">${x.pred} %${x.prob}</span>
                     </div>
                     ${bar("0-1 Gol", x.r01)} ${bar("2-3 Gol", x.r23)} ${bar("4+ Gol", x.r4p)}
                     <div class="score-box">
-                        <input type="number" id="sA_${x.id}" class="s-inp" value="${x.sA!==null?x.sA:''}">
-                        <input type="number" id="sB_${x.id}" class="s-inp" value="${x.sB!==null?x.sB:''}">
+                        <input type="number" id="sA_${x.id}" class="s-inp" value="${x.sA!==null?x.sA:''}" placeholder="0">
+                        <input type="number" id="sB_${x.id}" class="s-inp" value="${x.sB!==null?x.sB:''}" placeholder="0">
                         <button class="s-ok" onclick="saveS(${x.id})">KAYDET</button>
                     </div>
                 </div>`;
@@ -148,9 +147,9 @@
         if(item.prob >= 80 || item.prob <= 30) { stats.mt++; if(win) stats.mw++; }
         save(); updateUI();
     }
-    function clearFields() { document.querySelectorAll('input').forEach(i => i.value = ''); window.scrollTo(0,0); }
-    function resetStats() { if(confirm("Sıfırlansın mı?")) { stats={t:0,w:0,mt:0,mw:0}; data=[]; save(); updateUI(); } }
-    function save() { localStorage.setItem('sa_v10_d', JSON.stringify(data)); localStorage.setItem('sa_v10_s', JSON.stringify(stats)); }
+    function clearFields() { document.querySelectorAll('input').forEach(i => i.value = ''); window.scrollTo({top: 0, behavior: 'smooth'}); }
+    function resetStats() { if(confirm("Tüm veriler sıfırlansın mı?")) { stats={t:0,w:0,mt:0,mw:0}; data=[]; save(); updateUI(); } }
+    function save() { localStorage.setItem('sa_v11_d', JSON.stringify(data)); localStorage.setItem('sa_v11_s', JSON.stringify(stats)); }
     init();
 </script>
 </body>

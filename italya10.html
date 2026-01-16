@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serie A Goal Radar</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #fbbf24;
+            --text-color: #f8fafc;
+            --input-bg: #334155;
+            --btn-analyze: #10b981;
+            --btn-clear: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: var(--accent-color);
+            margin: 0;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .team-section {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .team-name-input {
+            width: 100%;
+            padding: 10px;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 6px;
+            color: #000;
+            font-weight: bold;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+            color: #94a3b8;
+        }
+
+        input[type="number"] {
+            background: var(--input-bg);
+            border: 1px solid #475569;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        #btn-analyze { background-color: var(--btn-analyze); color: white; }
+        #btn-clear { background-color: var(--btn-clear); color: white; }
+
+        .result-panel {
+            background: #0ea5e9;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .result-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .percentage {
+            font-size: 1.2rem;
+            font-weight: 800;
+            float: right;
+        }
+
+        .analysis-text {
+            font-style: italic;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Serie A Goal Radar</h1>
+    </div>
+
+    <div class="container">
+        <div class="team-section">
+            <input type="text" id="nameA" class="team-name-input" placeholder="Ev Sahibi Takım">
+            <div class="grid" id="inputsA">
+                </div>
+        </div>
+
+        <div class="team-section">
+            <input type="text" id="nameB" class="team-name-input" placeholder="Deplasman Takımı">
+            <div class="grid" id="inputsB">
+                </div>
+        </div>
+
+        <div class="actions">
+            <button id="btn-clear" onclick="clearData()">TEMİZLE</button>
+            <button id="btn-analyze" onclick="performAnalysis()">ANALİZ ET</button>
+        </div>
+
+        <div id="resultPanel" class="result-panel">
+            <h3 style="margin-top:0">📊 Analiz Verileri</h3>
+            <div id="resultsContent"></div>
+            <div id="analysisSpeech" class="analysis-text"></div>
+        </div>
+    </div>
+
+    <script>
+        const metrics = ["Dist", "CPA", "PrgP", "SCA", "Poss 3rd", "npxG/S", "Blocks", "Interc", "Recovery", "Err"];
+
+        function createInputs() {
+            ['A', 'B'].forEach(team => {
+                const container = document.getElementById(`inputs${team}`);
+                metrics.forEach(m => {
+                    const id = `${m.replace(/\s/g, '')}_${team}`;
+                    container.innerHTML += `
+                        <div class="input-group">
+                            <label>${m}</label>
+                            <input type="number" id="${id}" step="0.1" oninput="saveData()">
+                        </div>`;
+                });
+            });
+        }
+
+        function saveData() {
+            const data = {};
+            data.nameA = document.getElementById('nameA').value;
+            data.nameB = document.getElementById('nameB').value;
+            metrics.forEach(m => {
+                const idA = `${m.replace(/\s/g, '')}_A`;
+                const idB = `${m.replace(/\s/g, '')}_B`;
+                data[idA] = document.getElementById(idA).value;
+                data[idB] = document.getElementById(idB).value;
+            });
+            localStorage.setItem('serieAData', JSON.stringify(data));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('serieAData');
+            if (!saved) return;
+            const data = JSON.parse(saved);
+            document.getElementById('nameA').value = data.nameA || "";
+            document.getElementById('nameB').value = data.nameB || "";
+            metrics.forEach(m => {
+                const idA = `${m.replace(/\s/g, '')}_A`;
+                const idB = `${m.replace(/\s/g, '')}_B`;
+                document.getElementById(idA).value = data[idA] || "";
+                document.getElementById(idB).value = data[idB] || "";
+            });
+            if(localStorage.getItem('lastResult')) {
+                displayResult(JSON.parse(localStorage.getItem('lastResult')));
+            }
+        }
+
+        function clearData() {
+            if(confirm("Tüm verileri silmek istediğine emin misin?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        function performAnalysis() {
+            const nameA = document.getElementById('nameA').value || "Takım A";
+            const nameB = document.getElementById('nameB').value || "Takım B";
+
+            // Basit Simülasyon Mantığı (Gerçek metrik ağırlıklarına göre)
+            const scaA = parseFloat(document.getElementById('SCA_A').value) || 0;
+            const scaB = parseFloat(document.getElementById('SCA_B').value) || 0;
+            const errB = parseFloat(document.getElementById('Err_B').value) || 0;
+            
+            // % Hesaplama (Örnektir, metriklerin gücüne göre değişir)
+            let winA = Math.min(85, Math.max(10, 33 + (scaA - scaB)));
+            let draw = 25;
+            let winB = 100 - winA - draw;
+
+            let totalGoal = (scaA + scaB) > 45 ? "2-3 Gol" : "0-1 Gol";
+            let goalProb = (scaA + scaB) > 50 ? 75 : 55;
+
+            const result = {
+                winA: winA.toFixed(0),
+                winB: winB.toFixed(0),
+                draw: draw,
+                goalRange: totalGoal,
+                goalProb: goalProb,
+                nameA: nameA,
+                nameB: nameB,
+                summary: `${nameA} ekibi SCA (${scaA}) ile üretimde baskın. ${nameB} tarafındaki Err (${errB}) oranı maçın skor potansiyelini tetikliyor. İtalya standartlarına göre taktiksel bir üstünlük söz konusu.`
+            };
+
+            localStorage.setItem('lastResult', JSON.stringify(result));
+            displayResult(result);
+        }
+
+        function displayResult(res) {
+            const panel = document.getElementById('resultPanel');
+            const content = document.getElementById('resultsContent');
+            const speech = document.getElementById('analysisSpeech');
+
+            panel.style.display = 'block';
+            content.innerHTML = `
+                <div class="result-item">${res.nameA} Kazanır <span class="percentage">%${res.winA}</span></div>
+                <div class="result-item">${res.nameB} Kazanır <span class="percentage">%${res.winB}</span></div>
+                <div class="result-item">Beraberlik <span class="percentage">%${res.draw}</span></div>
+                <div class="result-item">Toplam ${res.goalRange} <span class="percentage">%${res.goalProb}</span></div>
+            `;
+            speech.innerText = res.summary;
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        createInputs();
+        loadData();
+    </script>
+</body>
+</html>

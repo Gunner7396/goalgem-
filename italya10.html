@@ -3,49 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Serie A Pro Analiz v5</title>
+    <title>Serie A Stratejik Analiz v6</title>
     <style>
-        :root {
-            --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9;
-            --win: #22c55e; --loss: #ef4444; --gold: #fbbf24; --soft: #94a3b8;
-        }
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9; --win: #22c55e; --loss: #ef4444; --gold: #fbbf24; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 12px; }
         .dashboard { background: #111827; padding: 15px; border-radius: 15px; border: 1px solid var(--accent); margin-bottom: 20px; text-align: center; }
         .kpi-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .kpi-box { background: #1f2937; padding: 12px; border-radius: 8px; border: 1px solid #334155; }
-        .kpi-box.master { border-color: var(--gold); background: rgba(251, 191, 36, 0.05); }
-        .kpi-val { display: block; font-size: 1.6rem; font-weight: 800; color: var(--accent); }
-        .master .kpi-val { color: var(--gold); }
-        .kpi-label { font-size: 0.65rem; color: var(--soft); text-transform: uppercase; }
-
+        .kpi-box { background: #1f2937; padding: 10px; border-radius: 8px; border-bottom: 3px solid #374151; }
+        .master { border-color: var(--gold) !important; }
+        .kpi-val { display: block; font-size: 1.5rem; font-weight: 800; color: var(--gold); }
         .input-card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 12px; }
-        .team-title { width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--accent); color: #000; font-weight: bold; margin-bottom: 12px; }
+        .team-title { width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--accent); color: #000; font-weight: bold; margin-bottom: 10px; box-sizing: border-box; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        input[type="number"] { background: #334155; border: 1px solid #475569; color: white; padding: 10px; border-radius: 6px; width: 100%; box-sizing: border-box; font-size: 1rem; }
-
-        .btn-main { width: 100%; background: var(--win); color: white; padding: 16px; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
-        
-        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left: 6px solid var(--soft); position: relative; }
-        .card.master-bet { border-left-color: var(--gold); }
-        .card.win { border-left-color: var(--win); background: rgba(34, 197, 94, 0.05); }
-        .card.loss { border-left-color: var(--loss); background: rgba(239, 68, 68, 0.05); }
-
-        .range-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 10px; }
-        .range-item { background: #0f172a; padding: 8px 4px; border-radius: 6px; text-align: center; font-size: 0.75rem; border: 1px solid #334155; }
-        .range-val { display: block; font-weight: bold; color: var(--accent); font-size: 0.9rem; }
-
-        .score-entry { margin-top: 15px; display: flex; gap: 8px; align-items: center; border-top: 1px solid #334155; padding-top: 12px; }
-        .score-inp { width: 45px !important; text-align: center; background: #0f172a !important; }
-        .save-btn { background: var(--accent); color: #000; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; font-size: 0.75rem; }
+        input[type="number"] { background: #334155; border: 1px solid #475569; color: white; padding: 10px; border-radius: 6px; width: 100%; box-sizing: border-box; }
+        .btn-main { width: 100%; background: var(--win); color: white; padding: 16px; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; margin: 10px 0; cursor: pointer; }
+        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left: 6px solid #475569; position: relative; }
+        .card.master-bet { border-left-color: var(--gold); background: linear-gradient(to right, #1e293b, #1e1b4b); }
+        .range-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 12px; }
+        .range-item { background: #0f172a; padding: 10px 5px; border-radius: 6px; text-align: center; border: 1px solid #334155; }
+        .range-val { display: block; font-weight: bold; color: var(--accent); }
+        .score-entry { margin-top: 15px; display: flex; gap: 8px; align-items: center; border-top: 1px solid #334155; padding-top: 10px; }
+        .score-inp { width: 45px !important; text-align: center; }
     </style>
 </head>
 <body>
 
     <div class="dashboard">
-        <h2 style="margin:0; font-size:0.9rem; color:var(--accent);">SERIE A STRATEJİ MERKEZİ</h2>
         <div class="kpi-row">
-            <div class="kpi-box"><span class="kpi-val" id="totalRate">%0</span><span class="kpi-label">Genel Başarı</span></div>
-            <div class="kpi-box master"><span class="kpi-val" id="masterRate">%0</span><span class="kpi-label">NET TAHMİN (%80+)</span></div>
+            <div class="kpi-box"><span class="kpi-val" id="totalRate">%0</span><span class="kpi-label" style="font-size: 0.7rem;">GENEL BAŞARI</span></div>
+            <div class="kpi-box master"><span class="kpi-val" id="masterRate">%0</span><span class="kpi-label" style="font-size: 0.7rem;">NET TAHMİN (%80+)</span></div>
         </div>
     </div>
 
@@ -55,50 +41,57 @@
     </div>
 
     <button class="btn-main" onclick="run()">ANALİZ ET</button>
-    <button onclick="localStorage.clear(); location.reload();" style="background:none; border:none; color:var(--soft); font-size:0.7rem; width:100%; margin-top:10px;">Verileri Temizle</button>
 
-    <div id="history" style="margin-top:20px"></div>
+    <div id="history"></div>
 
 <script>
     const fields = ["Dist", "CPA", "PrgP", "SCA", "Poss 3rd", "npxG/S", "Blocks", "Interc", "Recovery", "Err"];
-    let data = JSON.parse(localStorage.getItem('sa_v5_data')) || [];
+    let data = JSON.parse(localStorage.getItem('sa_v6_data')) || [];
 
     function init() {
         ['A', 'B'].forEach(t => {
             const div = document.getElementById('g' + t);
-            fields.forEach(f => div.innerHTML += `<div class="inp-wrap"><label style="font-size:0.6rem; color:var(--soft)">${f}</label><input type="number" id="${f}_${t}" step="any" inputmode="decimal"></div>`);
+            fields.forEach(f => div.innerHTML += `<input type="number" id="${f}_${t}" step="any" inputmode="decimal" placeholder="${f}">`);
         });
         updateUI();
     }
 
     function run() {
-        if(!document.getElementById('SCA_A').value) { alert("Lütfen en azından SCA verilerini girin."); return; }
-        
+        // Boş veri kontrolü
+        if(!document.getElementById('SCA_A').value || !document.getElementById('SCA_B').value) {
+            alert("Analiz için en azından SCA verilerini girmelisiniz!"); return;
+        }
+
         const sca = (parseFloat(document.getElementById('SCA_A').value)||0) + (parseFloat(document.getElementById('SCA_B').value)||0);
         const err = (parseFloat(document.getElementById('Err_A').value)||0) + (parseFloat(document.getElementById('Err_B').value)||0);
         
-        let mainProb = Math.min(98, 15 + (sca * 0.8) + (err * 12));
-        let pred = mainProb > 65 ? "ÜST" : "ALT";
-
-        // Gol Aralığı Hesaplama (Simülasyon Mantığı)
-        let r01 = Math.max(5, 100 - mainProb - 10).toFixed(0);
-        let r23 = (mainProb > 40 && mainProb < 85) ? 60 : 40;
-        let r4p = Math.max(5, mainProb - 60).toFixed(0);
+        let upProb = Math.min(98, 15 + (sca * 0.75) + (err * 12));
+        let pred = upProb > 60 ? "ÜST" : "ALT";
         
-        // Toplamı 100'e yuvarlama ayarı
-        let sum = parseInt(r01) + parseInt(r23) + parseInt(r4p);
-        r23 = r23 + (100 - sum);
+        let r01, r23, r4p;
+        
+        // TUTARLI DAĞILIM ALGORİTMASI
+        if (upProb >= 80) { // Net Üst Senaryosu
+            r4p = Math.round(upProb * 0.45);
+            r01 = Math.round((100 - upProb) * 0.5);
+            r23 = 100 - r4p - r01;
+        } else if (upProb <= 30) { // Net Alt Senaryosu
+            r01 = Math.round((100 - upProb) * 0.7);
+            r4p = Math.round(upProb * 0.2);
+            r23 = 100 - r01 - r4p;
+        } else { // Orta Şiddet (2-3 Gol Bölgesi)
+            r23 = 60;
+            let kalan = 40;
+            r01 = Math.round(kalan * (1 - (upProb/100)));
+            r4p = 100 - r23 - r01;
+        }
 
-        data.unshift({ 
-            id: Date.now(), teams: (document.getElementById('tA').value || "A") + " vs " + (document.getElementById('tB').value || "B"), 
-            pred, prob: mainProb.toFixed(0), r01, r23, r4p, scoreA: null, scoreB: null, status: 'p' 
-        });
+        data.unshift({ id: Date.now(), teams: (document.getElementById('tA').value||"A") + " vs " + (document.getElementById('tB').value||"B"), pred, prob: upProb.toFixed(0), r01, r23, r4p, scoreA: null, scoreB: null, status: 'p' });
         save(); updateUI();
     }
 
     function setScore(id) {
-        const sA = document.getElementById('sA_'+id).value;
-        const sB = document.getElementById('sB_'+id).value;
+        const sA = document.getElementById('sA_'+id).value, sB = document.getElementById('sB_'+id).value;
         if(sA === "" || sB === "") return;
         const item = data.find(x => x.id === id);
         item.scoreA = parseInt(sA); item.scoreB = parseInt(sB);
@@ -108,38 +101,31 @@
     }
 
     function updateUI() {
-        let tGen = 0, wGen = 0, tMaster = 0, wMaster = 0;
+        let tGen = 0, wGen = 0, tM = 0, wM = 0;
         const hist = document.getElementById('history'); hist.innerHTML = '';
         data.forEach(x => {
-            if(x.status !== 'p') {
-                tGen++; if(x.status === 'w') wGen++;
-                if(x.prob >= 80) { tMaster++; if(x.status === 'w') wMaster++; }
-            }
-            const isMaster = x.prob >= 80;
+            if(x.status !== 'p') { tGen++; if(x.status === 'w') wGen++; if(x.prob >= 80 || x.prob <= 30) { tM++; if(x.status === 'w') wM++; } }
+            const isM = x.prob >= 80 || x.prob <= 30;
             hist.innerHTML += `
-                <div class="card ${isMaster ? 'master-bet' : ''} ${x.status === 'w' ? 'win' : x.status === 'l' ? 'loss' : ''}">
-                    <div style="font-weight:bold; font-size:1rem;">${isMaster ? '⭐ ' : ''}${x.teams}</div>
-                    <div style="color:var(--accent); font-weight:bold; margin-top:5px;">Hedef: ${x.pred} (%${x.prob})</div>
-                    
+                <div class="card ${isM ? 'master-bet' : ''} ${x.status==='w'?'win':x.status==='l'?'loss':''}">
+                    <div style="font-weight:bold">${isM ? '⭐ ' : ''}${x.teams}</div>
+                    <div style="font-size:0.9rem; color:var(--accent); margin-top:5px;">Hedef: ${x.pred} (%${x.prob >= 60 ? x.prob : (100-x.prob).toFixed(0)})</div>
                     <div class="range-grid">
-                        <div class="range-item"><span class="range-label">0-1 Gol</span><span class="range-val">%${x.r01}</span></div>
-                        <div class="range-item"><span class="range-label">2-3 Gol</span><span class="range-val">%${x.r23}</span></div>
-                        <div class="range-item"><span class="range-label">4+ Gol</span><span class="range-val">%${x.r4p}</span></div>
+                        <div class="range-item"><span style="font-size:0.6rem">0-1 GOL</span><span class="range-val">%${x.r01}</span></div>
+                        <div class="range-item"><span style="font-size:0.6rem">2-3 GOL</span><span class="range-val">%${x.r23}</span></div>
+                        <div class="range-item"><span style="font-size:0.6rem">4+ GOL</span><span class="range-val">%${x.r4p}</span></div>
                     </div>
-
                     <div class="score-entry">
-                        <input type="number" id="sA_${x.id}" class="score-inp" value="${x.scoreA !== null ? x.scoreA : ''}">
-                        <span>-</span>
-                        <input type="number" id="sB_${x.id}" class="score-inp" value="${x.scoreB !== null ? x.scoreB : ''}">
-                        <button class="save-btn" onclick="setScore(${x.id})">SKORU İŞLE</button>
+                        <input type="number" id="sA_${x.id}" class="score-inp" value="${x.scoreA!==null?x.scoreA:''}"> - 
+                        <input type="number" id="sB_${x.id}" class="score-inp" value="${x.scoreB!==null?x.scoreB:''}">
+                        <button onclick="setScore(${x.id})" style="background:var(--accent); border:none; padding:5px 10px; border-radius:4px; font-weight:bold; margin-left:10px">İŞLE</button>
                     </div>
                 </div>`;
         });
-        document.getElementById('totalRate').innerText = `%${tGen === 0 ? 0 : Math.round((wGen/tGen)*100)}`;
-        document.getElementById('masterRate').innerText = `%${tMaster === 0 ? 0 : Math.round((wMaster/tMaster)*100)}`;
+        document.getElementById('totalRate').innerText = `%${tGen===0?0:Math.round((wGen/tGen)*100)}`;
+        document.getElementById('masterRate').innerText = `%${tM===0?0:Math.round((wM/tM)*100)}`;
     }
-
-    function save() { localStorage.setItem('sa_v5_data', JSON.stringify(data)); }
+    function save() { localStorage.setItem('sa_v6_data', JSON.stringify(data)); }
     init();
 </script>
 </body>

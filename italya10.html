@@ -2,285 +2,193 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Serie A Goal Radar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Serie A Pro Analiz</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-color: #fbbf24;
-            --text-color: #f8fafc;
-            --input-bg: #334155;
-            --btn-analyze: #10b981;
-            --btn-clear: #ef4444;
+            --bg: #0a0f1e; --card: #161e32; --accent: #00f2ff; --text: #e2e8f0;
+            --win: #10b981; --loss: #ef4444; --neutral: #64748b;
         }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; padding-bottom: 50px; }
+        .dashboard { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #2d3748; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center; }
+        .stat-box { background: #1e293b; padding: 10px; border-radius: 8px; }
+        .stat-val { display: block; font-size: 1.5rem; font-weight: bold; color: var(--accent); }
+        
+        .team-box { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; }
+        .team-name { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: none; background: var(--accent); color: #000; font-weight: bold; box-sizing: border-box; }
+        
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .inp-group { display: flex; flex-direction: column; }
+        label { font-size: 0.7rem; color: #94a3b8; margin-bottom: 2px; }
+        input[type="number"] { background: #1e293b; border: 1px solid #334155; color: white; padding: 10px; border-radius: 6px; font-size: 1rem; input-mode: decimal; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        .btns { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin: 15px 0; }
+        button { padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .clear-btn { background: #334155; color: white; }
+        .analyze-btn { background: var(--win); color: white; }
 
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .header h1 {
-            color: var(--accent-color);
-            margin: 0;
-            font-size: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .team-section {
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        .team-name-input {
-            width: 100%;
-            padding: 10px;
-            background: var(--accent-color);
-            border: none;
-            border-radius: 6px;
-            color: #000;
-            font-weight: bold;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            font-size: 0.75rem;
-            margin-bottom: 4px;
-            color: #94a3b8;
-        }
-
-        input[type="number"] {
-            background: var(--input-bg);
-            border: 1px solid #475569;
-            color: white;
-            padding: 8px;
-            border-radius: 5px;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 5px;
-            margin-bottom: 20px;
-        }
-
-        button {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        #btn-analyze { background-color: var(--btn-analyze); color: white; }
-        #btn-clear { background-color: var(--btn-clear); color: white; }
-
-        .result-panel {
-            background: #0ea5e9;
-            padding: 20px;
-            border-radius: 12px;
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .result-item {
-            background: rgba(255,255,255,0.1);
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 10px;
-        }
-
-        .percentage {
-            font-size: 1.2rem;
-            font-weight: 800;
-            float: right;
-        }
-
-        .analysis-text {
-            font-style: italic;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            margin-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.2);
-            padding-top: 10px;
-        }
+        .history-title { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+        .result-card { background: var(--card); border-left: 4px solid var(--accent); padding: 15px; border-radius: 8px; margin-bottom: 10px; position: relative; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity:0; transform: translateX(-10px); } }
+        
+        .card-header { font-weight: bold; font-size: 0.9rem; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .card-metrics { font-size: 0.85rem; color: #cbd5e1; }
+        .outcome-btns { margin-top: 10px; display: flex; gap: 5px; }
+        .outcome-btns button { padding: 5px 10px; font-size: 0.7rem; flex: 1; }
+        .btn-success { background: #065f46; color: white; }
+        .btn-fail { background: #7f1d1d; color: white; }
+        .delete-single { color: #94a3b8; font-size: 1.2rem; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>Serie A Goal Radar</h1>
+    <div class="dashboard">
+        <div class="stats-grid">
+            <div class="stat-box">
+                <span class="stat-val" id="totalMatches">0</span>
+                <label>TOPLAM MAÇ</label>
+            </div>
+            <div class="stat-box">
+                <span class="stat-val" id="winRate">%0</span>
+                <label>BAŞARI ORANI</label>
+            </div>
+        </div>
+        <button onclick="resetStats()" style="width:100%; margin-top:10px; padding:5px; font-size:0.7rem; background:none; color:#94a3b8; border:1px solid #334155;">İstatistikleri Sıfırla</button>
     </div>
 
-    <div class="container">
-        <div class="team-section">
-            <input type="text" id="nameA" class="team-name-input" placeholder="Ev Sahibi Takım">
-            <div class="grid" id="inputsA">
-                </div>
+    <div id="inputForm">
+        <div class="team-box">
+            <input type="text" id="nameA" class="team-name" placeholder="EV SAHİBİ TAKIM">
+            <div class="grid" id="gridA"></div>
         </div>
-
-        <div class="team-section">
-            <input type="text" id="nameB" class="team-name-input" placeholder="Deplasman Takımı">
-            <div class="grid" id="inputsB">
-                </div>
-        </div>
-
-        <div class="actions">
-            <button id="btn-clear" onclick="clearData()">TEMİZLE</button>
-            <button id="btn-analyze" onclick="performAnalysis()">ANALİZ ET</button>
-        </div>
-
-        <div id="resultPanel" class="result-panel">
-            <h3 style="margin-top:0">📊 Analiz Verileri</h3>
-            <div id="resultsContent"></div>
-            <div id="analysisSpeech" class="analysis-text"></div>
+        <div class="team-box">
+            <input type="text" id="nameB" class="team-name" placeholder="DEPLASMAN TAKIMI">
+            <div class="grid" id="gridB"></div>
         </div>
     </div>
 
-    <script>
-        const metrics = ["Dist", "CPA", "PrgP", "SCA", "Poss 3rd", "npxG/S", "Blocks", "Interc", "Recovery", "Err"];
+    <div class="btns">
+        <button class="clear-btn" onclick="clearInputs()">SİL</button>
+        <button class="analyze-btn" onclick="analyze()">ANALİZ ET</button>
+    </div>
 
-        function createInputs() {
-            ['A', 'B'].forEach(team => {
-                const container = document.getElementById(`inputs${team}`);
-                metrics.forEach(m => {
-                    const id = `${m.replace(/\s/g, '')}_${team}`;
-                    container.innerHTML += `
-                        <div class="input-group">
-                            <label>${m}</label>
-                            <input type="number" id="${id}" step="0.1" oninput="saveData()">
-                        </div>`;
-                });
-            });
-        }
+    <div class="history-title">
+        <h3>Analiz Geçmişi</h3>
+        <button onclick="clearHistory()" style="background:none; color:var(--loss); font-size:0.8rem; border:none;">Tümünü Temizle</button>
+    </div>
+    <div id="historyList"></div>
 
-        function saveData() {
-            const data = {};
-            data.nameA = document.getElementById('nameA').value;
-            data.nameB = document.getElementById('nameB').value;
+<script>
+    const metrics = ["Dist", "CPA", "PrgP", "SCA", "Poss 3rd", "npxG/S", "Blocks", "Interc", "Recovery", "Err"];
+    let history = JSON.parse(localStorage.getItem('serieA_history')) || [];
+    let stats = JSON.parse(localStorage.getItem('serieA_stats')) || { total: 0, wins: 0 };
+
+    function init() {
+        ['A', 'B'].forEach(t => {
+            const container = document.getElementById('grid' + t);
             metrics.forEach(m => {
-                const idA = `${m.replace(/\s/g, '')}_A`;
-                const idB = `${m.replace(/\s/g, '')}_B`;
-                data[idA] = document.getElementById(idA).value;
-                data[idB] = document.getElementById(idB).value;
+                container.innerHTML += `
+                <div class="inp-group">
+                    <label>${m}</label>
+                    <input type="number" id="${m}_${t}" step="any" inputmode="decimal" placeholder="0.0">
+                </div>`;
             });
-            localStorage.setItem('serieAData', JSON.stringify(data));
+        });
+        updateStats();
+        renderHistory();
+    }
+
+    function analyze() {
+        const nameA = document.getElementById('nameA').value || "Takım A";
+        const nameB = document.getElementById('nameB').value || "Takım B";
+        
+        // Mantık: Gol olasılığı SCA ve CPA toplamına, hata oranına bağlıdır
+        const scaTotal = (parseFloat(document.getElementById('SCA_A').value) || 0) + (parseFloat(document.getElementById('SCA_B').value) || 0);
+        const errTotal = (parseFloat(document.getElementById('Err_A').value) || 0) + (parseFloat(document.getElementById('Err_B').value) || 0);
+        
+        let goalProb = Math.min(95, 20 + (scaTotal * 0.8) + (errTotal * 10));
+        let scorePred = goalProb > 65 ? "2.5 ÜST / 2-3 GOL" : "2.5 ALT / 0-1 GOL";
+
+        const newAnalysis = {
+            id: Date.now(),
+            teams: `${nameA} vs ${nameB}`,
+            prediction: scorePred,
+            prob: goalProb.toFixed(0),
+            status: 'pending' // pending, win, loss
+        };
+
+        history.unshift(newAnalysis);
+        save();
+        renderHistory();
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function renderHistory() {
+        const list = document.getElementById('historyList');
+        list.innerHTML = '';
+        history.forEach(item => {
+            list.innerHTML += `
+            <div class="result-card" style="border-color: ${item.status === 'win' ? 'var(--win)' : item.status === 'loss' ? 'var(--loss)' : 'var(--accent)'}">
+                <div class="card-header">
+                    <span>${item.teams}</span>
+                    <span class="delete-single" onclick="deleteSingle(${item.id})">×</span>
+                </div>
+                <div class="card-metrics">
+                    Tahmin: <b>${item.prediction}</b> (%${item.prob})
+                </div>
+                ${item.status === 'pending' ? `
+                <div class="outcome-btns">
+                    <button class="btn-success" onclick="markStatus(${item.id}, 'win')">TUTTU</button>
+                    <button class="btn-fail" onclick="markStatus(${item.id}, 'loss')">YATMADI</button>
+                </div>` : `<div style="margin-top:5px; font-size:0.7rem; font-weight:bold; color:${item.status === 'win' ? 'var(--win)' : 'var(--loss)'}">${item.status.toUpperCase()}</div>`}
+            </div>`;
+        });
+    }
+
+    function markStatus(id, status) {
+        const item = history.find(h => h.id === id);
+        if (item && item.status === 'pending') {
+            item.status = status;
+            stats.total++;
+            if (status === 'win') stats.wins++;
+            save();
+            updateStats();
+            renderHistory();
         }
+    }
 
-        function loadData() {
-            const saved = localStorage.getItem('serieAData');
-            if (!saved) return;
-            const data = JSON.parse(saved);
-            document.getElementById('nameA').value = data.nameA || "";
-            document.getElementById('nameB').value = data.nameB || "";
-            metrics.forEach(m => {
-                const idA = `${m.replace(/\s/g, '')}_A`;
-                const idB = `${m.replace(/\s/g, '')}_B`;
-                document.getElementById(idA).value = data[idA] || "";
-                document.getElementById(idB).value = data[idB] || "";
-            });
-            if(localStorage.getItem('lastResult')) {
-                displayResult(JSON.parse(localStorage.getItem('lastResult')));
-            }
-        }
+    function updateStats() {
+        document.getElementById('totalMatches').innerText = stats.total;
+        const rate = stats.total === 0 ? 0 : Math.round((stats.wins / stats.total) * 100);
+        document.getElementById('winRate').innerText = `%${rate}`;
+        if(stats.total >= 100) alert("100 Maçlık Rapor Tamamlandı! Başarı Oranı: %" + rate);
+    }
 
-        function clearData() {
-            if(confirm("Tüm verileri silmek istediğine emin misin?")) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
+    function deleteSingle(id) {
+        history = history.filter(h => h.id !== id);
+        save();
+        renderHistory();
+    }
 
-        function performAnalysis() {
-            const nameA = document.getElementById('nameA').value || "Takım A";
-            const nameB = document.getElementById('nameB').value || "Takım B";
+    function clearInputs() {
+        document.querySelectorAll('input').forEach(i => i.value = '');
+    }
 
-            // Basit Simülasyon Mantığı (Gerçek metrik ağırlıklarına göre)
-            const scaA = parseFloat(document.getElementById('SCA_A').value) || 0;
-            const scaB = parseFloat(document.getElementById('SCA_B').value) || 0;
-            const errB = parseFloat(document.getElementById('Err_B').value) || 0;
-            
-            // % Hesaplama (Örnektir, metriklerin gücüne göre değişir)
-            let winA = Math.min(85, Math.max(10, 33 + (scaA - scaB)));
-            let draw = 25;
-            let winB = 100 - winA - draw;
+    function clearHistory() {
+        if(confirm("Tüm geçmişi sil?")) { history = []; save(); renderHistory(); }
+    }
 
-            let totalGoal = (scaA + scaB) > 45 ? "2-3 Gol" : "0-1 Gol";
-            let goalProb = (scaA + scaB) > 50 ? 75 : 55;
+    function resetStats() {
+        if(confirm("İstatistikleri sıfırla?")) { stats = { total: 0, wins: 0 }; save(); updateStats(); }
+    }
 
-            const result = {
-                winA: winA.toFixed(0),
-                winB: winB.toFixed(0),
-                draw: draw,
-                goalRange: totalGoal,
-                goalProb: goalProb,
-                nameA: nameA,
-                nameB: nameB,
-                summary: `${nameA} ekibi SCA (${scaA}) ile üretimde baskın. ${nameB} tarafındaki Err (${errB}) oranı maçın skor potansiyelini tetikliyor. İtalya standartlarına göre taktiksel bir üstünlük söz konusu.`
-            };
+    function save() {
+        localStorage.setItem('serieA_history', JSON.stringify(history));
+        localStorage.setItem('serieA_stats', JSON.stringify(stats));
+    }
 
-            localStorage.setItem('lastResult', JSON.stringify(result));
-            displayResult(result);
-        }
-
-        function displayResult(res) {
-            const panel = document.getElementById('resultPanel');
-            const content = document.getElementById('resultsContent');
-            const speech = document.getElementById('analysisSpeech');
-
-            panel.style.display = 'block';
-            content.innerHTML = `
-                <div class="result-item">${res.nameA} Kazanır <span class="percentage">%${res.winA}</span></div>
-                <div class="result-item">${res.nameB} Kazanır <span class="percentage">%${res.winB}</span></div>
-                <div class="result-item">Beraberlik <span class="percentage">%${res.draw}</span></div>
-                <div class="result-item">Toplam ${res.goalRange} <span class="percentage">%${res.goalProb}</span></div>
-            `;
-            speech.innerText = res.summary;
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-
-        createInputs();
-        loadData();
-    </script>
+    init();
+</script>
 </body>
 </html>

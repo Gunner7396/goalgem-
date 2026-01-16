@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Serie A Pro v21 - Tolerance Engine</title>
+    <title>Serie A Pro v21 - Final Stability</title>
     <style>
         :root { --bg: #0b0b0b; --card: #181818; --accent: #00df5d; --sub: #909090; --border: #282828; --gold: #ffd60a; --loss: #ff453a; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; padding: 12px; }
@@ -11,19 +11,20 @@
         .kpi { flex: 1; background: var(--card); padding: 12px; border-radius: 12px; border: 1px solid var(--border); text-align: center; position: relative; }
         .kpi-val { display: block; font-size: 1.4rem; font-weight: 800; color: var(--accent); }
         .kpi-label { font-size: 0.6rem; color: var(--sub); font-weight: bold; }
-        .reset-all { position: absolute; top: 5px; right: 8px; color: var(--loss); font-size: 10px; cursor: pointer; }
+        .reset-all { position: absolute; top: 5px; right: 8px; color: var(--loss); font-size: 10px; cursor: pointer; font-weight: bold; }
         .input-card { background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
         .team-h { border: none; background: transparent; color: var(--accent); font-size: 1.1rem; font-weight: 800; width: 100%; margin-bottom: 10px; outline: none; border-bottom: 1px solid var(--border); }
         .m-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .m-row { display: flex; flex-direction: column; border-bottom: 1px solid #222; padding: 4px 0; }
         .m-row label { font-size: 0.65rem; color: var(--sub); margin-bottom: 2px; }
         .m-row input { background: #222; border: 1px solid #333; border-radius: 4px; color: white; padding: 6px; text-align: center; font-size: 0.85rem; outline: none; }
-        .btn-run { width: 100%; background: var(--accent); color: black; padding: 16px; border-radius: 12px; border: none; font-weight: 900; margin: 10px 0; cursor: pointer; }
-        .btn-clear { width: 100%; background: #222; color: #777; padding: 10px; border: none; border-radius: 8px; font-size: 0.75rem; margin-bottom: 15px; cursor: pointer; }
-        .res-card { background: var(--card); border-radius: 14px; padding: 12px; margin-bottom: 10px; border: 1px solid var(--border); }
+        .btn-run { width: 100%; background: var(--accent); color: black; padding: 16px; border-radius: 12px; border: none; font-weight: 900; margin: 10px 0; cursor: pointer; font-size: 1rem; }
+        .btn-clear { width: 100%; background: #222; color: #777; padding: 10px; border: none; border-radius: 8px; font-size: 0.75rem; margin-bottom: 15px; cursor: pointer; font-weight: bold; }
+        .res-card { background: var(--card); border-radius: 14px; padding: 12px; margin-bottom: 10px; border: 1px solid var(--border); animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .prob-val { font-size: 1.6rem; font-weight: 900; color: var(--accent); }
-        .s-box { display: flex; gap: 8px; margin-top: 10px; }
-        .s-ok { flex: 1; background: white; color: black; border: none; padding: 6px; border-radius: 4px; font-weight: 900; font-size: 0.7rem; cursor: pointer; }
+        .s-box { display: flex; gap: 8px; margin-top: 10px; border-top: 1px solid #222; padding-top: 10px; }
+        .s-ok { flex: 1; background: white; color: black; border: none; padding: 8px; border-radius: 6px; font-weight: 900; font-size: 0.75rem; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -61,13 +62,13 @@
 
     function saveInputs() {
         const inputs = {};
-        document.querySelectorAll('input').forEach(i => inputs[i.id] = i.value);
+        document.querySelectorAll('input').forEach(i => { if(i.id) inputs[i.id] = i.value; });
         localStorage.setItem('sa_v21_last_inputs', JSON.stringify(inputs));
     }
 
     function loadInputs() {
         const saved = JSON.parse(localStorage.getItem('sa_v21_last_inputs'));
-        if (saved) Object.keys(saved).forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = saved[id]; });
+        if (saved) Object.keys(saved).forEach(id => { const el = document.getElementById(id); if(el) el.value = saved[id]; });
     }
 
     function analyze() {
@@ -78,17 +79,15 @@
             const errOpp = getV('Err_'+opp), blocksOpp = getV('Blocks_'+opp);
 
             // SERIE A GUARD FILTERS
-            if (dist > 22.5) return 0; // Mesafe saçma ise hücum iptal
-            if (npx > 0.22) npx = 0.18; // 0.30 gibi veriler ideale çekilir
-            if (sca > 32) sca = 28;
+            if (dist > 22.5) return 0; // Mesafe gerçekçi değilse güç iptal
+            if (npx > 0.22) npx = 0.18; // Elit tavan sınırı
+            if (sca > 32) sca = 28; // Şişme engelleme
 
             let power = (sca * 0.45) + (cpa * 0.85);
             
             // TOLERANSLI HATA SİSTEMİ
             let errorImpact = 0;
-            if (errOpp > 0.8) {
-                errorImpact = (errOpp - 0.8) * (npx * 60); 
-            }
+            if (errOpp > 0.8) { errorImpact = (errOpp - 0.8) * (npx * 60); }
             power += errorImpact;
 
             power = Math.max(0, power - (blocksOpp * 0.6));
@@ -105,8 +104,7 @@
     }
 
     function updateUI() {
-        const hist = document.getElementById('history');
-        hist.innerHTML = '';
+        const hist = document.getElementById('history'); hist.innerHTML = '';
         data.forEach(x => {
             const isM = x.prob >= 78 || x.prob <= 35;
             hist.innerHTML += `<div class="res-card" style="border-left: 5px solid ${x.st==='w'?'var(--accent)':x.st==='l'?'var(--loss)':'#333'}">
@@ -115,10 +113,10 @@
                     <div class="prob-val">%${x.prob}</div>
                 </div>
                 <div class="s-box">
-                    <input type="number" id="sA_${x.id}" style="width:35px; background:#000; color:#fff; border:1px solid #333; text-align:center" placeholder="H">
-                    <input type="number" id="sB_${x.id}" style="width:35px; background:#000; color:#fff; border:1px solid #333; text-align:center" placeholder="A">
+                    <input type="number" id="sA_${x.id}" style="width:40px; background:#000; color:#fff; border:1px solid #333; text-align:center; border-radius:4px;" placeholder="H">
+                    <input type="number" id="sB_${x.id}" style="width:40px; background:#000; color:#fff; border:1px solid #333; text-align:center; border-radius:4px;" placeholder="A">
                     <button class="s-ok" onclick="saveS(${x.id})">SKORU KAYDET</button>
-                    <button onclick="deleteCard(${x.id})" style="background:transparent; border:none; color:#555; font-size:12px; cursor:pointer">✕</button>
+                    <button onclick="deleteCard(${x.id})" style="background:transparent; border:none; color:#555; font-size:16px; cursor:pointer; padding:0 10px;">✕</button>
                 </div>
             </div>`;
         });
@@ -139,8 +137,12 @@
     }
 
     function deleteCard(id) { data = data.filter(x => x.id !== id); save(); updateUI(); }
-    function clearInputs() { document.querySelectorAll('input').forEach(i => { if(!i.id.includes('_')) i.value = ''; }); localStorage.removeItem('sa_v21_last_inputs'); window.scrollTo({top:0, behavior:'smooth'}); }
-    function resetStats() { if(confirm("Tüm veriler silinsin mi?")) { stats = {t:0,w:0,mt:0,mw:0}; data = []; localStorage.removeItem('sa_v21_last_inputs'); save(); updateUI(); } }
+    function clearInputs() { 
+        document.querySelectorAll('input').forEach(i => { if(!i.id.includes('_')) i.value = ''; }); 
+        localStorage.removeItem('sa_v21_last_inputs');
+        window.scrollTo({top:0, behavior:'smooth'}); 
+    }
+    function resetStats() { if(confirm("Tüm başarı verileri ve geçmiş silinsin mi?")) { stats = {t:0,w:0,mt:0,mw:0}; data = []; localStorage.removeItem('sa_v21_last_inputs'); save(); updateUI(); } }
     function save() { localStorage.setItem('sa_v21_history', JSON.stringify(data)); localStorage.setItem('sa_v21_stats', JSON.stringify(stats)); }
     init();
 </script>

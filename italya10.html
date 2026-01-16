@@ -3,32 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Serie A Pro v18 - Final</title>
+    <title>Serie A Pro v19 - Fixed</title>
     <style>
         :root { --bg: #0b0b0b; --card: #181818; --accent: #00df5d; --sub: #909090; --border: #282828; --gold: #ffd60a; --loss: #ff453a; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: white; margin: 0; padding: 12px; }
         .dashboard { display: flex; gap: 10px; margin-bottom: 15px; }
-        .kpi { flex: 1; background: var(--card); padding: 12px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
+        .kpi { flex: 1; background: var(--card); padding: 12px; border-radius: 12px; border: 1px solid var(--border); text-align: center; position: relative; }
         .kpi-val { display: block; font-size: 1.4rem; font-weight: 800; color: var(--accent); }
         .kpi-label { font-size: 0.6rem; color: var(--sub); font-weight: bold; }
+        .reset-all { position: absolute; top: 5px; right: 8px; color: var(--loss); font-size: 10px; font-weight: bold; cursor: pointer; }
         .input-card { background: var(--card); padding: 16px; border-radius: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
         .team-h { border: none; background: transparent; color: var(--accent); font-size: 1.1rem; font-weight: 800; width: 100%; margin-bottom: 10px; outline: none; border-bottom: 1px solid var(--border); }
         .m-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .m-row { display: flex; flex-direction: column; border-bottom: 1px solid #222; padding: 4px 0; }
         .m-row label { font-size: 0.65rem; color: var(--sub); margin-bottom: 2px; }
-        .m-row input { background: #222; border: 1px solid #333; border-radius: 4px; color: white; padding: 6px; text-align: center; font-size: 0.85rem; }
-        .btn-run { width: 100%; background: var(--accent); color: black; padding: 16px; border-radius: 12px; border: none; font-weight: 900; margin: 10px 0; cursor: pointer; }
-        .btn-clear { width: 100%; background: #222; color: #777; padding: 8px; border: none; border-radius: 8px; font-size: 0.75rem; margin-bottom: 10px; cursor: pointer; }
-        .res-card { background: var(--card); border-radius: 14px; padding: 12px; margin-bottom: 10px; border: 1px solid var(--border); }
+        .m-row input { background: #222; border: 1px solid #333; border-radius: 4px; color: white; padding: 6px; text-align: center; font-size: 0.85rem; outline: none; }
+        .btn-run { width: 100%; background: var(--accent); color: black; padding: 16px; border-radius: 12px; border: none; font-weight: 900; margin: 10px 0; cursor: pointer; box-shadow: 0 4px 15px rgba(0,223,93,0.2); }
+        .btn-clear { width: 100%; background: #222; color: #777; padding: 10px; border: none; border-radius: 8px; font-size: 0.75rem; margin-bottom: 15px; cursor: pointer; font-weight: bold; }
+        .res-card { background: var(--card); border-radius: 14px; padding: 12px; margin-bottom: 10px; border: 1px solid var(--border); animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .prob-val { font-size: 1.6rem; font-weight: 900; color: var(--accent); }
-        .s-ok { background: white; color: black; border: none; padding: 5px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .s-box { display: flex; gap: 8px; margin-top: 10px; }
+        .s-inp-box { width: 35px; background: #000; color: #fff; border: 1px solid #333; border-radius: 4px; text-align: center; }
+        .s-ok { flex: 1; background: white; color: black; border: none; padding: 6px; border-radius: 4px; font-weight: 900; font-size: 0.7rem; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="dashboard">
-        <div class="kpi" onclick="resetStats()"><span class="kpi-val" id="r1">%0</span><span class="kpi-label">BAŞARI</span></div>
-        <div class="kpi"><span class="kpi-val" id="r2" style="color:var(--gold)">%0</span><span class="kpi-label">MASTER ⭐</span></div>
+        <div class="kpi">
+            <span class="reset-all" onclick="resetStats()">SIFIRLA</span>
+            <span class="kpi-val" id="r1">%0</span>
+            <span class="kpi-label">BAŞARI</span>
+        </div>
+        <div class="kpi">
+            <span class="kpi-val" id="r2" style="color:var(--gold)">%0</span>
+            <span class="kpi-label" style="color:var(--gold)">MASTER ⭐</span>
+        </div>
     </div>
 
     <div id="form">
@@ -37,13 +48,14 @@
     </div>
 
     <button class="btn-run" onclick="analyze()">ANALİZ ET</button>
-    <button class="btn-clear" onclick="clearFields()">TEMİZLE & YENİ ANALİZ</button>
+    <button class="btn-clear" onclick="clearInputs()">YENİ ANALİZ İÇİN KUTULARI TEMİZLE</button>
+    
     <div id="history"></div>
 
 <script>
     const fields = ["SCA", "CPA", "npxG/S", "Dist", "Err", "Blocks", "Poss 3rd", "PrgP"];
-    let data = JSON.parse(localStorage.getItem('sa_final_d')) || [];
-    let stats = JSON.parse(localStorage.getItem('sa_final_s')) || { t: 0, w: 0, mt: 0, mw: 0 };
+    let data = JSON.parse(localStorage.getItem('sa_v19_history')) || [];
+    let stats = JSON.parse(localStorage.getItem('sa_v19_stats')) || { t: 0, w: 0, mt: 0, mw: 0 };
 
     function init() {
         ['A', 'B'].forEach(t => {
@@ -57,74 +69,57 @@
     }
 
     function saveInputs() {
-        const currentInputs = {};
-        document.querySelectorAll('input').forEach(input => {
-            currentInputs[input.id] = input.value;
-        });
-        localStorage.setItem('sa_last_inputs', JSON.stringify(currentInputs));
+        const inputs = {};
+        document.querySelectorAll('input').forEach(i => inputs[i.id] = i.value);
+        localStorage.setItem('sa_v19_last_inputs', JSON.stringify(inputs));
     }
 
     function loadInputs() {
-        const saved = JSON.parse(localStorage.getItem('sa_last_inputs'));
-        if (saved) {
-            Object.keys(saved).forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.value = saved[id];
-            });
-        }
+        const saved = JSON.parse(localStorage.getItem('sa_v19_last_inputs'));
+        if (saved) Object.keys(saved).forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = saved[id]; });
     }
 
     function analyze() {
         const getV = (id) => parseFloat(document.getElementById(id).value) || 0;
         
         const calcNetPower = (t, opp) => {
-            let sca = getV('SCA_'+t), cpa = getV('CPA_'+t), npx = getV('npxG/S_'+t);
-            let dist = getV('Dist_'+t) || 18.0;
-
-            // SERIE A GUARD FILTERS
-            if (dist > 22.5) return 0; // Mesafe gerçek dışı
-            if (npx > 0.22) npx = 0.18; // Şut kalitesi imkansız, ideale çek
-            if (sca > 32) sca = 28; // Şut sayısı şişmiş
-
+            let sca = getV('SCA_'+t), cpa = getV('CPA_'+t), npx = getV('npxG/S_'+t), dist = getV('Dist_'+t) || 18.0;
             const errOpp = getV('Err_'+opp), blocksOpp = getV('Blocks_'+opp);
-            
+
+            // SERIE A GUARD FILTERS (GERÇEKLİK DUVARI)
+            if (dist > 22.5) return 0; // Mesafe saçma ise güç yok
+            if (npx > 0.22) npx = 0.18; // 0.30 gibi verileri Serie A tavanına çeker
+
             let power = (sca * 0.5) + (cpa * 0.9) + (npx * 45) + (errOpp * 4);
             power = Math.max(0, power - (blocksOpp * 0.6));
 
-            // Mesafe etkisi: 22m'ye yaklaştıkça gücü eritir
             const distFactor = Math.max(0, (22.5 - dist) / (22.5 - 15)); 
             return power * distFactor;
         };
 
-        const pA = calcNetPower('A', 'B');
-        const pB = calcNetPower('B', 'A');
-        
-        let finalProb = 44 + (pA + pB) * 0.8;
-        finalProb = Math.min(85, Math.max(15, finalProb));
+        const impact = calcNetPower('A', 'B') + calcNetPower('B', 'A');
+        let prob = 44 + (impact * 0.8);
+        prob = Math.min(85, Math.max(15, prob));
 
-        data.unshift({
-            id: Date.now(),
-            t: (document.getElementById('tA').value || "T1") + " - " + (document.getElementById('tB').value || "T2"),
-            pred: finalProb > 51 ? "ÜST" : "ALT",
-            prob: Math.round(finalProb),
-            st: 'p'
-        });
+        data.unshift({ id: Date.now(), t: (document.getElementById('tA').value || "Ev") + " - " + (document.getElementById('tB').value || "Dep"), pred: prob > 51 ? "ÜST" : "ALT", prob: Math.round(prob), st: 'p' });
         save(); updateUI();
     }
 
     function updateUI() {
-        const hist = document.getElementById('history'); hist.innerHTML = '';
+        const hist = document.getElementById('history');
+        hist.innerHTML = '';
         data.forEach(x => {
             const isM = x.prob >= 78 || x.prob <= 35;
             hist.innerHTML += `<div class="res-card" style="border-left: 5px solid ${x.st==='w'?'var(--accent)':x.st==='l'?'var(--loss)':'#333'}">
                 <div style="display:flex;justify-content:space-between;align-items:center">
-                    <div>${isM?'⭐ ':''}<b>${x.t}</b><br><small>Tahmin: ${x.pred}</small></div>
+                    <div>${isM?'⭐ ':''}<b>${x.t}</b><br><small style="color:var(--sub)">Tahmin: ${x.pred}</small></div>
                     <div class="prob-val">%${x.prob}</div>
                 </div>
-                <div style="margin-top:10px; display:flex; gap:8px">
-                    <input type="number" id="sA_${x.id}" style="width:35px; background:#000; color:#fff; border:1px solid #333; text-align:center" placeholder="H">
-                    <input type="number" id="sB_${x.id}" style="width:35px; background:#000; color:#fff; border:1px solid #333; text-align:center" placeholder="A">
+                <div class="s-box">
+                    <input type="number" id="sA_${x.id}" class="s-inp-box" placeholder="H">
+                    <input type="number" id="sB_${x.id}" class="s-inp-box" placeholder="A">
                     <button class="s-ok" onclick="saveS(${x.id})">SKORU KAYDET</button>
+                    <button onclick="deleteCard(${x.id})" style="background:transparent; border:none; color:#555; font-size:12px">✕</button>
                 </div>
             </div>`;
         });
@@ -137,21 +132,39 @@
         if(sA===""||sB==="") return;
         const item = data.find(x => x.id === id);
         if(item.st !== 'p') return;
-        const total = parseInt(sA) + parseInt(sB);
-        const win = (item.pred === "ÜST" && total >= 3) || (item.pred === "ALT" && total < 3);
+        const win = (item.pred === "ÜST" && (parseInt(sA)+parseInt(sB)) >= 3) || (item.pred === "ALT" && (parseInt(sA)+parseInt(sB)) < 3);
         item.st = win ? 'w' : 'l';
         stats.t++; if(win) stats.w++;
         if(item.prob >= 78 || item.prob <= 35) { stats.mt++; if(win) stats.mw++; }
         save(); updateUI();
     }
 
-    function clearFields() { 
-        document.querySelectorAll('input').forEach(i => i.value = ''); 
-        localStorage.removeItem('sa_last_inputs');
-        window.scrollTo(0,0); 
+    function deleteCard(id) {
+        data = data.filter(x => x.id !== id);
+        save(); updateUI();
     }
-    function resetStats() { if(confirm("Tüm geçmiş silinsin mi?")) { stats={t:0,w:0,mt:0,mw:0}; data=[]; save(); updateUI(); } }
-    function save() { localStorage.setItem('sa_final_d', JSON.stringify(data)); localStorage.setItem('sa_final_s', JSON.stringify(stats)); }
+
+    function clearInputs() {
+        document.querySelectorAll('input').forEach(i => { if(!i.id.includes('_')) i.value = ''; else i.value = ''; });
+        localStorage.removeItem('sa_v19_last_inputs');
+        window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    function resetStats() {
+        if(confirm("Tüm başarı verileri ve geçmiş silinsin mi?")) {
+            stats = {t:0,w:0,mt:0,mw:0};
+            data = [];
+            localStorage.removeItem('sa_v19_last_inputs');
+            save();
+            updateUI();
+        }
+    }
+
+    function save() {
+        localStorage.setItem('sa_v19_history', JSON.stringify(data));
+        localStorage.setItem('sa_v19_stats', JSON.stringify(stats));
+    }
+
     init();
 </script>
 </body>

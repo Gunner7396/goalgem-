@@ -3,42 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Serie A Akıllı Gol Analizi</title>
+    <title>Serie A Akıllı Analiz v4</title>
     <style>
         :root {
             --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9;
-            --win: #22c55e; --loss: #ef4444; --warning: #f59e0b;
+            --win: #22c55e; --loss: #ef4444; --gold: #fbbf24;
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 12px; line-height: 1.5; }
-        .dashboard { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 20px; border-radius: 15px; border: 1px solid #334155; margin-bottom: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); }
-        .stats-row { display: flex; justify-content: space-around; text-align: center; }
-        .stat-val { display: block; font-size: 2rem; font-weight: 800; color: var(--accent); }
-        .stat-label { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
-        
-        .alert-box { display: none; margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 0.85rem; background: rgba(245, 158, 11, 0.1); border: 1px solid var(--warning); color: var(--warning); }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 12px; }
+        .dashboard { background: #111827; padding: 15px; border-radius: 15px; border: 1px solid var(--accent); margin-bottom: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .kpi-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .kpi-box { background: #1f2937; padding: 12px; border-radius: 8px; position: relative; }
+        .kpi-box.master { border: 1px solid var(--gold); }
+        .kpi-val { display: block; font-size: 1.6rem; font-weight: 800; color: var(--accent); }
+        .master .kpi-val { color: var(--gold); }
+        .kpi-label { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; }
 
-        .input-card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        .team-title { width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--accent); color: #000; font-weight: bold; margin-bottom: 15px; font-size: 1rem; box-sizing: border-box; }
+        .input-card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 12px; }
+        .team-title { width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--accent); color: #000; font-weight: bold; margin-bottom: 12px; font-size: 1rem; box-sizing: border-box; }
         
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .inp-wrap { display: flex; flex-direction: column; }
-        .inp-wrap label { font-size: 0.65rem; color: #94a3b8; margin-bottom: 2px; padding-left: 2px; }
-        input[type="number"] { background: #334155; border: 1px solid #475569; color: white; padding: 12px; border-radius: 8px; font-size: 1rem; width: 100%; box-sizing: border-box; }
+        .inp-wrap label { font-size: 0.65rem; color: #94a3b8; margin-bottom: 2px; }
+        input[type="number"] { background: #334155; border: 1px solid #475569; color: white; padding: 10px; border-radius: 6px; font-size: 1rem; width: 100%; box-sizing: border-box; }
 
-        .btn-group { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin: 20px 0; }
-        button { border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: transform 0.1s, opacity 0.2s; }
-        button:active { transform: scale(0.98); opacity: 0.8; }
-        .btn-clear { background: #475569; color: white; padding: 15px; }
-        .btn-main { background: var(--win); color: white; font-size: 1.1rem; }
+        .btn-main { width: 100%; background: var(--win); color: white; padding: 16px; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; margin-top: 10px; cursor: pointer; }
         
-        .card { background: var(--card); margin-bottom: 12px; padding: 15px; border-radius: 12px; border-left: 6px solid var(--accent); animation: fadeIn 0.4s ease-out; position: relative; }
-        .card.win { border-color: var(--win); }
-        .card.loss { border-color: var(--loss); }
-        .status-badge { font-size: 0.65rem; padding: 3px 8px; border-radius: 4px; float: right; font-weight: bold; }
+        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 5px solid #475569; animation: fadeIn 0.3s ease; position: relative; }
+        .card.master-bet { border-left-color: var(--gold); background: linear-gradient(to right, #1e293b, #1a1a2e); }
+        .card.win { border-left-color: var(--win); }
+        .card.loss { border-left-color: var(--loss); }
         
-        .outcome-btns { display: flex; gap: 8px; margin-top: 15px; }
-        .outcome-btns button { flex: 1; padding: 10px; font-size: 0.8rem; }
-        .del-btn { position: absolute; top: 10px; right: 10px; color: #64748b; font-size: 1.2rem; cursor: pointer; padding: 5px; }
+        .score-entry { margin-top: 12px; display: flex; gap: 8px; align-items: center; border-top: 1px solid #334155; padding-top: 10px; }
+        .score-inp { width: 45px !important; text-align: center; padding: 5px !important; background: #0f172a !important; }
+        .save-btn { background: var(--accent); color: #000; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } }
     </style>
@@ -46,140 +43,105 @@
 <body>
 
     <div class="dashboard">
-        <div class="stats-row">
-            <div><span class="stat-val" id="totalCount">0</span><span class="stat-label">Toplam Analiz</span></div>
-            <div><span class="stat-val" id="rateVal">%0</span><span class="stat-label">Başarı Oranı</span></div>
-        </div>
-        <div id="aiAlert" class="alert-box">
-            <strong>⚠️ KRİTİK ANALİZ:</strong> Başarı oranı %80 altında! Modelin özellikle <b>Dist</b> (Mesafe) ve <b>npxG/S</b> verilerini tekrar tartması gerekiyor. İtalya liginde uzak şutların gol dönüşümü düşüktür, bu metrikleri kontrol et.
+        <h2 style="margin:0; font-size:0.9rem; color:var(--accent); letter-spacing: 1px;">STRATEJİK PERFORMANS</h2>
+        <div class="kpi-row">
+            <div class="kpi-box">
+                <span class="kpi-val" id="totalRate">%0</span>
+                <span class="kpi-label">Genel Başarı</span>
+            </div>
+            <div class="kpi-box master">
+                <span class="kpi-val" id="masterRate">%0</span>
+                <span class="kpi-label">NET TAHMİN (%80+)</span>
+            </div>
         </div>
     </div>
 
     <div id="form">
-        <div class="input-card">
-            <input type="text" id="tA" class="team-title" placeholder="EV SAHİBİ">
-            <div class="grid" id="gA"></div>
-        </div>
-        <div class="input-card">
-            <input type="text" id="tB" class="team-title" placeholder="DEPLASMAN">
-            <div class="grid" id="gB"></div>
-        </div>
+        <div class="input-card"><input type="text" id="tA" class="team-title" placeholder="EV SAHİBİ"><div class="grid" id="gA"></div></div>
+        <div class="input-card"><input type="text" id="tB" class="team-title" placeholder="DEPLASMAN"><div class="grid" id="gB"></div></div>
     </div>
 
-    <div class="btn-group">
-        <button class="btn-clear" onclick="clearInp()">SİL</button>
-        <button class="btn-main" onclick="run()">ANALİZ ET</button>
-    </div>
+    <button class="btn-main" onclick="run()">ANALİZ ET</button>
+    <button onclick="clearAll()" style="background:none; border:none; color:#64748b; font-size:0.75rem; width:100%; margin-top:15px; text-decoration: underline;">Tüm Verileri Sıfırla</button>
 
+    <h3 style="margin:20px 0 10px 5px; font-size: 1rem;">Analiz Geçmişi</h3>
     <div id="history"></div>
 
 <script>
     const fields = ["Dist", "CPA", "PrgP", "SCA", "Poss 3rd", "npxG/S", "Blocks", "Interc", "Recovery", "Err"];
-    let data = JSON.parse(localStorage.getItem('sa_final_data')) || [];
-    let stats = JSON.parse(localStorage.getItem('sa_final_stats')) || { t: 0, w: 0 };
+    let data = JSON.parse(localStorage.getItem('sa_v4_data')) || [];
 
     function init() {
-        ['A', 'B'].forEach(team => {
-            const div = document.getElementById('g' + team);
-            fields.forEach(f => {
-                div.innerHTML += `
+        ['A', 'B'].forEach(t => {
+            const div = document.getElementById('g' + t);
+            fields.forEach(f => div.innerHTML += `
                 <div class="inp-wrap">
                     <label>${f}</label>
-                    <input type="number" id="${f}_${team}" step="any" inputmode="decimal" placeholder="0.0">
-                </div>`;
-            });
+                    <input type="number" id="${f}_${t}" step="any" inputmode="decimal" placeholder="0.0">
+                </div>`);
         });
         updateUI();
     }
 
     function run() {
-        const nA = document.getElementById('tA').value || "Takım A";
-        const nB = document.getElementById('tB').value || "Takım B";
+        const sca = (parseFloat(document.getElementById('SCA_A').value)||0) + (parseFloat(document.getElementById('SCA_B').value)||0);
+        const err = (parseFloat(document.getElementById('Err_A').value)||0) + (parseFloat(document.getElementById('Err_B').value)||0);
         
-        const scaA = parseFloat(document.getElementById('SCA_A').value) || 0;
-        const scaB = parseFloat(document.getElementById('SCA_B').value) || 0;
-        const errA = parseFloat(document.getElementById('Err_A').value) || 0;
-        const errB = parseFloat(document.getElementById('Err_B').value) || 0;
+        let prob = Math.min(98, 15 + (sca * 0.8) + (err * 12));
+        let pred = prob > 65 ? "ÜST" : "ALT";
 
-        // Gelişmiş Gol Olasılık Algoritması
-        let baseProb = 20;
-        let scaFactor = (scaA + scaB) * 0.75;
-        let errFactor = (errA + errB) * 12;
-        let prob = Math.min(96, baseProb + scaFactor + errFactor);
-        
-        let pred = prob > 65 ? "2.5 ÜST / KG VAR" : "2.5 ALT / 0-1 GOL";
-
-        const obj = { 
+        data.unshift({ 
             id: Date.now(), 
-            teams: nA + " vs " + nB, 
-            pred: pred, 
-            prob: prob.toFixed(0), 
-            status: 'p' 
-        };
-        
-        data.unshift(obj);
-        save();
-        updateUI();
+            teams: (document.getElementById('tA').value || "A") + " vs " + (document.getElementById('tB').value || "B"), 
+            pred, prob: prob.toFixed(0), scoreA: null, scoreB: null, status: 'p' 
+        });
+        save(); updateUI();
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
-    function mark(id, s) {
+    function setScore(id) {
+        const sA = document.getElementById('sA_'+id).value;
+        const sB = document.getElementById('sB_'+id).value;
+        if(sA === "" || sB === "") return;
+
         const item = data.find(x => x.id === id);
-        if(item && item.status === 'p') {
-            item.status = s;
-            stats.t++;
-            if(s === 'w') stats.w++;
-            save();
-            updateUI();
-        }
-    }
-
-    function remove(id) {
-        data = data.filter(x => x.id !== id);
-        save();
-        updateUI();
+        item.scoreA = parseInt(sA); item.scoreB = parseInt(sB);
+        
+        const isUpper = (item.scoreA + item.scoreB) >= 3;
+        item.status = (item.pred === "ÜST" && isUpper) || (item.pred === "ALT" && !isUpper) ? 'w' : 'l';
+        
+        save(); updateUI();
     }
 
     function updateUI() {
-        document.getElementById('totalCount').innerText = stats.t;
-        const rate = stats.t === 0 ? 0 : Math.round((stats.w / stats.t) * 100);
-        document.getElementById('rateVal').innerText = `%${rate}`;
-        
-        const alertBox = document.getElementById('aiAlert');
-        alertBox.style.display = (stats.t >= 5 && rate < 80) ? 'block' : 'none';
+        let tGen = 0, wGen = 0, tMaster = 0, wMaster = 0;
+        const hist = document.getElementById('history'); hist.innerHTML = '';
 
-        const hist = document.getElementById('history');
-        hist.innerHTML = '';
         data.forEach(x => {
-            const statusText = x.status === 'p' ? 'BEKLEYEN' : x.status === 'w' ? 'TUTTU' : 'YATTI';
-            const statusColor = x.status === 'p' ? 'var(--accent)' : x.status === 'w' ? 'var(--win)' : 'var(--loss)';
-            
+            if(x.status !== 'p') {
+                tGen++; if(x.status === 'w') wGen++;
+                if(x.prob >= 80) { tMaster++; if(x.status === 'w') wMaster++; }
+            }
+            const isMaster = x.prob >= 80;
             hist.innerHTML += `
-                <div class="card ${x.status === 'w' ? 'win' : x.status === 'l' ? 'loss' : ''}">
-                    <span class="del-btn" onclick="remove(${x.id})">×</span>
-                    <div style="font-weight:bold; font-size:1rem; padding-right:20px;">${x.teams}</div>
-                    <div style="font-size:0.85rem; margin-top:5px; color:#cbd5e1;">
-                        Tahmin: <b style="color:white">${x.pred}</b> (%${x.prob})
+                <div class="card ${isMaster ? 'master-bet' : ''} ${x.status === 'w' ? 'win' : x.status === 'l' ? 'loss' : ''}">
+                    <div style="font-weight:bold; color:${isMaster ? 'var(--gold)' : 'white'}">${isMaster ? '⭐ NET TAHMİN: ' : ''}${x.teams}</div>
+                    <div style="font-size:0.85rem; margin-top:4px;">Hedef: <b>${x.pred}</b> (%${x.prob})</div>
+                    <div class="score-entry">
+                        <input type="number" id="sA_${x.id}" class="score-inp" placeholder="0" value="${x.scoreA !== null ? x.scoreA : ''}">
+                        <span style="color:#64748b">-</span>
+                        <input type="number" id="sB_${x.id}" class="score-inp" placeholder="0" value="${x.scoreB !== null ? x.scoreB : ''}">
+                        <button class="save-btn" onclick="setScore(${x.id})">SKORU İŞLE</button>
                     </div>
-                    <span class="status-badge" style="color:${statusColor}; border:1px solid ${statusColor}">${statusText}</span>
-                    ${x.status === 'p' ? `
-                    <div class="outcome-btns">
-                        <button style="background:var(--win); color:white;" onclick="mark(${x.id}, 'w')">TUTTU</button>
-                        <button style="background:var(--loss); color:white;" onclick="mark(${x.id}, 'l')">YATMADI</button>
-                    </div>` : ''}
                 </div>`;
         });
+
+        document.getElementById('totalRate').innerText = `%${tGen === 0 ? 0 : Math.round((wGen/tGen)*100)}`;
+        document.getElementById('masterRate').innerText = `%${tMaster === 0 ? 0 : Math.round((wMaster/tMaster)*100)}`;
     }
 
-    function clearInp() {
-        if(confirm("Girişleri temizle?")) {
-            document.querySelectorAll('input').forEach(i => i.value = '');
-        }
-    }
-
-    function save() {
-        localStorage.setItem('sa_final_data', JSON.stringify(data));
-        localStorage.setItem('sa_final_stats', JSON.stringify(stats));
-    }
+    function clearAll() { if(confirm("Tüm veriler ve geçmiş silinsin mi?")) { localStorage.clear(); location.reload(); } }
+    function save() { localStorage.setItem('sa_v4_data', JSON.stringify(data)); }
     init();
 </script>
 </body>

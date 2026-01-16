@@ -3,129 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Serie A Stratejik Analiz v6</title>
+    <title>Serie A Pro - Fotmob Edition</title>
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f1f5f9; --win: #22c55e; --loss: #ef4444; --gold: #fbbf24; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 12px; }
-        .dashboard { background: #111827; padding: 15px; border-radius: 15px; border: 1px solid var(--accent); margin-bottom: 20px; text-align: center; }
-        .kpi-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .kpi-box { background: #1f2937; padding: 10px; border-radius: 8px; border-bottom: 3px solid #374151; }
-        .master { border-color: var(--gold) !important; }
-        .kpi-val { display: block; font-size: 1.5rem; font-weight: 800; color: var(--gold); }
-        .input-card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 12px; }
-        .team-title { width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--accent); color: #000; font-weight: bold; margin-bottom: 10px; box-sizing: border-box; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        input[type="number"] { background: #334155; border: 1px solid #475569; color: white; padding: 10px; border-radius: 6px; width: 100%; box-sizing: border-box; }
-        .btn-main { width: 100%; background: var(--win); color: white; padding: 16px; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; margin: 10px 0; cursor: pointer; }
-        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left: 6px solid #475569; position: relative; }
-        .card.master-bet { border-left-color: var(--gold); background: linear-gradient(to right, #1e293b, #1e1b4b); }
-        .range-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 12px; }
-        .range-item { background: #0f172a; padding: 10px 5px; border-radius: 6px; text-align: center; border: 1px solid #334155; }
-        .range-val { display: block; font-weight: bold; color: var(--accent); }
-        .score-entry { margin-top: 15px; display: flex; gap: 8px; align-items: center; border-top: 1px solid #334155; padding-top: 10px; }
-        .score-inp { width: 45px !important; text-align: center; }
+        :root {
+            --fotmob-bg: #121212;
+            --fotmob-card: #1c1c1e;
+            --fotmob-accent: #00df5d; /* Fotmob Yeşili */
+            --fotmob-text: #ffffff;
+            --fotmob-sub: #a0a0a2;
+            --fotmob-border: #2c2c2e;
+            --win: #00df5d;
+            --loss: #ff453a;
+            --gold: #ffd60a;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--fotmob-bg); color: var(--fotmob-text); margin: 0; padding: 12px; }
+        
+        /* Dashboard */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; margin-bottom: 15px; }
+        .logo { font-size: 1.2rem; font-weight: 900; letter-spacing: -1px; }
+        .logo span { color: var(--fotmob-accent); }
+
+        .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .kpi-box { background: var(--fotmob-card); padding: 15px; border-radius: 12px; border: 1px solid var(--fotmob-border); position: relative; }
+        .kpi-val { display: block; font-size: 1.8rem; font-weight: 800; }
+        .kpi-label { font-size: 0.7rem; color: var(--fotmob-sub); text-transform: uppercase; font-weight: 600; }
+        .reset-stats { position: absolute; top: 8px; right: 8px; font-size: 0.6rem; color: var(--loss); cursor: pointer; text-decoration: underline; }
+
+        /* Form Alanı */
+        .input-card { background: var(--fotmob-card); padding: 16px; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--fotmob-border); }
+        .team-input { width: 100%; background: transparent; border: none; border-bottom: 2px solid var(--fotmob-border); color: white; font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; padding: 5px 0; outline: none; }
+        .team-input:focus { border-bottom-color: var(--fotmob-accent); }
+        
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .field-group { display: flex; flex-direction: column; }
+        .field-group label { font-size: 0.65rem; color: var(--fotmob-sub); margin-bottom: 4px; font-weight: bold; }
+        input[type="number"] { background: #2c2c2e; border: 1px solid transparent; border-radius: 8px; color: white; padding: 10px; font-size: 1rem; outline: none; -moz-appearance: textfield; }
+        input[type="number"]:focus { border-color: var(--fotmob-accent); }
+
+        /* Butonlar */
+        .action-btns { display: grid; grid-template-columns: 1fr 2.5fr; gap: 10px; margin-bottom: 25px; }
+        .btn { border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 1rem; }
+        .btn-clear { background: #3a3a3c; color: white; }
+        .btn-analyze { background: var(--fotmob-accent); color: black; padding: 16px; }
+
+        /* Analiz Kartları */
+        .card { background: var(--fotmob-card); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--fotmob-border); position: relative; }
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .card-teams { font-weight: bold; font-size: 1rem; }
+        .master-badge { background: var(--gold); color: black; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: 900; vertical-align: middle; }
+        
+        .prob-badge { font-size: 0.85rem; font-weight: bold; color: var(--fotmob-accent); }
+        
+        .range-bar-container { margin: 15px 0; }
+        .range-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .bar-bg { flex: 1; height: 6px; background: #2c2c2e; border-radius: 3px; margin: 0 10px; overflow: hidden; }
+        .bar-fill { height: 100%; background: var(--fotmob-accent); border-radius: 3px; }
+        .range-label { font-size: 0.75rem; color: var(--fotmob-sub); width: 50px; }
+        .range-perc { font-size: 0.75rem; font-weight: bold; width: 35px; text-align: right; }
+
+        .score-row { display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--fotmob-border); pt: 12px; margin-top: 10px; }
+        .score-box { width: 40px; background: #2c2c2e; border: none; border-radius: 6px; color: white; text-align: center; padding: 8px 0; font-weight: bold; }
+        .btn-save { background: white; color: black; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; flex-grow: 1; }
+
+        .win-card { border-left: 4px solid var(--win); }
+        .loss-card { border-left: 4px solid var(--loss); }
     </style>
 </head>
 <body>
 
+    <div class="header">
+        <div class="logo">SERIE A <span>PRO</span></div>
+    </div>
+
     <div class="dashboard">
-        <div class="kpi-row">
-            <div class="kpi-box"><span class="kpi-val" id="totalRate">%0</span><span class="kpi-label" style="font-size: 0.7rem;">GENEL BAŞARI</span></div>
-            <div class="kpi-box master"><span class="kpi-val" id="masterRate">%0</span><span class="kpi-label" style="font-size: 0.7rem;">NET TAHMİN (%80+)</span></div>
+        <div class="kpi-box">
+            <span class="reset-stats" onclick="resetStats()">SIFIRLA</span>
+            <span class="kpi-label">BAŞARI</span>
+            <span class="kpi-val" id="totalRate">%0</span>
+        </div>
+        <div class="kpi-box" style="border-color: var(--gold);">
+            <span class="kpi-label" style="color: var(--gold);">MASTER %80+</span>
+            <span class="kpi-val" id="masterRate" style="color: var(--gold);">%0</span>
         </div>
     </div>
 
     <div id="form">
-        <div class="input-card"><input type="text" id="tA" class="team-title" placeholder="EV SAHİBİ"><div class="grid" id="gA"></div></div>
-        <div class="input-card"><input type="text" id="tB" class="team-title" placeholder="DEPLASMAN"><div class="grid" id="gB"></div></div>
+        <div class="input-card">
+            <input type="text" id="tA" class="team-input" placeholder="Ev Sahibi Takım">
+            <div class="grid" id="gA"></div>
+        </div>
+        <div class="input-card">
+            <input type="text" id="tB" class="team-input" placeholder="Deplasman Takımı">
+            <div class="grid" id="gB"></div>
+        </div>
     </div>
 
-    <button class="btn-main" onclick="run()">ANALİZ ET</button>
+    <div class="action-btns">
+        <button class="btn btn-clear" onclick="clearInputs()">TEMİZLE</button>
+        <button class="btn btn-analyze" onclick="runAnalysis()">ANALİZİ BAŞLAT</button>
+    </div>
 
     <div id="history"></div>
 
 <script>
-    const fields = ["Dist", "CPA", "PrgP", "SCA", "Poss 3rd", "npxG/S", "Blocks", "Interc", "Recovery", "Err"];
-    let data = JSON.parse(localStorage.getItem('sa_v6_data')) || [];
+    const fields = ["SCA", "Err", "Dist", "npxG/S", "CPA", "PrgP", "Poss 3rd", "Blocks", "Interc", "Recovery"];
+    let data = JSON.parse(localStorage.getItem('sa_v7_data')) || [];
+    let stats = JSON.parse(localStorage.getItem('sa_v7_stats')) || { t: 0, w: 0, mt: 0, mw: 0 };
 
     function init() {
         ['A', 'B'].forEach(t => {
             const div = document.getElementById('g' + t);
-            fields.forEach(f => div.innerHTML += `<input type="number" id="${f}_${t}" step="any" inputmode="decimal" placeholder="${f}">`);
+            fields.forEach(f => div.innerHTML += `
+                <div class="field-group">
+                    <label>${f}</label>
+                    <input type="number" id="${f}_${t}" step="any" inputmode="decimal">
+                </div>`);
         });
         updateUI();
     }
 
-    function run() {
-        // Boş veri kontrolü
-        if(!document.getElementById('SCA_A').value || !document.getElementById('SCA_B').value) {
-            alert("Analiz için en azından SCA verilerini girmelisiniz!"); return;
-        }
-
+    function runAnalysis() {
+        if(!document.getElementById('SCA_A').value) return alert("Veri girişi yapmalısın!");
+        
         const sca = (parseFloat(document.getElementById('SCA_A').value)||0) + (parseFloat(document.getElementById('SCA_B').value)||0);
         const err = (parseFloat(document.getElementById('Err_A').value)||0) + (parseFloat(document.getElementById('Err_B').value)||0);
         
         let upProb = Math.min(98, 15 + (sca * 0.75) + (err * 12));
-        let pred = upProb > 60 ? "ÜST" : "ALT";
-        
         let r01, r23, r4p;
-        
-        // TUTARLI DAĞILIM ALGORİTMASI
-        if (upProb >= 80) { // Net Üst Senaryosu
-            r4p = Math.round(upProb * 0.45);
-            r01 = Math.round((100 - upProb) * 0.5);
-            r23 = 100 - r4p - r01;
-        } else if (upProb <= 30) { // Net Alt Senaryosu
-            r01 = Math.round((100 - upProb) * 0.7);
-            r4p = Math.round(upProb * 0.2);
-            r23 = 100 - r01 - r4p;
-        } else { // Orta Şiddet (2-3 Gol Bölgesi)
-            r23 = 60;
-            let kalan = 40;
-            r01 = Math.round(kalan * (1 - (upProb/100)));
-            r4p = 100 - r23 - r01;
+
+        if (upProb >= 80) { 
+            r4p = Math.round(upProb * 0.45); r01 = Math.round((100 - upProb) * 0.5); r23 = 100 - r4p - r01;
+        } else if (upProb <= 30) {
+            r01 = Math.round((100 - upProb) * 0.7); r4p = Math.round(upProb * 0.2); r23 = 100 - r01 - r4p;
+        } else {
+            r23 = 60; let k = 40; r01 = Math.round(k * (1 - (upProb/100))); r4p = 100 - r23 - r01;
         }
 
-        data.unshift({ id: Date.now(), teams: (document.getElementById('tA').value||"A") + " vs " + (document.getElementById('tB').value||"B"), pred, prob: upProb.toFixed(0), r01, r23, r4p, scoreA: null, scoreB: null, status: 'p' });
-        save(); updateUI();
-    }
-
-    function setScore(id) {
-        const sA = document.getElementById('sA_'+id).value, sB = document.getElementById('sB_'+id).value;
-        if(sA === "" || sB === "") return;
-        const item = data.find(x => x.id === id);
-        item.scoreA = parseInt(sA); item.scoreB = parseInt(sB);
-        const isUpper = (item.scoreA + item.scoreB) >= 3;
-        item.status = (item.pred === "ÜST" && isUpper) || (item.pred === "ALT" && !isUpper) ? 'w' : 'l';
-        save(); updateUI();
+        const res = {
+            id: Date.now(),
+            teams: (document.getElementById('tA').value || "T1") + " - " + (document.getElementById('tB').value || "T2"),
+            pred: upProb > 60 ? "ÜST" : "ALT",
+            prob: upProb.toFixed(0),
+            r01, r23, r4p, sA: null, sB: null, status: 'p'
+        };
+        data.unshift(res);
+        save();
+        updateUI();
     }
 
     function updateUI() {
-        let tGen = 0, wGen = 0, tM = 0, wM = 0;
         const hist = document.getElementById('history'); hist.innerHTML = '';
         data.forEach(x => {
-            if(x.status !== 'p') { tGen++; if(x.status === 'w') wGen++; if(x.prob >= 80 || x.prob <= 30) { tM++; if(x.status === 'w') wM++; } }
             const isM = x.prob >= 80 || x.prob <= 30;
             hist.innerHTML += `
-                <div class="card ${isM ? 'master-bet' : ''} ${x.status==='w'?'win':x.status==='l'?'loss':''}">
-                    <div style="font-weight:bold">${isM ? '⭐ ' : ''}${x.teams}</div>
-                    <div style="font-size:0.9rem; color:var(--accent); margin-top:5px;">Hedef: ${x.pred} (%${x.prob >= 60 ? x.prob : (100-x.prob).toFixed(0)})</div>
-                    <div class="range-grid">
-                        <div class="range-item"><span style="font-size:0.6rem">0-1 GOL</span><span class="range-val">%${x.r01}</span></div>
-                        <div class="range-item"><span style="font-size:0.6rem">2-3 GOL</span><span class="range-val">%${x.r23}</span></div>
-                        <div class="range-item"><span style="font-size:0.6rem">4+ GOL</span><span class="range-val">%${x.r4p}</span></div>
+                <div class="card ${isM ? 'master-bet' : ''} ${x.status==='w'?'win-card':x.status==='l'?'loss-card':''}">
+                    <div class="card-header">
+                        <span class="card-teams">${isM ? '<span class="master-badge">MASTER</span> ' : ''}${x.teams}</span>
+                        <span class="prob-badge">${x.pred} %${x.prob >= 60 ? x.prob : (100-x.prob).toFixed(0)}</span>
                     </div>
-                    <div class="score-entry">
-                        <input type="number" id="sA_${x.id}" class="score-inp" value="${x.scoreA!==null?x.scoreA:''}"> - 
-                        <input type="number" id="sB_${x.id}" class="score-inp" value="${x.scoreB!==null?x.scoreB:''}">
-                        <button onclick="setScore(${x.id})" style="background:var(--accent); border:none; padding:5px 10px; border-radius:4px; font-weight:bold; margin-left:10px">İŞLE</button>
+                    <div class="range-bar-container">
+                        ${renderBar("0-1 Gol", x.r01)}
+                        ${renderBar("2-3 Gol", x.r23)}
+                        ${renderBar("4+ Gol", x.r4p)}
+                    </div>
+                    <div class="score-row">
+                        <input type="number" id="sA_${x.id}" class="score-box" value="${x.sA!==null?x.sA:''}" placeholder="0">
+                        <span style="color:var(--fotmob-sub)">-</span>
+                        <input type="number" id="sB_${x.id}" class="score-box" value="${x.sB!==null?x.sB:''}" placeholder="0">
+                        <button class="btn-save" onclick="saveScore(${x.id})">SKORU KAYDET</button>
                     </div>
                 </div>`;
         });
-        document.getElementById('totalRate').innerText = `%${tGen===0?0:Math.round((wGen/tGen)*100)}`;
-        document.getElementById('masterRate').innerText = `%${tM===0?0:Math.round((wM/tM)*100)}`;
+        document.getElementById('totalRate').innerText = `%${stats.t === 0 ? 0 : Math.round((stats.w/stats.t)*100)}`;
+        document.getElementById('masterRate').innerText = `%${stats.mt === 0 ? 0 : Math.round((stats.mw/stats.mt)*100)}`;
     }
-    function save() { localStorage.setItem('sa_v6_data', JSON.stringify(data)); }
+
+    function renderBar(label, val) {
+        return `<div class="range-item"><span class="range-label">${label}</span><div class="bar-bg"><div class="bar-fill" style="width:${val}%"></div></div><span class="range-perc">%${val}</span></div>`;
+    }
+
+    function saveScore(id) {
+        const sA = document.getElementById('sA_'+id).value, sB = document.getElementById('sB_'+id).value;
+        if(sA === "" || sB === "") return;
+        const item = data.find(x => x.id === id);
+        if(item.status !== 'p') return;
+        item.sA = parseInt(sA); item.sB = parseInt(sB);
+        const win = (item.pred === "ÜST" && (item.sA+item.sB >= 3)) || (item.pred === "ALT" && (item.sA+item.sB < 3));
+        item.status = win ? 'w' : 'l';
+        stats.t++; if(win) stats.w++;
+        if(item.prob >= 80 || item.prob <= 30) { stats.mt++; if(win) stats.mw++; }
+        save(); updateUI();
+    }
+
+    function clearInputs() { 
+        document.querySelectorAll('input').forEach(i => i.value = ''); 
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function resetStats() {
+        if(confirm("Tüm başarı yüzdeleri sıfırlansın mı?")) {
+            stats = { t: 0, w: 0, mt: 0, mw: 0 };
+            data = [];
+            save(); updateUI();
+        }
+    }
+
+    function save() {
+        localStorage.setItem('sa_v7_data', JSON.stringify(data));
+        localStorage.setItem('sa_v7_stats', JSON.stringify(stats));
+    }
     init();
 </script>
 </body>
